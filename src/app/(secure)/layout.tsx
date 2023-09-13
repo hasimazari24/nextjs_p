@@ -1,6 +1,4 @@
-//perlu ada ini karena next.js 13 berjalan di server side sedangkan chakra di client jadi diubah biar jalan client
 "use client";
-
 import {
   Box,
   useDisclosure,
@@ -9,7 +7,6 @@ import {
   useColorModeValue,
   Flex,
 } from "@chakra-ui/react";
-
 import Sidebar from "../components/SideBar";
 import Header from "../components/Header";
 import { redirect } from "next/navigation";
@@ -23,11 +20,10 @@ export const metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useAuth();
-  console.log(user);
   if (user === 401) {
     redirect("/login");
   }
-  
+
   return (
     <main>
       <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -63,10 +59,31 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             shadow="lg"
             // borderWidth="1px"
           >
-            <Box p="6" height="full" width="full">
-              {children}
-            </Box>
+            <DrawerContent>
+              <Sidebar onClose={onClose} />
+            </DrawerContent>
           </Flex>
+          {/* <SidebarWithHeader /> */}
+          {/* <Header /> */}
+          <Header onOpen={onOpen} />
+          <Box ml={{ base: 0, md: 60 }} p="4">
+            <Flex
+              w="full"
+              h="100%"
+              // alignItems=""
+              // justifyContent="center"
+              // cursor="pointer"
+              minHeight="82vh"
+              bg="white"
+              rounded="xl"
+              shadow="lg"
+              // borderWidth="1px"
+            >
+              <Box p="6" height="full" width="full">
+                {children}
+              </Box>
+            </Flex>
+          </Box>
         </Box>
       </Box>
     </main>

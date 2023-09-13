@@ -17,15 +17,23 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "../../components/AuthContext";
 
 interface Formlogin {
-  usernameoremail : string;
-  password : string,
+  usernameoremail: string;
+  password: string;
 }
 
 export default function Login() {
+<<<<<<< HEAD
   const { login, loading } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
 
+=======
+  const { login } = useAuth();
+  
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+>>>>>>> d75f85974989b7de8f5308a8d567bacfb3f9477e
   // get functions to build form with useForm() hook
   const { register, handleSubmit, formState, reset } = useForm<Formlogin>();
   const { errors } = formState;

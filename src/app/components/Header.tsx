@@ -60,7 +60,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   };
 
   const { user, logout } = useAuth();
-  const getUser : any = user;
+  const getUser: any = user;
 
   return (
     <Flex
