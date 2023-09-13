@@ -9,30 +9,24 @@ import {
   Stack,
   Button,
   FormErrorMessage,
-  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import apiCall from "../../components/api-call";
-import AlertBar from "../../components/AlertBar";
-import { useForm,SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useAuth } from "../../components/AuthContext";
 
 interface Formlogin {
-  usernameoremail : string;
-  password : string,
+  usernameoremail: string;
+  password: string;
 }
 
 export default function Login() {
   const { login } = useAuth();
-
+  
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-
   // get functions to build form with useForm() hook
   const { register, handleSubmit, formState, reset } = useForm<Formlogin>();
   const { errors } = formState;

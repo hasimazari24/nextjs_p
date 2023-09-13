@@ -37,6 +37,7 @@ import Link from "next/link";
 import { ImProfile } from "@react-icons/all-files/im/ImProfile";
 import { RiLogoutBoxRLine } from "@react-icons/all-files/ri/RiLogoutBoxRLine";
 import { useState, useRef, useEffect } from "react";
+import { useAuth } from "./AuthContext";
 
 interface LinkItemProps {
   name: string;
@@ -57,6 +58,8 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   const closeDropdown = () => {
     setIsOpen(false);
   };
+
+  const { logout } = useAuth();
 
   return (
     <Flex
@@ -178,7 +181,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                     key="LogOut"
                     size="sm"
                     fontWeight="normal"
-                    // onClick={handleAdd}
+                    onClick={logout}
                   >
                     Log Out&nbsp;
                     <RiLogoutBoxRLine />
