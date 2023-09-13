@@ -14,7 +14,12 @@ import {
   FormLabel,
   Input,
   Hide,
+  Flex,
+  Text,
+  Box,
   useDisclosure,
+  Textarea,
+  Select,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -76,7 +81,9 @@ const ModalEdit: React.FC<ModalProps> = ({
       },
     }),
     founder: register("founder", { required: "Founder harus diisi!" }),
-    level_tenant: register("level_tenant", { required: "Pilih salah satu level tenant!" }),
+    level_tenant: register("level_tenant", {
+      required: "Pilih salah satu level tenant!",
+    }),
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -107,10 +114,10 @@ const ModalEdit: React.FC<ModalProps> = ({
         const url: string = apiCall.editStartUp + `${data.id}`;
         await axios.put(url, data).then((response) => {
           // setData(response.data.data);
+
           if (response.status === 200) {
             handleShowMessage("Data berhasil diubah.", false);
           }
-          // console.log(response);
         });
         // .catch((error) => {
         //   console.error("Error fetching data:", error);
@@ -118,7 +125,8 @@ const ModalEdit: React.FC<ModalProps> = ({
       } else {
         // Mode tambah, kirim data melalui POST request
         await axios.post(apiCall.addStartUp, data).then((response) => {
-          if (response.status === 201) {
+          // console.log(response);
+          if (response.status === 200) {
             handleShowMessage("Data berhasil disimpan.", false);
           }
         });
@@ -149,7 +157,7 @@ const ModalEdit: React.FC<ModalProps> = ({
           onClose();
           reset();
         }}
-        size="lg"
+        size="xl"
       >
         <ModalOverlay />
         <ModalContent>
@@ -173,99 +181,177 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </Hide>
 
                 <FormControl isInvalid={!!errors.name} mb="3">
-                  <FormLabel>Nama</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.name}
-                    defaultValue={formData?.name}
-                    // className={`form-control ${errors.name ? "is-invalid"}`}
-                  />
-                  <FormErrorMessage>
-                    {errors.name && errors.name.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Nama</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        type="text"
+                        {...fields.name}
+                        defaultValue={formData?.name}
+                        // className={`form-control ${errors.name ? "is-invalid"}`}
+                      />
+                      <FormErrorMessage>
+                        {errors.name && errors.name.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
+
                 <FormControl isInvalid={!!errors.description} mb="3">
-                  <FormLabel>Deskripsi</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.description}
-                    defaultValue={formData?.description}
-                  />
-                  <FormErrorMessage>
-                    {errors.description && errors.description.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Deskripsi</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Textarea
+                        {...fields.description}
+                        defaultValue={formData?.description}
+                      />
+                      <FormErrorMessage>
+                        {errors.description && errors.description.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.address} mb="3">
-                  <FormLabel>Alamat</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.address}
-                    defaultValue={formData?.address}
-                  />
-                  <FormErrorMessage>
-                    {errors.address && errors.address.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Alamat</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Textarea
+                        {...fields.address}
+                        height="10px"
+                        defaultValue={formData?.address}
+                      />
+                      <FormErrorMessage>
+                        {errors.address && errors.address.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.contact} mb="3">
-                  <FormLabel>Kontak</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.contact}
-                    defaultValue={formData?.contact}
-                  />
-                  <FormErrorMessage>
-                    {errors.contact && errors.contact.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Kontak</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        type="text"
+                        {...fields.contact}
+                        defaultValue={formData?.contact}
+                      />
+                      <FormErrorMessage>
+                        {errors.contact && errors.contact.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.email} mb="3">
-                  <FormLabel>E-Mail</FormLabel>
-                  <Input
-                    // type="text"
-                    {...fields.email}
-                    defaultValue={formData?.email}
-                  />
-                  <FormErrorMessage>
-                    {errors.email && errors.email.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>E-Mail</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        // type="text"
+                        {...fields.email}
+                        defaultValue={formData?.email}
+                      />
+                      <FormErrorMessage>
+                        {errors.email && errors.email.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.founder} mb="3">
-                  <FormLabel>Founder</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.founder}
-                    defaultValue={formData?.founder}
-                  />
-                  <FormErrorMessage>
-                    {errors.founder && errors.founder.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Founder</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        type="text"
+                        {...fields.founder}
+                        defaultValue={formData?.founder}
+                      />
+                      <FormErrorMessage>
+                        {errors.founder && errors.founder.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.level_tenant} mb="3">
-                  <FormLabel>Level Tenant</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.level_tenant}
-                    defaultValue={formData?.level_tenant}
-                  />
-                  <FormErrorMessage>
-                    {errors.level_tenant && errors.level_tenant.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Level Tenant</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Select
+                        defaultValue={formData?.level_tenant}
+                        {...fields.level_tenant}
+                      >
+                        <option value="Pra Inkubasi">Pra Inkubasi</option>
+                        <option value="Inkubasi">Inkubasi</option>
+                        <option value="Inkubasi Lanjutan">
+                          Inkubasi Lanjutan
+                        </option>
+                        <option value="Scale Up">Scale Up</option>
+                      </Select>
+                      <FormErrorMessage>
+                        {errors.level_tenant && errors.level_tenant.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.image} mb="3">
-                  <FormLabel>Logo</FormLabel>
-                  <Input
-                    type="text"
-                    {...register("image")}
-                    defaultValue={formData?.image}
-                  />
-                  <FormErrorMessage>
-                    {errors.image && errors.image.message}
-                  </FormErrorMessage>
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={["center", "flex-start"]}
+                  >
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Logo</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        type="text"
+                        {...register("image")}
+                        defaultValue={formData?.image}
+                      />
+                      <FormErrorMessage>
+                        {errors.image && errors.image.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
                 </FormControl>
               </div>
             </ModalBody>

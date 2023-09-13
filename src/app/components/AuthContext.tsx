@@ -2,24 +2,24 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import axios from "axios";
-import apiCall from "../components/api-call";
 import AlertBar from "../components/AlertBar";
-import { redirect, useRouter } from "next/navigation";
-
-axios.defaults.withCredentials = true;
+import { useRouter } from "next/navigation";
+import { axiosCustom } from "../api/axios";
+// axios.defaults.withCredentials = true;
 
 interface User {
-  id: string;
+  // id: string;
   fullname: string;
   role:string;
   image:string;
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: User | null | 401;
   login: (username: string, password: string) => void;
   logout: () => void;
+  loading: boolean;
+  loadingValidation: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,6 +27,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
 
    const [isOpen, setIsOpen] = useState(false);
    const [msg, setMsg] = useState("");
@@ -36,24 +38,64 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
+      setLoading(true);
       // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      const response = await axios.post(apiCall.loginUser, {
+      const response = await axiosCustom.post("/login", {
         usernameoremail: username,
         password: password,
       });
       console.log(response);
+
       // Jika login berhasil, atur informasi pengguna di sini
       const loggedInUser: User = {
-        id: response.data.data.id,
+        // id: response.data.data.id,
         fullname: response.data.data.fullname,
         role: response.data.data.role,
         image: response.data.data.image,
       };
 
       setUser(loggedInUser);
-      router.push('/');
-    //   redirect('/');
+      router.push("/");
     } catch (error: any) {
+      if (error?.response) {
+        setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
+      } else setMsg(`Terjadi Kesalahan: ${error.message}`);
+      setstatus("error");
+      setIsOpen(true);
+    } finally {
+      setLoading(false); // Set loading menjadi false setelah proses login selesai
+    }
+  };
+
+  const validation = async () => {
+    try {
+      setLoadingValidation(true);
+      // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
+      const response = await axiosCustom.get("/validation");
+      // Jika login berhasil, atur informasi pengguna di sini
+      const validUser: User = {
+        // id: response.data.data.id,
+        fullname: response.data.data.fullname,
+        role: response.data.data.role,
+        image: response.data.data.image,
+      };
+      setUser(validUser);
+    } catch (error) {
+        // console.log(error);
+    } finally{
+      setLoadingValidation(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      // Lakukan logout, misalnya dengan membersihkan informasi sesi
+      console.log(axiosCustom);
+      await axiosCustom.get("/logout");
+      setUser(null);
+      router.push("/login");
+    } catch (error: any) {
+      console.log(error);
       if (error?.response) {
         setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
       } else setMsg(`Terjadi Kesalahan: ${error.message}`);
@@ -62,37 +104,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const validation = async () => {
-    try {
-      // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      const response = await axios.get(apiCall.userValidation, {headers: {'Access-Control-Allow-Origin':'*'}});
-
-      // Jika login berhasil, atur informasi pengguna di sini
-      const validUser: User = {
-        id: response.data.data.id,
-        fullname: response.data.data.fullname,
-        role: response.data.data.role,
-        image: response.data.data.image,
-      };
-
-      setUser(validUser);
-    } catch (error) {
-        console.log(error);
-    }
-  };
-
-  const logout = () => {
-    // Lakukan logout, misalnya dengan membersihkan informasi sesi
-    setUser(null);
-    redirect('/login');
-  };
-
   useEffect(() => {
     validation();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, loading, loadingValidation }}
+    >
       <>
         <AlertBar
           isOpen={isOpen}

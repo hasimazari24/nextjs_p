@@ -1,3 +1,5 @@
+"use client";
+import { Providers } from "./components/Providers";
 import { AuthProvider } from "./components/AuthContext";
 
 export const metadata = {
@@ -13,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <Providers>
+          <AuthProvider>{children}</AuthProvider>
+        </Providers>
       </body>
     </html>
   );

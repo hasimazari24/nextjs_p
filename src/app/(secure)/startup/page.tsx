@@ -10,6 +10,7 @@ import { Column } from "react-table";
 import { User } from "types/model";
 import { useEffect, useState } from "react";
 import ModalEdit from "./modal-edit";
+import ModalDetail from "./modal-detail";
 import { Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
 import axios from "axios";
 import apiCall from "../../components/api-call";
@@ -23,6 +24,10 @@ import {
   ViewIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { NavigateOptions } from "next/dist/shared/lib/app-router-context";
+import { idText } from "typescript";
 
 interface DataItem {
   id: string;
@@ -129,26 +134,59 @@ export default function page() {
   const [textConfirm, setTextConfirm] = useState(" ");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
+  const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
+  const [dataDetail, setDataDetail] = useState<any | null>(null);
+  const router = useRouter();
+
   const renderActions = (rowData: any) => {
     return (
       <>
         <Button
-          colorScheme="brand"
-          // color="white"
+          bgColor="teal.200"
+          _hover={{
+            bg: "teal.300",
+          }}
+          color="white"
           title="Tampilkan Detail"
-          // onClick={() => handleEdit(rowData)}
-          key="editData"
+          onClick={() => handleDetail(rowData)}
+          key="dataDetail"
           size="sm"
         >
           <ViewIcon />
         </Button>
         &nbsp;
+        {/* <Link
+          href={{
+            pathname: "/startup/page-catalog",
+            query: { id: rowData.id },
+          }}
+          as="/startup/page-catalog"
+          passHref
+        >
+          <Button
+            bgColor="blue.200"
+            color="white"
+            _hover={{
+              bg: "blue.300",
+            }}
+            title="Lihat Katalog"
+            // onClick={() => router.push(`/startup/page-catalog?id=${rowData.id}`)}
+            key="catalog"
+            size="sm"
+          >
+            <HamburgerIcon />
+          </Button>
+        </Link> */}
         <Button
-          colorScheme="catalog"
-          // color="white"
+          bgColor="blue.200"
+          color="white"
+          _hover={{
+            bg: "blue.300",
+          }}
           title="Lihat Katalog"
-          // onClick={() => handleEdit(rowData)}
-          key="editData"
+          // onClick={() => router.push(`/startup/page-catalog?id=${rowData.id}`)}
+          onClick={() => {handleCatalog(rowData.id)}}
+          key="catalog"
           size="sm"
         >
           <HamburgerIcon />
@@ -182,6 +220,10 @@ export default function page() {
     setIsModalEditOpen(true);
     // console.log(item);
   };
+  const link:string = "/startup/page-catalog";
+  const handleCatalog = (id:string) => {
+    router.push(`/startup/page-catalog?id=${id}`);
+  }
 
   function handleAdd() {
     // setEditingData(null);
@@ -195,6 +237,13 @@ export default function page() {
       `Yakin ingin hapus data Tenant dengan nama : ${item.name} ?`
     );
     setIsModalDeleteOpen(true);
+  };
+
+  const handleDetail = (item: any) => {
+    setDataDetail(item);
+
+    setIsModalDetailOpen(true);
+    // console.log(dataDetail);
   };
 
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
@@ -297,11 +346,18 @@ export default function page() {
             isLoading={isLoadingDelete}
           />
 
+          {/* untuk membuka data detail */}
+          <ModalDetail
+            isOpen={isModalDetailOpen}
+            onClose={() => setIsModalDetailOpen(false)}
+            tableData={dataDetail}
+          />
+
           <DataTable
             data={dataTampil}
             column={columns}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
+            // handleEdit={handleEdit}
+            // handleDelete={handleDelete}
             hiddenColumns={hidenCols}
           >
             {(rowData: any) => renderActions(rowData)}

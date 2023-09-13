@@ -41,8 +41,6 @@ type DataTableProps<T extends object> = {
   data: T[];
   column: ReadonlyArray<Column<T>>;
   // onCellClick: (rowData: any) => void;
-  handleEdit: (rowData: any) => void;
-  handleDelete: (rowIndex: number) => void;
   hiddenColumns: string[];
   children: (rowData: any) => ReactNode; // Properti children yang menerima fungsi
 };
