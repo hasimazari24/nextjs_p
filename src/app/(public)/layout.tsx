@@ -6,15 +6,9 @@ import {
   Stack,
   Heading,
   Text,
-<<<<<<< HEAD
   Center,Spinner,
   useColorModeValue,
 } from "@chakra-ui/react";
-=======
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { Providers } from "../components/Providers";
->>>>>>> d75f85974989b7de8f5308a8d567bacfb3f9477e
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useAuth } from "../components/AuthContext";
 import { useRouter } from "next/navigation";
@@ -25,15 +19,6 @@ export const metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const { user } = useAuth();
-
-  if (user !== null && user !== 401) {
-    router.push("/");
-  }
-
-<<<<<<< HEAD
-function Layout({ children }: { children: React.ReactNode }) {
   const { user, loadingValidation } = useAuth();
   const router = useRouter();
 
@@ -41,8 +26,6 @@ function Layout({ children }: { children: React.ReactNode }) {
     router.push("/");
   }
   
-=======
->>>>>>> d75f85974989b7de8f5308a8d567bacfb3f9477e
   return (
     <main>
       {loadingValidation ? (

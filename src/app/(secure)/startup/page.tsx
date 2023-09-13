@@ -1,33 +1,22 @@
 "use client";
-import { Heading } from "@chakra-ui/layout";
-import { Container } from "@chakra-ui/layout";
-// import users from "./data/users";
+
 import DataTable from "../../components/data-table";
-// import GithubCorner from "components/github-corner";
-import type { NextPage } from "next";
-import Head from "next/head";
 import { Column } from "react-table";
-import { User } from "types/model";
 import { useEffect, useState } from "react";
 import ModalEdit from "./modal-edit";
 import ModalDetail from "./modal-detail";
 import { Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
-import axios from "axios";
-import apiCall from "../../components/api-call";
 import ConfirmationModal from "../../components/modal-confirm";
 import ModalNotif from "../../components/modal-notif";
 import {
   AddIcon,
   DeleteIcon,
   EditIcon,
-  SearchIcon,
   ViewIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { NavigateOptions } from "next/dist/shared/lib/app-router-context";
-import { idText } from "typescript";
+import { axiosCustom } from "@/app/api/axios";
 
 interface DataItem {
   id: string;
@@ -100,7 +89,7 @@ export default function page() {
   const getTampil = async () => {
     try {
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axios.get(apiCall.getStartUp);
+      const response = await axiosCustom.get("/tenant");
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
@@ -253,8 +242,8 @@ export default function page() {
       try {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
-        const response = await axios.delete(
-          apiCall.getStartUp + `/${dataDeleteId}`
+        const response = await axiosCustom.delete(
+          "/tenant" + `/${dataDeleteId}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -356,8 +345,6 @@ export default function page() {
           <DataTable
             data={dataTampil}
             column={columns}
-            // handleEdit={handleEdit}
-            // handleDelete={handleDelete}
             hiddenColumns={hidenCols}
           >
             {(rowData: any) => renderActions(rowData)}

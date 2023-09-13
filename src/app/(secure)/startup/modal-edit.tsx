@@ -27,6 +27,7 @@ import axios from "axios";
 import apiCall from "../../components/api-call";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "../../components/modal-notif";
+import { axiosCustom } from "@/app/api/axios";
 
 interface ModalProps {
   isOpen: boolean;
@@ -110,9 +111,8 @@ const ModalEdit: React.FC<ModalProps> = ({
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (isEdit) {
         // Mode edit, kirim data melalui PUT request
-        // console.log(data);
-        const url: string = apiCall.editStartUp + `${data.id}`;
-        await axios.put(url, data).then((response) => {
+        // console.log(data); axiosCustom.put("/")
+        await axiosCustom.put(`/tenant/${data.id}`, data).then((response) => {
           // setData(response.data.data);
 
           if (response.status === 200) {
@@ -124,7 +124,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         // });
       } else {
         // Mode tambah, kirim data melalui POST request
-        await axios.post(apiCall.addStartUp, data).then((response) => {
+        await axiosCustom.post("/tenant", data).then((response) => {
           // console.log(response);
           if (response.status === 200) {
             handleShowMessage("Data berhasil disimpan.", false);
@@ -183,7 +183,6 @@ const ModalEdit: React.FC<ModalProps> = ({
                 <FormControl isInvalid={!!errors.name} mb="3">
                   <Flex
                     flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
                   >
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Nama</FormLabel>
@@ -204,9 +203,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.description} mb="3">
                   <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
-                  >
+                    flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Deskripsi</FormLabel>
                     </Box>
@@ -224,9 +221,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.address} mb="3">
                   <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
-                  >
+                    flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Alamat</FormLabel>
                     </Box>
@@ -245,9 +240,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.contact} mb="3">
                   <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
-                  >
+                    flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Kontak</FormLabel>
                     </Box>
@@ -266,9 +259,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.email} mb="3">
                   <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
-                  >
+                    flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>E-Mail</FormLabel>
                     </Box>
@@ -287,9 +278,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.founder} mb="3">
                   <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
-                  >
+                    flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Founder</FormLabel>
                     </Box>
@@ -308,9 +297,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.level_tenant} mb="3">
                   <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
-                  >
+                    flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Level Tenant</FormLabel>
                     </Box>
@@ -335,9 +322,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.image} mb="3">
                   <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={["center", "flex-start"]}
-                  >
+                    flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Logo</FormLabel>
                     </Box>

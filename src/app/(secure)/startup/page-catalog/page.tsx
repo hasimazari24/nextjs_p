@@ -1,7 +1,6 @@
 "use client";
 
 import apiCall from '@/app/components/api-call';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Column } from "react-table";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
@@ -9,6 +8,7 @@ import { Button, Center, Spinner, Text, HStack } from '@chakra-ui/react';
 import DataTable from '@/app/components/data-table';
 import { DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
 import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
+import { axiosCustom } from '@/app/api/axios';
 
 interface DataItem {
   id: string;
@@ -69,8 +69,8 @@ export default function PageCatalog(props: any) {
     const getCatalog = async () => {
       try {
         // Panggil API menggunakan Axios dengan async/await
-        const response = await axios.get(
-          apiCall.getStartUp + `/${id}` + "/catalog"
+        const response = await axiosCustom.get(
+          "/tenant" + `/${id}` + "/catalog",
         );
         
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)

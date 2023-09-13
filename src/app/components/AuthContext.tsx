@@ -1,13 +1,6 @@
 // context/AuthContext.ts
 "use client";
 
-<<<<<<< HEAD
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import AlertBar from "../components/AlertBar";
-import { useRouter } from "next/navigation";
-import { axiosCustom } from "../api/axios";
-// axios.defaults.withCredentials = true;
-=======
 import {
   createContext,
   useContext,
@@ -18,7 +11,6 @@ import {
 import AlertBar from "../components/AlertBar";
 import { useRouter } from "next/navigation";
 import { axiosCustom } from "../api/axios";
->>>>>>> d75f85974989b7de8f5308a8d567bacfb3f9477e
 
 interface User {
   // id: string;
@@ -61,10 +53,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       // Jika login berhasil, atur informasi pengguna di sini
       const loggedInUser: User = {
-<<<<<<< HEAD
-        // id: response.data.data.id,
-=======
->>>>>>> d75f85974989b7de8f5308a8d567bacfb3f9477e
         fullname: response.data.data.fullname,
         role: response.data.data.role,
         image: response.data.data.image,
@@ -96,8 +84,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         image: response.data.data.image,
       };
       setUser(validUser);
-    } catch (error) {
-        // console.log(error);
+    } catch (error: any) {
+       error.response.status === 401 ? setUser(401) : setUser(null);
     } finally{
       setLoadingValidation(false);
     }
@@ -120,42 +108,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-<<<<<<< HEAD
-=======
-  const validation = async () => {
-    try {
-      // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      const response = await axiosCustom.get("/validation");
-      // Jika login berhasil, atur informasi pengguna di sini
-      const validUser: User = {
-        // id: response.data.data.id,
-        fullname: response.data.data.fullname,
-        role: response.data.data.role,
-        image: response.data.data.image,
-      };
-      setUser(validUser);
-    } catch (error: any) {
-      error.response.status === 401 ? setUser(401) : setUser(null);
-    }
-  };
-
-  const logout = async () => {
-    try {
-      // Lakukan logout, misalnya dengan membersihkan informasi sesi
-      await axiosCustom.get("/logout");
-      setUser(null);
-      router.push("/login");
-    } catch (error: any) {
-      // console.log(error);
-      if (error?.response) {
-        setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
-      } else setMsg(`Terjadi Kesalahan: ${error.message}`);
-      setstatus("error");
-      setIsOpen(true);
-    }
-  };
-
->>>>>>> d75f85974989b7de8f5308a8d567bacfb3f9477e
   useEffect(() => {
     validation();
   }, []);

@@ -26,21 +26,28 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isLoading,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Konfirmasi Hapus</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>{dataConfirm}</ModalBody>
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Konfirmasi Hapus</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>{dataConfirm}</ModalBody>
 
-        <ModalFooter>
-          <Button colorScheme="red" mr={3} onClick={onConfirm} isLoading={isLoading}>
-            Hapus
-          </Button>
-          <Button onClick={onClose}>Batal</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={onConfirm}
+              isLoading={isLoading}
+            >
+              Hapus
+            </Button>
+            <Button onClick={onClose}>Batal</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

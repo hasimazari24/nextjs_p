@@ -2,12 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
-  VStack,
   Text,
   Input,
   InputGroup,
-  InputAddon,
-  InputLeftAddon,
   Button,
   FormControl,
   FormLabel,
@@ -17,10 +14,9 @@ import {
   FormErrorMessage,
   Flex,
 } from "@chakra-ui/react";
-import axios from "axios";
-import apiCall from "../../components/api-call";
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { CheckIcon } from "@chakra-ui/icons";
 import ModalNotif from "../../components/modal-notif";
+import { axiosCustom } from "@/app/api/axios";
 
 type FormValues = {
   fullname?: string;
@@ -89,7 +85,7 @@ const MyProfile: React.FC = () => {
   const [dataTampil, setDataTampil] = useState<any | null>([]);
   const getTampil = async () => {
     try {
-      const response = await axios.get(apiCall.getProfileById);
+      const response = await axiosCustom.get("/user/edit-profile");
       const timer = setTimeout(() => {
         setDataTampil(response.data.data);
         setIsLoading(false);
@@ -111,7 +107,7 @@ const MyProfile: React.FC = () => {
   const onSubmitProfile: SubmitHandler<FormValues> = async (data) => {
     setIsLoadingEdit(true);
     try {
-      await axios.put(apiCall.getProfileById, data).then((response) => {
+      await axiosCustom.put("/user/edit-profile", data).then((response) => {
         // setData(response.data.data);
         if (response.status === 200) {
           const timer = setTimeout(() => {
@@ -137,8 +133,8 @@ const MyProfile: React.FC = () => {
   const onSubmitPassword: SubmitHandler<FormValues> = async (data) => {
     setIsLoadingEdit(true);
     try {
-      await axios
-        .put(apiCall.getProfileById + "/password", data)
+      await axiosCustom
+        .put("/user/edit-password", data)
         .then((response) => {
           // setData(response.data.data);
           console.log(response);
