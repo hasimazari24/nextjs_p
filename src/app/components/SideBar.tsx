@@ -7,23 +7,13 @@ import {
   Icon,
   useColorModeValue,
   Text,
-  Drawer,
-  DrawerContent,
-  useDisclosure,
   BoxProps,
   FlexProps,
-  // NextLink,
-  Spinner,
 } from "@chakra-ui/react";
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-} from "react-icons/fi";
-import React, { useState, useEffect } from "react";
+import { AiOutlineDashboard } from "react-icons/ai";
+import { BsBuilding, BsPeople } from "react-icons/bs";
 import { IconType } from "react-icons";
+import { useAuth } from "./AuthContext";
 
 interface LinkItemProps {
   name: string;
@@ -41,63 +31,72 @@ interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
 
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: FiHome, href: '/dashboard' },
-  { name: "Data Start-Up", icon: FiTrendingUp, href: '/startup' },
-  //   { name: "Data User", icon: FiCompass },
-  //   { name: "Favourites", icon: FiStar },
-  //   { name: "Settings", icon: FiSettings },
+const LinkItems_admin: Array<LinkItemProps> = [
+  { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
+  { name: "Data Tenant", icon: BsBuilding, href: "/startup" },
+  { name: "Data User", icon: BsPeople, href: "/user" },
 ];
 
-
+const LinkItems_tenant: Array<LinkItemProps> = [
+  { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
+  { name: "Data Tenant", icon: BsBuilding, href: "/startup" },
+];
 
 const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const handleNavigation = () => {
-    setIsLoading(true); // Set isLoading menjadi true saat memulai navigasi
-  };
-
-  useEffect(() => {
-    if (isLoading) {
-      setIsLoading(false); // Setelah navigasi selesai, kembalikan isLoading menjadi false
-    }
-  }, [isLoading]);
-
   return (
-    <Box onClick={handleNavigation}>
-      <NextLink href={link} passHref>
-        <Flex
-          align="center"
-          p="4"
-          mx="4"
-          borderRadius="lg"
-          role="group"
-          cursor="pointer"
-          _hover={{
-            bg: "cyan.400",
-            color: "white",
-          }}
-          {...rest}
-        >
-          {icon && (
-            <Icon
-              mr="4"
-              fontSize="16"
-              _groupHover={{
-                color: "white",
-              }}
-              as={icon}
-            />
-          )}
-          {children}
-          &nbsp; {isLoading ? <Spinner size="sm" /> : " "}
-        </Flex>
-      </NextLink>
-    </Box>
+    <NextLink href={link} passHref>
+      {/* <a> */}
+      <Flex
+        align="center"
+        p="4"
+        mx="4"
+        borderRadius="lg"
+        role="group"
+        cursor="pointer"
+        _hover={{
+          bg: "cyan.400",
+          color: "white",
+        }}
+        {...rest}
+      >
+        {icon && (
+          <Icon
+            mr="2.5"
+            fontSize="18"
+            _groupHover={{
+              color: "white",
+            }}
+            as={icon}
+          />
+        )}
+        {children}
+      </Flex>
+      {/* </a> */}
+    </NextLink>
   );
 };
 
 const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
+  const { user } = useAuth();
+  const getUser: any = user;
+
+  const renderMenu = () => {
+    if (getUser){
+      if (getUser?.role === "Super Admin") {
+        return LinkItems_admin.map((link) => (
+          <NavItem key={link.name} icon={link.icon} link={link.href}>
+            {link.name}
+          </NavItem>
+        ));
+      } if (getUser?.role === "Tenant") {
+        return LinkItems_tenant.map((link) => (
+          <NavItem key={link.name} icon={link.icon} link={link.href}>
+            {link.name}
+          </NavItem>
+        ));
+      }
+    }
+  }
   return (
     <Box
       transition="3s ease"
@@ -116,38 +115,10 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
 
-      {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} link={link.href}>
-          {link.name}
-        </NavItem>
-      ))}
+      {renderMenu()}
+
     </Box>
   );
 };
-
-// const Sidebar = () => {
-//   const { isOpen, onOpen, onClose } = useDisclosure();
-
-//   return (
-//     <Box>
-//       <SidebarContent
-//         onClose={() => onClose}
-//         display={{ base: "none", md: "block" }}
-//       />
-//       <Drawer
-//         isOpen={isOpen}
-//         placement="left"
-//         onClose={onClose}
-//         returnFocusOnClose={false}
-//         onOverlayClick={onClose}
-//         size="full"
-//       >
-//         <DrawerContent>
-//           <SidebarContent onClose={onClose} />
-//         </DrawerContent>
-//       </Drawer>
-//     </Box>
-//   );
-// };
 
 export default Sidebar;
