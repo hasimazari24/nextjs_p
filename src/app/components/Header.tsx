@@ -15,7 +15,7 @@ import {
   Menu,
   MenuButton,
   Button,
-  Divider,
+  Divider,Img,
   MenuItem,
   List,
   ListItem,
@@ -59,7 +59,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
     setIsOpen(false);
   };
 
-  const { user, logout } = useAuth();
+  const { user, logout, loadingLogOut } = useAuth();
   const getUser: any = user;
 
   return (
@@ -71,7 +71,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent={{ base: "space-between", md: "flex-end" }}
+      justifyContent={"space-between"}
       {...rest}
     >
       <IconButton
@@ -82,16 +82,25 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
         icon={<FiMenu />}
       />
 
-      <Text
-        display={{ base: "flex", md: "none" }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold"
-      >
-        Logo
-      </Text>
+      {/* <Box display={{ base: "flex", md: "none" }}>
+        <Img src="/img/LOGO-STP.png" h="50px" />
+      </Box> */}
 
-      <HStack>
+      <HStack display={{ base: "flex", md: "flex-start" }}>
+        <VStack
+          display={{ base: "none", md: "flex" }}
+          alignItems="flex-start"
+          spacing="1px"
+          ml="2"
+        >
+          <Text fontSize="sm">{getUser ? getUser.fullname : null}</Text>
+          <Text fontSize="xs" color="gray.600">
+            {getUser ? getUser.role : null}
+          </Text>
+        </VStack>
+      </HStack>
+
+      <HStack display={{ base: "flex", md: "flex-end" }}>
         {/* <IconButton
           size="lg"
           variant="ghost"
@@ -185,6 +194,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                     size="sm"
                     fontWeight="normal"
                     onClick={logout}
+                    isLoading={loadingLogOut}
                   >
                     Log Out&nbsp;
                     <RiLogoutBoxRLine />

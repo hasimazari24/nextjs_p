@@ -2,10 +2,10 @@
 
 import DataTable from "../../components/data-table";
 import { Column } from "react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ModalEdit from "./modal-edit";
 import ModalDetail from "./modal-detail";
-import { Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
+import { Button, Center, HStack, Spinner, Text, Heading, Flex } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal-confirm";
 import ModalNotif from "../../components/modal-notif";
 import {
@@ -16,6 +16,7 @@ import {
   HamburgerIcon,
 } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
+// import { useNavigate } from "react-router-dom";
 import { axiosCustom } from "@/app/api/axios";
 
 interface DataItem {
@@ -127,6 +128,16 @@ export default function page() {
   const [dataDetail, setDataDetail] = useState<any | null>(null);
   const router = useRouter();
 
+  const filterOptions = [
+    { key: "name", label: "Nama" },
+    { key: "address", label: "Alamat" },
+    {
+      key: "level_tenant",
+      label: "Level",
+      values: ["Pra Inkubasi", "Inkubasi", "Inkubasi Lanjutan", "Scale Up"],
+    }, // Nilai-nilai usia yang dapat difilter
+  ];
+
   const renderActions = (rowData: any) => {
     return (
       <>
@@ -173,8 +184,15 @@ export default function page() {
             bg: "blue.300",
           }}
           title="Lihat Katalog"
-          // onClick={() => router.push(`/startup/page-catalog?id=${rowData.id}`)}
-          onClick={() => {handleCatalog(rowData.id)}}
+          // onClick={() =>
+          //   navigate(
+          //     {
+          //       pathname<string, any> : "/startup/page-catalog",
+          //       query<string, any> : { id: rowData.id },
+          //     }
+          //   )
+          // }
+          onClick={() => router.push(`/startup/page-catalog?id=${rowData.id}`)}
           key="catalog"
           size="sm"
         >
@@ -209,10 +227,12 @@ export default function page() {
     setIsModalEditOpen(true);
     // console.log(item);
   };
-  const link:string = "/startup/page-catalog";
-  const handleCatalog = (id:string) => {
-    router.push(`/startup/page-catalog?id=${id}`);
-  }
+
+
+  // const handleCatalog = (id:string) => {
+  //   router.push(`/startup/page-catalog`);
+  //   getCatalog(id);
+  // }
 
   function handleAdd() {
     // setEditingData(null);
@@ -285,20 +305,22 @@ export default function page() {
         </Center>
       ) : (
         <>
-          <HStack>
-            <Text fontSize="lg" fontWeight="bold">
-              DATA START-UP
-            </Text>
+          <Flex
+            justifyContent={"space-between"}
+            pb="2"
+            direction={["column", "row"]}
+          >
+            <Heading fontSize={"2xl"}>DAFTAR TENANT</Heading>
             <Button
               colorScheme="green"
               key="tambahData"
-              size="sm"
+              size="md"
               onClick={handleAdd}
             >
               <AddIcon />
-              &nbsp;Tambah
+              &nbsp;Tambah Baru
             </Button>
-          </HStack>
+          </Flex>
           {/* {editingData && ( */}
           <ModalEdit
             // isOpen={isModalOpen}
@@ -346,6 +368,7 @@ export default function page() {
             data={dataTampil}
             column={columns}
             hiddenColumns={hidenCols}
+            filterOptions={filterOptions}
           >
             {(rowData: any) => renderActions(rowData)}
           </DataTable>

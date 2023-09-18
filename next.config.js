@@ -6,7 +6,7 @@ module.exports = {
   env: {
     APP_NAME: "SIMANTO-STP",
     APP_DESCRIPTION:
-      "Sistem Informasi Menejemen dan Mentoring Tenant Solo Technopark",
+      "Sistem Informasi Manajemen dan Mentoring Tenant Solo Technopark",
     APP_URL: "http://localhost:3000",
     API_URL: "http://localhost:8000/api",
   },

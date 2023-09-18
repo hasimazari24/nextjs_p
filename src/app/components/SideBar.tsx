@@ -9,6 +9,7 @@ import {
   Text,
   BoxProps,
   FlexProps,
+  Img,
 } from "@chakra-ui/react";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { BsBuilding, BsPeople } from "react-icons/bs";
@@ -32,7 +33,7 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems_admin: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
+  { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
   { name: "Data Tenant", icon: BsBuilding, href: "/startup" },
   { name: "Data User", icon: BsPeople, href: "/user" },
 ];
@@ -109,14 +110,11 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
+        <Img src="/img/LOGO-STP.png" h="50px" />
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
 
       {renderMenu()}
-
     </Box>
   );
 };

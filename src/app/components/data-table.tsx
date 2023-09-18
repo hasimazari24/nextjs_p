@@ -13,6 +13,8 @@ import {
   Flex,
   Wrap,
   WrapItem,
+  InputLeftElement,
+  InputGroup,Input,
 } from "@chakra-ui/react";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import React, { ReactNode, useState } from "react";
@@ -22,6 +24,7 @@ import {
   HiChevronLeft,
   HiChevronRight,
 } from "react-icons/hi";
+import { SearchIcon } from "@chakra-ui/icons";
 import {
   Column,
   useFilters,
@@ -33,7 +36,7 @@ import {
 } from "react-table";
 import GotoForm from "./goto-form";
 import Pagination from "./pagination";
-import TextField from "./text-field";
+// import TextField from "./text-field";
 import { Columns } from "lucide-react";
 // import { EditIcon } from "lucide-react";
 
@@ -42,6 +45,7 @@ type DataTableProps<T extends object> = {
   column: ReadonlyArray<Column<T>>;
   // onCellClick: (rowData: any) => void;
   hiddenColumns: string[];
+  filterOptions: { key: string; label: string; values?: string[] }[];
   children: (rowData: any) => ReactNode; // Properti children yang menerima fungsi
 };
 
@@ -119,8 +123,44 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
 
   return (
     <Box>
-      <Box justifyContent="space-between" mt="4" mb="2" display="flex">
-        <HStack>
+      <Flex
+        mt="4"
+        mb="2"
+        justifyContent="space-between"
+        direction={["column", "row"]}
+      >
+        <HStack display={{ base: "flex", md: "flex-start" }}>
+          <Flex direction={["column", "row"]}>
+            {props.filterOptions.map((option) =>
+              option.values ? (
+                <Select
+                  onChange={(e) => setFilter(option.key, e.target.value)}
+                >
+                  <option value="">Semua {option.label}</option>
+                  {option.values.map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </Select>
+              ) : (
+                <InputGroup px="2" >
+                  <InputLeftElement pointerEvents="none">
+                    <Button leftIcon={<SearchIcon />}></Button>
+                  </InputLeftElement>
+                  <Input
+                    pl="3rem"
+                    key={option.key}
+                    type="text"
+                    placeholder={`Cari ${option.label}`}
+                    onChange={(e) => setFilter(option.key, e.target.value)}
+                  />
+                </InputGroup>
+              ),
+            )}
+          </Flex>
+        </HStack>
+        <HStack display={{ base: "flex", md: "flex-end" }}>
           <p>&nbsp; Showing</p>
           <Select
             w="20"
@@ -138,12 +178,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
           </Select>
           <p>Data Per Page</p>
         </HStack>
-        <Wrap>
-          <WrapItem>
-            <TextField onChangeDebounce={setGlobalFilter} />
-          </WrapItem>
-        </Wrap>
-      </Box>
+      </Flex>
 
       <TableContainer>
         <Table {...getTableProps()} mt="4" variant="striped">

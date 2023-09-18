@@ -25,6 +25,7 @@ interface AuthContextType {
   logout: () => void;
   loading: boolean;
   loadingValidation: boolean;
+  loadingLogOut: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,7 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null | 401>(null);
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
+  const [loadingValidation, setLoadingValidation] = useState<boolean>(true);
+  const [loadingLogOut, setLoadingLogOut] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const [msg, setMsg] = useState("");
@@ -42,8 +44,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   >("error");
 
   const login = async (username: string, password: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
       // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
       const response = await axiosCustom.post("/login", {
         usernameoremail: username,
@@ -66,9 +68,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else setMsg(`Terjadi Kesalahan: ${error.message}`);
       setstatus("error");
       setIsOpen(true);
-    } finally {
-      setLoading(false); // Set loading menjadi false setelah proses login selesai
     }
+    setLoading(false);
   };
 
   const validation = async () => {
@@ -93,19 +94,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      // Lakukan logout, misalnya dengan membersihkan informasi sesi
-      console.log(axiosCustom);
-      await axiosCustom.get("/logout");
-      setUser(null);
-      router.push("/login");
+      setLoadingLogOut(true);
+      await axiosCustom.get("/logout").then(() => {
+        router.push("/login");
+        setUser(null);
+      });
+      
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       if (error?.response) {
         setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
       } else setMsg(`Terjadi Kesalahan: ${error.message}`);
       setstatus("error");
       setIsOpen(true);
     }
+    setLoadingLogOut(false);
   };
 
   useEffect(() => {
@@ -114,7 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, loading, loadingValidation }}
+      value={{ user, login, logout, loading, loadingValidation, loadingLogOut }}
     >
       <>
         <AlertBar

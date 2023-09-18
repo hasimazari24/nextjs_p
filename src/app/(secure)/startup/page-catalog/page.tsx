@@ -1,6 +1,5 @@
 "use client";
 
-import apiCall from '@/app/components/api-call';
 import React, { useEffect, useState } from 'react';
 import { Column } from "react-table";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
@@ -9,6 +8,9 @@ import DataTable from '@/app/components/data-table';
 import { DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
 import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
 import { axiosCustom } from '@/app/api/axios';
+import { useAPIContext } from '../context/StartUpContext';
+import ModalEditCatalog from './modal-edit-catalog';
+import ConfirmationModal from '@/app/components/modal-confirm';
 
 interface DataItem {
   id: string;
@@ -16,127 +18,255 @@ interface DataItem {
   description: string;
 }
 
-export default function PageCatalog(props: any) {
-    const hidenCols = ["id"];
-    const columns: ReadonlyArray<Column<DataItem>> = [
-      {
-        Header: "id",
-        accessor: "id",
-      },
-      {
-        Header: "title",
-        accessor: "title",
-      },
-      {
-        Header: "description",
-        accessor: "description",
-      },
-    ];
+export default function PageCatalog() {
+  const hidenCols = ["id"];
+  const [isModalNotif, setModalNotif] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const handleShowMessage = (msg: string, err: boolean) => {
+    setMessage(msg);
+    setIsError(err);
+    setModalNotif(true);
+  };
 
-    const renderActions = (rowData: any) => {
-      return (
-        <>
-          <Button
-            colorScheme="blue"
-            title="Edit Data"
-            // onClick={() => handleEdit(rowData)}
-            key="editData"
-            size="sm"
-          >
-            <EditIcon />
-          </Button>
-          &nbsp;
-          <Button
-            title="Hapus Data"
-            colorScheme="red"
-            // onClick={() => handleDelete(rowData)}
-            key="hapusData"
-            size="sm"
-          >
-            <DeleteIcon />
-          </Button>
-        </>
-      );
-    };
+  //handle edit data
+  const [editingData, setEditingData] = useState<any | null>(null);
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 
-    //daptein id dari query link router
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const router = useRouter();
+  //handle tambah data
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+  // const [selectedData, setSelectedData] = useState<any | null>(null);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [dataCatalog, setDataCatalog] = useState<any | null>([]);
-    const getCatalog = async () => {
+  //handle hapus
+  const [dataDeleteId, setDataDeleteId] = useState<number | null>(null);
+  const [textConfirm, setTextConfirm] = useState(" ");
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+  const columns: ReadonlyArray<Column<DataItem>> = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "title",
+      accessor: "title",
+    },
+    {
+      Header: "description",
+      accessor: "description",
+    },
+  ];
+
+  const [dataCatalog, setDataCatalog] = useState<any[]>([]);
+  const searchParams = useSearchParams();
+  const idTenant = searchParams.get("id");
+  const [loadingCatalog, setLoadingCatalog] = useState<boolean>(false);
+
+  const getCatalog = async () => {
+    try {
+      setLoadingCatalog(true);
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(`/tenant/${idTenant}/catalog`);
+
+      // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
+      const timer = setTimeout(() => {
+        setDataCatalog(response.data.data);
+        // setIdTenant(id);
+        // console.log(dataCatalog);
+        setLoadingCatalog(false); // Set isLoading to false to stop the spinner
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    } catch (error) {
+      console.error("Gagal memuat data:", error);
+      setLoadingCatalog(false);
+    }
+  };
+  
+  useEffect(() => {
+    // Panggil fungsi fetchData untuk memuat data
+    getCatalog();
+    // Clear the timeout when the component is unmounted
+  }, []);
+
+  const renderActions = (rowData: any) => {
+    return (
+      <>
+        <Button
+          colorScheme="blue"
+          title="Edit Data"
+          onClick={() => handleEdit(rowData)}
+          key="editData"
+          size="sm"
+        >
+          <EditIcon />
+        </Button>
+        &nbsp;
+        <Button
+          title="Hapus Data"
+          colorScheme="red"
+          onClick={() => handleDelete(rowData)}
+          key="hapusData"
+          size="sm"
+        >
+          <DeleteIcon />
+        </Button>
+      </>
+    );
+  };
+
+  const router = useRouter();
+
+  const handleEdit = (item: any) => {
+    setEditingData(item);
+    setIsModalEditOpen(true);
+    // console.log(item);
+  };
+
+  function handleAdd() {
+    // setEditingData(null);
+    setIsModalAddOpen(true);
+    // console.log(editingData);
+  }
+
+  const handleDelete = (item: any) => {
+    setDataDeleteId(item.id);
+    setTextConfirm(
+      `Yakin ingin hapus data Tenant dengan Judul : ${item.title} ?`,
+    );
+    setIsModalDeleteOpen(true);
+  };
+
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+  const deleteData = async () => {
+    if (dataDeleteId !== null) {
+      // Lakukan penghapusan data berdasarkan dataToDeleteId
       try {
+        setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
-        const response = await axiosCustom.get(
-          "/tenant" + `/${id}` + "/catalog",
+        const response = await axiosCustom.delete(
+          "/tenant-catalog" + `/${dataDeleteId}`,
         );
-        
+
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
         const timer = setTimeout(() => {
-          setDataCatalog(response.data.data);
-          console.log(dataCatalog);
-          setIsLoading(false); // Set isLoading to false to stop the spinner
+          // console.log(response);
+          if (response.status === 200) {
+            setIsLoadingDelete(false);
+            setIsModalDeleteOpen(false);
+            handleShowMessage("Data berhasil dihapus.", false);
+            // getCatalog(idTenant);
+          }
         }, 1000);
 
+        await getCatalog();
+
         return () => clearTimeout(timer);
-      } catch (error) {
-        console.error("Gagal memuat data:", error);
-        setIsLoading(false);
+      } catch (error: any) {
+        if (error?.response) {
+          handleShowMessage(
+            `Terjadi Kesalahan: ${error.response.data.message}`,
+            true,
+          );
+        } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        setIsLoadingDelete(false);
       }
-    };
+      setDataDeleteId(null);
+    }
+  };
 
-    useEffect(() => {
-      // Panggil fungsi fetchData untuk memuat data
-      getCatalog();
-    }, []);
+  const handleSaveData = () => {
+    setIsModalAddOpen(false);
+    setIsModalEditOpen(false);
+  };
 
-    return (
-      <div>
-        {isLoading ? (
-          <Center h="100%" m="10">
-            <Spinner className="spinner" size="xl" color="blue.500" />
-          </Center>
-        ) : (
-          <>
-            <HStack pb="3">
-              <Button
-                bgColor="grey.400"
-                color="white"
-                _hover={{
-                  bg: "grey.500",
-                }}
-                key="kembali"
-                size="sm"
-                onClick={() => {router.push('/startup')}}
-              >
-                <AiOutlineRollback />
-                &nbsp;Kembali
-              </Button>
-              <Button
-                colorScheme="green"
-                key="tambahData"
-                size="sm"
-                // onClick={handleAdd}
-              >
-                <AddIcon />
-                &nbsp;Tambah
-              </Button>
-            </HStack>
-            <Text fontSize="lg" fontWeight="bold">
-              CATALOG TENANT
-            </Text>
 
-            <DataTable
-              data={dataCatalog}
-              column={columns}
-              hiddenColumns={hidenCols}
+  // const [dataCatalog, setDataCatalog] = useState<any | null>([]);
+  return (
+    <div>
+      {loadingCatalog ? (
+        <Center h="100%" m="10">
+          <Spinner className="spinner" size="xl" color="blue.500" />
+        </Center>
+      ) : (
+        <>
+          <HStack pb="3">
+            <Button
+              bgColor="grey.400"
+              color="white"
+              _hover={{
+                bg: "grey.500",
+              }}
+              key="kembali"
+              size="sm"
+              onClick={() => {
+                router.push("/startup");
+              }}
             >
-              {(rowData: any) => renderActions(rowData)}
-            </DataTable>
-          </>
-        )}
-      </div>
-    );
+              <AiOutlineRollback />
+              &nbsp;Kembali
+            </Button>
+            <Button
+              colorScheme="green"
+              key="tambahData"
+              size="sm"
+              onClick={handleAdd}
+            >
+              <AddIcon />
+              &nbsp;Tambah
+            </Button>
+          </HStack>
+          <Text fontSize="lg" fontWeight="bold">
+            CATALOG TENANT
+          </Text>
+
+          <DataTable
+            data={dataCatalog}
+            column={columns}
+            hiddenColumns={hidenCols}
+          >
+            {(rowData: any) => renderActions(rowData)}
+          </DataTable>
+        </>
+      )}
+
+      {/* {editingData && ( */}
+      <ModalEditCatalog
+        // isOpen={isModalOpen}
+        // onClose={() => setIsModalOpen(false)}
+        // data={editingData}
+        isOpen={isModalEditOpen}
+        onClose={() => setIsModalEditOpen(false)}
+        onSubmit={() => {
+          handleSaveData;
+          setEditingData(null);
+          getCatalog();
+          // getTampil();
+        }}
+        isEdit={true}
+        formData={editingData}
+      />
+
+      {/* untuk menambah data baru */}
+      <ModalEditCatalog
+        isOpen={isModalAddOpen}
+        onClose={() => setIsModalAddOpen(false)}
+        onSubmit={() => {
+          handleSaveData;
+          getCatalog();
+        }}
+        isEdit={false}
+        idTenant={idTenant}
+      />
+
+      {/* Modal hapus data */}
+      <ConfirmationModal
+        isOpen={isModalDeleteOpen}
+        onClose={() => setIsModalDeleteOpen(false)}
+        onConfirm={deleteData}
+        dataConfirm={textConfirm}
+        isLoading={isLoadingDelete}
+      />
+    </div>
+  );
 }
