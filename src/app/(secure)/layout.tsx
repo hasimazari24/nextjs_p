@@ -10,7 +10,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import Sidebar from "../components/template/SideBar";
-import Header from "../components/Header";
+import Header from "../components/template/Header";
 import { redirect } from "next/navigation";
 import { useAuth } from "../components/utils/AuthContext";
 
