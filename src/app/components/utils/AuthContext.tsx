@@ -8,9 +8,9 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import AlertBar from "../components/AlertBar";
+import AlertBar from "../modal/AlertBar";
 import { useRouter } from "next/navigation";
-import { axiosCustom } from "../api/axios";
+import { axiosCustom } from "../../api/axios";
 
 interface User {
   // id: string;
@@ -86,8 +86,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       setUser(validUser);
     } catch (error: any) {
-       error.response.status === 401 ? setUser(401) : setUser(null);
-    } finally{
+      error.response.status === 401 ? setUser(401) : setUser(null);
+    } finally {
       setLoadingValidation(false);
     }
   };
@@ -99,7 +99,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         router.push("/login");
         setUser(null);
       });
-      
     } catch (error: any) {
       // console.log(error);
       if (error?.response) {

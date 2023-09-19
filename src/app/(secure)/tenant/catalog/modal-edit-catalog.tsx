@@ -26,7 +26,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
-import { useAPIContext } from "../context/StartUpContext";
 
 interface ModalProps {
   isOpen: boolean;
@@ -80,7 +79,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
-
+    
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (isEdit) {
@@ -102,14 +101,13 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         // Mode tambah, kirim data melalui POST request
         const getIdTenant: any = idTenant;
         await axiosCustom
-          .post("/tenant-catalog/", {
-            id_tenant: getIdTenant,
+          .post(`/tenant-catalog/${getIdTenant}`, {
             title: data.title,
             description: data.description,
           })
           .then((response) => {
             // console.log(response);
-            if (response.status === 200) {
+            if (response.status === 201) {
               handleShowMessage("Data berhasil disimpan.", false);
             }
           });

@@ -14,7 +14,7 @@ import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useAuth } from "../../components/AuthContext";
+import { useAuth } from "../../components/utils/AuthContext";
 
 interface Formlogin {
   usernameoremail: string;

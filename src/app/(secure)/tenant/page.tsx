@@ -1,11 +1,24 @@
 "use client";
 
-import DataTable from "../../components/data-table";
+import DataTable from "../../components/datatable/data-table";
 import { Column } from "react-table";
 import { useEffect, useState, useContext } from "react";
 import ModalEdit from "./modal-edit";
 import ModalDetail from "./modal-detail";
-import { Button, Center, HStack, Spinner, Text, Heading, Flex } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  HStack,
+  Spinner,
+  Text,
+  Heading,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal-confirm";
 import ModalNotif from "../../components/modal-notif";
 import {
@@ -17,6 +30,9 @@ import {
 } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 // import { useNavigate } from "react-router-dom";
+import { GrMoreVertical } from "react-icons/gr";
+import { SiMicrosoftteams } from "react-icons/si";
+import { BiLinkExternal } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
 
 interface DataItem {
@@ -135,88 +151,63 @@ export default function page() {
       key: "level_tenant",
       label: "Level",
       values: ["Pra Inkubasi", "Inkubasi", "Inkubasi Lanjutan", "Scale Up"],
-    }, // Nilai-nilai usia yang dapat difilter
+    },
   ];
 
   const renderActions = (rowData: any) => {
     return (
       <>
-        <Button
-          bgColor="teal.200"
-          _hover={{
-            bg: "teal.300",
-          }}
-          color="white"
-          title="Tampilkan Detail"
-          onClick={() => handleDetail(rowData)}
-          key="dataDetail"
-          size="sm"
-        >
-          <ViewIcon />
-        </Button>
-        &nbsp;
-        {/* <Link
-          href={{
-            pathname: "/startup/page-catalog",
-            query: { id: rowData.id },
-          }}
-          as="/startup/page-catalog"
-          passHref
-        >
-          <Button
-            bgColor="blue.200"
-            color="white"
+        <Menu>
+          <MenuButton
+            as={Button}
+            bgColor="green.100"
             _hover={{
-              bg: "blue.300",
+              bg: "green.200",
             }}
-            title="Lihat Katalog"
-            // onClick={() => router.push(`/startup/page-catalog?id=${rowData.id}`)}
-            key="catalog"
+            // color="white"
+            title="More ..."
+            // onClick={() => handleDetail(rowData)}
+            key="dataDetail"
             size="sm"
           >
-            <HamburgerIcon />
-          </Button>
-        </Link> */}
-        <Button
-          bgColor="blue.200"
-          color="white"
-          _hover={{
-            bg: "blue.300",
-          }}
-          title="Lihat Katalog"
-          // onClick={() =>
-          //   navigate(
-          //     {
-          //       pathname<string, any> : "/startup/page-catalog",
-          //       query<string, any> : { id: rowData.id },
-          //     }
-          //   )
-          // }
-          onClick={() => router.push(`/startup/page-catalog?id=${rowData.id}`)}
-          key="catalog"
-          size="sm"
-        >
-          <HamburgerIcon />
-        </Button>
+            <GrMoreVertical />
+          </MenuButton>
+          <MenuList>
+            <MenuItem>
+              <BiLinkExternal />
+              &nbsp; Lihat Situs
+            </MenuItem>
+            <MenuItem
+              onClick={() => router.push(`/tenant/catalog?id=${rowData.id}`)}
+            >
+              <HamburgerIcon />
+              &nbsp; Catalog Tenant
+            </MenuItem>
+            <MenuItem
+              onClick={() => router.push(`/tenant/team?id=${rowData.id}`)}
+            >
+              <SiMicrosoftteams />
+              &nbsp; Team Tenant
+            </MenuItem>
+            <MenuItem onClick={() => handleDelete(rowData)}>
+              <DeleteIcon />
+              &nbsp; Hapus Tenant
+            </MenuItem>
+          </MenuList>
+        </Menu>
         &nbsp;
         <Button
-          colorScheme="blue"
+          bgColor="blue.100"
+          _hover={{
+            bg: "blue.200",
+          }}
+          // color="white"
           title="Edit Data"
           onClick={() => handleEdit(rowData)}
           key="editData"
           size="sm"
         >
           <EditIcon />
-        </Button>
-        &nbsp;
-        <Button
-          title="Hapus Data"
-          colorScheme="red"
-          onClick={() => handleDelete(rowData)}
-          key="hapusData"
-          size="sm"
-        >
-          <DeleteIcon />
         </Button>
       </>
     );
@@ -228,9 +219,8 @@ export default function page() {
     // console.log(item);
   };
 
-
   // const handleCatalog = (id:string) => {
-  //   router.push(`/startup/page-catalog`);
+  //   router.push(`/tenant/page-catalog`);
   //   getCatalog(id);
   // }
 
@@ -243,7 +233,7 @@ export default function page() {
   const handleDelete = (item: any) => {
     setDataDeleteId(item.id);
     setTextConfirm(
-      `Yakin ingin hapus data Tenant dengan nama : ${item.name} ?`
+      `Yakin ingin hapus data Tenant dengan nama : ${item.name} ?`,
     );
     setIsModalDeleteOpen(true);
   };
@@ -283,7 +273,7 @@ export default function page() {
         if (error?.response) {
           handleShowMessage(
             `Terjadi Kesalahan: ${error.response.data.message}`,
-            true
+            true,
           );
         } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
         setIsLoadingDelete(false);

@@ -6,7 +6,7 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Center, 
+  Center,
   BoxProps,
   FlexProps,
   Img,
@@ -14,7 +14,7 @@ import {
 import { AiOutlineDashboard } from "react-icons/ai";
 import { BsBuilding, BsPeople } from "react-icons/bs";
 import { IconType } from "react-icons";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../utils/AuthContext";
 
 interface LinkItemProps {
   name: string;
@@ -34,13 +34,13 @@ interface SidebarProps extends BoxProps {
 
 const LinkItems_admin: Array<LinkItemProps> = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
-  { name: "Data Tenant", icon: BsBuilding, href: "/startup" },
+  { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
   { name: "Data User", icon: BsPeople, href: "/user" },
 ];
 
 const LinkItems_tenant: Array<LinkItemProps> = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-  { name: "Data Tenant", icon: BsBuilding, href: "/startup" },
+  { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
 ];
 
 const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
@@ -82,14 +82,15 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
   const getUser: any = user;
 
   const renderMenu = () => {
-    if (getUser){
+    if (getUser) {
       if (getUser?.role === "Super Admin") {
         return LinkItems_admin.map((link) => (
           <NavItem key={link.name} icon={link.icon} link={link.href}>
             {link.name}
           </NavItem>
         ));
-      } if (getUser?.role === "Tenant") {
+      }
+      if (getUser?.role === "Tenant") {
         return LinkItems_tenant.map((link) => (
           <NavItem key={link.name} icon={link.icon} link={link.href}>
             {link.name}
@@ -97,7 +98,7 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
         ));
       }
     }
-  }
+  };
   return (
     <Box
       transition="3s ease"
@@ -109,8 +110,8 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Img src="/img/LOGO-STP.png" h="50px" />
+      <Flex h="16" alignItems="center" mx="8" justifyContent="center">
+        <Img src="/img/LOGO-STP.png" h="35px" />
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
 

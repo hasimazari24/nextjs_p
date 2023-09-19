@@ -1,16 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
-import { Button, Center, Spinner, Text, HStack } from '@chakra-ui/react';
-import DataTable from '@/app/components/data-table';
-import { DeleteIcon, EditIcon, AddIcon } from '@chakra-ui/icons';
+import {
+  Button,
+  Center,
+  Spinner,
+  Text,
+  HStack,
+  Heading,
+  Flex,
+} from "@chakra-ui/react";
+import DataTable from "@/app/components/datatable/data-table";
+import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
-import { axiosCustom } from '@/app/api/axios';
-import { useAPIContext } from '../context/StartUpContext';
-import ModalEditCatalog from './modal-edit-catalog';
-import ConfirmationModal from '@/app/components/modal-confirm';
+import { axiosCustom } from "@/app/api/axios";
+import ModalEditCatalog from "./modal-team";
+import ConfirmationModal from "@/app/components/modal/modal-confirm";
 
 interface DataItem {
   id: string;
@@ -42,6 +49,8 @@ export default function PageCatalog() {
   const [textConfirm, setTextConfirm] = useState(" ");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
+  const filterOptions = [{ key: "title", label: "Judul" }];
+
   const columns: ReadonlyArray<Column<DataItem>> = [
     {
       Header: "id",
@@ -60,17 +69,19 @@ export default function PageCatalog() {
   const [dataCatalog, setDataCatalog] = useState<any[]>([]);
   const searchParams = useSearchParams();
   const idTenant = searchParams.get("id");
+  const [namaTenant, setNamaTenant] = useState("");
   const [loadingCatalog, setLoadingCatalog] = useState<boolean>(false);
 
   const getCatalog = async () => {
     try {
       setLoadingCatalog(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant/${idTenant}/catalog`);
+      const response = await axiosCustom.get(`/tenant-catalog/${idTenant}`);
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
-        setDataCatalog(response.data.data);
+        setDataCatalog(response.data.data.catalog);
+        setNamaTenant(response.data.data.name);
         // setIdTenant(id);
         // console.log(dataCatalog);
         setLoadingCatalog(false); // Set isLoading to false to stop the spinner
@@ -82,7 +93,7 @@ export default function PageCatalog() {
       setLoadingCatalog(false);
     }
   };
-  
+
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
     getCatalog();
@@ -93,7 +104,10 @@ export default function PageCatalog() {
     return (
       <>
         <Button
-          colorScheme="blue"
+          bgColor="blue.100"
+          _hover={{
+            bg: "blue.200",
+          }}
           title="Edit Data"
           onClick={() => handleEdit(rowData)}
           key="editData"
@@ -180,7 +194,6 @@ export default function PageCatalog() {
     setIsModalEditOpen(false);
   };
 
-
   // const [dataCatalog, setDataCatalog] = useState<any | null>([]);
   return (
     <div>
@@ -190,40 +203,49 @@ export default function PageCatalog() {
         </Center>
       ) : (
         <>
-          <HStack pb="3">
-            <Button
-              bgColor="grey.400"
-              color="white"
-              _hover={{
-                bg: "grey.500",
-              }}
-              key="kembali"
-              size="sm"
-              onClick={() => {
-                router.push("/startup");
-              }}
-            >
-              <AiOutlineRollback />
-              &nbsp;Kembali
-            </Button>
-            <Button
-              colorScheme="green"
-              key="tambahData"
-              size="sm"
-              onClick={handleAdd}
-            >
-              <AddIcon />
-              &nbsp;Tambah
-            </Button>
-          </HStack>
-          <Text fontSize="lg" fontWeight="bold">
-            CATALOG TENANT
-          </Text>
+          <Text fontSize="lg" fontWeight="bold"></Text>
+
+          <Flex
+            justifyContent={"space-between"}
+            pb="2"
+            direction={["column", "row"]}
+          >
+            <Heading fontSize={"2xl"}>
+              TEAM TENANT : {namaTenant.toUpperCase()}
+            </Heading>
+            <HStack>
+              <Button
+                bgColor="grey.400"
+                color="white"
+                _hover={{
+                  bg: "grey.500",
+                }}
+                key="kembali"
+                size="sm"
+                onClick={() => {
+                  router.push("/tenant");
+                }}
+              >
+                <AiOutlineRollback />
+                &nbsp;Daftar Tenant
+              </Button>
+              <Button
+                colorScheme="green"
+                key="tambahData"
+                size="sm"
+                onClick={handleAdd}
+              >
+                <AddIcon />
+                &nbsp;Tambah Baru
+              </Button>
+            </HStack>
+          </Flex>
 
           <DataTable
             data={dataCatalog}
             column={columns}
             hiddenColumns={hidenCols}
+            filterOptions={filterOptions}
           >
             {(rowData: any) => renderActions(rowData)}
           </DataTable>

@@ -1,6 +1,6 @@
 "use client";
 
-import DataTable from "../../components/data-table";
+import DataTable from "../../components/datatable/data-table";
 import { Column } from "react-table";
 import { useEffect, useState, useContext } from "react";
 import ModalEdit from "./modal-edit";
@@ -8,11 +8,7 @@ import ModalReset from "./modal-reset-pass";
 import { Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal-confirm";
 import ModalNotif from "../../components/modal-notif";
-import {
-  AddIcon,
-  DeleteIcon,
-  EditIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 import { axiosCustom } from "@/app/api/axios";
 import { MdLockReset } from "react-icons/md";
@@ -56,7 +52,7 @@ export default function page() {
       Header: "Username",
       accessor: "username",
     },
-    
+
     {
       Header: "E-mail",
       accessor: "email",
@@ -159,11 +155,11 @@ export default function page() {
   function handleAdd() {
     setIsModalAddOpen(true);
   }
-  
+
   const handleReset = (item: any) => {
     setDataReset(item);
     setIsModalResetOpen(true);
-  }
+  };
 
   const handleDelete = (item: any) => {
     setDataDeleteId(item.id);
@@ -172,8 +168,6 @@ export default function page() {
     );
     setIsModalDeleteOpen(true);
   };
-
-
 
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const deleteData = async () => {

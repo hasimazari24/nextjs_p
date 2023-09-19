@@ -221,7 +221,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       </Th>
                     );
                   })}
-                  {/* <Th>Aksi</Th> */}
+                  <Th width="100px">Action</Th>
                 </Tr>
               );
             })}

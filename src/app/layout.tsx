@@ -1,6 +1,6 @@
 "use client";
-import { Providers } from "./components/Providers";
-import { AuthProvider } from "./components/AuthContext";
+import { Providers } from "./components/utils/Providers";
+import { AuthProvider } from "./components/utils/AuthContext";
 
 export const metadata = {
   title: process.env.APP_NAME,
