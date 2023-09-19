@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      const response = await axiosCustom.post("/login", {
+      const response = await axiosCustom.post("/auth/login", {
         usernameoremail: username,
         password: password,
       });
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       setLoadingLogOut(true);
-      await axiosCustom.get("/logout").then(() => {
+      await axiosCustom.get("/auth/logout").then(() => {
         router.push("/login");
         setUser(null);
       });
