@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Icon,
   IconButton,
   Avatar,
   Box,
@@ -32,6 +33,7 @@ import {
   FiBell,
   FiChevronDown,
 } from "react-icons/fi";
+import { AiOutlineHome } from "react-icons/ai";
 import { IconType } from "react-icons";
 import Link from "next/link";
 import { ImProfile } from "@react-icons/all-files/im/ImProfile";
@@ -66,7 +68,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
     <Flex
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
-      height="20"
+      height="16"
       alignItems="center"
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
@@ -93,10 +95,27 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
           spacing="1px"
           ml="2"
         >
-          <Text fontSize="sm">{getUser ? getUser.fullname : null}</Text>
-          <Text fontSize="xs" color="gray.600">
-            {getUser ? getUser.role : null}
-          </Text>
+          <Flex
+            alignItems="center"
+            // p="4"
+            // mx="4"
+            // borderRadius="lg"
+            role="group"
+            cursor="pointer"
+            // _hover={{
+            //   bg: "cyan.400",
+            //   color: "white",
+            // }}
+            // {...rest}
+          >
+            <Icon mr="2.5" fontSize="18" as={AiOutlineHome} />
+            <Text fontSize="sm">
+              pages / tenant
+            </Text>
+          </Flex>
+          {/* <Text fontSize="xs" color="gray.600">
+            Halaman Daftar Tenant
+          </Text> */}
         </VStack>
       </HStack>
 

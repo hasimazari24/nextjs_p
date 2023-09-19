@@ -6,7 +6,7 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Text,
+  Center, 
   BoxProps,
   FlexProps,
   Img,

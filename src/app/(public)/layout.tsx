@@ -40,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Box
           position={"relative"}
           // bgImage={`url('${Bg_Stp.src}')`}
-          backgroundImage="url('/img/bg-stp.jpg')"
+          // backgroundImage="url('/img/bg-stp.jpg')"
           backgroundSize="cover"
           backgroundRepeat="no-repeat"
           backgroundPosition="center"
