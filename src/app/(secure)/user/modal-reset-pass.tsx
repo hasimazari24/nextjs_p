@@ -11,7 +11,7 @@ import {
   FormControl,FormLabel, Input, Flex,
   FormErrorMessage, Button
 } from "@chakra-ui/react";
-import ModalNotif from "../../components/modal-notif";
+import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";

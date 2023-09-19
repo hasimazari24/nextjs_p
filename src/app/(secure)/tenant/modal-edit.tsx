@@ -23,10 +23,8 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import apiCall from "../../components/api-call";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import ModalNotif from "../../components/modal-notif";
+import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 
 interface ModalProps {

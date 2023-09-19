@@ -1,7 +1,7 @@
 // app/providers.tsx
 'use client'
 import React from "react";
-import customTheme from "./theme";
+import customTheme from "../template/theme";
 
 import { CacheProvider } from '@chakra-ui/next-js'
 import { ChakraProvider } from '@chakra-ui/react'

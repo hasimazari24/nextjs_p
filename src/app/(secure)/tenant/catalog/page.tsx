@@ -17,7 +17,7 @@ import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
 import { axiosCustom } from "@/app/api/axios";
 import ModalEditCatalog from "./modal-edit-catalog";
-import ConfirmationModal from "@/app/components/modal-confirm";
+import ConfirmationModal from "@/app/components/modal/modal-confirm";
 
 interface DataItem {
   id: string;

@@ -39,7 +39,7 @@ import Link from "next/link";
 import { ImProfile } from "@react-icons/all-files/im/ImProfile";
 import { RiLogoutBoxRLine } from "@react-icons/all-files/ri/RiLogoutBoxRLine";
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../utils/AuthContext";
 
 interface LinkItemProps {
   name: string;

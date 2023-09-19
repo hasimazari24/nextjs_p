@@ -19,8 +19,8 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import ConfirmationModal from "../../components/modal-confirm";
-import ModalNotif from "../../components/modal-notif";
+import ConfirmationModal from "../../components/modal/modal-confirm";
+import ModalNotif from "../../components/modal/modal-notif";
 import {
   AddIcon,
   DeleteIcon,
