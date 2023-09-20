@@ -17,6 +17,7 @@ import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
 import { axiosCustom } from "@/app/api/axios";
 import ModalEditCatalog from "./modal-team";
+import SearchModal from "@/app/components/modal/SearchModal";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
 
 interface DataItem {
@@ -25,7 +26,7 @@ interface DataItem {
   description: string;
 }
 
-export default function PageCatalog() {
+export default function PageTeam() {
   const hidenCols = ["id"];
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -49,6 +50,11 @@ export default function PageCatalog() {
   const [textConfirm, setTextConfirm] = useState(" ");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
+  //handle add team
+  const [isModalSearchOpen, setIsModalSearchOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const filterOptions = [{ key: "title", label: "Judul" }];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
@@ -66,37 +72,37 @@ export default function PageCatalog() {
     },
   ];
 
-  const [dataCatalog, setDataCatalog] = useState<any[]>([]);
+  const [dataTeam, setDataTeam] = useState<any[]>([]);
   const searchParams = useSearchParams();
   const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState("");
-  const [loadingCatalog, setLoadingCatalog] = useState<boolean>(false);
+  const [loadingTeam, setLoadingTeam] = useState<boolean>(false);
 
-  const getCatalog = async () => {
+  const getTeam = async () => {
     try {
-      setLoadingCatalog(true);
+      setLoadingTeam(true);
       // Panggil API menggunakan Axios dengan async/await
       const response = await axiosCustom.get(`/tenant-catalog/${idTenant}`);
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
-        setDataCatalog(response.data.data.catalog);
+        setDataTeam(response.data.data.catalog);
         setNamaTenant(response.data.data.name);
         // setIdTenant(id);
         // console.log(dataCatalog);
-        setLoadingCatalog(false); // Set isLoading to false to stop the spinner
+        setLoadingTeam(false); // Set isLoading to false to stop the spinner
       }, 1000);
 
       return () => clearTimeout(timer);
     } catch (error) {
       console.error("Gagal memuat data:", error);
-      setLoadingCatalog(false);
+      setLoadingTeam(false);
     }
   };
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    getCatalog();
+    getTeam();
     // Clear the timeout when the component is unmounted
   }, []);
 
@@ -104,20 +110,7 @@ export default function PageCatalog() {
     return (
       <>
         <Button
-          bgColor="blue.100"
-          _hover={{
-            bg: "blue.200",
-          }}
-          title="Edit Data"
-          onClick={() => handleEdit(rowData)}
-          key="editData"
-          size="sm"
-        >
-          <EditIcon />
-        </Button>
-        &nbsp;
-        <Button
-          title="Hapus Data"
+          title="Hapus Tim"
           colorScheme="red"
           onClick={() => handleDelete(rowData)}
           key="hapusData"
@@ -131,17 +124,55 @@ export default function PageCatalog() {
 
   const router = useRouter();
 
-  const handleEdit = (item: any) => {
-    setEditingData(item);
-    setIsModalEditOpen(true);
-    // console.log(item);
+  const [isLoadingSearch, setIsLoadingSearch] = useState(false);
+  const handleSearch = async (query: string) => {
+    try {
+      setIsLoadingSearch(true);
+      const response = await axiosCustom.get(
+        `https://api.example.com/search?query=${query}`,
+      );
+      const timer = setTimeout(() => {
+        if (response.status === 200) {
+          setSearchResults(response.data.data);
+          setIsLoadingSearch(false);
+        }
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoadingSearch(false);
+    }
   };
 
-  function handleAdd() {
-    // setEditingData(null);
-    setIsModalAddOpen(true);
-    // console.log(editingData);
-  }
+  const saveSelectedItem = async () => {
+    try {
+      setIsLoadingSearch(true);
+      const response = await axiosCustom.post(
+        "https://api.example.com/save",
+        selectedItem,
+      );
+      if (response.status === 200) {
+        handleShowMessage(`Tim ${response.data.data.name} berhasil ditambahkan`, false);
+        setIsLoadingSearch(false);
+        await getTeam();
+        setIsModalSearchOpen(false);
+      }
+    } catch (error: any) {
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoadingSearch(false);
+    }
+  };
 
   const handleDelete = (item: any) => {
     setDataDeleteId(item.id);
@@ -169,11 +200,11 @@ export default function PageCatalog() {
             setIsLoadingDelete(false);
             setIsModalDeleteOpen(false);
             handleShowMessage("Data berhasil dihapus.", false);
-            // getCatalog(idTenant);
+            // getTeam(idTenant);
           }
         }, 1000);
 
-        await getCatalog();
+        await getTeam();
 
         return () => clearTimeout(timer);
       } catch (error: any) {
@@ -197,7 +228,7 @@ export default function PageCatalog() {
   // const [dataCatalog, setDataCatalog] = useState<any | null>([]);
   return (
     <div>
-      {loadingCatalog ? (
+      {loadingTeam ? (
         <Center h="100%" m="10">
           <Spinner className="spinner" size="xl" color="blue.500" />
         </Center>
@@ -233,16 +264,16 @@ export default function PageCatalog() {
                 colorScheme="green"
                 key="tambahData"
                 size="sm"
-                onClick={handleAdd}
+                onClick={() => setIsModalSearchOpen(true)}
               >
                 <AddIcon />
-                &nbsp;Tambah Baru
+                &nbsp;Tambah Tim
               </Button>
             </HStack>
           </Flex>
 
           <DataTable
-            data={dataCatalog}
+            data={dataTeam}
             column={columns}
             hiddenColumns={hidenCols}
             filterOptions={filterOptions}
@@ -252,33 +283,15 @@ export default function PageCatalog() {
         </>
       )}
 
-      {/* {editingData && ( */}
-      <ModalEditCatalog
-        // isOpen={isModalOpen}
-        // onClose={() => setIsModalOpen(false)}
-        // data={editingData}
-        isOpen={isModalEditOpen}
-        onClose={() => setIsModalEditOpen(false)}
-        onSubmit={() => {
-          handleSaveData;
-          setEditingData(null);
-          getCatalog();
-          // getTampil();
-        }}
-        isEdit={true}
-        formData={editingData}
-      />
-
-      {/* untuk menambah data baru */}
-      <ModalEditCatalog
-        isOpen={isModalAddOpen}
-        onClose={() => setIsModalAddOpen(false)}
-        onSubmit={() => {
-          handleSaveData;
-          getCatalog();
-        }}
-        isEdit={false}
-        idTenant={idTenant}
+      {/* buka modal search */}
+      <SearchModal
+        title="Tambahkan Tim"
+        placeholder="Masukkan username tim ..."
+        isOpen={isModalSearchOpen}
+        onClose={() => setIsModalSearchOpen(false)}
+        onSearch={handleSearch}
+        searchResults={searchResults}
+        onSelect={(item) => setSelectedItem(item)}
       />
 
       {/* Modal hapus data */}

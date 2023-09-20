@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         image: response.data.data.image,
       };
       setUser(loggedInUser);
-      router.push("/");
+      router.push("/dashboard");
     } catch (error: any) {
       // console.log(error);
       if (error?.response) {

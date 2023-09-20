@@ -33,7 +33,7 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems_admin: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
+  { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
   { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
   { name: "Data User", icon: BsPeople, href: "/user" },
 ];

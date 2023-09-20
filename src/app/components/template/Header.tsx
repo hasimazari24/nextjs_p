@@ -108,8 +108,8 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
             // }}
             // {...rest}
           >
-            <Icon mr="2.5" fontSize="18" as={AiOutlineHome} />
-            <Text fontSize="sm">
+            <Icon mr="2.5" fontSize="20" as={AiOutlineHome} />
+            <Text >
               pages / tenant
             </Text>
           </Flex>
