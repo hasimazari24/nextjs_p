@@ -125,8 +125,8 @@ export default function CallToActionWithVideo() {
               >
                 All Tenants
               </Heading>
-              <Box p={4}>
-                <ImageCarousel images={images} />
+              <Box>
+                <ImageCarousel />
               </Box>
             </Stack>
           </Stack>
