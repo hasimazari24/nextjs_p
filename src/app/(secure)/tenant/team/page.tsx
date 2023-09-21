@@ -16,8 +16,9 @@ import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
 import { axiosCustom } from "@/app/api/axios";
-import ModalEditCatalog from "./modal-team";
-import SearchModal from "@/app/components/modal/SearchModal";
+import SearchModal from "@/app/(secure)/tenant/team/SearchModal";
+import ModalNotif from "@/app/components/modal/modal-notif";
+import ModalTeam from "./modal-team";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
 
 interface DataItem {
@@ -41,10 +42,6 @@ export default function PageTeam() {
   const [editingData, setEditingData] = useState<any | null>(null);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 
-  //handle tambah data
-  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
-  // const [selectedData, setSelectedData] = useState<any | null>(null);
-
   //handle hapus
   const [dataDeleteId, setDataDeleteId] = useState<number | null>(null);
   const [textConfirm, setTextConfirm] = useState(" ");
@@ -53,7 +50,7 @@ export default function PageTeam() {
   //handle add team
   const [isModalSearchOpen, setIsModalSearchOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [resultNothing, setResultNothing] = useState<string | null>(null);
 
   const filterOptions = [{ key: "title", label: "Judul" }];
 
@@ -77,6 +74,11 @@ export default function PageTeam() {
   const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState("");
   const [loadingTeam, setLoadingTeam] = useState<boolean>(false);
+  const router = useRouter();
+
+  if(!idTenant) {
+    router.push("/tenant");
+  };
 
   const getTeam = async () => {
     try {
@@ -102,7 +104,7 @@ export default function PageTeam() {
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    getTeam();
+    if (!idTenant) getTeam();
     // Clear the timeout when the component is unmounted
   }, []);
 
@@ -118,22 +120,34 @@ export default function PageTeam() {
         >
           <DeleteIcon />
         </Button>
+        &nbsp;
+        <Button
+          bgColor="blue.100"
+          _hover={{
+            bg: "blue.200",
+          }}
+          // color="white"
+          title="Edit Data"
+          onClick={() => handleEdit(rowData)}
+          key="editData"
+          size="sm"
+        >
+          <EditIcon />
+        </Button>
       </>
     );
   };
-
-  const router = useRouter();
 
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
   const handleSearch = async (query: string) => {
     try {
       setIsLoadingSearch(true);
-      const response = await axiosCustom.get(
-        `https://api.example.com/search?query=${query}`,
-      );
+      const response = await axiosCustom.get(`/user/search-user-tenant/${query}`);
+      // console.log(response);
       const timer = setTimeout(() => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data.data) {
           setSearchResults(response.data.data);
+          setResultNothing(null);
           setIsLoadingSearch(false);
         }
       }, 1000);
@@ -141,24 +155,30 @@ export default function PageTeam() {
       return () => clearTimeout(timer);
     } catch (error: any) {
       if (error?.response) {
-        handleShowMessage(
-          `Terjadi Kesalahan: ${error.response.data.message}`,
-          true,
-        );
+        if (error.response.status === 404) {
+          setResultNothing(error.response.data.message);
+        } else
+          handleShowMessage(
+            `Terjadi Kesalahan: ${error.response.data.message}`,
+            true,
+          );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setIsLoadingSearch(false);
     }
   };
 
-  const saveSelectedItem = async () => {
+  const saveSelectedItem = async (data: any) => {
     try {
       setIsLoadingSearch(true);
       const response = await axiosCustom.post(
-        "https://api.example.com/save",
-        selectedItem,
+        `/tenant/${idTenant}/add-member`,
+        data,
       );
       if (response.status === 200) {
-        handleShowMessage(`Tim ${response.data.data.name} berhasil ditambahkan`, false);
+        handleShowMessage(
+          `Tim ${response.data.data.name} berhasil ditambahkan`,
+          false,
+        );
         setIsLoadingSearch(false);
         await getTeam();
         setIsModalSearchOpen(false);
@@ -177,7 +197,7 @@ export default function PageTeam() {
   const handleDelete = (item: any) => {
     setDataDeleteId(item.id);
     setTextConfirm(
-      `Yakin ingin hapus data Tenant dengan Judul : ${item.title} ?`,
+      `Yakin ingin hapus anggota tim dengan nama : ${item.fullname} ?`,
     );
     setIsModalDeleteOpen(true);
   };
@@ -190,7 +210,7 @@ export default function PageTeam() {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          "/tenant-catalog" + `/${dataDeleteId}`,
+          `/tenant-catalogtenant/${idTenant}/delete-member/${dataDeleteId}`
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -220,12 +240,12 @@ export default function PageTeam() {
     }
   };
 
-  const handleSaveData = () => {
-    setIsModalAddOpen(false);
-    setIsModalEditOpen(false);
+  const handleEdit = (item: any) => {
+    setEditingData(item);
+    setIsModalEditOpen(true);
+    // console.log(item);
   };
 
-  // const [dataCatalog, setDataCatalog] = useState<any | null>([]);
   return (
     <div>
       {loadingTeam ? (
@@ -267,7 +287,7 @@ export default function PageTeam() {
                 onClick={() => setIsModalSearchOpen(true)}
               >
                 <AddIcon />
-                &nbsp;Tambah Tim
+                &nbsp;Tambah Anggota
               </Button>
             </HStack>
           </Flex>
@@ -285,13 +305,19 @@ export default function PageTeam() {
 
       {/* buka modal search */}
       <SearchModal
-        title="Tambahkan Tim"
-        placeholder="Masukkan username tim ..."
         isOpen={isModalSearchOpen}
-        onClose={() => setIsModalSearchOpen(false)}
+        onClose={() => {
+          setIsModalSearchOpen(false);
+          setSearchResults([]);
+          setResultNothing(null);
+        }}
         onSearch={handleSearch}
         searchResults={searchResults}
-        onSelect={(item) => setSelectedItem(item)}
+        isLoading={isLoadingSearch}
+        onSubmit={(item) => {
+          saveSelectedItem(item);
+        }}
+        ifResultNothing={resultNothing}
       />
 
       {/* Modal hapus data */}
@@ -301,6 +327,23 @@ export default function PageTeam() {
         onConfirm={deleteData}
         dataConfirm={textConfirm}
         isLoading={isLoadingDelete}
+      />
+
+      <ModalTeam
+        isOpen={isModalEditOpen}
+        onClose={() => setIsModalEditOpen(false)}
+        onSubmit={() => {
+          setEditingData(null);
+          getTeam();
+        }}
+        formData={editingData}
+      />
+
+      <ModalNotif
+        isOpen={isModalNotif}
+        onClose={() => setModalNotif(false)}
+        message={message}
+        isError={isError}
       />
     </div>
   );

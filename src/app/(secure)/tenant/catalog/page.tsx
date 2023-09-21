@@ -71,6 +71,11 @@ export default function PageCatalog() {
   const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState("");
   const [loadingCatalog, setLoadingCatalog] = useState<boolean>(false);
+  const router = useRouter();
+  if (!idTenant) {
+    router.push("/tenant");
+    // handleShowMessage(`Silahkan pilih tenant terlebih dahulu!`, true);
+  }
 
   const getCatalog = async () => {
     try {
@@ -96,7 +101,7 @@ export default function PageCatalog() {
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    getCatalog();
+    if(!idTenant) getCatalog();
     // Clear the timeout when the component is unmounted
   }, []);
 
@@ -128,8 +133,6 @@ export default function PageCatalog() {
       </>
     );
   };
-
-  const router = useRouter();
 
   const handleEdit = (item: any) => {
     setEditingData(item);

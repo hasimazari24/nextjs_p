@@ -30,11 +30,7 @@ import { axiosCustom } from "@/app/api/axios";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // data: any; // Data yang akan ditampilkan dalam modal
   onSubmit: () => void;
-  // values?: FormValues;
-  // title: string;
-  isEdit?: boolean; // Tambahkan prop isEdit untuk menentukan apakah ini mode edit
   formData?: any; // Jika mode edit, kirim data yang akan diedit
   idTenant?: string | null;
 }
@@ -45,11 +41,10 @@ interface FormValues {
   description: string;
 }
 
-const ModalEditCatalog: React.FC<ModalProps> = ({
+const ModalTeam: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
-  isEdit,
   formData,
   idTenant,
 }) => {
@@ -79,40 +74,18 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
-    
+
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      if (isEdit) {
-        // Mode edit, kirim data melalui PUT request
-        // console.log(data); axiosCustom.put("/")
-        await axiosCustom
-          .put(`/tenant-catalog/${data.id}`, data)
-          .then((response) => {
-            // setData(response.data.data);
+      await axiosCustom
+        .put(`/tenant/${idTenant}/update-member`, data)
+        .then((response) => {
+          // setData(response.data.data);
 
-            if (response.status === 200) {
-              handleShowMessage("Data berhasil diubah.", false);
-            }
-          });
-        // .catch((error) => {
-        //   console.error("Error fetching data:", error);
-        // });
-      } else {
-        // Mode tambah, kirim data melalui POST request
-        const getIdTenant: any = idTenant;
-        await axiosCustom
-          .post(`/tenant-catalog/${getIdTenant}`, {
-            title: data.title,
-            description: data.description,
-          })
-          .then((response) => {
-            // console.log(response);
-            if (response.status === 201) {
-              handleShowMessage("Data berhasil disimpan.", false);
-            }
-          });
-      }
-
+          if (response.status === 200) {
+            handleShowMessage("Data berhasil diubah.", false);
+          }
+        });
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
@@ -143,7 +116,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <ModalHeader>{isEdit ? "Edit Data" : "Tambah Data"}</ModalHeader>
+            <ModalHeader>Ubah Data Anggota</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">
@@ -153,7 +126,6 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                       type="text"
                       {...register("id")}
                       defaultValue={formData?.id}
-                      // className={`form-control ${errors.name ? "is-invalid"}`}
                     />
                     <FormErrorMessage>
                       {errors.id && errors.id.message}
@@ -171,7 +143,6 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                         type="text"
                         {...fields.title}
                         defaultValue={formData?.title}
-                        // className={`form-control ${errors.name ? "is-invalid"}`}
                       />
                       <FormErrorMessage>
                         {errors.title && errors.title.message}
@@ -207,7 +178,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                 isLoading={isLoading}
                 size="sm"
               >
-                {isEdit ? "Simpan Perubahan" : "Tambah"}
+                Simpan Perubahan
               </Button>
               <Button
                 leftIcon={<CloseIcon />}
@@ -236,4 +207,4 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   );
 };
 
-export default ModalEditCatalog;
+export default ModalTeam;

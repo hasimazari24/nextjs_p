@@ -86,7 +86,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       setUser(validUser);
     } catch (error: any) {
-      error.response.status === 401 ? setUser(401) : setUser(null);
+      if (error?.response) {
+        // error.response?.status === 401 ? setUser(401) : setUser(null);\
+        setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
+      } else setMsg(`Terjadi Kesalahan: ${error.message}`);
+      setUser(401);
+      setstatus("error");
+      setIsOpen(true);
     } finally {
       setLoadingValidation(false);
     }
@@ -95,10 +101,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       setLoadingLogOut(true);
-      await axiosCustom.get("/auth/logout").then(() => {
+      const response = await axiosCustom.get("/auth/logout");
+      if (response.status === 200) {
         router.push("/login");
         setUser(null);
-      });
+      }
     } catch (error: any) {
       // console.log(error);
       if (error?.response) {
