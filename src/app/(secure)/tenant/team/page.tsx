@@ -83,14 +83,16 @@ export default function PageTeam() {
     {
       Header: "Admin Tenant",
       accessor: "is_admin",
+      Cell: ({ value }) => (value ? "Ya" : "Tidak"),
     },
     {
       Header: "Tampil Public",
       accessor: "is_public",
+      Cell: ({ value }) => (value ? "Ya" : "Tidak"),
     },
   ];
 
-  const [dataTeam, setDataTeam] = useState<DataItem>();
+  const [dataTeam, setDataTeam] = useState<any[]>([]);
   const searchParams = useSearchParams();
   const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState("");
@@ -101,26 +103,16 @@ export default function PageTeam() {
     router.push("/tenant");
   };
 
-  const [dataTeamTampil, setDataTeamTampil] = useState<any>({});
   const getTeam = async () => {
     try {
       setLoadingTeam(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant/${idTenant}/get-user`);
+      const response =  await axiosCustom.get(`/tenant/${idTenant}/get-user`);
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
         setDataTeam(response.data.data.user_tenant);
         
-        setDataTeamTampil({
-          id: dataTeam?.id,
-          image: dataTeam?.image,
-          username: dataTeam?.username,
-          fullname: dataTeam?.fullname,
-          position: dataTeam?.position,
-          is_admin: dataTeam?.is_admin ? "Ya" : "Tidak",
-          is_public: dataTeam?.is_public ? "Ya" : "Tidak",
-        });
         setNamaTenant(response.data.data.name);
         // setIdTenant(id);
         setLoadingTeam(false); // Set isLoading to false to stop the spinner
@@ -322,7 +314,7 @@ export default function PageTeam() {
           </Flex>
 
           <DataTable
-            data={dataTeamTampil}
+            data={dataTeam}
             column={columns}
             hiddenColumns={hidenCols}
             filterOptions={filterOptions}
@@ -367,6 +359,7 @@ export default function PageTeam() {
           getTeam();
         }}
         formData={editingData}
+        idTenant={idTenant}
       />
 
       <ModalNotif
