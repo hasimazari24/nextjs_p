@@ -33,6 +33,7 @@ interface SearchModalProps {
   onSearch: (query: string) => void;
   searchResults: any[];
   isLoading: boolean;
+  isLoadSave: boolean;
   onSubmit: (selectedItem: any) => void;
   ifResultNothing: string | null;
 }
@@ -53,6 +54,7 @@ const SearchModal = ({
   onSearch,
   searchResults,
   isLoading,
+  isLoadSave,
   onSubmit,
   ifResultNothing,
 }: SearchModalProps) => {
@@ -83,17 +85,20 @@ const SearchModal = ({
     setSelectedItem(null);
   };
 
+  const [load, setLoad] = useState(false);
   const handleFormSubmit: SubmitHandler<any> = (data: any) => {
-    // onSubmit(data);
+    setLoad(true);
     const sendData = {
       id : data.id,
       is_admin : selectedOption,
       position : data.position,
   };
-    console.log(sendData);
+    onSubmit(sendData);
     reset();
     setSelectedItem(null);
+    setQuery("");
     onClose();
+    setLoad(false);
   };
 
   const [selectedOption, setSelectedOption] = useState<Boolean>(false);
@@ -173,7 +178,7 @@ const SearchModal = ({
                 </FormControl>
 
                 <HStack pt="2">
-                  <Button colorScheme="green" type="submit">
+                  <Button colorScheme="green" type="submit" isLoading={load}>
                     Simpan
                   </Button>
                   <Button colorScheme="red" onClick={handleCancel}>

@@ -75,8 +75,8 @@ const ModalTeam: React.FC<ModalProps> = ({
 
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      await axiosCustom
-        .put(`/tenant/${idTenant}/update-member`, {
+      await axiosCustom 
+        .put(`/tenant/${idTenant}/update-user`, {
           id : data.id,
           position : data.position,
           is_admin : selectedOption

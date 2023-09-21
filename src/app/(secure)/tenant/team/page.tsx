@@ -81,16 +81,16 @@ export default function PageTeam() {
       accessor: "position",
     },
     {
-      Header: "is_admin",
+      Header: "Admin Tenant",
       accessor: "is_admin",
     },
     {
-      Header: "is_public",
+      Header: "Tampil Public",
       accessor: "is_public",
     },
   ];
 
-  const [dataTeam, setDataTeam] = useState<any[]>([]);
+  const [dataTeam, setDataTeam] = useState<DataItem>();
   const searchParams = useSearchParams();
   const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState("");
@@ -101,6 +101,7 @@ export default function PageTeam() {
     router.push("/tenant");
   };
 
+  const [dataTeamTampil, setDataTeamTampil] = useState<any>({});
   const getTeam = async () => {
     try {
       setLoadingTeam(true);
@@ -109,13 +110,22 @@ export default function PageTeam() {
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
-        setDataTeam([response.data.data]);
-        // setNamaTenant(response.data.data.name);
+        setDataTeam(response.data.data.user_tenant);
+        
+        setDataTeamTampil({
+          id: dataTeam?.id,
+          image: dataTeam?.image,
+          username: dataTeam?.username,
+          fullname: dataTeam?.fullname,
+          position: dataTeam?.position,
+          is_admin: dataTeam?.is_admin ? "Ya" : "Tidak",
+          is_public: dataTeam?.is_public ? "Ya" : "Tidak",
+        });
+        setNamaTenant(response.data.data.name);
         // setIdTenant(id);
-        console.log(response.data.data);
         setLoadingTeam(false); // Set isLoading to false to stop the spinner
       }, 1000);
-
+      
       return () => clearTimeout(timer);
     } catch (error) {
       console.error("Gagal memuat data:", error);
@@ -186,31 +196,32 @@ export default function PageTeam() {
       setIsLoadingSearch(false);
     }
   };
-
+  const [isLoadSave, setIsLoadSave] = useState(false);
   const saveSelectedItem = async (data: any) => {
+    setIsLoadSave(true);
     try {
-      setIsLoadingSearch(true);
       const response = await axiosCustom.post(
-        `/tenant/${idTenant}/add-member`,
+        `/tenant/${idTenant}/add-user`,
         data,
       );
-      if (response.status === 200) {
+      if (response.status === 201) {
         handleShowMessage(
-          `Tim ${response.data.data.name} berhasil ditambahkan`,
+          `Anggota Tim berhasil ditambahkan`,
           false,
         );
-        setIsLoadingSearch(false);
+        setIsLoadSave(false);
         await getTeam();
         setIsModalSearchOpen(false);
       }
     } catch (error: any) {
+      console.log(error);
       if (error?.response) {
         handleShowMessage(
-          `Terjadi Kesalahan: ${error.response.data.message}`,
+          `Terjadi Kesalahan: ${error.response.data}`,
           true,
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-      setIsLoadingSearch(false);
+      setIsLoadSave(false);
     }
   };
 
@@ -230,7 +241,7 @@ export default function PageTeam() {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/tenant-catalogtenant/${idTenant}/delete-member/${dataDeleteId}`
+          `tenant/${idTenant}/delete-user/${dataDeleteId}`
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -240,11 +251,9 @@ export default function PageTeam() {
             setIsLoadingDelete(false);
             setIsModalDeleteOpen(false);
             handleShowMessage("Data berhasil dihapus.", false);
-            // getTeam(idTenant);
+            getTeam();
           }
         }, 1000);
-
-        await getTeam();
 
         return () => clearTimeout(timer);
       } catch (error: any) {
@@ -313,7 +322,7 @@ export default function PageTeam() {
           </Flex>
 
           <DataTable
-            data={dataTeam}
+            data={dataTeamTampil}
             column={columns}
             hiddenColumns={hidenCols}
             filterOptions={filterOptions}
@@ -334,6 +343,7 @@ export default function PageTeam() {
         onSearch={handleSearch}
         searchResults={searchResults}
         isLoading={isLoadingSearch}
+        isLoadSave={isLoadSave}
         onSubmit={(item) => {
           saveSelectedItem(item);
         }}
