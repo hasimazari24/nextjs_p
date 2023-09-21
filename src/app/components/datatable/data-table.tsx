@@ -231,7 +231,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
             {/* untuk perncarian jika data tidak ditemukan */}
             {page.length === 0 ? (
               <Tr key={props.column.length}>
-                <Td colSpan={props.column.length} textAlign="center" key={0}>
+                <Td colSpan={props.column.length+1} textAlign="center" key={0}>
                   Tidak Ada Data
                 </Td>
               </Tr>
@@ -258,7 +258,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                 ) : (
                   //jika tidak ada row values id, maka ...
                   <Tr key={i}>
-                    <Td colSpan={row.cells.length} textAlign="center" key={0}>
+                    <Td colSpan={row.cells.length + 1} textAlign="center" key={0}>
                       Tidak Ada Data
                     </Td>
                   </Tr>

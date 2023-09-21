@@ -20,6 +20,7 @@ import {
   useDisclosure,
   Textarea,
   Select,
+  RadioGroup,Radio,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -37,8 +38,8 @@ interface ModalProps {
 
 interface FormValues {
   id: string;
-  title: string;
-  description: string;
+  position: string;
+  is_admin: boolean;
 }
 
 const ModalTeam: React.FC<ModalProps> = ({
@@ -56,10 +57,7 @@ const ModalTeam: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const fields = {
-    title: register("title", { required: "Judul harus diisi!" }),
-    description: register("description", {
-      required: "Deskripsi harus diisi!",
-    }),
+    position: register("position", { required: "Posisi harus diisi!" }),
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -78,7 +76,11 @@ const ModalTeam: React.FC<ModalProps> = ({
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       await axiosCustom
-        .put(`/tenant/${idTenant}/update-member`, data)
+        .put(`/tenant/${idTenant}/update-member`, {
+          id : data.id,
+          position : data.position,
+          is_admin : selectedOption
+        })
         .then((response) => {
           // setData(response.data.data);
 
@@ -103,6 +105,11 @@ const ModalTeam: React.FC<ModalProps> = ({
     }
   };
 
+  const [selectedOption, setSelectedOption] = useState<Boolean>(false);
+  const handleIsAdmin = (value: string) => {
+    setSelectedOption(value === "ya");
+  };
+
   return (
     <>
       <Modal
@@ -116,7 +123,7 @@ const ModalTeam: React.FC<ModalProps> = ({
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <ModalHeader>Ubah Data Anggota</ModalHeader>
+            <ModalHeader>Ubah Data Anggota : {formData?.fullname}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">
@@ -133,37 +140,35 @@ const ModalTeam: React.FC<ModalProps> = ({
                   </FormControl>
                 </Hide>
 
-                <FormControl isInvalid={!!errors.title} mb="3">
+                <FormControl isInvalid={!!errors.position} mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Judul</FormLabel>
+                      <FormLabel>Posisi</FormLabel>
                     </Box>
                     <Box flex={["1", "80%"]}>
                       <Input
-                        type="text"
-                        {...fields.title}
-                        defaultValue={formData?.title}
+                        {...fields.position}
+                        defaultValue={formData?.position}
                       />
                       <FormErrorMessage>
-                        {errors.title && errors.title.message}
+                        {errors.position && errors.position.message}
                       </FormErrorMessage>
                     </Box>
                   </Flex>
                 </FormControl>
 
-                <FormControl isInvalid={!!errors.description} mb="3">
+                <FormControl as="fieldset" mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Deskripsi</FormLabel>
+                    <Box flex={["1", "46%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Atur sebagai admin tenant?</FormLabel>
                     </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Textarea
-                        {...fields.description}
-                        defaultValue={formData?.description}
-                      />
-                      <FormErrorMessage>
-                        {errors.description && errors.description.message}
-                      </FormErrorMessage>
+                    <Box flex={["1", "54%"]}>
+                      <RadioGroup defaultValue={formData?.is_admin === true ? "ya" : "tidak"} onChange={handleIsAdmin}>
+                        <Radio value="ya" pr="4">
+                          Ya
+                        </Radio>
+                        <Radio value="tidak">Tidak</Radio>
+                      </RadioGroup>
                     </Box>
                   </Flex>
                 </FormControl>

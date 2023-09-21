@@ -10,7 +10,7 @@ import {
   Center,
   HStack,
   Spinner,
-  Text,
+  Text,useColorModeValue,Image, Avatar, Stack,
   Heading,
   Flex,
   Menu,
@@ -18,6 +18,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  Box,
 } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalNotif from "../../components/modal/modal-notif";
@@ -300,6 +301,72 @@ export default function page() {
             pb="2"
             direction={["column", "row"]}
           >
+            <Heading fontSize={"2xl"}>DATA TENANT</Heading>
+            <HStack>
+              <Button
+                bgColor="green.300"
+                _hover={{
+                  bg: "green.400",
+                }}
+              >
+                <AddIcon />
+                &nbsp;Edit
+              </Button>
+              <Button
+                bgColor="red.300"
+                _hover={{
+                  bg: "red.400",
+                }}
+              >
+                <AddIcon />
+                &nbsp;Edit
+              </Button>
+            </HStack>
+          </Flex>
+
+          <Box
+            maxW={"7xl"}
+            w={"full"}
+            bg={useColorModeValue("white", "gray.800")}
+            boxShadow={"2xl"}
+            rounded={"md"}
+            overflow={"hidden"}
+          >
+            <Image
+              h={"280px"}
+              w={"full"}
+              src={
+                "https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+              }
+              objectFit="cover"
+              alt="#"
+            />
+            <Flex justify={"center"} mt={-28}>
+              <Avatar
+                size={"x2"}
+                src={
+                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+                }
+                css={{
+                  border: "10px solid white",
+                }}
+              />
+            </Flex>
+            <Stack spacing={2} align={"center"} mb={5} p="4">
+              <Heading fontSize={"2xl"} fontWeight={500} fontFamily={"body"}>
+                CV. IMPULS.ID
+              </Heading>
+              <Text >
+                Pengembangan software dan digitalisasi pendidikan
+              </Text>
+            </Stack>
+          </Box>
+
+          <Flex
+            justifyContent={"space-between"}
+            pb="2"
+            direction={["column", "row"]}
+          >
             <Heading fontSize={"2xl"}>DAFTAR TENANT</Heading>
             <Button
               colorScheme="green"
@@ -311,6 +378,16 @@ export default function page() {
               &nbsp;Tambah Baru
             </Button>
           </Flex>
+          <Box>
+            <DataTable
+              data={dataTampil}
+              column={columns}
+              hiddenColumns={hidenCols}
+              filterOptions={filterOptions}
+            >
+              {(rowData: any) => renderActions(rowData)}
+            </DataTable>
+          </Box>
           {/* {editingData && ( */}
           <ModalEdit
             // isOpen={isModalOpen}
@@ -353,15 +430,6 @@ export default function page() {
             onClose={() => setIsModalDetailOpen(false)}
             tableData={dataDetail}
           />
-
-          <DataTable
-            data={dataTampil}
-            column={columns}
-            hiddenColumns={hidenCols}
-            filterOptions={filterOptions}
-          >
-            {(rowData: any) => renderActions(rowData)}
-          </DataTable>
 
           <ModalNotif
             isOpen={isModalNotif}

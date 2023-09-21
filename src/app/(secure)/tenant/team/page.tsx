@@ -22,9 +22,14 @@ import ModalTeam from "./modal-team";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
 
 interface DataItem {
+  // id_tenant: string;
   id: string;
-  title: string;
-  description: string;
+  image: string;
+  username: string;
+  fullname: string;
+  position: string;
+  is_admin: boolean;
+  is_public: boolean;
 }
 
 export default function PageTeam() {
@@ -52,7 +57,7 @@ export default function PageTeam() {
   const [searchResults, setSearchResults] = useState([]);
   const [resultNothing, setResultNothing] = useState<string | null>(null);
 
-  const filterOptions = [{ key: "title", label: "Judul" }];
+  const filterOptions = [{ key: "username", label: "Username" }];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
     {
@@ -60,12 +65,28 @@ export default function PageTeam() {
       accessor: "id",
     },
     {
-      Header: "title",
-      accessor: "title",
+      Header: "image",
+      accessor: "image",
     },
     {
-      Header: "description",
-      accessor: "description",
+      Header: "username",
+      accessor: "username",
+    },
+    {
+      Header: "fullname",
+      accessor: "fullname",
+    },
+    {
+      Header: "position",
+      accessor: "position",
+    },
+    {
+      Header: "is_admin",
+      accessor: "is_admin",
+    },
+    {
+      Header: "is_public",
+      accessor: "is_public",
     },
   ];
 
@@ -84,14 +105,14 @@ export default function PageTeam() {
     try {
       setLoadingTeam(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant-catalog/${idTenant}`);
+      const response = await axiosCustom.get(`/tenant/${idTenant}/get-user`);
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
-        setDataTeam(response.data.data.catalog);
-        setNamaTenant(response.data.data.name);
+        setDataTeam([response.data.data]);
+        // setNamaTenant(response.data.data.name);
         // setIdTenant(id);
-        // console.log(dataCatalog);
+        console.log(response.data.data);
         setLoadingTeam(false); // Set isLoading to false to stop the spinner
       }, 1000);
 
@@ -104,23 +125,13 @@ export default function PageTeam() {
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    if (!idTenant) getTeam();
+    if (idTenant) getTeam();
     // Clear the timeout when the component is unmounted
   }, []);
 
   const renderActions = (rowData: any) => {
     return (
       <>
-        <Button
-          title="Hapus Tim"
-          colorScheme="red"
-          onClick={() => handleDelete(rowData)}
-          key="hapusData"
-          size="sm"
-        >
-          <DeleteIcon />
-        </Button>
-        &nbsp;
         <Button
           bgColor="blue.100"
           _hover={{
@@ -133,6 +144,15 @@ export default function PageTeam() {
           size="sm"
         >
           <EditIcon />
+        </Button> &nbsp;
+        <Button
+          title="Hapus Tim"
+          colorScheme="red"
+          onClick={() => handleDelete(rowData)}
+          key="hapusData"
+          size="sm"
+        >
+          <DeleteIcon />
         </Button>
       </>
     );
