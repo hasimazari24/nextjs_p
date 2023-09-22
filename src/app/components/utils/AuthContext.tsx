@@ -23,6 +23,7 @@ interface AuthContextType {
   user: User | null | 401;
   login: (username: string, password: string) => void;
   logout: () => void;
+  validation: () => void;
   loading: boolean;
   loadingValidation: boolean;
   loadingLogOut: boolean;
@@ -88,11 +89,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error: any) {
       if (error?.response) {
         // error.response?.status === 401 ? setUser(401) : setUser(null);\
-        setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
-      } else setMsg(`Terjadi Kesalahan: ${error.message}`);
+        console.log(error.response.data.message);
+        // setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
+      } else {
+        setMsg(`Terjadi Kesalahan: ${error.message}`);
+        setstatus("error");
+        setIsOpen(true);
+      }
       setUser(401);
-      setstatus("error");
-      setIsOpen(true);
     } finally {
       setLoadingValidation(false);
     }
@@ -123,7 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, loading, loadingValidation, loadingLogOut }}
+      value={{ user, login, logout, validation, loading, loadingValidation, loadingLogOut }}
     >
       <>
         <AlertBar

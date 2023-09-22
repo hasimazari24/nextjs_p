@@ -10,7 +10,7 @@ import {
   Text,
   HStack,
   Heading,
-  Flex,
+  Flex, Checkbox,
 } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
@@ -57,7 +57,23 @@ export default function PageTeam() {
   const [searchResults, setSearchResults] = useState([]);
   const [resultNothing, setResultNothing] = useState<string | null>(null);
 
-  const filterOptions = [{ key: "username", label: "Username" }];
+  const filterOptions = [
+    { key: "username", label: "Username" },
+    {
+      key: "is_admin",
+      label: "Hanya Admin",
+      type: "val_check",
+    },
+    {
+      key: "is_public",
+      label: "Hanya Public",
+      type: "val_check",
+    },
+    {
+      key: "position",
+      label: "Posisi",
+    },
+  ];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
     {
@@ -81,14 +97,25 @@ export default function PageTeam() {
       accessor: "position",
     },
     {
-      Header: "Admin Tenant",
+      Header: "Admin",
+      width : 20,
       accessor: "is_admin",
-      Cell: ({ value }) => (value ? "Ya" : "Tidak"),
+      Cell: ({ value }) =>
+        value ? (
+          // <Center>
+            <Checkbox defaultChecked isDisabled size="lg" />
+          // </Center>
+        ) : null,
     },
     {
-      Header: "Tampil Public",
+      Header: "Show Public",
       accessor: "is_public",
-      Cell: ({ value }) => (value ? "Ya" : "Tidak"),
+      Cell: ({ value }) =>
+        value ? (
+          <Center>
+            <Checkbox defaultChecked isDisabled size="lg" />
+          </Center>
+        ) : null,
     },
   ];
 
@@ -275,8 +302,6 @@ export default function PageTeam() {
         </Center>
       ) : (
         <>
-          <Text fontSize="lg" fontWeight="bold"></Text>
-
           <Flex
             justifyContent={"space-between"}
             pb="2"

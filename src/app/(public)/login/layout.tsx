@@ -22,6 +22,7 @@ import {
 import { useAuth } from "../../components/utils/AuthContext";
 // import Bg_Stp from "../components/img/bg-stp.jpg";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 // import { useState } from "react";
 
 export const metadata = {
@@ -32,6 +33,7 @@ export const metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, loadingValidation } = useAuth();
   const router = useRouter();
+
   // const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
 
   if (user !== null && user !== 401) {

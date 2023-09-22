@@ -13,6 +13,7 @@ import Sidebar from "../components/template/SideBar";
 import Header from "../components/template/Header";
 import { redirect } from "next/navigation";
 import { useAuth } from "../components/utils/AuthContext";
+import { useEffect } from "react";
 
 export const metadata = {
   title: process.env.APP_NAME,

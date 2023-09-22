@@ -11,6 +11,7 @@ import {
   Checkbox,
   TableContainer,
   Flex,
+  Text,
   Wrap,
   WrapItem,
   InputLeftElement,
@@ -45,7 +46,7 @@ type DataTableProps<T extends object> = {
   column: ReadonlyArray<Column<T>>;
   // onCellClick: (rowData: any) => void;
   hiddenColumns: string[];
-  filterOptions: { key: string; label: string; values?: string[] }[];
+  filterOptions: { key: string; label: string; values?: string[]; type?:string; }[];
   children: (rowData: any) => ReactNode; // Properti children yang menerima fungsi
 };
 
@@ -85,14 +86,14 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
       columns: props.column,
       initialState: {
         pageSize: 5,
-        hiddenColumns: props.hiddenColumns,
+        hiddenColumns: props.hiddenColumns
       },
     },
     useFilters,
     useGlobalFilter,
     useSortBy,
     usePagination,
-    useRowSelect
+    useRowSelect,
     //Menampilkan checkbox
     // (hooks) => {
     //   hooks.visibleColumns.push((columns) => [
@@ -126,41 +127,67 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
       <Flex
         mt="4"
         mb="2"
+        // justifyItems="center"
         justifyContent="space-between"
+        width="100%"
         direction={["column", "row"]}
       >
-        <HStack display={{ base: "flex", md: "flex-start" }}>
+        <HStack justifyContent="flex-start" display="flex">
           <Flex direction={["column", "row"]}>
-            {props.filterOptions.map((option) =>
-              option.values ? (
-                <Select
-                  onChange={(e) => setFilter(option.key, e.target.value)}
-                >
-                  <option value="">Semua {option.label}</option>
-                  {option.values.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </Select>
-              ) : (
-                <InputGroup px="2" >
-                  <InputLeftElement pointerEvents="none">
-                    <Button leftIcon={<SearchIcon />}></Button>
-                  </InputLeftElement>
-                  <Input
-                    pl="3rem"
-                    key={option.key}
-                    type="text"
-                    placeholder={`Cari ${option.label}`}
+            {props.filterOptions.map((option) => {
+              if (Array.isArray(option.values)) {
+                return (
+                  <Select
                     onChange={(e) => setFilter(option.key, e.target.value)}
-                  />
-                </InputGroup>
-              ),
-            )}
+                    width="100%"
+                    mb="2"
+                  >
+                    <option value="">Semua {option.label}</option>
+                    {option.values.map((value) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </Select>
+                );
+              }
+              if (option.type) {
+                return (
+                  <>
+                    <HStack width="100%" mb="2">
+                      <p>{option.label}</p>
+                      <Checkbox
+                        onChange={(e) =>
+                          setFilter(option.key, e.target.checked ? true : null)
+                        }
+                        pl="2"
+                        pr="2"
+                        size="lg"
+                      />
+                    </HStack>
+                  </>
+                );
+              } else
+                return (
+                  <InputGroup px="2">
+                    <InputLeftElement pointerEvents="none">
+                      <Button leftIcon={<SearchIcon />}></Button>
+                    </InputLeftElement>
+                    <Input
+                      width="100%"
+                      pl="3rem"
+                      key={option.key}
+                      type="text"
+                      placeholder={`Cari ${option.label}`}
+                      onChange={(e) => setFilter(option.key, e.target.value)}
+                      mb="2"
+                    />
+                  </InputGroup>
+                );
+            })}
           </Flex>
         </HStack>
-        <HStack display={{ base: "flex", md: "flex-end" }}>
+        <HStack justifyContent="flex-start" display="flex">
           <p>&nbsp; Showing</p>
           <Select
             w="20"
@@ -231,7 +258,11 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
             {/* untuk perncarian jika data tidak ditemukan */}
             {page.length === 0 ? (
               <Tr key={props.column.length}>
-                <Td colSpan={props.column.length+1} textAlign="center" key={0}>
+                <Td
+                  colSpan={props.column.length + 1}
+                  textAlign="center"
+                  key={0}
+                >
                   Tidak Ada Data
                 </Td>
               </Tr>
@@ -258,7 +289,11 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                 ) : (
                   //jika tidak ada row values id, maka ...
                   <Tr key={i}>
-                    <Td colSpan={row.cells.length + 1} textAlign="center" key={0}>
+                    <Td
+                      colSpan={row.cells.length + 1}
+                      textAlign="center"
+                      key={0}
+                    >
                       Tidak Ada Data
                     </Td>
                   </Tr>

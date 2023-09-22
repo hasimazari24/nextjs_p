@@ -62,7 +62,7 @@ const SearchModal = ({
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
   const handleSearch = () => {
-    console.log("masuk gk nih?");
+    // console.log("masuk gk nih?");
     onSearch(query);
   };
 
@@ -88,9 +88,11 @@ const SearchModal = ({
   const [load, setLoad] = useState(false);
   const handleFormSubmit: SubmitHandler<any> = (data: any) => {
     setLoad(true);
+    // console.log(data);
     const sendData = {
       id : data.id,
       is_admin : selectedOption,
+      is_public : selectedIsPublic,
       position : data.position,
   };
     onSubmit(sendData);
@@ -101,9 +103,26 @@ const SearchModal = ({
     setLoad(false);
   };
 
-  const [selectedOption, setSelectedOption] = useState<Boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<boolean>(false);
   const handleIsAdmin = (value: string) => {
-    setSelectedOption(value === "ya");
+    setSelectedOption(value === "ya_admin");
+  };
+
+  //pastikan nilai di dalam() sesuai default valuenya radioSelected
+  const [selectedIsPublic, setSelecteIsPublic] = useState<boolean>(true);
+  const handleIsPublic = (value: string) => {
+    setSelecteIsPublic(value === "ya_public");
+  };
+
+  const handleEnterPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      if (query === "" || query.trim() === "") {
+        setIsError(true);
+      } else {
+        setIsError(false);
+        handleSearch();
+      }
+    }
   };
 
   const [isError, setIsError] = useState<boolean | undefined>(undefined);
@@ -127,7 +146,7 @@ const SearchModal = ({
         <ModalBody>
           {selectedItem ? (
             <Stack>
-              <HStack>
+              <HStack pb="3">
                 <Text>
                   Tambahkan <b>{selectedItem.fullname}</b> sebagai anggota tim
                 </Text>
@@ -167,11 +186,35 @@ const SearchModal = ({
                       <FormLabel>Atur sebagai admin tenant?</FormLabel>
                     </Box>
                     <Box flex={["1", "54%"]}>
-                      <RadioGroup defaultValue="tidak" onChange={handleIsAdmin}>
-                        <Radio value="ya" pr="4">
+                      <RadioGroup
+                        defaultValue="tidak_admin"
+                        onChange={handleIsAdmin}
+                        name="isAdmin"
+                      >
+                        <Radio value="ya_admin" pr="4">
                           Ya
                         </Radio>
-                        <Radio value="tidak">Tidak</Radio>
+                        <Radio value="tidak_admin">Tidak</Radio>
+                      </RadioGroup>
+                    </Box>
+                  </Flex>
+                </FormControl>
+
+                <FormControl as="fieldset" mb="3">
+                  <Flex flexDirection={["column", "row"]}>
+                    <Box flex={["1", "50%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Tampilkan ke halaman public?</FormLabel>
+                    </Box>
+                    <Box flex={["1", "50%"]}>
+                      <RadioGroup
+                        defaultValue="ya_public"
+                        onChange={handleIsPublic}
+                        name="isPublic"
+                      >
+                        <Radio value="ya_public" pr="4">
+                          Ya
+                        </Radio>
+                        <Radio value="tidak_public">Tidak</Radio>
                       </RadioGroup>
                     </Box>
                   </Flex>
@@ -199,6 +242,7 @@ const SearchModal = ({
                       if (query !== "" || query.trim() !== "")
                         setIsError(false);
                     }}
+                    onKeyDown={handleEnterPress}
                   />
                   <Button
                     colorScheme="blue"

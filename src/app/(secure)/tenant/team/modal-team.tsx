@@ -75,12 +75,15 @@ const ModalTeam: React.FC<ModalProps> = ({
 
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+      const simpan = {
+        id: data.id,
+        position: data.position,
+        is_admin: selectedOption,
+        is_public: selectedIsPublic,
+      };
+      console.log(simpan);
       await axiosCustom 
-        .put(`/tenant/${idTenant}/update-user`, {
-          id : data.id,
-          position : data.position,
-          is_admin : selectedOption
-        })
+        .put(`/tenant/${idTenant}/update-user`, simpan)
         .then((response) => {
           // setData(response.data.data);
 
@@ -105,9 +108,14 @@ const ModalTeam: React.FC<ModalProps> = ({
     }
   };
 
-  const [selectedOption, setSelectedOption] = useState<Boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<boolean>(false);
   const handleIsAdmin = (value: string) => {
-    setSelectedOption(value === "ya");
+    setSelectedOption(value === "ya_admin");
+  };
+
+  const [selectedIsPublic, setSelecteIsPublic] = useState<boolean>(false);
+  const handleIsPublic = (value: string) => {
+    setSelecteIsPublic(value === "ya_public");
   };
 
   return (
@@ -163,11 +171,41 @@ const ModalTeam: React.FC<ModalProps> = ({
                       <FormLabel>Atur sebagai admin tenant?</FormLabel>
                     </Box>
                     <Box flex={["1", "54%"]}>
-                      <RadioGroup defaultValue={formData?.is_admin === true ? "ya" : "tidak"} onChange={handleIsAdmin}>
-                        <Radio value="ya" pr="4">
+                      <RadioGroup
+                        defaultValue={
+                          formData?.is_admin === true
+                            ? "ya_admin"
+                            : "tidak_admin"
+                        }
+                        name="isAdmin"
+                        onChange={handleIsAdmin}
+                      >
+                        <Radio value="ya_admin" pr="4">
                           Ya
                         </Radio>
-                        <Radio value="tidak">Tidak</Radio>
+                        <Radio value="tidak_admin">Tidak</Radio>
+                      </RadioGroup>
+                    </Box>
+                  </Flex>
+                </FormControl>
+
+                <FormControl as="fieldset" mb="3">
+                  <Flex flexDirection={["column", "row"]}>
+                    <Box flex={["1", "50%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Tampilkan ke halaman public?</FormLabel>
+                    </Box>
+                    <Box flex={["1", "50%"]}>
+                      <RadioGroup
+                        defaultValue={
+                          formData?.is_public === true ? "ya_public" : "tidak_public"
+                        }
+                        name="isPublic"
+                        onChange={handleIsPublic}
+                      >
+                        <Radio value="ya_public" pr="4">
+                          Ya
+                        </Radio>
+                        <Radio value="tidak_public">Tidak</Radio>
                       </RadioGroup>
                     </Box>
                   </Flex>
