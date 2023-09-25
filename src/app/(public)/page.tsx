@@ -17,6 +17,7 @@ import {
   Img,
 } from "@chakra-ui/react";
 import ImageCarousel from "./template/ImageCarousel";
+import LargeWithNewsletter from "./template/Footer";
 
 export default function CallToActionWithVideo() {
   const images = [
@@ -56,7 +57,7 @@ export default function CallToActionWithVideo() {
               </Text>
             </Heading>
             <Text color={"gray.800"} fontSize="20px">
-              Pusat pengelolaan dan pemantauan perkembangan Tenant di Solo
+              Pusat Pengelolaan dan Pemantauan Perkembangan Tenant di Solo
               Technopark.
             </Text>
             <Stack
@@ -93,9 +94,10 @@ export default function CallToActionWithVideo() {
             <Box position={"relative"} height={"400px"}>
               <Img
                 alt={"STP"}
+                style={{objectFit:"contain"}}
                 w={"100%"}
-                h={"100%"}
-                src="/img/gedungbiru-img.png"
+                //h={"100%"}
+                src="/img/gb-stp.png"
               />
             </Box>
           </Flex>
@@ -132,6 +134,9 @@ export default function CallToActionWithVideo() {
           </Stack>
         </Container>
       </Flex>
+      <Box>
+        <LargeWithNewsletter/>
+      </Box>
     </>
   );
 }
