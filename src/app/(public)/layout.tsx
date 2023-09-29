@@ -1,7 +1,9 @@
 "use client";
 
 import Navbar from "./template/Navbar";
+import Footer from "./template/Footer";
 import type { Metadata } from "next";
+import { usePathname } from "next/navigation";
 // import { useState } from "react";
 
 export const metadata: Metadata = {
@@ -10,11 +12,18 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   return (
     <div>
-        <Navbar />
-        
-        {children}
+      {pathname === "/login" ? (
+        <div>{children}</div>
+      ) : (
+        <div>
+          <Navbar />
+          {children}
+          <Footer />
+        </div>
+      )}
     </div>
   );
 }

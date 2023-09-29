@@ -17,19 +17,19 @@ import {
   Img,
 } from "@chakra-ui/react";
 import ImageCarousel from "./template/ImageCarousel";
-import LargeWithNewsletter from "./template/Footer";
+import GallerySlider from "./template/GallerySlider";
 
 export default function CallToActionWithVideo() {
   const images = [
     {
       src: "https://images.unsplash.com/photo-1559230928-34c7c281d7c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1417&q=80",
       alt: "Image 1",
-      id:"1",
+      id: "1",
     },
     {
       src: "https://plus.unsplash.com/premium_photo-1685112908051-334a2216b0c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
       alt: "Image 2",
-      id:"2",
+      id: "2",
     },
     // Tambahkan gambar-gambar lainnya
   ];
@@ -38,15 +38,15 @@ export default function CallToActionWithVideo() {
       <Container maxW={"7xl"}>
         <Stack
           align={"center"}
-          spacing={{ base: 8, md: 10 }}
-          py={{ base: 10, md: 20 }}
+          spacing={{ base: 5, md: 10 }}
+          py={{ base: 8, lg: 16 }}
           direction={{ base: "column", md: "row" }}
         >
           <Stack w={"full"} flex={1} spacing={{ base: 5, md: 10 }}>
             <Heading
               lineHeight={1.2}
               fontWeight={500}
-              fontSize={{ base: "2xl", sm: "3xl", lg: "4xl" }}
+              fontSize={{ base: "xl", sm: "2xl", lg: "4xl" }}
             >
               <Text as={"span"} color={"grey.700"} position={"relative"}>
                 {process.env.APP_NAME?.toUpperCase()}
@@ -91,27 +91,19 @@ export default function CallToActionWithVideo() {
               zIndex={-1}
               color={useColorModeValue("red.50", "red.400")}
             />
-            <Box position={"relative"} height={"400px"}>
-              <Img
-                alt={"STP"}
-                style={{objectFit:"contain"}}
-                w={"100%"}
-                //h={"100%"}
-                src="/img/gb-stp.png"
-              />
-            </Box>
+            <Image
+              alt={"STP"}
+              style={{ objectFit: "contain" }}
+              // fit={"cover"}
+              w={"100%"}
+              h={{ base: "330px", sm: "330px", md: "400px", lg: "400px" }}
+              src="/img/gb-stp.png"
+            />
           </Flex>
         </Stack>
       </Container>
-      <Flex
-        bg={useColorModeValue("gray.50", "gray.500")}
-        // minH={"60px"}
-        // borderTop={1}
-        // borderStyle={"solid"}
-        // borderColor={useColorModeValue("gray.200", "gray.900")}
-        // align={"center"}
-      >
-        <Container maxW={"7xl"}>
+      <Box bg={useColorModeValue("gray.50", "gray.500")}>
+        {/* <Container maxW={"7xl"}>
           <Stack
             // align={"center"}
             spacing={{ base: 8, md: 10 }}
@@ -127,15 +119,12 @@ export default function CallToActionWithVideo() {
               >
                 All Tenants
               </Heading>
-              <Box>
-                <ImageCarousel />
-              </Box>
             </Stack>
           </Stack>
-        </Container>
-      </Flex>
-      <Box>
-        <LargeWithNewsletter/>
+        </Container> */}
+        <Box>
+          <GallerySlider />
+        </Box>
       </Box>
     </>
   );
@@ -151,7 +140,7 @@ const Blob = (props: IconProps) => {
   return (
     <Icon
       width={"100%"}
-      viewBox="0 0 578 440"
+      viewBox="0 0 590 450"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}

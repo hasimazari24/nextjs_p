@@ -1,5 +1,4 @@
-
-'use client'
+"use client";
 
 import {
   Box,
@@ -119,7 +118,7 @@ const GoogleMaps = () => {
   );
 };
 
-const LargeWithNewsletter = () => {
+const Footer = () => {
   return (
     <Box
       bg={useColorModeValue("red.600", "gray.900")}
@@ -215,4 +214,4 @@ const LargeWithNewsletter = () => {
   );
 };
 
-export default LargeWithNewsletter;
+export default Footer;
