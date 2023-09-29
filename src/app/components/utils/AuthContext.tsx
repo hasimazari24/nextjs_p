@@ -48,20 +48,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      const response = await axiosCustom.post("/auth/login", {
+      await axiosCustom.post("/auth/login", {
         usernameoremail: username,
         password: password,
+      }).then((response) => {
+        // Jika login berhasil, atur informasi pengguna di sini
+        const loggedInUser: User = {
+          fullname: response.data.data.fullname,
+          role: response.data.data.role,
+          image: response.data.data.image,
+        };
+        setUser(loggedInUser);
+        router.push("/dashboard");
+        setLoading(false);
       });
-      console.log(response);
-
-      // Jika login berhasil, atur informasi pengguna di sini
-      const loggedInUser: User = {
-        fullname: response.data.data.fullname,
-        role: response.data.data.role,
-        image: response.data.data.image,
-      };
-      setUser(loggedInUser);
-      router.push("/dashboard");
+      
     } catch (error: any) {
       // console.log(error);
       if (error?.response) {
@@ -69,8 +70,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else setMsg(`Terjadi Kesalahan: ${error.message}`);
       setstatus("error");
       setIsOpen(true);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const validation = async () => {
@@ -105,11 +106,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       setLoadingLogOut(true);
-      const response = await axiosCustom.get("/auth/logout");
-      if (response.status === 200) {
+      await axiosCustom.get("/auth/logout").then((response) => {
         router.push("/login");
-        setUser(null);
-      }
+        if (response.status === 200) {
+          setUser(null);
+          setLoadingLogOut(false);
+        }
+      });
+      
     } catch (error: any) {
       // console.log(error);
       if (error?.response) {
@@ -117,8 +121,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else setMsg(`Terjadi Kesalahan: ${error.message}`);
       setstatus("error");
       setIsOpen(true);
+      setLoadingLogOut(false);
     }
-    setLoadingLogOut(false);
   };
 
   useEffect(() => {

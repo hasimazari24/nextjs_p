@@ -41,6 +41,7 @@ interface ModalProps {
 interface FormValues {
   id: string;
   name: string;
+  motto: string;
   description: string;
   address: string;
   contact: string;
@@ -48,6 +49,7 @@ interface FormValues {
   founder: string;
   level_tenant: string;
   image: string;
+  image_banner: string;
 }
 
 const ModalEdit: React.FC<ModalProps> = ({
@@ -69,6 +71,7 @@ const ModalEdit: React.FC<ModalProps> = ({
     description: register("description", {
       required: "Deskripsi harus diisi!",
     }),
+    motto: register("motto", { required: "Motto harus diisi!" }),
     address: register("address", { required: "Alamat harus diisi!" }),
     contact: register("contact", { required: "Kontak harus diisi!" }),
     email: register("email", {
@@ -136,7 +139,7 @@ const ModalEdit: React.FC<ModalProps> = ({
       setIsLoading(false);
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
-      // console.error(error);
+      console.error(error);
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
@@ -179,9 +182,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </Hide>
 
                 <FormControl isInvalid={!!errors.name} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}
-                  >
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Nama</FormLabel>
                     </Box>
@@ -200,8 +201,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.description} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}>
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Deskripsi</FormLabel>
                     </Box>
@@ -218,8 +218,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.address} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}>
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Alamat</FormLabel>
                     </Box>
@@ -236,9 +235,26 @@ const ModalEdit: React.FC<ModalProps> = ({
                   </Flex>
                 </FormControl>
 
+                <FormControl isInvalid={!!errors.motto} mb="3">
+                  <Flex flexDirection={["column", "row"]}>
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Motto</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        type="text"
+                        {...fields.motto}
+                        defaultValue={formData?.motto}
+                      />
+                      <FormErrorMessage>
+                        {errors.motto && errors.motto.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
+                </FormControl>
+
                 <FormControl isInvalid={!!errors.contact} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}>
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Kontak</FormLabel>
                     </Box>
@@ -256,8 +272,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.email} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}>
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>E-Mail</FormLabel>
                     </Box>
@@ -275,8 +290,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.founder} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}>
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Founder</FormLabel>
                     </Box>
@@ -294,8 +308,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.level_tenant} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}>
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Level Tenant</FormLabel>
                     </Box>
@@ -319,8 +332,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.image} mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}>
+                  <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Logo</FormLabel>
                     </Box>
@@ -332,6 +344,24 @@ const ModalEdit: React.FC<ModalProps> = ({
                       />
                       <FormErrorMessage>
                         {errors.image && errors.image.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.image_banner} mb="3">
+                  <Flex flexDirection={["column", "row"]}>
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Banner</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        type="text"
+                        {...register("image_banner")}
+                        defaultValue={formData?.image_banner}
+                      />
+                      <FormErrorMessage>
+                        {errors.image_banner && errors.image_banner.message}
                       </FormErrorMessage>
                     </Box>
                   </Flex>

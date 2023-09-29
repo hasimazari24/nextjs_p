@@ -60,6 +60,10 @@ export default function PageTeam() {
   const filterOptions = [
     { key: "username", label: "Username" },
     {
+      key: "position",
+      label: "Posisi",
+    },
+    {
       key: "is_admin",
       label: "Hanya Admin",
       type: "val_check",
@@ -68,10 +72,6 @@ export default function PageTeam() {
       key: "is_public",
       label: "Hanya Public",
       type: "val_check",
-    },
-    {
-      key: "position",
-      label: "Posisi",
     },
   ];
 

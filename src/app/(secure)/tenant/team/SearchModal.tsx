@@ -85,6 +85,16 @@ const SearchModal = ({
     setSelectedItem(null);
   };
 
+  const resetAll = () => {
+    reset();
+    setSelectedItem(null);
+    setSelectedOption(false);
+    setSelecteIsPublic(true);
+    setQuery("");
+    setLoad(false);
+    setIsError(undefined);
+  }
+
   const [load, setLoad] = useState(false);
   const handleFormSubmit: SubmitHandler<any> = (data: any) => {
     setLoad(true);
@@ -96,11 +106,9 @@ const SearchModal = ({
       position : data.position,
   };
     onSubmit(sendData);
-    reset();
-    setSelectedItem(null);
-    setQuery("");
+    resetAll();
     onClose();
-    setLoad(false);
+    
   };
 
   const [selectedOption, setSelectedOption] = useState<boolean>(false);
@@ -132,10 +140,7 @@ const SearchModal = ({
       isOpen={isOpen}
       onClose={() => {
         onClose();
-        setSelectedItem(null);
-        setQuery("");
-        reset();
-        setIsError(undefined);
+        resetAll();
       }}
       size="lg"
     >

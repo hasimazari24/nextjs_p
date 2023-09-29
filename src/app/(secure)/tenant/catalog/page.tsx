@@ -66,7 +66,7 @@ export default function PageCatalog() {
     },
   ];
 
-  const [dataCatalog, setDataCatalog] = useState<any[]>([]);
+  const [dataCatalog, setDataCatalog] = useState<Array<DataItem>>([]);
   const searchParams = useSearchParams();
   const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState("");
@@ -81,14 +81,15 @@ export default function PageCatalog() {
     try {
       setLoadingCatalog(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant-catalog/${idTenant}`);
-
-      // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
-      const timer = setTimeout(() => {
+      await axiosCustom.get(`/tenant-catalog/${idTenant}`).then((response) => {
+        console.log(response);
         setDataCatalog(response.data.data.catalog);
         setNamaTenant(response.data.data.name);
+      });
+      
+      // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
+      const timer = setTimeout(() => {
         // setIdTenant(id);
-        // console.log(dataCatalog);
         setLoadingCatalog(false); // Set isLoading to false to stop the spinner
       }, 1000);
 
@@ -99,9 +100,11 @@ export default function PageCatalog() {
     }
   };
 
+  console.log(dataCatalog);
+
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    if(!idTenant) getCatalog();
+    if(idTenant) getCatalog();
     // Clear the timeout when the component is unmounted
   }, []);
 

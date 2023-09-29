@@ -110,7 +110,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         // Mode tambah, kirim data melalui POST request
         await axiosCustom.post("/user", data).then((response) => {
           // console.log(response);
-          if (response.status === 200) {
+          if (response.status === 201) {
             handleShowMessage("Data berhasil disimpan.", false);
           }
         });

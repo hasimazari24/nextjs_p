@@ -9,7 +9,7 @@ import {
   ModalCloseButton,
   Box,
   FormControl,FormLabel, Input, Flex,
-  FormErrorMessage, Button
+  FormErrorMessage, Button, Hide
 } from "@chakra-ui/react";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
@@ -52,6 +52,8 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
     }),
   };
 
+  setFocus("password");
+
   const [isLoading, setIsLoading] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -67,13 +69,15 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
     setIsLoading(true);
 
     try {
-      await axiosCustom.put(`/user/${data.id}`, data).then((response) => {
-        // setData(response.data.data);
+      await axiosCustom
+        .put(`/user/reset-password`, data)
+        .then((response) => {
+          // setData(response.data.data);
 
-        if (response.status === 200) {
-          handleShowMessage("Data berhasil diubah.", false);
-        }
-      });
+          if (response.status === 200) {
+            handleShowMessage("Password berhasil direset.", false);
+          }
+        });
       
       onSubmit();
       onClose(); // Tutup modal
@@ -81,7 +85,7 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
       setIsLoading(false);
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
-      // console.error(error);
+      console.error(error);
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
@@ -113,6 +117,14 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
             <ModalHeader>Reset Password</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
+              <Hide>
+                <Input
+                  type="text"
+                  className="id"
+                  disabled
+                  defaultValue={tableData?.id}
+                />
+              </Hide>
               <FormControl mb="3">
                 <Flex flexDirection={["column", "row"]}>
                   <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
@@ -149,10 +161,7 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
                     <FormLabel>Password</FormLabel>
                   </Box>
                   <Box flex={["1", "75%"]}>
-                    <Input
-                      type="text"
-                      {...fields.password}
-                    />
+                    <Input type="text" {...fields.password} />
                     <FormErrorMessage>
                       {errors.password && errors.password.message}
                     </FormErrorMessage>

@@ -20,10 +20,10 @@ import {
   useDisclosure,
   Textarea,
   Select,
-  RadioGroup,Radio,
+  RadioGroup,Radio, Stack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
@@ -32,14 +32,22 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  formData?: any; // Jika mode edit, kirim data yang akan diedit
+  formData?: {
+    id: string;
+    fullname: string;
+    position: string;
+    is_admin: boolean;
+    is_public: boolean;
+  }; // Jika mode edit, kirim data yang akan diedit
   idTenant?: string | null;
 }
 
 interface FormValues {
   id: string;
+  fullname:string;
   position: string;
-  is_admin: boolean;
+  is_admin: string;
+  is_public:string;
 }
 
 const ModalTeam: React.FC<ModalProps> = ({
@@ -53,6 +61,7 @@ const ModalTeam: React.FC<ModalProps> = ({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -70,31 +79,47 @@ const ModalTeam: React.FC<ModalProps> = ({
     setModalNotif(true);
   };
 
+   const [selectedOption, setSelectedOption] = useState<boolean | undefined>(
+     undefined,
+   );
+   const handleIsAdmin = (value: string) => {
+     setSelectedOption(value === "ya_admin");
+   };
+
+   //pastikan nilai di dalam() sesuai default valuenya radioSelected
+   const [selectedIsPublic, setSelecteIsPublic] = useState<boolean | undefined>(
+     undefined,
+   );
+   const handleIsPublic = (value: string) => {
+     setSelecteIsPublic(value === "ya_public");
+   };
+
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
 
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+      // console
       const simpan = {
         id: data.id,
         position: data.position,
-        is_admin: selectedOption,
-        is_public: selectedIsPublic,
+        is_admin: data.is_admin === "ya_admin" ? true : false,
+        is_public: data.is_admin === "ya_public" ? true : false,
       };
       console.log(simpan);
-      await axiosCustom 
-        .put(`/tenant/${idTenant}/update-user`, simpan)
-        .then((response) => {
-          // setData(response.data.data);
+      // await axiosCustom 
+      //   .put(`/tenant/${idTenant}/update-user`, simpan)
+      //   .then((response) => {
+      //     // setData(response.data.data);
 
-          if (response.status === 200) {
-            handleShowMessage("Data berhasil diubah.", false);
-          }
-        });
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
-      onClose(); // Tutup modal
-      reset(); // Reset formulir
-      setIsLoading(false);
+      //     if (response.status === 200) {
+      //       handleShowMessage("Data berhasil diubah.", false);
+      //     }
+      //   });
+      // onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      // onClose(); // Tutup modal
+      // reset(); // Reset formulir
+      // setIsLoading(false);
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
       console.error(error);
@@ -108,16 +133,7 @@ const ModalTeam: React.FC<ModalProps> = ({
     }
   };
 
-  const [selectedOption, setSelectedOption] = useState<boolean>(false);
-  const handleIsAdmin = (value: string) => {
-    setSelectedOption(value === "ya_admin");
-  };
-
-  const [selectedIsPublic, setSelecteIsPublic] = useState<boolean>(false);
-  const handleIsPublic = (value: string) => {
-    setSelecteIsPublic(value === "ya_public");
-  };
-
+  console.log(formData?.is_admin);
   return (
     <>
       <Modal
@@ -177,13 +193,17 @@ const ModalTeam: React.FC<ModalProps> = ({
                             ? "ya_admin"
                             : "tidak_admin"
                         }
-                        name="isAdmin"
-                        onChange={handleIsAdmin}
                       >
-                        <Radio value="ya_admin" pr="4">
+                        <Radio
+                          value="ya_admin"
+                          pr="4"
+                          {...register("is_admin")}
+                        >
                           Ya
                         </Radio>
-                        <Radio value="tidak_admin">Tidak</Radio>
+                        <Radio value="tidak_admin" {...register("is_admin")}>
+                          Tidak
+                        </Radio>
                       </RadioGroup>
                     </Box>
                   </Flex>
@@ -197,15 +217,21 @@ const ModalTeam: React.FC<ModalProps> = ({
                     <Box flex={["1", "50%"]}>
                       <RadioGroup
                         defaultValue={
-                          formData?.is_public === true ? "ya_public" : "tidak_public"
+                          formData?.is_public === true
+                            ? "ya_public"
+                            : "tidak_public"
                         }
-                        name="isPublic"
-                        onChange={handleIsPublic}
                       >
-                        <Radio value="ya_public" pr="4">
+                        <Radio
+                          value="ya_public"
+                          pr="4"
+                          {...register("is_public")}
+                        >
                           Ya
                         </Radio>
-                        <Radio value="tidak_public">Tidak</Radio>
+                        <Radio value="tidak_public" {...register("is_public")}>
+                          Tidak
+                        </Radio>
                       </RadioGroup>
                     </Box>
                   </Flex>

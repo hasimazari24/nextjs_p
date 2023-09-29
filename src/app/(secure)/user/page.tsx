@@ -5,10 +5,19 @@ import { Column } from "react-table";
 import { useEffect, useState, useContext } from "react";
 import ModalEdit from "./modal-edit";
 import ModalReset from "./modal-reset-pass";
-import { Button, Center, HStack, Spinner, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Flex,
+  HStack,
+  Heading,
+  Spinner,
+  Text,
+  Menu, MenuButton, MenuList, MenuItem, } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalNotif from "../../components/modal/modal-notif";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { GrMoreVertical, GrShareOption } from "react-icons/gr";
 import { useRouter } from "next/navigation";
 import { axiosCustom } from "@/app/api/axios";
 import { MdLockReset } from "react-icons/md";
@@ -109,38 +118,44 @@ export default function page() {
   const renderActions = (rowData: any) => {
     return (
       <>
-        <Button
-          title="Reset Password"
-          bgColor="orange.300"
-          _hover={{
-            bg: "orange.400",
-          }}
-          color="white"
-          onClick={() => handleReset(rowData)}
-          key="resetPass"
-          size="sm"
-        >
-          <MdLockReset size="1.3rem" />
-        </Button>
+        <Menu>
+          <MenuButton
+            as={Button}
+            bgColor="green.100"
+            _hover={{
+              bg: "green.200",
+            }}
+            // color="white"
+            title="More ..."
+            // onClick={() => handleDetail(rowData)}
+            key="more"
+            size="sm"
+          >
+            <GrMoreVertical />
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={() => handleReset(rowData)}>
+              <MdLockReset size="1.3rem" />
+              &nbsp; Reset Password
+            </MenuItem>
+            <MenuItem onClick={() => handleDelete(rowData)}>
+              <DeleteIcon />
+              &nbsp; Hapus user
+            </MenuItem>
+          </MenuList>
+        </Menu>
         &nbsp;
         <Button
-          colorScheme="blue"
+          bgColor="blue.100"
+          _hover={{
+            bg: "blue.200",
+          }}
           title="Edit Data"
           onClick={() => handleEdit(rowData)}
           key="editData"
           size="sm"
         >
           <EditIcon />
-        </Button>
-        &nbsp;
-        <Button
-          title="Hapus Data"
-          colorScheme="red"
-          onClick={() => handleDelete(rowData)}
-          key="hapusData"
-          size="sm"
-        >
-          <DeleteIcon />
         </Button>
       </>
     );
@@ -177,7 +192,7 @@ export default function page() {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          "/tenant" + `/${dataDeleteId}`,
+          "/user" + `/${dataDeleteId}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -211,6 +226,16 @@ export default function page() {
     setIsModalEditOpen(false);
   };
 
+  const filterOptions = [
+    { key: "username", label: "Username" },
+    { key: "email", label: "E-Mail" },
+    {
+      key: "role",
+      label: "Hak Akses",
+      values: ["Super Admin", "Manajemen", "Mentor", "Tenant"],
+    },
+  ];
+
   return (
     <div>
       {isLoading ? (
@@ -219,20 +244,22 @@ export default function page() {
         </Center>
       ) : (
         <>
-          <HStack>
-            <Text fontSize="lg" fontWeight="bold">
-              DATA USER
-            </Text>
+          <Flex
+            justifyContent={"space-between"}
+            pb="2"
+            direction={["column", "row"]}
+          >
+            <Heading fontSize={"2xl"}>DAFTAR USER</Heading>
             <Button
               colorScheme="green"
               key="tambahData"
-              size="sm"
+              size="md"
               onClick={handleAdd}
             >
               <AddIcon />
-              &nbsp;Tambah
+              &nbsp;Tambah Baru
             </Button>
-          </HStack>
+          </Flex>
           {/* {editingData && ( */}
           <ModalEdit
             // isOpen={isModalOpen}
@@ -283,6 +310,7 @@ export default function page() {
             data={dataTampil}
             column={columns}
             hiddenColumns={hidenCols}
+            filterOptions={filterOptions}
           >
             {(rowData: any) => renderActions(rowData)}
           </DataTable>
