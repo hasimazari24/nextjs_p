@@ -104,23 +104,22 @@ const ModalTeam: React.FC<ModalProps> = ({
         id: data.id,
         position: data.position,
         is_admin: data.is_admin === "ya_admin" ? true : false,
-        is_public: data.is_admin === "ya_public" ? true : false,
+        is_public: data.is_public === "ya_public" ? true : false,
       };
-      console.log(simpan);
-      // await axiosCustom 
-      //   .put(`/tenant/${idTenant}/update-user`, simpan)
-      //   .then((response) => {
-      //     // setData(response.data.data);
+      // console.log(simpan);
+      await axiosCustom 
+        .put(`/tenant/${idTenant}/update-user`, simpan)
+        .then((response) => {
+          // setData(response.data.data);
 
-      //     if (response.status === 200) {
-      //       handleShowMessage("Data berhasil diubah.", false);
-      //     }
-      //   });
-      // onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
-      // onClose(); // Tutup modal
-      // reset(); // Reset formulir
-      // setIsLoading(false);
-      // Setelah data disimpan, atur pesan berhasil ke dalam state
+          if (response.status === 200) {
+            handleShowMessage("Data berhasil diubah.", false);
+          }
+        });
+      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      onClose(); // Tutup modal
+      reset(); // Reset formulir
+      setIsLoading(false);
     } catch (error: any) {
       console.error(error);
       if (error?.response) {
