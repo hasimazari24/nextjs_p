@@ -9,7 +9,7 @@ import {
   HStack,
   Button,
   Checkbox,
-  TableContainer,
+  TableContainer,Stack,
   Flex,
   Text,
   Wrap,
@@ -38,7 +38,6 @@ import {
 import GotoForm from "./goto-form";
 import Pagination from "./pagination";
 // import TextField from "./text-field";
-import { Columns } from "lucide-react";
 // import { EditIcon } from "lucide-react";
 
 type DataTableProps<T extends object> = {
@@ -124,22 +123,21 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
 
   return (
     <Box>
-      <Flex
+      <Stack
         mt="4"
         mb="2"
         // justifyItems="center"
         justifyContent="space-between"
-        width="100%"
         direction={["column", "row"]}
+        flexWrap={"wrap"}
       >
-        <HStack justifyContent="flex-start" display="flex">
-          <Flex direction={["column", "row"]}>
+        <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
+          <Stack direction={{ base: "column",md: "row", lg: "row" }} alignItems={"center"}>
             {props.filterOptions.map((option) => {
               if (Array.isArray(option.values)) {
                 return (
                   <Select
                     onChange={(e) => setFilter(option.key, e.target.value)}
-                    width="100%"
                     mb="2"
                   >
                     <option value="">Semua {option.label}</option>
@@ -154,14 +152,12 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
               if (option.type) {
                 return (
                   <>
-                    <HStack width="100%" mb="2">
-                      <p>{option.label}</p>
+                    <HStack mb="2" alignItems={"center"} pr="3">
+                      <Text whiteSpace={{ base: "nowrap",md:"normal",lg:"nowrap" }}>{option.label}</Text>
                       <Checkbox
                         onChange={(e) =>
                           setFilter(option.key, e.target.checked ? true : null)
                         }
-                        pl="2"
-                        pr="2"
                         size="lg"
                       />
                     </HStack>
@@ -174,7 +170,6 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       <Button leftIcon={<SearchIcon />}></Button>
                     </InputLeftElement>
                     <Input
-                      width="100%"
                       pl="3rem"
                       key={option.key}
                       type="text"
@@ -185,17 +180,25 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                   </InputGroup>
                 );
             })}
-          </Flex>
-        </HStack>
-        <HStack justifyContent="flex-start" display="flex">
-          <p>&nbsp; Showing</p>
+          </Stack>
+        </Flex>
+        <Flex
+          justifyContent={["center", "flex-start"]}
+          alignItems={"center"}
+          mt="-2"
+        >
+          {/* <Stack direction={["column","row"]}> */}
+          <Text>Showing</Text>
           <Select
             w="20"
+            minW="20"
             fontSize="sm"
             onChange={(e) => {
               setPageSize(+e.target.value);
             }}
             cursor="pointer"
+            pl="2"
+            pr="2"
           >
             <option value="5">5</option>
             <option value="10">10</option>
@@ -203,9 +206,10 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
             <option value="75">75</option>
             <option value="100">100</option>
           </Select>
-          <p>Data Per Page</p>
-        </HStack>
-      </Flex>
+          <Text>Data Per Page</Text>
+          {/* </Stack> */}
+        </Flex>
+      </Stack>
 
       <TableContainer>
         <Table {...getTableProps()} mt="4" variant="striped">

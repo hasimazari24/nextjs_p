@@ -16,11 +16,15 @@ import {
   Menu,
   MenuButton,
   Button,
-  Divider,Img,
-  MenuItem,
-  List,
-  ListItem,
-  MenuList,
+  Divider,
+  Img,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverArrow,
+  PopoverCloseButton,
   Center,
 } from "@chakra-ui/react";
 import {
@@ -109,9 +113,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
             // {...rest}
           >
             <Icon mr="2.5" fontSize="20" as={AiOutlineHome} />
-            <Text >
-              pages / tenant
-            </Text>
+            <Text>pages / tenant</Text>
           </Flex>
           {/* <Text fontSize="xs" color="gray.600">
             Halaman Daftar Tenant
@@ -134,93 +136,90 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
             transition="all 0.3s"
             _focus={{ boxShadow: "none" }}
           >
-            <Box onClick={toggleDropdown} cursor="pointer">
-              <HStack>
-                <Avatar
-                  size={"sm"}
-                  src={
-                    "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                  }
-                />
-                <VStack
-                  display={{ base: "none", md: "flex" }}
-                  alignItems="flex-start"
-                  spacing="1px"
-                  ml="2"
-                >
-                  <Text fontSize="sm">{getUser ? getUser.fullname : null}</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    {getUser ? getUser.role : null}
-                  </Text>
-                </VStack>
-
-                <Box display={{ base: "none", lg: "flex" }}>
-                  <FiChevronDown />
-                </Box>
-              </HStack>
-            </Box>
-            {isOpen && (
-              <Box
-                position="absolute"
-                top="100%"
-                right="0"
-                bg={useColorModeValue("white", "gray.900")}
-                borderColor={useColorModeValue("gray.200", "gray.700")}
-                w="300px"
-                p="3"
-                borderWidth="1px"
-                borderRadius="lg"
-                // onClick={closeDropdown}
-                boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)"
-                zIndex="1"
-              >
-                <Center p="3">
-                  <VStack>
-                    <Avatar
-                      size={"2xl"}
-                      src={
-                        "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                      }
-                    />
+            <Popover placement="bottom" isLazy strategy="fixed">
+              <PopoverTrigger>
+                <HStack cursor={"pointer"}>
+                  <Avatar
+                    size={"sm"}
+                    src={
+                      "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    }
+                  />
+                  <VStack
+                    display={{ base: "none", md: "flex" }}
+                    alignItems="flex-start"
+                    spacing="1px"
+                    ml="2"
+                  >
                     <Text fontSize="sm">
                       {getUser ? getUser.fullname : null}
                     </Text>
-                    <Text fontSize="sm" color="gray.600" mt="-1.5">
+                    <Text fontSize="xs" color="gray.600">
                       {getUser ? getUser.role : null}
                     </Text>
                   </VStack>
-                </Center>
 
-                <Divider orientation="horizontal" />
-
-                <HStack justifyContent="space-between" pt="3">
-                  <Link href="/myprofile" passHref>
-                    <Button
-                      colorScheme="teal"
-                      key="Profile"
-                      size="sm"
-                      fontWeight="normal"
-                      onClick={closeDropdown}
-                    >
-                      <ImProfile />
-                      &nbsp;Profile
-                    </Button>
-                  </Link>
-
-                  <Button
-                    colorScheme="red"
-                    key="LogOut"
-                    size="sm"
-                    fontWeight="normal"
-                    onClick={logout}
-                    isLoading={loadingLogOut}
-                  >
-                    Log Out&nbsp;
-                    <RiLogoutBoxRLine />
-                  </Button>
+                  <Box display={{ base: "none", lg: "flex" }}>
+                    <FiChevronDown />
+                  </Box>
                 </HStack>
-              </Box>
-            )}
+              </PopoverTrigger>
+              <PopoverContent
+                _focus={{ boxShadow: "none" }} w="full"
+              >
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverBody>
+                  <Box w="300px">
+                    <Center p="3">
+                      <VStack>
+                        <Avatar
+                          size={"2xl"}
+                          src={
+                            "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                          }
+                        />
+                        <Text fontSize="sm">
+                          {getUser ? getUser.fullname : null}
+                        </Text>
+                        <Text fontSize="sm" color="gray.600" mt="-1.5">
+                          {getUser ? getUser.role : null}
+                        </Text>
+                      </VStack>
+                    </Center>
+
+                    <Divider orientation="horizontal" />
+
+                    <HStack justifyContent="space-between" pt="3">
+                      <Link href="/myprofile" passHref>
+                        <Button
+                          colorScheme="teal"
+                          key="Profile"
+                          size="sm"
+                          fontWeight="normal"
+                          onClick={closeDropdown}
+                        >
+                          <ImProfile />
+                          &nbsp;Profile
+                        </Button>
+                      </Link>
+
+                      <Button
+                        colorScheme="red"
+                        key="LogOut"
+                        size="sm"
+                        fontWeight="normal"
+                        onClick={logout}
+                        isLoading={loadingLogOut}
+                      >
+                        Log Out&nbsp;
+                        <RiLogoutBoxRLine />
+                      </Button>
+                    </HStack>
+                  </Box>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Box>
         </Flex>
       </HStack>

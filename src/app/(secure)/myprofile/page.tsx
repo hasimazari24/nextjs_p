@@ -15,54 +15,69 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
-import ModalNotif from "../../components/modal-notif";
+import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 
-type FormValues = {
+type profile = {
+  id?: string;
   fullname?: string;
   username?: string;
   email?: string;
+  image?: string;
+};
+
+interface pwd {
   password?: string;
   password_old?: string;
   password_confirmation?: string;
-};
+}
 
 const MyProfile: React.FC = () => {
   const {
-    reset,
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<FormValues>();
+    reset: resetProfile,
+    handleSubmit: handleProfile,
+    register: registerProfile,
+    formState: { errors: errProfile },
+  } = useForm<profile>();
+
+  const {
+    reset: resetPwd,
+    handleSubmit: handlePwd,
+    register: registerPwd,
+    formState: { errors: errPwd },
+  } = useForm<pwd>();
 
   const fields = {
-    fullname: register("fullname", { required: "Nama Lengkap harus diisi" }),
-    username: register("username", { required: "Username harus diisi" }),
-    email: register("email", {
+    fullname: registerProfile("fullname", {
+      required: "Nama Lengkap harus diisi",
+    }),
+    username: registerProfile("username", { required: "Username harus diisi" }),
+    email: registerProfile("email", {
       required: "E-mail harus diisi",
       pattern: {
-        value : /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        message : "E-mail tidak valid",
+        value:
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        message: "E-mail tidak valid",
       },
     }),
   };
 
   const fields_pwd = {
-    password: register("password", {
+    password: registerPwd("password", {
       required: "Isikan Password baru!",
       minLength: {
         value: 6,
         message: "Password minimal 6 karakter",
       },
     }),
-    password_old: register("password_old", {
+    password_old: registerPwd("password_old", {
       required: "Isikan Password Lama!",
       minLength: {
         value: 6,
         message: "Password minimal 6 karakter",
       },
     }),
-    password_confirmation: register("password_confirmation", {
+    password_confirmation: registerPwd("password_confirmation", {
       required: "Isikan Konfirmasi Password baru!",
       minLength: {
         value: 6,
@@ -85,7 +100,7 @@ const MyProfile: React.FC = () => {
   const [dataTampil, setDataTampil] = useState<any | null>([]);
   const getTampil = async () => {
     try {
-      const response = await axiosCustom.get("/user/edit-profile");
+      const response = await axiosCustom.get("/user/myprofile");
       const timer = setTimeout(() => {
         setDataTampil(response.data.data);
         setIsLoading(false);
@@ -104,10 +119,10 @@ const MyProfile: React.FC = () => {
     // Clear the timeout when the component is unmounted
   }, []);
 
-  const onSubmitProfile: SubmitHandler<FormValues> = async (data) => {
+  const onSubmitProfile: SubmitHandler<profile> = async (data) => {
     setIsLoadingEdit(true);
     try {
-      await axiosCustom.put("/user/edit-profile", data).then((response) => {
+      await axiosCustom.put("/user/myprofile/update", data).then((response) => {
         // setData(response.data.data);
         if (response.status === 200) {
           const timer = setTimeout(() => {
@@ -123,30 +138,28 @@ const MyProfile: React.FC = () => {
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
-          true
+          true,
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setIsLoadingEdit(false);
     }
   };
 
-  const onSubmitPassword: SubmitHandler<FormValues> = async (data) => {
+  const onSubmitPassword: SubmitHandler<pwd> = async (data) => {
     setIsLoadingEdit(true);
     try {
-      await axiosCustom
-        .put("/user/edit-password", data)
-        .then((response) => {
-          // setData(response.data.data);
-          console.log(response);
-          if (response.status === 200) {
-            const timer = setTimeout(() => {
-              setIsLoadingEdit(false);
-              reset();
-            }, 1000);
-            handleShowMessage("Data berhasil diubah.", false);
-            return () => clearTimeout(timer);
-          }
-        });
+      await axiosCustom.put("/user/update-password", data).then((response) => {
+        // setData(response.data.data);
+        console.log(response);
+        if (response.status === 200) {
+          const timer = setTimeout(() => {
+            setIsLoadingEdit(false);
+            resetPwd();
+          }, 1000);
+          handleShowMessage("Data berhasil diubah.", false);
+          return () => clearTimeout(timer);
+        }
+      });
       
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
@@ -174,8 +187,8 @@ const MyProfile: React.FC = () => {
             EDIT PROFILE
           </Text>
           <Box maxW="630">
-            <form onSubmit={handleSubmit(onSubmitProfile)}>
-              <FormControl isInvalid={!!errors.fullname} mb="4">
+            <form onSubmit={handleProfile(onSubmitProfile)}>
+              <FormControl isInvalid={!!errProfile.fullname} mb="4">
                 <InputGroup>
                   <FormLabel minW="120px">Nama Lengkap</FormLabel>
                   <Input
@@ -187,11 +200,11 @@ const MyProfile: React.FC = () => {
                 </InputGroup>
 
                 <FormErrorMessage pl="130px" pb="2">
-                  {errors.fullname && errors.fullname.message}
+                  {errProfile.fullname && errProfile.fullname.message}
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={!!errors.username} mb="4">
+              <FormControl isInvalid={!!errProfile.username} mb="4">
                 <InputGroup>
                   <FormLabel minW="120px">Username</FormLabel>
                   <Input
@@ -203,11 +216,11 @@ const MyProfile: React.FC = () => {
                 </InputGroup>
 
                 <FormErrorMessage pl="130px" pb="2">
-                  {errors.username && errors.username.message}
+                  {errProfile.username && errProfile.username.message}
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={!!errors.email} mb="4">
+              <FormControl isInvalid={!!errProfile.email} mb="4">
                 <InputGroup>
                   <FormLabel minW="120px">E-Mail</FormLabel>
                   <Input
@@ -219,7 +232,7 @@ const MyProfile: React.FC = () => {
                 </InputGroup>
 
                 <FormErrorMessage pl="130px" pb="2">
-                  {errors.email && errors.email.message}
+                  {errProfile.email && errProfile.email.message}
                 </FormErrorMessage>
               </FormControl>
               <Flex justify="flex-end">
@@ -240,8 +253,8 @@ const MyProfile: React.FC = () => {
             EDIT PASSWORD
           </Text>
           <Box maxW="630">
-            <form onSubmit={handleSubmit(onSubmitPassword)}>
-              <FormControl isInvalid={!!errors.password_old} mb="4">
+            <form onSubmit={handlePwd(onSubmitPassword)}>
+              <FormControl isInvalid={!!errPwd.password_old} mb="4">
                 <InputGroup>
                   <FormLabel minW="120px">Password Lama</FormLabel>
                   <Input
@@ -253,11 +266,11 @@ const MyProfile: React.FC = () => {
                 </InputGroup>
 
                 <FormErrorMessage pl="130px" pb="2">
-                  {errors.password_old && errors.password_old.message}
+                  {errPwd.password_old && errPwd.password_old.message}
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={!!errors.password} mb="4">
+              <FormControl isInvalid={!!errPwd.password} mb="4">
                 <InputGroup>
                   <FormLabel minW="120px">Password Baru</FormLabel>
                   <Input
@@ -269,11 +282,11 @@ const MyProfile: React.FC = () => {
                 </InputGroup>
 
                 <FormErrorMessage pl="130px" pb="2">
-                  {errors.password && errors.password.message}
+                  {errPwd.password && errPwd.password.message}
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={!!errors.password_confirmation} mb="4">
+              <FormControl isInvalid={!!errPwd.password_confirmation} mb="4">
                 <InputGroup>
                   <FormLabel minW="120px">Konfirmasi</FormLabel>
                   <Input
@@ -285,8 +298,8 @@ const MyProfile: React.FC = () => {
                 </InputGroup>
 
                 <FormErrorMessage pl="130px" pb="2">
-                  {errors.password_confirmation &&
-                    errors.password_confirmation.message}
+                  {errPwd.password_confirmation &&
+                    errPwd.password_confirmation.message}
                 </FormErrorMessage>
               </FormControl>
               <Flex justify="flex-end">
