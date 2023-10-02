@@ -14,8 +14,8 @@
     vertical-align: middle;
     padding: 10px;
     margin: 10px;
-    opacity: 0.8;
-    background-color: var(--color-transparent-white);
+    background-color: rgba(255, 255, 255, 0.795);
+    opacity: 0.7;
     transition: all 300ms ease;
     border-radius: 10px;
     box-shadow: 0 0 5px 0  rgba(0,0,0,0.8);
@@ -88,4 +88,36 @@
 
 .fade.out {
   opacity: 0;
+}
+
+.module {
+  place-items: center;
+  color: #ff43ea;
+  position: relative;
+  /* filter: grayscale(100%); */
+}
+.module::after {
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-size: cover;
+  filter: grayscale(100%);
+}
+.module-inside {
+  filter: grayscale(0%);
+  position: relative;
+  font: bold 42px sans-serif;
+}
+.module-inside::before {
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-size: cover;
+  filter: grayscale(0%);
 }

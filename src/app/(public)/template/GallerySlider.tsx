@@ -145,16 +145,16 @@ export default function GallerySlider() {
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
           backgroundSize="cover"
+          transition="background-image 0.3s ease-in-out"
           backgroundImage={`url(${cards[activeSlide].image})`}
-          filter="auto"
-          brightness="60%"
-        />
+          filter="brightness(60%)"
+        ></Box>
         <Stack align="center" justify="center">
           <Box
             w={"auto"}
             maxW={"lg"}
             position="absolute"
-            top={{ base:"15%", md:"20%" }}
+            top={{ base: "15%", md: "20%" }}
             transform="translate(0, -20%)"
             color={"white"}
             p="3"

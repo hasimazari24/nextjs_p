@@ -16,8 +16,9 @@ import {
   useColorModeValue,
   Img,
 } from "@chakra-ui/react";
-import ImageCarousel from "./template/ImageCarousel";
 import GallerySlider from "./template/GallerySlider";
+import Link from "next/link";
+import React, { useEffect } from "react";
 
 export default function CallToActionWithVideo() {
   const images = [
@@ -33,6 +34,26 @@ export default function CallToActionWithVideo() {
     },
     // Tambahkan gambar-gambar lainnya
   ];
+
+  const scrollToElement = (elementId:any) => { //isi nama element id yang menjadi target scroll
+    const element = document.getElementById(elementId); // Ganti dengan ID elemen yang ingin Anda gulirkan
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handleHashScrolling = () => {
+    if (window.location.hash) {
+      const elementId = window.location.hash.substring(1); // Menghilangkan karakter "#" dari hash
+      scrollToElement(elementId);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("load", handleHashScrolling);
+  }, [])
+  
+
   return (
     <>
       <Container maxW={"7xl"}>
@@ -70,6 +91,7 @@ export default function CallToActionWithVideo() {
                 fontWeight={"normal"}
                 px={6}
                 leftIcon={<PlayIcon h={4} w={4} color={"gray.300"} />}
+                onClick={() => scrollToElement("PortofilioTenant")}
               >
                 Get Started
               </Button>
@@ -122,7 +144,7 @@ export default function CallToActionWithVideo() {
             </Stack>
           </Stack>
         </Container> */}
-        <Box>
+        <Box id="PortofilioTenant">
           <GallerySlider />
         </Box>
       </Box>
