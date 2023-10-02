@@ -4,7 +4,8 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Text,
   Input,
-  InputGroup,
+  Stack,
+  HStack,
   Button,
   FormControl,
   FormLabel,
@@ -13,10 +14,30 @@ import {
   Box,
   FormErrorMessage,
   Flex,
+  Container,
+  Image,
+  VStack,
+  SimpleGrid,
+  Avatar,
+  Divider,
+  useColorModeValue,
+  IconButton,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
+import { TbWorldWww } from "react-icons/tb";
+import {
+  AiOutlineFacebook,
+  AiOutlineLinkedin,
+  AiOutlineCamera,
+} from "react-icons/ai";
+import Link from "next/link";
+import {
+  EditIcon,
+  DeleteIcon,
+} from "@chakra-ui/icons";
+import ModalSocial from "../../components/modal/modal-social";
 
 type profile = {
   id?: string;
@@ -30,6 +51,12 @@ interface pwd {
   password?: string;
   password_old?: string;
   password_confirmation?: string;
+}
+
+interface userLinks {
+  id: string;
+  title: string;
+  url: string;
 }
 
 const MyProfile: React.FC = () => {
@@ -98,11 +125,15 @@ const MyProfile: React.FC = () => {
   };
 
   const [dataTampil, setDataTampil] = useState<any | null>([]);
+  const [dataLinks, setDataLinks] = useState<Array<userLinks>>([]);
+  const [isModalSocial, setIsModalSocial] = useState(false);
+
   const getTampil = async () => {
     try {
       const response = await axiosCustom.get("/user/myprofile");
       const timer = setTimeout(() => {
         setDataTampil(response.data.data);
+        setDataLinks(response.data.data.user_link);
         setIsLoading(false);
       }, 1000);
 
@@ -160,19 +191,28 @@ const MyProfile: React.FC = () => {
           return () => clearTimeout(timer);
         }
       });
-      
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
       console.log(error);
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
-          true
+          true,
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setIsLoadingEdit(false);
     }
   };
+
+   const [isHovered, setIsHovered] = useState(false);
+
+   const handleMouseEnter = () => {
+     setIsHovered(true);
+   };
+
+   const handleMouseLeave = () => {
+     setIsHovered(false);
+   };
 
   return (
     // <VStack spacing={8} p={4}>
@@ -183,138 +223,309 @@ const MyProfile: React.FC = () => {
         </Center>
       ) : (
         <>
-          <Text fontSize="lg" fontWeight="bold" mb="5">
-            EDIT PROFILE
-          </Text>
-          <Box maxW="630">
-            <form onSubmit={handleProfile(onSubmitProfile)}>
-              <FormControl isInvalid={!!errProfile.fullname} mb="4">
-                <InputGroup>
-                  <FormLabel minW="120px">Nama Lengkap</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.fullname}
-                    defaultValue={dataTampil?.fullname}
-                    // className={`form-control ${errors.name ? "is-invalid"}`}
-                  />
-                </InputGroup>
-
-                <FormErrorMessage pl="130px" pb="2">
-                  {errProfile.fullname && errProfile.fullname.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              <FormControl isInvalid={!!errProfile.username} mb="4">
-                <InputGroup>
-                  <FormLabel minW="120px">Username</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.username}
-                    defaultValue={dataTampil?.username}
-                    // className={`form-control ${errors.name ? "is-invalid"}`}
-                  />
-                </InputGroup>
-
-                <FormErrorMessage pl="130px" pb="2">
-                  {errProfile.username && errProfile.username.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              <FormControl isInvalid={!!errProfile.email} mb="4">
-                <InputGroup>
-                  <FormLabel minW="120px">E-Mail</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields.email}
-                    defaultValue={dataTampil?.email}
-                    // className={`form-control ${errors.name ? "is-invalid"}`}
-                  />
-                </InputGroup>
-
-                <FormErrorMessage pl="130px" pb="2">
-                  {errProfile.email && errProfile.email.message}
-                </FormErrorMessage>
-              </FormControl>
-              <Flex justify="flex-end">
-                <Button
-                  leftIcon={<CheckIcon />}
-                  colorScheme="teal"
-                  type="submit"
-                  isLoading={isLoadingEdit}
-                  size="md"
+          <Container maxW={"7xl"} pl="0" pr="0">
+            <SimpleGrid
+              columns={{ base: 1, lg: 2 }}
+              spacing={{ base: 8, md: 10 }}
+            >
+              <VStack>
+                <Text fontSize="lg" fontWeight="bold" mb="3">
+                  EDIT PROFILE
+                </Text>
+                <Flex
+                  justify={"center"}
+                  //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
                 >
-                  Simpan Profile
-                </Button>
-              </Flex>
-            </form>
-          </Box>
+                  {/* <Avatar
+                    h={{ base: "100px", sm: "200px", lg: "200px" }}
+                    w="100%"
+                    src={
+                      "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    }
+                    css={{
+                      border: "5px solid white",
+                    }}
+                  /> */}
 
-          <Text fontSize="lg" fontWeight="bold" mb="5" mt="3">
-            EDIT PASSWORD
-          </Text>
-          <Box maxW="630">
-            <form onSubmit={handlePwd(onSubmitPassword)}>
-              <FormControl isInvalid={!!errPwd.password_old} mb="4">
-                <InputGroup>
-                  <FormLabel minW="120px">Password Lama</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields_pwd.password_old}
-                    defaultValue={dataTampil?.password_old}
-                    // className={`form-control ${errors.name ? "is-invalid"}`}
-                  />
-                </InputGroup>
+                  <Box
+                    position="relative"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    mb="3"
+                    cursor={"pointer"}
+                  >
+                    <Image
+                      src={
+                        "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                      }
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      borderRadius="full"
+                    />
 
-                <FormErrorMessage pl="130px" pb="2">
-                  {errPwd.password_old && errPwd.password_old.message}
-                </FormErrorMessage>
-              </FormControl>
+                    <Stack
+                      position="absolute"
+                      bottom="0"
+                      right="0"
+                      padding="2"
+                      spacing="2"
+                      direction="column"
+                      background="rgba(0, 0, 0, 0.7)"
+                      opacity={isHovered ? 1 : 0} // Mengatur opacity berdasarkan isHovered
+                      transition="opacity 0.2s ease-in-out" // Efek transisi
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      justifyContent={"center"}
+                      align={"center"}
+                      borderRadius="full"
+                    >
+                      <HStack spacing="1">
+                        <IconButton
+                          aria-label="Edit"
+                          title="Ubah"
+                          icon={<AiOutlineCamera size="20px" />}
+                          colorScheme="teal"
+                        />
+                        <IconButton
+                          aria-label="Delete"
+                          title="Hapus"
+                          icon={<DeleteIcon />}
+                          colorScheme="red"
+                        />
+                      </HStack>
+                    </Stack>
+                  </Box>
+                </Flex>
+                <Box w="full">
+                  <form onSubmit={handleProfile(onSubmitProfile)}>
+                    <FormControl isInvalid={!!errProfile.fullname} mb="3">
+                      <Flex flexDirection={["column", "row"]}>
+                        <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
+                          <FormLabel minW="110px">Nama Lengkap</FormLabel>
+                        </Box>
+                        <Box flex={["1", "75%"]}>
+                          <Input
+                            type="text"
+                            {...fields.fullname}
+                            defaultValue={dataTampil?.fullname}
+                            // className={`form-control ${errors.name ? "is-invalid"}`}
+                          />
+                          <FormErrorMessage>
+                            {errProfile.fullname && errProfile.fullname.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
 
-              <FormControl isInvalid={!!errPwd.password} mb="4">
-                <InputGroup>
-                  <FormLabel minW="120px">Password Baru</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields_pwd.password}
-                    defaultValue={dataTampil?.password}
-                    // className={`form-control ${errors.name ? "is-invalid"}`}
-                  />
-                </InputGroup>
+                    <FormControl isInvalid={!!errProfile.username} mb="3">
+                      <Flex flexDirection={["column", "row"]}>
+                        <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
+                          <FormLabel minW="110px">Username</FormLabel>
+                        </Box>
+                        <Box flex={["1", "75%"]}>
+                          <Input
+                            type="text"
+                            {...fields.username}
+                            defaultValue={dataTampil?.username}
+                            // className={`form-control ${errors.name ? "is-invalid"}`}
+                          />
+                          <FormErrorMessage>
+                            {errProfile.username && errProfile.username.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
 
-                <FormErrorMessage pl="130px" pb="2">
-                  {errPwd.password && errPwd.password.message}
-                </FormErrorMessage>
-              </FormControl>
+                    <FormControl isInvalid={!!errProfile.email} mb="3">
+                      <Flex flexDirection={["column", "row"]}>
+                        <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
+                          <FormLabel minW="110px">E-Mail</FormLabel>
+                        </Box>
+                        <Box flex={["1", "75%"]}>
+                          <Input
+                            type="text"
+                            {...fields.email}
+                            defaultValue={dataTampil?.email}
+                            // className={`form-control ${errors.name ? "is-invalid"}`}
+                          />
+                          <FormErrorMessage>
+                            {errProfile.email && errProfile.email.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
 
-              <FormControl isInvalid={!!errPwd.password_confirmation} mb="4">
-                <InputGroup>
-                  <FormLabel minW="120px">Konfirmasi</FormLabel>
-                  <Input
-                    type="text"
-                    {...fields_pwd.password_confirmation}
-                    defaultValue={dataTampil?.password_confirmation}
-                    // className={`form-control ${errors.name ? "is-invalid"}`}
-                  />
-                </InputGroup>
+                    <Flex justify="flex-end">
+                      <Button
+                        leftIcon={<CheckIcon />}
+                        colorScheme="teal"
+                        type="submit"
+                        isLoading={isLoadingEdit}
+                        size="md"
+                      >
+                        Simpan Profile
+                      </Button>
+                    </Flex>
+                  </form>
+                </Box>
+              </VStack>
 
-                <FormErrorMessage pl="130px" pb="2">
-                  {errPwd.password_confirmation &&
-                    errPwd.password_confirmation.message}
-                </FormErrorMessage>
-              </FormControl>
-              <Flex justify="flex-end">
-                <Button
-                  leftIcon={<CheckIcon />}
-                  colorScheme="green"
-                  type="submit"
-                  isLoading={isLoading}
-                  size="md"
-                >
-                  Simpan Password
-                </Button>
-              </Flex>
-            </form>
-          </Box>
+              <Box>
+                <VStack>
+                  <Text fontSize="lg" fontWeight="bold" mb="3">
+                    EDIT PASSWORD
+                  </Text>
+                  <Box w="full">
+                    <form onSubmit={handlePwd(onSubmitPassword)}>
+                      <FormControl isInvalid={!!errPwd.password_old} mb="3">
+                        <Flex flexDirection={["column", "row"]}>
+                          <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
+                            <FormLabel minW="110px">Password Lama</FormLabel>
+                          </Box>
+                          <Box flex={["1", "75%"]}>
+                            <Input
+                              type="text"
+                              {...fields_pwd.password_old}
+                              defaultValue={dataTampil?.password_old}
+                              // className={`form-control ${errors.name ? "is-invalid"}`}
+                            />
+                            <FormErrorMessage>
+                              {errPwd.password_old &&
+                                errPwd.password_old.message}
+                            </FormErrorMessage>
+                          </Box>
+                        </Flex>
+                      </FormControl>
+
+                      <FormControl isInvalid={!!errPwd.password} mb="4">
+                        <Flex flexDirection={["column", "row"]}>
+                          <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
+                            <FormLabel minW="110px">Password Baru</FormLabel>
+                          </Box>
+                          <Box flex={["1", "75%"]}>
+                            <Input
+                              type="text"
+                              {...fields_pwd.password}
+                              defaultValue={dataTampil?.password}
+                              // className={`form-control ${errors.name ? "is-invalid"}`}
+                            />
+                            <FormErrorMessage>
+                              {errPwd.password && errPwd.password.message}
+                            </FormErrorMessage>
+                          </Box>
+                        </Flex>
+                      </FormControl>
+
+                      <FormControl
+                        isInvalid={!!errPwd.password_confirmation}
+                        mb="4"
+                      >
+                        <Flex flexDirection={["column", "row"]}>
+                          <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
+                            <FormLabel minW="110px">Konfirmasi</FormLabel>
+                          </Box>
+                          <Box flex={["1", "75%"]}>
+                            <Input
+                              type="text"
+                              {...fields_pwd.password_confirmation}
+                              defaultValue={dataTampil?.password_confirmation}
+                              // className={`form-control ${errors.name ? "is-invalid"}`}
+                            />
+                            <FormErrorMessage>
+                              {errPwd.password_confirmation &&
+                                errPwd.password_confirmation.message}
+                            </FormErrorMessage>
+                          </Box>
+                        </Flex>
+                      </FormControl>
+
+                      <Flex justify="flex-end">
+                        <Button
+                          leftIcon={<CheckIcon />}
+                          colorScheme="green"
+                          type="submit"
+                          isLoading={isLoading}
+                          size="md"
+                        >
+                          Simpan Password
+                        </Button>
+                      </Flex>
+                    </form>
+                  </Box>
+
+                  <Divider mt="3" mb="3" />
+
+                  <Text fontSize="lg" fontWeight="bold" mb="3">
+                    EDIT SOCIAL LINKS
+                  </Text>
+                </VStack>
+                <Stack direction={["column", "row"]} mb="3">
+                  {dataLinks.length !== 0 ? (
+                    dataLinks.map((link) => {
+                      if (link.title === "Website") {
+                        return (
+                          <Link href={link.url} target="_blank">
+                            <HStack alignItems={"center"} pr="3">
+                              <IconButton
+                                colorScheme="blue"
+                                aria-label="web"
+                                title="Website"
+                                icon={<TbWorldWww size="xs" />}
+                              />
+                            </HStack>
+                          </Link>
+                        );
+                      } else if (link.title === "Facebook") {
+                        return (
+                          <Link href={link.url} target="_blank">
+                            <HStack alignItems={"center"} pr="3">
+                              <IconButton
+                                colorScheme="facebook"
+                                aria-label="web"
+                                icon={<AiOutlineFacebook size="xs" />}
+                              />
+                            </HStack>
+                          </Link>
+                        );
+                      } else if (link.title === "LinkedIn") {
+                        return (
+                          <Link href={link.url} target="_blank">
+                            <Link href="impuls.id">
+                              <HStack alignItems={"center"} pr="3">
+                                <IconButton
+                                  colorScheme="linkedin"
+                                  aria-label="web"
+                                  icon={<AiOutlineLinkedin size="xs" />}
+                                />
+                              </HStack>
+                            </Link>
+                          </Link>
+                        );
+                      }
+                    })
+                  ) : (
+                    <Text as="i" mb="3">
+                      Belum ada social links. Tambahkan melalui Edit Social
+                      Links di bawah ini.
+                    </Text>
+                  )}
+                </Stack>
+                <Flex justify="flex-end">
+                  <Button
+                    bgColor="blue.400"
+                    _hover={{
+                      bg: "blue.500",
+                    }}
+                    color="white"
+                    onClick={() => setIsModalSocial(true)}
+                    key="editSocial"
+                  >
+                    <EditIcon /> &nbsp; Edit Social Links
+                  </Button>
+                </Flex>
+              </Box>
+            </SimpleGrid>
+          </Container>
         </>
       )}
       <ModalNotif
@@ -322,6 +533,16 @@ const MyProfile: React.FC = () => {
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+      />
+      <ModalSocial
+        isOpen={isModalSocial}
+        onClose={() => setIsModalSocial(false)}
+        onSubmit={() => {
+          getTampil();
+        }}
+        formData={dataLinks}
+        idUser={dataTampil?.id}
+        onDelete={() => getTampil()}
       />
     </div>
   );

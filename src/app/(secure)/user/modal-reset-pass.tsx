@@ -67,10 +67,10 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
-
+    console.log(data);
     try {
       await axiosCustom
-        .put(`/user/reset-password`, data)
+        .post(`/user/reset-password`, data)
         .then((response) => {
           // setData(response.data.data);
 
@@ -131,12 +131,13 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
                     <FormLabel>Username</FormLabel>
                   </Box>
                   <Box flex={["1", "75%"]}>
-                    <Input
-                      type="text"
-                      className="username"
-                      disabled
-                      defaultValue={tableData?.username}
-                    />
+                    <fieldset disabled>
+                      <Input
+                        type="text"
+                        {...register("username")}
+                        defaultValue={tableData?.username}
+                      />
+                    </fieldset>
                   </Box>
                 </Flex>
               </FormControl>
@@ -146,12 +147,13 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
                     <FormLabel>E-mail</FormLabel>
                   </Box>
                   <Box flex={["1", "75%"]}>
-                    <Input
-                      type="text"
-                      className="email"
-                      disabled
-                      defaultValue={tableData?.email}
-                    />
+                    <fieldset disabled>
+                      <Input
+                        type="text"
+                        {...register("email")}
+                        defaultValue={tableData?.email}
+                      />
+                    </fieldset>
                   </Box>
                 </Flex>
               </FormControl>

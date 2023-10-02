@@ -14,7 +14,8 @@ import {
 } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
-import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
+// import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
+import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
 import SearchModal from "@/app/(secure)/tenant/team/SearchModal";
 import ModalNotif from "@/app/components/modal/modal-notif";

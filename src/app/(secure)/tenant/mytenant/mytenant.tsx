@@ -384,7 +384,7 @@ export default function MyTenant() {
                       dataTenantLinks.map((link) => {
                         if (link.title === "Website") {
                           return (
-                            <Link href={link.url}>
+                            <Link href={link.url} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
                                   colorScheme="blue"
@@ -397,7 +397,7 @@ export default function MyTenant() {
                           );
                         } else if (link.title === "Facebook") {
                           return (
-                            <Link href={link.url}>
+                            <Link href={link.url} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
                                   colorScheme="facebook"
@@ -410,7 +410,7 @@ export default function MyTenant() {
                           );
                         } else if (link.title === "LinkedIn") {
                           return (
-                            <Link href={link.url}>
+                            <Link href={link.url} target="_blank">
                               <Link href="impuls.id">
                                 <HStack alignItems={"center"} pr="3">
                                   <IconButton
@@ -461,6 +461,7 @@ export default function MyTenant() {
         }}
         formData={dataTenantLinks}
         idTenant={dataMyTenant?.id}
+        onDelete={() => getMyTenant()}
       />
 
       <ModalNotif

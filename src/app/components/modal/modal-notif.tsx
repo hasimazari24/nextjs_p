@@ -69,7 +69,7 @@ const ModalNotif: React.FC<ModalProps> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -94,8 +94,12 @@ const ModalNotif: React.FC<ModalProps> = ({
             )}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <Center mb="3">{message}</Center>
+          <ModalBody width={"full"}>
+            <Center mb="3">
+              <Box pr="2" pl="2">
+                <Text fontSize={"auto"} textAlign={"center"}>{message}</Text>
+              </Box>
+            </Center>
             <Progress colorScheme="green" size="md" value={progressValue} />
           </ModalBody>
           <ModalFooter>

@@ -29,6 +29,7 @@ import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "./modal-notif";
+import ConfirmationModal from "./modal-confirm";
 import { axiosCustom } from "@/app/api/axios";
 import { AiOutlineFacebook, AiOutlineLinkedin } from "react-icons/ai";
 
@@ -39,6 +40,8 @@ interface ModalProps {
   onSubmit: () => void;
   formData?: { id: string; title: string; url: string }[]; // Jika mode edit, kirim data yang akan diedit
   idTenant?: string;
+  idUser?: string;
+  onDelete: () => void;
 }
 
 interface FormValues {
@@ -54,6 +57,8 @@ const ModalSocial: React.FC<ModalProps> = ({
   onSubmit,
   formData,
   idTenant,
+  idUser,
+  onDelete,
 }) => {
   const {
     register: registWebsite,
@@ -87,56 +92,176 @@ const ModalSocial: React.FC<ModalProps> = ({
 
   const handleSave = async (data: any) => {
     setIsLoading(true);
+    if (idTenant) {
+      try {
+        // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+        if (data.id) {
+          // Mode edit, kirim data melalui PUT request
+          // console.log(data); axiosCustom.put("/")
+          await axiosCustom
+            .put(`/tenant/${idTenant}/update-link/${data.id}`, data)
+            .then((response) => {
+              // setData(response.data.data);
 
-    try {
-      // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      if (data.id) {
-        // Mode edit, kirim data melalui PUT request
-        // console.log(data); axiosCustom.put("/")
-        await axiosCustom
-          .put(`/tenant/${idTenant}/update-link/${data.id}`, data)
-          .then((response) => {
-            // setData(response.data.data);
+              if (response.status === 200) {
+                handleShowMessage("Data berhasil diubah.", false);
+              }
+            });
+        } else {
+          // Mode tambah, kirim data melalui POST request
+          await axiosCustom
+            .post(`/tenant/${idTenant}/add-link`, data)
+            .then((response) => {
+              // console.log(response);
+              if (response.status === 201) {
+                handleShowMessage("Data berhasil disimpan.", false);
+              }
+            });
+        }
 
-            if (response.status === 200) {
-              handleShowMessage("Data berhasil diubah.", false);
-            }
-          });
-      } else {
-        // Mode tambah, kirim data melalui POST request
-        await axiosCustom
-          .post(`/tenant/${idTenant}/add-link`, data)
-          .then((response) => {
-            // console.log(response);
-            if (response.status === 201) {
-              handleShowMessage("Data berhasil disimpan.", false);
-            }
-          });
+        onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+        onClose(); // Tutup modal
+        resetAll();
+        setIsLoading(false);
+        // Setelah data disimpan, atur pesan berhasil ke dalam state
+      } catch (error: any) {
+        console.error(error);
+        if (error?.response) {
+          handleShowMessage(
+            `Terjadi Kesalahan: ${error.response.data.message} : ${error.response.data.data?.url}`,
+            true,
+          );
+        } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        setIsLoading(false);
       }
+    } else if (idUser) {
+      try {
+        // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+        if (data.id) {
+          // Mode edit, kirim data melalui PUT request
+          // console.log(data); axiosCustom.put("/")
+          await axiosCustom
+            .put(`/user/${idUser}/update-link/${data.id}`, data)
+            .then((response) => {
+              // setData(response.data.data);
 
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
-      onClose(); // Tutup modal
-      resetAll();
-      setIsLoading(false);
-      // Setelah data disimpan, atur pesan berhasil ke dalam state
-    } catch (error: any) {
-      console.error(error);
-      if (error?.response) {
-        handleShowMessage(
-          `Terjadi Kesalahan: ${error.response.data.message} : ${error.response.data.data?.url}`,
-          true,
+              if (response.status === 200) {
+                handleShowMessage("Data berhasil diubah.", false);
+              }
+            });
+        } else {
+          // Mode tambah, kirim data melalui POST request
+          await axiosCustom
+            .post(`/user/${idUser}/add-link`, data)
+            .then((response) => {
+              // console.log(response);
+              if (response.status === 201) {
+                handleShowMessage("Data berhasil disimpan.", false);
+              }
+            });
+        }
+
+        onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+        onClose(); // Tutup modal
+        resetAll();
+        setIsLoading(false);
+        // Setelah data disimpan, atur pesan berhasil ke dalam state
+      } catch (error: any) {
+        console.error(error);
+        if (error?.response) {
+          handleShowMessage(
+            `Terjadi Kesalahan: ${error.response.data.message} : ${error.response.data.data?.url}`,
+            true,
+          );
+        } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        setIsLoading(false);
+      }
+    }
+  };
+
+  //handle hapus
+  const [dataDeleteId, setDataDeleteId] = useState<string | null>(null);
+  const [textConfirm, setTextConfirm] = useState(" ");
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+  const handleDelete = (item: any) => {
+    setDataDeleteId(item.id);
+    setTextConfirm(`Yakin ingin hapus akun social link ${item.title} ?`);
+    setIsModalDeleteOpen(true);
+  };
+
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+  const deleteData = async () => {
+    if (idTenant && dataDeleteId) {
+      try {
+        setIsLoadingDelete(true);
+        const response = await axiosCustom.delete(
+          `tenant/${idTenant}/delete-link/${dataDeleteId}`,
         );
-      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-      setIsLoading(false);
+
+        // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
+        const timer = setTimeout(() => {
+          // console.log(response);
+          if (response.status === 200) {
+            setIsLoadingDelete(false);
+            setIsModalDeleteOpen(false);
+            handleShowMessage("Data berhasil dihapus.", false);
+            setDataDeleteId(null);
+            onDelete();
+          }
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      } catch (error: any) {
+        if (error?.response) {
+          handleShowMessage(
+            `Terjadi Kesalahan: ${error.response.data.message}`,
+            true,
+          );
+        } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        setIsLoadingDelete(false);
+      }
+    } else if (idTenant) {
+      try {
+        setIsLoadingDelete(true);
+        const response = await axiosCustom.delete(
+          `/user/${idUser}/delete-link/${dataDeleteId}`,
+        );
+
+        // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
+        const timer = setTimeout(() => {
+          // console.log(response);
+          if (response.status === 200) {
+            setIsLoadingDelete(false);
+            setIsModalDeleteOpen(false);
+            handleShowMessage("Data berhasil dihapus.", false);
+            setDataDeleteId(null);
+            onDelete();
+          }
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      } catch (error: any) {
+        if (error?.response) {
+          handleShowMessage(
+            `Terjadi Kesalahan: ${error.response.data.message}`,
+            true,
+          );
+        } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        setIsLoadingDelete(false);
+      }
     }
   };
 
   const resetAll = () => {
     setIsEditingInstagram(false);
     setIsEditingWebsite(false);
+    setDataDeleteId(null);
     resetInstagram();
     resetWebsite();
   };
+
+  // console.log(formData);
 
   return (
     <>
@@ -170,29 +295,31 @@ const ModalSocial: React.FC<ModalProps> = ({
                           defaultValue={akunWeb ? akunWeb.id : ""}
                         />
                         <Input
-                          {...registWebsite("id_tenant")}
-                          defaultValue={idTenant}
-                        />
-                        <Input
                           {...registWebsite("title")}
                           defaultValue="Website"
                         />
                       </Hide>
-                      <Input
-                        placeholder="URL Social Website"
-                        disabled={!isEditingWebsite}
-                        onFocus={() => !isEditingWebsite}
-                        defaultValue={akunWeb ? akunWeb.url : ""}
-                        {...registWebsite("url", {
-                          required: "URL Website harus diisi!",
-                        })}
-                      />
+                      <fieldset disabled={!isEditingWebsite}>
+                        <Input
+                          placeholder="URL Social Website"
+                          onFocus={() => !isEditingWebsite}
+                          defaultValue={akunWeb ? akunWeb.url : ""}
+                          {...registWebsite("url", {
+                            required: "URL Website harus diisi!",
+                          })}
+                        />
+                      </fieldset>
+
                       {/* jika ada datany maka berikan tampilan edit dan delete */}
                       {akunWeb?.url ? (
                         <div>
                           {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
                           {isEditingWebsite ? (
-                            <Button colorScheme="orange" type="submit">
+                            <Button
+                              colorScheme="orange"
+                              type="submit"
+                              isLoading={isLoading}
+                            >
                               Simpan
                             </Button>
                           ) : (
@@ -207,7 +334,12 @@ const ModalSocial: React.FC<ModalProps> = ({
                               >
                                 Edit
                               </Button>
-                              <Button colorScheme="red">Hapus</Button>
+                              <Button
+                                colorScheme="red"
+                                onClick={() => handleDelete(akunWeb)}
+                              >
+                                Hapus
+                              </Button>
                             </HStack>
                           )}
                         </div>
@@ -215,7 +347,11 @@ const ModalSocial: React.FC<ModalProps> = ({
                         // jika tidak ada data/ belum punya, maka berikan btn tambah
                         <>
                           {isEditingWebsite && (
-                            <Button colorScheme="orange" type="submit">
+                            <Button
+                              colorScheme="orange"
+                              type="submit"
+                              isLoading={isLoading}
+                            >
                               Simpan
                             </Button>
                           )}
@@ -256,10 +392,6 @@ const ModalSocial: React.FC<ModalProps> = ({
                         <Input
                           {...registInstagram("id")}
                           defaultValue={akunIg ? akunIg.id : ""}
-                        />
-                        <Input
-                          {...registInstagram("id_tenant")}
-                          defaultValue={idTenant}
                         />
                         <Input
                           {...registInstagram("title")}
@@ -347,6 +479,15 @@ const ModalSocial: React.FC<ModalProps> = ({
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+      />
+
+      {/* Modal hapus data */}
+      <ConfirmationModal
+        isOpen={isModalDeleteOpen}
+        onClose={() => setIsModalDeleteOpen(false)}
+        onConfirm={deleteData}
+        dataConfirm={textConfirm}
+        isLoading={isLoadingDelete}
       />
     </>
   );
