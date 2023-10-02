@@ -23,14 +23,16 @@ const customTheme = extendTheme({
       },
     },
   },
-  "bg-image-wrap" : {
-   position: "fixed",
-   top: 0,
-   left: 0,
-   width: "100vw",
-   height: "100vh",
+
+  "bg-image-wrap": {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
   },
   colors: {
+    "--color-transparent-white": "rgba(255, 0, 0, 0.5)",
     teal: {
       50: "#E6FFFA",
       100: "#B2F5EA",

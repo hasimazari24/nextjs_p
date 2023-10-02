@@ -38,10 +38,12 @@ import {
   FiChevronDown,
 } from "react-icons/fi";
 import { AiOutlineHome } from "react-icons/ai";
+import { ImProfile } from "react-icons/im";
+import { RiLogoutBoxRLine } from "react-icons/ri";
 import { IconType } from "react-icons";
 import Link from "next/link";
-import { ImProfile } from "@react-icons/all-files/im/ImProfile";
-import { RiLogoutBoxRLine } from "@react-icons/all-files/ri/RiLogoutBoxRLine";
+// import { ImProfile } from "@react-icons/all-files/im/ImProfile";
+// import { RiLogoutBoxRLine } from "@react-icons/all-files/ri/RiLogoutBoxRLine";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../utils/AuthContext";
 
