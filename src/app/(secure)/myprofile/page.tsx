@@ -98,7 +98,7 @@ const MyProfile: React.FC = () => {
     // ambil type dari file
     const UPLOAD_FILE_TYPE = file.type;
     // ambil size dari file
-    const UPLOAD_FILE_SIZE = file.type;
+    const UPLOAD_FILE_SIZE = file.size;
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
       file.value = null;
