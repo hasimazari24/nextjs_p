@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
   Text,
@@ -33,11 +33,9 @@ import {
   AiOutlineCamera,
 } from "react-icons/ai";
 import Link from "next/link";
-import {
-  EditIcon,
-  DeleteIcon,
-} from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import ModalSocial from "../../components/modal/modal-social";
+import { profile } from "console";
 
 type profile = {
   id?: string;
@@ -73,6 +71,84 @@ const MyProfile: React.FC = () => {
     register: registerPwd,
     formState: { errors: errPwd },
   } = useForm<pwd>();
+
+  const [avatar, setAvatar] = useState<File>();
+  const [previewAvatar, setPreviewAvatar] = useState<string>();
+  const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
+  const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
+  const [btnDeleteAvatar, setBtnDeleteAvatar] = useState<Boolean>(false);
+  const inputFile = useRef<HTMLInputElement>(null);
+  // jika button edit avatar klik, brarti input file juga diklik
+  const onButtonEditAvatar = () => {
+    inputFile.current?.click();
+  };
+  // fungsi ketika input file avatar change
+  const onAvatarChange = (e: any) => {
+    // prepare supported file type
+    const SUPPORT_FILE_TYPE = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/svg+xml",
+    ];
+    // prepare max file size
+    const MAX_FILE_SIZE = 800000; //800KB
+    // ambil input nya
+    const file = e?.[0];
+    // ambil type dari file
+    const UPLOAD_FILE_TYPE = file.type;
+    // ambil size dari file
+    const UPLOAD_FILE_SIZE = file.type;
+    if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
+      handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
+      file.value = null;
+    } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
+      handleShowMessage(
+        "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
+        true,
+      );
+      file.value = null;
+    } else {
+      setAvatar(file);
+      setPreviewAvatar(URL.createObjectURL(file));
+      setIsLoadingEdit(true);
+    }
+  };
+
+  // fungsi ketika button delete avatar click
+  const onButtonDeleteAvatar = () => {
+    setPreviewAvatar(`${process.env.API_URL}/storage/view/avatar-default.jpg`);
+    setIdImageAvatar(`delete=${idImageAvatarOld}`);
+    setIdImageAvatarOld(null);
+    setBtnDeleteAvatar(false);
+  };
+
+  // logic update avatar disini
+  useEffect(() => {
+    async function uploadAvatar() {
+      if (avatar !== undefined && avatar !== null) {
+        try {
+          const data = new FormData();
+          data.append("asset", avatar as File);
+          const upload = await axiosCustom.post("/assets/upload", data, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          setIdImageAvatar(upload.data.data.id);
+        } catch (error: any) {
+          // tampilken error
+          if (error?.response) {
+            handleShowMessage(
+              `Terjadi Kesalahan: ${error.response.data.message}`,
+              true,
+            );
+          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        } finally {
+          setIsLoadingEdit(false);
+        }
+      }
+    }
+    uploadAvatar();
+  }, [avatar]);
 
   const fields = {
     fullname: registerProfile("fullname", {
@@ -135,8 +211,11 @@ const MyProfile: React.FC = () => {
         setDataTampil(response.data.data);
         setDataLinks(response.data.data.user_link);
         setIsLoading(false);
+        if (response.data.data.image_id !== null) {
+          setIdImageAvatarOld(response.data.data.image_id);
+          setBtnDeleteAvatar(true);
+        } else setBtnDeleteAvatar(false);
       }, 1000);
-
       return () => clearTimeout(timer);
     } catch (error) {
       console.error("Gagal memuat data:", error);
@@ -151,18 +230,38 @@ const MyProfile: React.FC = () => {
   }, []);
 
   const onSubmitProfile: SubmitHandler<profile> = async (data) => {
+    // refactoring data untuk mendukung update avatar
+    const dataBaru: profile = {
+      fullname: `${data.fullname}`,
+      username: `${data.username}`,
+      email: `${data.email}`,
+    };
+    // append jika idImageAvatar not null
+    if (idImageAvatar) dataBaru.image = idImageAvatar;
     setIsLoadingEdit(true);
     try {
-      await axiosCustom.put("/user/myprofile/update", data).then((response) => {
-        // setData(response.data.data);
-        if (response.status === 200) {
-          const timer = setTimeout(() => {
-            setIsLoadingEdit(false);
-          }, 1000);
-          handleShowMessage("Data berhasil diubah.", false);
-          return () => clearTimeout(timer);
-        }
-      });
+      await axiosCustom
+        .patch("/user/myprofile/update", dataBaru)
+        .then((response) => {
+          // setData(response.data.data);
+          if (response.status === 200) {
+            const timer = setTimeout(() => {
+              setIsLoadingEdit(false);
+            }, 1000);
+            handleShowMessage("Data berhasil diubah.", false);
+            // jika data yg dikirim ada image
+            if (dataBaru.image) {
+              // cek dulu dek jika bisa dipecah jadi dua maka kosongkan idimgold
+              if (dataBaru.image.split("=").length === 2)
+                setIdImageAvatarOld(null);
+              // kosongkan img avatar
+              setIdImageAvatar(null);
+              // tampilkan btn delete
+              setBtnDeleteAvatar(false);
+            }
+            return () => clearTimeout(timer);
+          }
+        });
       await getTampil();
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
@@ -173,6 +272,18 @@ const MyProfile: React.FC = () => {
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setIsLoadingEdit(false);
+    } finally {
+      // jika data.image ada isinya
+      if (data.image) {
+        // tampung dulu dek
+        const idImg = data.image;
+        // cek jika bisa dipecah jadi dua atau tidak
+        if (idImg.split("=").length === 1) {
+          setIdImageAvatarOld(idImg);
+          setIdImageAvatar(null);
+          setBtnDeleteAvatar(true);
+        }
+      }
     }
   };
 
@@ -204,18 +315,17 @@ const MyProfile: React.FC = () => {
     }
   };
 
-   const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-   const handleMouseEnter = () => {
-     setIsHovered(true);
-   };
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
 
-   const handleMouseLeave = () => {
-     setIsHovered(false);
-   };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return (
-    // <VStack spacing={8} p={4}>
     <div>
       {isLoading ? (
         <Center h="100%" m="10">
@@ -236,17 +346,6 @@ const MyProfile: React.FC = () => {
                   justify={"center"}
                   //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
                 >
-                  {/* <Avatar
-                    h={{ base: "100px", sm: "200px", lg: "200px" }}
-                    w="100%"
-                    src={
-                      "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                    }
-                    css={{
-                      border: "5px solid white",
-                    }}
-                  /> */}
-
                   <Box
                     position="relative"
                     onMouseEnter={handleMouseEnter}
@@ -254,15 +353,24 @@ const MyProfile: React.FC = () => {
                     mb="3"
                     cursor={"pointer"}
                   >
-                    <Image
-                      src={
-                        "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                      }
-                      h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w="100%"
-                      borderRadius="full"
-                    />
-
+                    {/* tambahan untuk update avatar */}
+                    {previewAvatar ? (
+                      <Image
+                        src={previewAvatar}
+                        h={{ base: "100px", sm: "200px", lg: "200px" }}
+                        w="100%"
+                        borderRadius="full"
+                        alt="Preview Avatar"
+                      />
+                    ) : (
+                      <Image
+                        src={dataTampil?.image_url}
+                        h={{ base: "100px", sm: "200px", lg: "200px" }}
+                        w="100%"
+                        borderRadius="full"
+                        alt="Avatar"
+                      />
+                    )}
                     <Stack
                       position="absolute"
                       bottom="0"
@@ -281,17 +389,21 @@ const MyProfile: React.FC = () => {
                     >
                       <HStack spacing="1">
                         <IconButton
+                          onClick={onButtonEditAvatar}
                           aria-label="Edit"
                           title="Ubah"
                           icon={<AiOutlineCamera size="20px" />}
                           colorScheme="teal"
                         />
-                        <IconButton
-                          aria-label="Delete"
-                          title="Hapus"
-                          icon={<DeleteIcon />}
-                          colorScheme="red"
-                        />
+                        {btnDeleteAvatar && (
+                          <IconButton
+                            onClick={onButtonDeleteAvatar}
+                            aria-label="Delete"
+                            title="Hapus"
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                          />
+                        )}
                       </HStack>
                     </Stack>
                   </Box>
@@ -308,7 +420,6 @@ const MyProfile: React.FC = () => {
                             type="text"
                             {...fields.fullname}
                             defaultValue={dataTampil?.fullname}
-                            // className={`form-control ${errors.name ? "is-invalid"}`}
                           />
                           <FormErrorMessage>
                             {errProfile.fullname && errProfile.fullname.message}
@@ -316,7 +427,6 @@ const MyProfile: React.FC = () => {
                         </Box>
                       </Flex>
                     </FormControl>
-
                     <FormControl isInvalid={!!errProfile.username} mb="3">
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
@@ -327,7 +437,6 @@ const MyProfile: React.FC = () => {
                             type="text"
                             {...fields.username}
                             defaultValue={dataTampil?.username}
-                            // className={`form-control ${errors.name ? "is-invalid"}`}
                           />
                           <FormErrorMessage>
                             {errProfile.username && errProfile.username.message}
@@ -335,7 +444,6 @@ const MyProfile: React.FC = () => {
                         </Box>
                       </Flex>
                     </FormControl>
-
                     <FormControl isInvalid={!!errProfile.email} mb="3">
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
@@ -354,7 +462,19 @@ const MyProfile: React.FC = () => {
                         </Box>
                       </Flex>
                     </FormControl>
-
+                    <Input
+                      ref={inputFile}
+                      style={{ display: "none" }}
+                      type="file"
+                      onChange={(e) => onAvatarChange(e.target.files)}
+                    />
+                    {idImageAvatar && (
+                      <Input
+                        type="hidden"
+                        // {...fields.image}
+                        defaultValue={`${idImageAvatar}`}
+                      />
+                    )}
                     <Flex justify="flex-end">
                       <Button
                         leftIcon={<CheckIcon />}
@@ -369,7 +489,6 @@ const MyProfile: React.FC = () => {
                   </form>
                 </Box>
               </VStack>
-
               <Box>
                 <VStack>
                   <Text fontSize="lg" fontWeight="bold" mb="3">
@@ -429,7 +548,6 @@ const MyProfile: React.FC = () => {
                               type="text"
                               {...fields_pwd.password_confirmation}
                               defaultValue={dataTampil?.password_confirmation}
-                              // className={`form-control ${errors.name ? "is-invalid"}`}
                             />
                             <FormErrorMessage>
                               {errPwd.password_confirmation &&
@@ -464,7 +582,7 @@ const MyProfile: React.FC = () => {
                     dataLinks.map((link) => {
                       if (link.title === "Website") {
                         return (
-                          <Link href={link.url} target="_blank">
+                          <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
                               <IconButton
                                 colorScheme="blue"
@@ -477,7 +595,7 @@ const MyProfile: React.FC = () => {
                         );
                       } else if (link.title === "Facebook") {
                         return (
-                          <Link href={link.url} target="_blank">
+                          <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
                               <IconButton
                                 colorScheme="facebook"
@@ -489,7 +607,7 @@ const MyProfile: React.FC = () => {
                         );
                       } else if (link.title === "LinkedIn") {
                         return (
-                          <Link href={link.url} target="_blank">
+                          <Link href={link.url} key={link.id} target="_blank">
                             <Link href="impuls.id">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
