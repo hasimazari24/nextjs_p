@@ -113,7 +113,7 @@ const MyProfile: React.FC = () => {
 
   // fungsi ketika button delete avatar click
   const onButtonDeleteAvatar = () => {
-    setPreviewAvatar(`${process.env.API_URL}/storage/view/avatar-default.jpg`);
+    setPreviewAvatar("/img/avatar-default.jpg");
     setIdImageAvatar(`delete=${idImageAvatarOld}`);
     setIdImageAvatarOld(null);
     setBtnDeleteAvatar(false);
@@ -253,7 +253,7 @@ const MyProfile: React.FC = () => {
               // kosongkan img avatar
               setIdImageAvatar(null);
               // tampilkan btn delete
-              setBtnDeleteAvatar(false);
+              setBtnDeleteAvatar(true);
             }
             return () => clearTimeout(timer);
           }
@@ -267,19 +267,8 @@ const MyProfile: React.FC = () => {
           true,
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-      setIsLoadingEdit(false);
     } finally {
-      // jika data.image ada isinya
-      if (data.image) {
-        // tampung dulu dek
-        const idImg = data.image;
-        // cek jika bisa dipecah jadi dua atau tidak
-        if (idImg.split("=").length === 1) {
-          setIdImageAvatarOld(idImg);
-          setIdImageAvatar(null);
-          setBtnDeleteAvatar(true);
-        }
-      }
+      setIsLoadingEdit(false);
     }
   };
 

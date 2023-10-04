@@ -20,10 +20,16 @@ import {
   useDisclosure,
   Textarea,
   Select,
+  Avatar,
+  Image,
+  HStack,
+  IconButton,
+  Stack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
+import { AiOutlineCamera } from "react-icons/ai";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 
@@ -39,10 +45,10 @@ interface ModalProps {
 }
 
 interface FormValues {
-  image: string;
-  id: string;
+  image?: string;
+  id?: string;
   username: string;
-  password: string;
+  password?: string;
   email: string;
   role: string;
   fullname: string;
@@ -82,6 +88,103 @@ const ModalEdit: React.FC<ModalProps> = ({
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [avatar, setAvatar] = useState<File>();
+  const [previewAvatar, setPreviewAvatar] = useState<string>(
+    "/img/avatar-default.jpg",
+  );
+  const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
+  const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
+  const [btnDeleteAvatar, setBtnDeleteAvatar] = useState<Boolean>(false);
+  const inputFile = useRef<HTMLInputElement>(null);
+  // jika button edit avatar klik, brarti input file juga diklik
+  const onButtonEditAvatar = () => {
+    inputFile.current?.click();
+  };
+  // fungsi ketika input file avatar change
+  const onAvatarChange = (e: any) => {
+    // prepare supported file type
+    const SUPPORT_FILE_TYPE = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/svg+xml",
+    ];
+    // prepare max file size
+    const MAX_FILE_SIZE = 800000; //800KB
+    // ambil input nya
+    const file = e?.[0];
+    // ambil type dari file
+    const UPLOAD_FILE_TYPE = file.type;
+    // ambil size dari file
+    const UPLOAD_FILE_SIZE = file.size;
+    if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
+      handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
+      file.value = null;
+    } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
+      handleShowMessage(
+        "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
+        true,
+      );
+      file.value = null;
+    } else {
+      setAvatar(file);
+      setPreviewAvatar(URL.createObjectURL(file));
+      setIsLoading(true);
+    }
+  };
+
+  // fungsi ketika button delete avatar click
+  const onButtonDeleteAvatar = () => {
+    // jika dalam kondisi tambah user, arakhkan ke delete asset
+    if (!isEdit && isOpen) {
+      axiosCustom.delete(`/assets/${idImageAvatar}/delete`);
+      setIdImageAvatar(null);
+    } else {
+      setIdImageAvatar(`delete=${idImageAvatarOld}`);
+    }
+    setPreviewAvatar("/img/avatar-default.jpg");
+    setIdImageAvatarOld(null);
+    setBtnDeleteAvatar(false);
+  };
+
+  // logic update avatar disini
+  useEffect(() => {
+    async function uploadAvatar() {
+      if (avatar !== undefined && avatar !== null) {
+        try {
+          const data = new FormData();
+          data.append("asset", avatar as File);
+          const upload = await axiosCustom.post("/assets/upload", data, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          setIdImageAvatar(upload.data.data.id);
+          // jika dalam kondisi tambah user, aktifkan btn delete
+          if (!isEdit && isOpen) setBtnDeleteAvatar(true);
+        } catch (error: any) {
+          // tampilken error
+          if (error?.response) {
+            handleShowMessage(
+              `Terjadi Kesalahan: ${error.response.data.message}`,
+              true,
+            );
+          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+    uploadAvatar();
+  }, [avatar]);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   const handleShowMessage = (msg: string, err: boolean) => {
     setMessage(msg);
     setIsError(err);
@@ -89,26 +192,41 @@ const ModalEdit: React.FC<ModalProps> = ({
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
+    // console.log(isEdit);
     setIsLoading(true);
-    console.log(isEdit);
+    // refactoring data untuk mendukung upload avatar
+    const dataBaru: FormValues = {
+      username: `${data.username}`,
+      email: `${data.email}`,
+      role: `${data.role}`,
+      fullname: `${data.fullname}`,
+    };
+    // append password ketika tambah user
+    if (!isEdit) dataBaru.password = `${data.password}`;
+    // append jika idimgava not null
+    if (idImageAvatar) dataBaru.image = idImageAvatar;
+    // append id jika isEdit
+    if (isEdit) dataBaru.id = data.id;
+    // logic submit form
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (isEdit) {
         // Mode edit, kirim data melalui PUT request
-        console.log(data);
-        await axiosCustom.put(`/user/${data.id}`, data).then((response) => {
-          // setData(response.data.data);
+        await axiosCustom
+          .patch(`/user/${dataBaru.id}`, dataBaru)
+          .then((response) => {
+            // setData(response.data.data);
 
-          if (response.status === 200) {
-            handleShowMessage("Data berhasil diubah.", false);
-          }
-        });
+            if (response.status === 200) {
+              handleShowMessage("Data berhasil diubah.", false);
+            }
+          });
         // .catch((error) => {
         //   console.error("Error fetching data:", error);
         // });
       } else {
         // Mode tambah, kirim data melalui POST request
-        await axiosCustom.post("/user", data).then((response) => {
+        await axiosCustom.post("/user", dataBaru).then((response) => {
           // console.log(response);
           if (response.status === 201) {
             handleShowMessage("Data berhasil disimpan.", false);
@@ -119,6 +237,10 @@ const ModalEdit: React.FC<ModalProps> = ({
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
+      setPreviewAvatar("/img/avatar-default.jpg"); // reset preview
+      setIdImageAvatarOld(null); // kosongkan idimage
+      setIdImageAvatar(null); // kosongkan idimage
+      setBtnDeleteAvatar(false); // hilangkan btndelete image
       setIsLoading(false);
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
@@ -126,12 +248,23 @@ const ModalEdit: React.FC<ModalProps> = ({
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
-          true
+          true,
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setIsLoading(false);
     }
   };
+
+  // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
+  if (isOpen && isEdit && formData) {
+    if (formData?.image_id !== null) {
+      if (idImageAvatarOld !== formData.image_id) {
+        setIdImageAvatarOld(formData.image_id);
+        setPreviewAvatar(formData.image_url);
+        setBtnDeleteAvatar(true);
+      }
+    }
+  }
 
   return (
     <>
@@ -140,6 +273,10 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
+          setPreviewAvatar("/img/avatar-default.jpg"); // reset preview
+          setIdImageAvatarOld(null); // kosongkan idimageold
+          setIdImageAvatar(null); // kosongkan idimage
+          setBtnDeleteAvatar(false); // hilangkan btndelete image
         }}
         size="xl"
       >
@@ -163,6 +300,8 @@ const ModalEdit: React.FC<ModalProps> = ({
                     </FormErrorMessage>
                   </FormControl>
                 </Hide>
+
+                {/* <>{setIdImageAvatarOld(formData?.image)}</> */}
 
                 <FormControl isInvalid={!!errors.fullname} mb="3">
                   <Flex flexDirection={["column", "row"]}>
@@ -207,13 +346,15 @@ const ModalEdit: React.FC<ModalProps> = ({
                         <FormLabel>Password</FormLabel>
                       </Box>
                       <Box flex={["1", "75%"]}>
-                        <Input {...register("password", {
-                          required: "Password harus diisi!",
-                          minLength: {
-                            value: 4,
-                            message: "Password minimal 4 karakter",
-                          },
-                        })} />
+                        <Input
+                          {...register("password", {
+                            required: "Password harus diisi!",
+                            minLength: {
+                              value: 4,
+                              message: "Password minimal 4 karakter",
+                            },
+                          })}
+                        />
 
                         <FormErrorMessage>
                           {errors.password && errors.password.message}
@@ -250,7 +391,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                     </Box>
                     <Box flex={["1", "75%"]}>
                       <Select defaultValue={formData?.role} {...fields.role}>
-                        <option value="Pra Inkubasi">Super Admin</option>
+                        <option value="Super Admin">Super Admin</option>
                         <option value="Manajemen">Manajemen</option>
                         <option value="Mentor">Mentor</option>
                         <option value="Tenant">Tenant</option>
@@ -261,24 +402,78 @@ const ModalEdit: React.FC<ModalProps> = ({
                     </Box>
                   </Flex>
                 </FormControl>
-
-                <FormControl isInvalid={!!errors.image} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Logo</FormLabel>
-                    </Box>
-                    <Box flex={["1", "75%"]}>
-                      <Input
-                        type="text"
-                        {...register("image")}
-                        defaultValue={formData?.image}
-                      />
-                      <FormErrorMessage>
-                        {errors.image && errors.image.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                <Input
+                  ref={inputFile}
+                  style={{ display: "none" }}
+                  type="file"
+                  onChange={(e) => onAvatarChange(e.target.files)}
+                />
+                {idImageAvatar && (
+                  <Input
+                    type="hidden"
+                    // {...fields.image}
+                    defaultValue={`${idImageAvatar}`}
+                  />
+                )}
+                <Box mt={3} textAlign={"center"}>
+                  Avatar
+                </Box>
+                <Flex
+                  justify={"center"}
+                  //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
+                >
+                  <Box
+                    mt={1}
+                    position="relative"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    mb="3"
+                    cursor={"pointer"}
+                  >
+                    <Image
+                      src={previewAvatar}
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      borderRadius="full"
+                      alt="Preview Avatar"
+                    />
+                    <Stack
+                      position="absolute"
+                      bottom="0"
+                      right="0"
+                      padding="2"
+                      spacing="2"
+                      direction="column"
+                      background="rgba(0, 0, 0, 0.7)"
+                      opacity={isHovered ? 1 : 0} // Mengatur opacity berdasarkan isHovered
+                      transition="opacity 0.2s ease-in-out" // Efek transisi
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      justifyContent={"center"}
+                      align={"center"}
+                      borderRadius="full"
+                    >
+                      <HStack spacing="1">
+                        <IconButton
+                          onClick={onButtonEditAvatar}
+                          aria-label="Edit"
+                          title="Ubah"
+                          icon={<AiOutlineCamera size="20px" />}
+                          colorScheme="teal"
+                        />
+                        {btnDeleteAvatar && (
+                          <IconButton
+                            onClick={onButtonDeleteAvatar}
+                            aria-label="Delete"
+                            title="Hapus"
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                          />
+                        )}
+                      </HStack>
+                    </Stack>
+                  </Box>
+                </Flex>
               </div>
             </ModalBody>
             <ModalFooter>
@@ -299,6 +494,10 @@ const ModalEdit: React.FC<ModalProps> = ({
                   onClose();
                   reset();
                   setIsLoading(false);
+                  setPreviewAvatar("/img/avatar-default.jpg"); // reset preview
+                  setIdImageAvatarOld(null); // kosongkan idimage
+                  setIdImageAvatar(null); // kosongkan idimage
+                  setBtnDeleteAvatar(false); // hilangkan btndelete image
                 }}
                 size="sm"
               >

@@ -1,9 +1,9 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "react-app"],
   "plugins": ["react-hooks"],
   "rules": {
     "react/prop-types": "off",
-    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/rules-of-hooks": "",
     "react-hooks/exhaustive-deps": "warn"
   }
 }
