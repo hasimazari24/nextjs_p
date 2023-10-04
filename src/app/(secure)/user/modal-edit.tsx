@@ -244,7 +244,7 @@ const ModalEdit: React.FC<ModalProps> = ({
       setIsLoading(false);
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
-      // console.error(error);
+      console.error(error);
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
