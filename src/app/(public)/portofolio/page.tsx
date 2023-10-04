@@ -21,8 +21,20 @@ import {
   WrapItem,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { usePublic } from "../utils/PublicContext";
+import Link from "next/link";
+
+interface Beranda {
+  id: string;
+  name: string;
+  motto: string;
+  image_url: string;
+  image_banner_url: string;
+}
 
 function page() {
+  const { beranda, getPortofolioDetail } = usePublic();
+  console.log(beranda);
     const cards = [
     {
         title: "Garena",
@@ -119,7 +131,37 @@ function page() {
               Portofolio
             </Heading>
           </Stack>
-          <SimpleGrid columns={{ base: 2, md:3, lg: 5 }} spacing={"15px"}>
+          <Box>
+            {beranda && beranda.length > 0 ? (
+              beranda.map((p: Beranda) => (
+                <div key={p.id}>
+                  <p>{p.name}</p>
+                  <p>{p.motto}</p>
+                  {/* <Link
+                    href={{
+                      pathname: "/dashboard/authed/[user]",
+                      query: { user: username },
+                    }}
+                    as="/dashboard/[user]"
+                  >
+                    Profile
+                  </Link> */}
+                  <Link
+                    href={{
+                      pathname: `/portofolio-detail?id=${p.id}`,
+                      query: { id: p.id },
+                    }}
+                    as="/portofolio-detail/"
+                  >
+                    <Button key="toDt">Detail</Button>
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <p>Tidak ada Data</p>
+            )}
+          </Box>
+          <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing={"15px"}>
             {cards.map((image, index) => (
               <Box
                 key={index}
@@ -129,7 +171,7 @@ function page() {
                 onMouseLeave={() => handleMouseLeave(index)}
               >
                 <Box
-                  w={{ base:"150px", md:"200px" }}
+                  w={{ base: "150px", md: "200px" }}
                   rounded="xl"
                   borderWidth={"1px"}
                   shadow="md"
