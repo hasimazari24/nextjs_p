@@ -16,7 +16,7 @@ interface User {
   // id: string;
   fullname: string;
   role: string;
-  image: string;
+  image_url: string;
 }
 
 interface AuthContextType {
@@ -48,21 +48,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      await axiosCustom.post("/auth/login", {
-        usernameoremail: username,
-        password: password,
-      }).then((response) => {
-        // Jika login berhasil, atur informasi pengguna di sini
-        const loggedInUser: User = {
-          fullname: response.data.data.fullname,
-          role: response.data.data.role,
-          image: response.data.data.image,
-        };
-        setUser(loggedInUser);
-        router.push("/dashboard");
-        setLoading(false);
-      });
-      
+      await axiosCustom
+        .post("/auth/login", {
+          usernameoremail: username,
+          password: password,
+        })
+        .then((response) => {
+          // Jika login berhasil, atur informasi pengguna di sini
+          const loggedInUser: User = {
+            fullname: response.data.data.fullname,
+            role: response.data.data.role,
+            image_url: response.data.data.image_url,
+          };
+          setUser(loggedInUser);
+          router.push("/dashboard");
+          setLoading(false);
+        });
     } catch (error: any) {
       // console.log(error);
       if (error?.response) {
@@ -84,7 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // id: response.data.data.id,
         fullname: response.data.data.fullname,
         role: response.data.data.role,
-        image: response.data.data.image,
+        image_url: response.data.data.image_url,
       };
       setUser(validUser);
     } catch (error: any) {
@@ -113,7 +114,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setLoadingLogOut(false);
         }
       });
-      
     } catch (error: any) {
       // console.log(error);
       if (error?.response) {
@@ -131,7 +131,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, validation, loading, loadingValidation, loadingLogOut }}
+      value={{
+        user,
+        login,
+        logout,
+        validation,
+        loading,
+        loadingValidation,
+        loadingLogOut,
+      }}
     >
       <>
         <AlertBar
