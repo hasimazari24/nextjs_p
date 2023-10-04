@@ -20,10 +20,15 @@ import {
   useDisclosure,
   Textarea,
   Select,
+  HStack,
+  IconButton,
+  Stack,
+  Image,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
+import { AiOutlineCamera } from "react-icons/ai";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 
@@ -39,7 +44,7 @@ interface ModalProps {
 }
 
 interface FormValues {
-  id: string;
+  id?: string;
   name: string;
   motto: string;
   description: string;
@@ -48,8 +53,8 @@ interface FormValues {
   email: string;
   founder: string;
   level_tenant: string;
-  image: string;
-  image_banner: string;
+  image?: string;
+  image_banner?: string;
 }
 
 const ModalEdit: React.FC<ModalProps> = ({
@@ -107,25 +112,43 @@ const ModalEdit: React.FC<ModalProps> = ({
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
-
+    // refactoring data untuk mendukung upload avatar
+    const dataBaru: FormValues = {
+      name: `${data.name}`,
+      motto: `${data.motto}`,
+      description: `${data.description}`,
+      address: `${data.address}`,
+      contact: `${data.contact}`,
+      email: `${data.email}`,
+      founder: `${data.founder}`,
+      level_tenant: `${data.level_tenant}`,
+    };
+    // append jika idimgava not null
+    if (idImageAvatar) dataBaru.image = idImageAvatar;
+    // append jika idimgbanner not null
+    if (idImageBanner) dataBaru.image_banner = idImageBanner;
+    // append id jika isEdit
+    if (isEdit) dataBaru.id = data.id;
+    // logic submit form
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (isEdit) {
         // Mode edit, kirim data melalui PUT request
         // console.log(data); axiosCustom.put("/")
-        await axiosCustom.put(`/tenant/${data.id}`, data).then((response) => {
-          // setData(response.data.data);
-
-          if (response.status === 200) {
-            handleShowMessage("Data berhasil diubah.", false);
-          }
-        });
+        await axiosCustom
+          .patch(`/tenant/${dataBaru.id}`, dataBaru)
+          .then((response) => {
+            // setData(response.data.data);
+            if (response.status === 200) {
+              handleShowMessage("Data berhasil diubah.", false);
+            }
+          });
         // .catch((error) => {
         //   console.error("Error fetching data:", error);
         // });
       } else {
         // Mode tambah, kirim data melalui POST request
-        await axiosCustom.post("/tenant", data).then((response) => {
+        await axiosCustom.post("/tenant", dataBaru).then((response) => {
           // console.log(response);
           if (response.status === 201) {
             handleShowMessage("Data berhasil disimpan.", false);
@@ -136,6 +159,14 @@ const ModalEdit: React.FC<ModalProps> = ({
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
+      setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+      setIdImageAvatarOld(null); // kosongkan idimage
+      setIdImageAvatar(null); // kosongkan idimage
+      setBtnDeleteAvatar(false); // hilangkan btndelete image
+      setPreviewBanner("/img/tenant-banner-default.jpg"); // reset preview
+      setIdImageBannerOld(null); // kosongkan idimagebanner
+      setIdImageBanner(null); // kosongkan idimagebanner
+      setBtnDeleteBanner(false); // hilangkan btndelete image banner
       setIsLoading(false);
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
@@ -143,10 +174,209 @@ const ModalEdit: React.FC<ModalProps> = ({
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
-          true
+          true,
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setIsLoading(false);
+    }
+  };
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [avatar, setAvatar] = useState<File>();
+  const [previewAvatar, setPreviewAvatar] = useState<string>(
+    "/img/tenant-logo-default.jpg",
+  );
+  const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
+  const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
+  const [btnDeleteAvatar, setBtnDeleteAvatar] = useState<Boolean>(false);
+  const inputFile = useRef<HTMLInputElement>(null);
+  // jika button edit avatar klik, brarti input file juga diklik
+  const onButtonEditAvatar = () => {
+    inputFile.current?.click();
+  };
+
+  // fungsi ketika button delete avatar click
+  const onButtonDeleteAvatar = () => {
+    // jika dalam kondisi tambah user, arakhkan ke delete asset
+    if (!isEdit && isOpen) {
+      axiosCustom.delete(`/assets/${idImageAvatar}/delete`);
+      setIdImageAvatar(null);
+    } else {
+      setIdImageAvatar(`delete=${idImageAvatarOld}`);
+    }
+    setPreviewAvatar("/img/avatar-default.jpg");
+    setIdImageAvatarOld(null);
+    setBtnDeleteAvatar(false);
+  };
+
+  // logic update avatar disini
+  useEffect(() => {
+    async function uploadAvatar() {
+      if (avatar !== undefined && avatar !== null) {
+        try {
+          const data = new FormData();
+          data.append("asset", avatar as File);
+          const upload = await axiosCustom.post("/assets/upload", data, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          setIdImageAvatar(upload.data.data.id);
+          // jika dalam kondisi tambah user, aktifkan btn delete
+          if (!isEdit && isOpen) setBtnDeleteAvatar(true);
+        } catch (error: any) {
+          // tampilken error
+          if (error?.response) {
+            handleShowMessage(
+              `Terjadi Kesalahan: ${error.response.data.message}`,
+              true,
+            );
+          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+    uploadAvatar();
+  }, [avatar]);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
+  if (isOpen && isEdit && formData) {
+    if (formData?.image_id !== null) {
+      if (idImageAvatarOld !== formData.image_id) {
+        setIdImageAvatarOld(formData.image_id);
+        setPreviewAvatar(formData.image_url);
+        setBtnDeleteAvatar(true);
+      }
+    }
+  }
+
+  const [isHoveredBanner, setIsHoveredBanner] = useState(false);
+  const [banner, setBanner] = useState<File>();
+  const [previewBanner, setPreviewBanner] = useState<string>(
+    "/img/tenant-banner-default.jpg",
+  );
+  const [idImageBanner, setIdImageBanner] = useState<string | null>(null);
+  const [idImageBannerOld, setIdImageBannerOld] = useState<string | null>(null);
+  const [btnDeleteBanner, setBtnDeleteBanner] = useState<Boolean>(false);
+  const inputBanner = useRef<HTMLInputElement>(null);
+  // jika button edit avatar klik, brarti input file juga diklik
+  const onButtonEditBanner = () => {
+    inputBanner.current?.click();
+  };
+
+  // fungsi ketika button delete avatar click
+  const onButtonDeleteBanner = () => {
+    // jika dalam kondisi tambah user, arakhkan ke delete asset
+    if (!isEdit && isOpen) {
+      axiosCustom.delete(`/assets/${idImageBanner}/delete`);
+      setIdImageBanner(null);
+    } else {
+      setIdImageBanner(`delete=${idImageBannerOld}`);
+    }
+    setPreviewBanner("/img/avatar-default.jpg");
+    setIdImageBannerOld(null);
+    setBtnDeleteBanner(false);
+  };
+
+  // logic update avatar disini
+  useEffect(() => {
+    async function uploadBanner() {
+      if (banner !== undefined && banner !== null) {
+        try {
+          const data = new FormData();
+          data.append("asset", banner as File);
+          const upload = await axiosCustom.post("/assets/upload", data, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          setIdImageBanner(upload.data.data.id);
+          // jika dalam kondisi tambah user, aktifkan btn delete
+          if (!isEdit && isOpen) setBtnDeleteBanner(true);
+        } catch (error: any) {
+          // tampilken error
+          if (error?.response) {
+            handleShowMessage(
+              `Terjadi Kesalahan: ${error.response.data.message}`,
+              true,
+            );
+          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    }
+    uploadBanner();
+  }, [banner]);
+
+  const handleMouseEnterBanner = () => {
+    setIsHoveredBanner(true);
+  };
+
+  const handleMouseLeaveBanner = () => {
+    setIsHoveredBanner(false);
+  };
+
+  // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
+  if (isOpen && isEdit && formData) {
+    if (formData?.image_banner_id !== null) {
+      if (idImageBannerOld !== formData.image_banner_id) {
+        setIdImageBannerOld(formData.image_banner_id);
+        setPreviewBanner(formData.image_banner_url);
+        setBtnDeleteBanner(true);
+      }
+    }
+  }
+
+  // buat type untuk batasi input biar tidak ugal-ugalan di jalan
+  type fromFileChangeType = "logo" | "banner";
+  // fungsi ketika input file avatar change
+  const onFileChange = (e: any, from: fromFileChangeType) => {
+    // prepare supported file type
+    const SUPPORT_FILE_TYPE = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/svg+xml",
+    ];
+    // prepare max file size, awasi ada dua kondisi dek
+    let MAX_FILE_SIZE = 0; //1MB untuk logo 2MB untuk banner
+    from === "logo" ? (MAX_FILE_SIZE = 1000000) : (MAX_FILE_SIZE = 2000000);
+    // ambil input nya
+    const file = e?.[0];
+    // ambil type dari file
+    const UPLOAD_FILE_TYPE = file?.type;
+    // ambil size dari file
+    const UPLOAD_FILE_SIZE = file?.size;
+    // jika file type tidak disupport
+    if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
+      handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
+      file.value = null;
+    }
+    // jika file size lebih dari yg sudah ditentukan
+    else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
+      handleShowMessage(
+        "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
+        true,
+      );
+      file.value = null;
+    }
+    // lolos tilang pak solipi dek
+    else {
+      // awasi ada dua kondisi dek
+      if (from === "logo") {
+        setAvatar(file);
+        setPreviewAvatar(URL.createObjectURL(file));
+      } else {
+        setBanner(file);
+        setPreviewBanner(URL.createObjectURL(file));
+      }
+      setIsLoading(true);
     }
   };
 
@@ -157,6 +387,14 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
+          setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+          setIdImageAvatarOld(null); // kosongkan idimage
+          setIdImageAvatar(null); // kosongkan idimage
+          setBtnDeleteAvatar(false); // hilangkan btndelete image
+          setPreviewBanner("/img/tenant-banner-default.jpg"); // reset preview
+          setIdImageBannerOld(null); // kosongkan idimagebanner
+          setIdImageBanner(null); // kosongkan idimagebanner
+          setBtnDeleteBanner(false); // hilangkan btndelete image banner
         }}
         size="xl"
       >
@@ -331,41 +569,141 @@ const ModalEdit: React.FC<ModalProps> = ({
                   </Flex>
                 </FormControl>
 
-                <FormControl isInvalid={!!errors.image} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Logo</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...register("image")}
-                        defaultValue={formData?.image}
-                      />
-                      <FormErrorMessage>
-                        {errors.image && errors.image.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                <Input
+                  ref={inputFile}
+                  style={{ display: "none" }}
+                  type="file"
+                  onChange={(e) => onFileChange(e.target.files, "logo")}
+                />
+                <Box mt={3} textAlign={"center"}>
+                  Avatar
+                </Box>
+                <Flex
+                  justify={"center"}
+                  //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
+                >
+                  <Box
+                    mt={1}
+                    position="relative"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    mb="3"
+                    cursor={"pointer"}
+                  >
+                    <Image
+                      src={previewAvatar}
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      borderRadius="full"
+                      alt="Preview Avatar"
+                    />
+                    <Stack
+                      position="absolute"
+                      bottom="0"
+                      right="0"
+                      padding="2"
+                      spacing="2"
+                      direction="column"
+                      background="rgba(0, 0, 0, 0.7)"
+                      opacity={isHovered ? 1 : 0} // Mengatur opacity berdasarkan isHovered
+                      transition="opacity 0.2s ease-in-out" // Efek transisi
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      justifyContent={"center"}
+                      align={"center"}
+                      borderRadius="full"
+                    >
+                      <HStack spacing="1">
+                        {!isLoading && (
+                          <IconButton
+                            onClick={onButtonEditAvatar}
+                            aria-label="Edit"
+                            title="Ubah"
+                            icon={<AiOutlineCamera size="20px" />}
+                            colorScheme="teal"
+                          />
+                        )}
+                        {!isLoading && btnDeleteAvatar && (
+                          <IconButton
+                            onClick={onButtonDeleteAvatar}
+                            aria-label="Delete"
+                            title="Hapus"
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                          />
+                        )}
+                      </HStack>
+                    </Stack>
+                  </Box>
+                </Flex>
 
-                <FormControl isInvalid={!!errors.image_banner} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Banner</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...register("image_banner")}
-                        defaultValue={formData?.image_banner}
-                      />
-                      <FormErrorMessage>
-                        {errors.image_banner && errors.image_banner.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                <Input
+                  ref={inputBanner}
+                  style={{ display: "none" }}
+                  type="file"
+                  onChange={(e) => onFileChange(e.target.files, "banner")}
+                />
+                <Box mt={3} textAlign={"center"}>
+                  Banner
+                </Box>
+                <Flex
+                  justify={"center"}
+                  //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
+                >
+                  <Box
+                    mt={1}
+                    position="relative"
+                    onMouseEnter={handleMouseEnterBanner}
+                    onMouseLeave={handleMouseLeaveBanner}
+                    mb="3"
+                    cursor={"pointer"}
+                  >
+                    <Image
+                      src={previewBanner}
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      borderRadius="full"
+                      alt="Preview Banner"
+                    />
+                    <Stack
+                      position="absolute"
+                      bottom="0"
+                      right="0"
+                      padding="2"
+                      spacing="2"
+                      direction="column"
+                      background="rgba(0, 0, 0, 0.7)"
+                      opacity={isHoveredBanner ? 1 : 0} // Mengatur opacity berdasarkan isHovered
+                      transition="opacity 0.2s ease-in-out" // Efek transisi
+                      h={{ base: "100px", sm: "200px", lg: "200px" }}
+                      w="100%"
+                      justifyContent={"center"}
+                      align={"center"}
+                      borderRadius="full"
+                    >
+                      <HStack spacing="1">
+                        {!isLoading && (
+                          <IconButton
+                            onClick={onButtonEditBanner}
+                            aria-label="Edit"
+                            title="Ubah"
+                            icon={<AiOutlineCamera size="20px" />}
+                            colorScheme="teal"
+                          />
+                        )}
+                        {!isLoading && btnDeleteBanner && (
+                          <IconButton
+                            onClick={onButtonDeleteBanner}
+                            aria-label="Delete"
+                            title="Hapus"
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                          />
+                        )}
+                      </HStack>
+                    </Stack>
+                  </Box>
+                </Flex>
               </div>
             </ModalBody>
             <ModalFooter>
@@ -386,6 +724,14 @@ const ModalEdit: React.FC<ModalProps> = ({
                   onClose();
                   reset();
                   setIsLoading(false);
+                  setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+                  setIdImageAvatarOld(null); // kosongkan idimage
+                  setIdImageAvatar(null); // kosongkan idimage
+                  setBtnDeleteAvatar(false); // hilangkan btndelete image
+                  setPreviewBanner("/img/tenant-banner-default.jpg"); // reset preview
+                  setIdImageBannerOld(null); // kosongkan idimagebanner
+                  setIdImageBanner(null); // kosongkan idimagebanner
+                  setBtnDeleteBanner(false); // hilangkan btndelete image banner
                 }}
                 size="sm"
               >

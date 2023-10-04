@@ -23,7 +23,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Hide,
-  RadioGroup,Radio,
+  RadioGroup,
+  Radio,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -46,7 +47,7 @@ interface FormValues {
 }
 
 interface Query {
-  cari : string;
+  cari: string;
 }
 
 const SearchModal = ({
@@ -94,22 +95,21 @@ const SearchModal = ({
     setQuery("");
     setLoad(false);
     setIsError(undefined);
-  }
+  };
 
   const [load, setLoad] = useState(false);
   const handleFormSubmit: SubmitHandler<any> = (data: any) => {
     setLoad(true);
     // console.log(data);
     const sendData = {
-      id : data.id,
-      is_admin : selectedOption,
-      is_public : selectedIsPublic,
-      position : data.position,
-  };
+      id: data.id,
+      is_admin: selectedOption,
+      is_public: selectedIsPublic,
+      position: data.position,
+    };
     onSubmit(sendData);
     resetAll();
     onClose();
-    
   };
 
   const [selectedOption, setSelectedOption] = useState<boolean>(false);
@@ -302,9 +302,7 @@ const SearchModal = ({
                             <HStack ml="2">
                               <Avatar
                                 size={"sm"}
-                                src={
-                                  "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                                }
+                                src={result.image_url}
                               ></Avatar>
                               <VStack
                                 alignItems="flex-start"

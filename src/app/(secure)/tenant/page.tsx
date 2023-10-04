@@ -16,16 +16,12 @@ import {
   MenuItem,
   MenuList,
   Box,
+  Avatar,
 } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalSocial from "../../components/modal/modal-social";
 import ModalNotif from "../../components/modal/modal-notif";
-import {
-  AddIcon,
-  DeleteIcon,
-  EditIcon,
-  HamburgerIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 // import { useNavigate } from "react-router-dom";
 import { GrMoreVertical, GrShareOption } from "react-icons/gr";
@@ -33,7 +29,7 @@ import { SiMicrosoftteams } from "react-icons/si";
 import { BiLinkExternal } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
-import MyTenant from "./mytenant/mytenant"
+import MyTenant from "./mytenant/mytenant";
 import { useAuth } from "@/app/components/utils/AuthContext";
 
 interface DataItem {
@@ -46,8 +42,10 @@ interface DataItem {
   email: string;
   founder: string;
   level_tenant: string;
-  image: string;
-  image_banner: string;
+  image_id: string;
+  image_banner_id: string;
+  image_url: string;
+  image_banner_url: string;
 }
 
 export default function page() {
@@ -63,16 +61,35 @@ export default function page() {
     setModalNotif(true);
   };
 
-  const hidenCols = ["id", "founder", "email", "contact", "description","image_banner","motto"];
+  const hidenCols = [
+    "id",
+    "founder",
+    "email",
+    "contact",
+    "description",
+    "image_id",
+    "image_banner_id",
+    "image_banner_url",
+    "motto",
+  ];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
     {
       Header: "Logo",
-      accessor: "image",
+      accessor: "image_url",
+      Cell: ({ value }) => <Avatar size={"sm"} src={value} />,
     },
     {
-      Header: "Banner",
-      accessor: "image_banner",
+      Header: "Image Banner URL",
+      accessor: "image_banner_url",
+    },
+    {
+      Header: "Image ID",
+      accessor: "image_id",
+    },
+    {
+      Header: "Image Banner ID",
+      accessor: "image_banner_id",
     },
     {
       Header: "User ID",
@@ -349,7 +366,10 @@ export default function page() {
                 // onClose={() => setIsModalOpen(false)}
                 // data={editingData}
                 isOpen={isModalEditOpen}
-                onClose={() => setIsModalEditOpen(false)}
+                onClose={() => {
+                  setIsModalEditOpen(false);
+                  setEditingData(null);
+                }}
                 onSubmit={() => {
                   handleSaveData;
                   setEditingData(null);
