@@ -37,8 +37,7 @@ import { CiGlobe } from "react-icons/ci";
 import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
 import { FiFacebook } from "react-icons/fi";
-import { TbWorldWww } from "react-icons/tb";
-import { AiOutlineFacebook, AiOutlineLinkedin } from "react-icons/ai";
+import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin, FaGlobe } from "react-icons/fa";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import ModalEdit from "../modal-edit";
 import {
@@ -204,7 +203,10 @@ export default function MyTenant() {
                     align={"center"}
                     w={"full"}
                     h={{ base: "150px", sm: "300px", lg: "300px" }}
+
                   />
+
+                    
                   <Flex
                     justify={"center"}
                     mt={{ base: "-50px", sm: "-100", lg: "-100" }}
@@ -385,13 +387,18 @@ export default function MyTenant() {
                         if (link.title === "Website") {
                           return (
                             <Link href={link.url} target="_blank">
-                              <HStack alignItems={"center"} pr="3">
+                              <HStack alignItems={"center"} pr="4">
                                 <IconButton
-                                  colorScheme="blue"
+                                  color="blue.300"
                                   aria-label="web"
-                                  icon={<TbWorldWww size="xs" />}
+                                  size="sm"
+                                  icon={<FaGlobe size="sm" /> }
+                                  _hover={{
+                                    color: "blue.500", // Ganti dengan warna saat hover
+                                  }}
+                                  title={link.url}
+                                  backgroundColor="rgba(0, 0, 0, 0)"  
                                 />
-                                <Text fontSize="16px">{link.url}</Text>
                               </HStack>
                             </Link>
                           );
@@ -400,25 +407,93 @@ export default function MyTenant() {
                             <Link href={link.url} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
-                                  colorScheme="facebook"
+                                  color="blue.600"
                                   aria-label="web"
-                                  icon={<AiOutlineFacebook size="xs" />}
+                                  icon={<FaFacebook size="sm" />} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color: "blue.900", // Ganti dengan warna saat hover
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
                                 />
-                                <Text fontSize="16px">{link.url}</Text>
                               </HStack>
                             </Link>
                           );
-                        } else if (link.title === "LinkedIn") {
+
+                        } else if (link.title === "Instagram") {
+                          return (
+                            <Link href={link.url} target="_blank">
+                              <HStack alignItems={"center"} pr="3">
+                                <IconButton
+                                  color="pink.500"
+                                  aria-label="web"
+                                  icon={<FaInstagram size="sm" />} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color:"pink.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                />
+                              </HStack>
+                            </Link>
+                          );
+
+                        } else if (link.title === "Twitter") {
+                          return (
+                            <Link href={link.url} target="_blank">
+                              <HStack alignItems={"center"} pr="3">
+                                <IconButton
+                                  color="blue.400"
+                                  aria-label="web"
+                                  icon={<FaTwitter size="sm"/>} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color:"blue.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                />
+                              </HStack>
+                            </Link>
+                          );
+
+                        } else if (link.title === "Youtube") {
+                          return (
+                            <Link href={link.url} target="_blank">
+                              <HStack alignItems={"center"} pr="3">
+                                <IconButton
+                                  color="red.500"
+                                  aria-label="web"
+                                  icon={<FaYoutube size="sm" />} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color:"red.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                />
+                              </HStack>
+                            </Link>
+                          );
+
+                        } else if (link.title === "Linkedin") {
                           return (
                             <Link href={link.url} target="_blank">
                               <Link href="impuls.id">
                                 <HStack alignItems={"center"} pr="3">
                                   <IconButton
-                                    colorScheme="linkedin"
+                                    color="blue.500"
                                     aria-label="web"
-                                    icon={<AiOutlineLinkedin size="xs" />}
+                                    icon={<FaLinkedin size="sm" />} 
+                                    size="sm"
+                                    title={link.url}
+                                    _hover={{
+                                      color:"blue.800"
+                                    }}
+                                    backgroundColor="rgba(0, 0, 0, 0)" 
                                   />
-                                  <Text fontSize="16px">{link.url}</Text>
                                 </HStack>
                               </Link>
                             </Link>

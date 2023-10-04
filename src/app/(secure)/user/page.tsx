@@ -13,7 +13,12 @@ import {
   Heading,
   Spinner,
   Text,
-  Menu, MenuButton, MenuList, MenuItem, } from "@chakra-ui/react";
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Avatar,
+} from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalNotif from "../../components/modal/modal-notif";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -23,7 +28,8 @@ import { axiosCustom } from "@/app/api/axios";
 import { MdLockReset } from "react-icons/md";
 
 interface DataItem {
-  image: string;
+  image_id: string;
+  image_url: string;
   id: string;
   username: string;
   //   password: string;
@@ -42,12 +48,14 @@ export default function page() {
     setModalNotif(true);
   };
 
-  const hidenCols = ["id"];
+  const hidenCols = ["id", "image_id"];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
+    { Header: "Image ID", accessor: "image_id" },
     {
-      Header: "Photo",
-      accessor: "image",
+      Header: "Avatar",
+      accessor: "image_url",
+      Cell: ({ value }) => <Avatar size={"sm"} src={value} />,
     },
     {
       Header: "User ID",
@@ -116,6 +124,8 @@ export default function page() {
   const router = useRouter();
 
   const renderActions = (rowData: any) => {
+    // console.log(rowData.image_id);
+    // console.log(dataTampil.image_id);
     return (
       <>
         <Menu>
@@ -162,6 +172,7 @@ export default function page() {
   };
 
   const handleEdit = (item: any) => {
+    // console.log(dataTampil);
     setEditingData(item);
     setIsModalEditOpen(true);
     // console.log(item);
@@ -191,9 +202,7 @@ export default function page() {
       try {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
-        const response = await axiosCustom.delete(
-          "/user" + `/${dataDeleteId}`,
-        );
+        const response = await axiosCustom.delete("/user" + `/${dataDeleteId}`);
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
         const timer = setTimeout(() => {
@@ -266,7 +275,10 @@ export default function page() {
             // onClose={() => setIsModalOpen(false)}
             // data={editingData}
             isOpen={isModalEditOpen}
-            onClose={() => setIsModalEditOpen(false)}
+            onClose={() => {
+              setIsModalEditOpen(false);
+              setEditingData(null);
+            }}
             onSubmit={() => {
               handleSaveData;
               setEditingData(null);

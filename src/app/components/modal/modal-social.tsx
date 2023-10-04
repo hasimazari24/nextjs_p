@@ -31,7 +31,9 @@ import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "./modal-notif";
 import ConfirmationModal from "./modal-confirm";
 import { axiosCustom } from "@/app/api/axios";
-import { AiOutlineFacebook, AiOutlineLinkedin } from "react-icons/ai";
+import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin, FaGlobe } from "react-icons/fa";
+ import { BsCheck, BsPlus, BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
+import { linkSync } from "fs";
 
 interface ModalProps {
   isOpen: boolean;
@@ -68,10 +70,38 @@ const ModalSocial: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const {
+    register: registFacebook,
+    handleSubmit: handleFacebook,
+    formState: { errors: errFacebook },
+    reset: resetFacebook,
+  } = useForm<FormValues>();
+
+  const {
     register: registInstagram,
     handleSubmit: handleInstagram,
     formState: { errors: errInstagram },
     reset: resetInstagram,
+  } = useForm<FormValues>();
+
+  const{
+    register: registTwitter,
+    handleSubmit: handleTwitter,
+    formState: {errors: errTwitter},
+    reset: resetTwitter,
+  } = useForm<FormValues>();
+
+  const{
+    register: registYoutube,
+    handleSubmit: handleYoutube,
+    formState: {errors: errYoutube},
+    reset: resetYoutube,
+  } = useForm<FormValues>();
+
+  const{
+    register: registLinkedin,
+    handleSubmit: handleLinkedin,
+    formState: {errors: errLinkedin},
+    reset: resetLinkedin,
   } = useForm<FormValues>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -85,10 +115,20 @@ const ModalSocial: React.FC<ModalProps> = ({
   };
   //'Website','LinkedIn','Instagram','Facebook','Twitter','YouTube'
   const akunWeb = formData?.find((links) => links.title === "Website");
+  const akunFb = formData?.find((links) => links.title === "Facebook");
   const akunIg = formData?.find((links) => links.title === "Instagram");
+  const akunTw = formData?.find((links) => links.title === "Twitter");
+  const akunYt = formData?.find((links) => links.title === "Youtube");
+  const akunLd = formData?.find((links) => links.title === "Linkedin");
+  
 
-  const [isEditingInstagram, setIsEditingInstagram] = useState<boolean>(false);
   const [isEditingWebsite, setIsEditingWebsite] = useState<boolean>(false);
+  const [isEditingFacebook, setIsEditingFacebook] = useState<boolean>(false);
+  const [isEditingInstagram, setIsEditingInstagram] = useState<boolean>(false);
+  const [isEditingTwitter, setIsEditingTwitter] = useState<boolean>(false);
+  const [isEditingYoutube, setIsEditingYoutube] = useState<boolean>(false);
+  const [isEditingLinkedin, setIsEditingLinkedin] = useState<boolean>(false);
+ 
 
   const handleSave = async (data: any) => {
     setIsLoading(true);
@@ -254,11 +294,17 @@ const ModalSocial: React.FC<ModalProps> = ({
   };
 
   const resetAll = () => {
-    setIsEditingInstagram(false);
     setIsEditingWebsite(false);
+    setIsEditingInstagram(false);
+    setIsEditingFacebook(false);
+    setIsEditingTwitter(false);
+    setIsEditingYoutube(false);
     setDataDeleteId(null);
-    resetInstagram();
     resetWebsite();
+    resetInstagram();
+    resetFacebook();
+    resetTwitter();
+    resetYoutube();
   };
 
   // console.log(formData);
@@ -275,7 +321,7 @@ const ModalSocial: React.FC<ModalProps> = ({
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{"Edit Data Social Links"}</ModalHeader>
+          <ModalHeader>{"Social Links Setting"}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <>
@@ -284,9 +330,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                   <FormControl isInvalid={!!errWebsite.url}>
                     <HStack spacing={3} alignItems={"center"}>
                       <IconButton
-                        colorScheme="facebook"
-                        aria-label="facebook"
-                        icon={<AiOutlineFacebook size="xs" />}
+                        color="blue.500"
+                        aria-label="website"
+                        icon={<FaGlobe size="xs" />}
                       />
                       <Hide>
                         {/* masukkan scr otomatis nilai id, id_tenant, title */}
@@ -315,31 +361,37 @@ const ModalSocial: React.FC<ModalProps> = ({
                         <div>
                           {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
                           {isEditingWebsite ? (
-                            <Button
+                            <IconButton
                               colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm"/>}
+                              size="sm"
                               type="submit"
-                              isLoading={isLoading}
-                            >
-                              Simpan
-                            </Button>
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
                           ) : (
                             // jika tidak, maka baru tampilkan edit dan delete
                             <HStack>
-                              <Button
+                              <IconButton
                                 colorScheme="blue"
+                                aria-label="Edit"
+                                icon={<BsFillPencilFill/>}
+                                size="sm"
+                                title="Edit"
                                 onClick={() =>
                                   // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                   setIsEditingWebsite(!isEditingWebsite)
                                 }
-                              >
-                                Edit
-                              </Button>
-                              <Button
+                              />
+                              <IconButton
                                 colorScheme="red"
+                                aria-label="Hapus"
+                                icon={<BsFillTrashFill/>}
+                                size="sm"
+                                title="Hapus"
                                 onClick={() => handleDelete(akunWeb)}
-                              >
-                                Hapus
-                              </Button>
+                              />
                             </HStack>
                           )}
                         </div>
@@ -347,13 +399,15 @@ const ModalSocial: React.FC<ModalProps> = ({
                         // jika tidak ada data/ belum punya, maka berikan btn tambah
                         <>
                           {isEditingWebsite && (
-                            <Button
+                            <IconButton
                               colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm" />}
+                              size="sm"
                               type="submit"
-                              isLoading={isLoading}
-                            >
-                              Simpan
-                            </Button>
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
                           )}
                         </>
                       )}
@@ -366,26 +420,138 @@ const ModalSocial: React.FC<ModalProps> = ({
                 </form>
 
                 {!akunWeb?.url && !isEditingWebsite ? (
-                  <Button
+                  <IconButton
                     colorScheme="green"
+                    aria-label="Tambah"
+                    icon={<BsPlus size="sm"/>}
+                    size="sm"
+                    title="Tambah"
                     onClick={() => {
                       // begitu tambah dipenyek, maka muncul btn simpan
                       setIsEditingWebsite(true);
-                    }}
-                  >
-                    Tambah
-                  </Button>
+                    }} />
+      
                 ) : null}
               </HStack>
 
+              <HStack spacing={3} pb="3" alignItems={"center"}>
+                <form onSubmit={handleFacebook(handleSave)}>
+                  <FormControl isInvalid={!!errFacebook.url}>
+                    <HStack spacing={3} alignItems={"center"}>
+                      <IconButton
+                        color="blue.700"
+                        aria-label="website"
+                        icon={<FaFacebook size="xs" />}
+                      />
+                      <Hide>
+                        {/* masukkan scr otomatis nilai id, id_tenant, title */}
+                        <Input
+                          {...registFacebook("id")}
+                          defaultValue={akunFb ? akunFb.id : ""}
+                        />
+                        <Input
+                          {...registFacebook("title")}
+                          defaultValue="Facebook"
+                        />
+                      </Hide>
+                      <fieldset disabled={!isEditingFacebook}>
+                        <Input
+                          placeholder="URL Social Facebook"
+                          onFocus={() => !isEditingFacebook}
+                          defaultValue={akunFb ? akunFb.url : ""}
+                          {...registFacebook("url", {
+                            required: "URL Facebook harus diisi!",
+                          })}
+                        />
+                      </fieldset>
+
+                      {/* jika ada datany maka berikan tampilan edit dan delete */}
+                      {akunFb?.url ? (
+                        <div>
+                          {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
+                          {isEditingFacebook ? (
+                            // begitu tambah dipenyek, maka muncul btn simpan
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm" />}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
+
+                          ) : (
+                            // jika tidak, maka baru tampilkan edit dan delete
+                            <HStack>
+                              <IconButton
+                                colorScheme="blue"
+                                aria-label="Edit"
+                                title="Edit"
+                                icon={<BsFillPencilFill />}
+                                size="sm"
+                                onClick={() =>
+                                  // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
+                                  setIsEditingFacebook(!isEditingFacebook)
+                                }
+                              />
+                              <IconButton
+                                colorScheme="red"
+                                aria-label="Hapus"
+                                title="Hapus"
+                                icon={<BsFillTrashFill/>}
+                                size="sm"
+                                onClick={() => handleDelete(akunFb)}
+                              />
+                            </HStack>
+                          )}
+                        </div>
+                      ) : (
+                        // jika tidak ada data/ belum punya, maka berikan btn tambah
+                        <>
+                          {isEditingFacebook && (
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm" />}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
+                          )}
+                        </>
+                      )}
+                    </HStack>
+
+                    <FormErrorMessage>
+                      {errFacebook.url && errFacebook.url.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </form>
+
+                {!akunFb?.url && !isEditingFacebook ? (
+                  <IconButton
+                    colorScheme="green"
+                    aria-label="Tambah"
+                    icon={<BsPlus size="sm"/>}
+                    size="sm"
+                    title="Tambah"
+                    onClick={() => {
+                      // begitu tambah dipenyek, maka muncul btn simpan
+                      setIsEditingFacebook(true);
+                    }}
+                  />
+                ) : null}
+              </HStack>
               <HStack spacing={3} pb="3" alignItems={"center"}>
                 <form onSubmit={handleInstagram(handleSave)}>
                   <FormControl isInvalid={!!errInstagram.url}>
                     <HStack spacing={3} alignItems={"center"}>
                       <IconButton
-                        colorScheme="facebook"
-                        aria-label="facebook"
-                        icon={<AiOutlineFacebook size="xs" />}
+                        color="pink.500"
+                        aria-label="website"
+                        icon={<FaInstagram size="xs" />}
                       />
                       <Hide>
                         {/* masukkan scr otomatis nilai id, id_tenant, title */}
@@ -398,41 +564,52 @@ const ModalSocial: React.FC<ModalProps> = ({
                           defaultValue="Instagram"
                         />
                       </Hide>
-                      <Input
-                        placeholder="URL Social Instagram"
-                        disabled={!isEditingInstagram}
-                        defaultValue={akunIg ? akunIg.url : ""}
-                        onFocus={() => !isEditingInstagram}
-                        {...registInstagram("url", {
-                          required: "URL Instagram harus diisi!",
-                        })}
-                      />
+                      <fieldset disabled={!isEditingInstagram}>
+                        <Input
+                          placeholder="URL Social Instagram"
+                          onFocus={() => !isEditingInstagram}
+                          defaultValue={akunIg ? akunIg.url : ""}
+                          {...registInstagram("url", {
+                            required: "URL Instagram harus diisi!",
+                          })}
+                        />
+                      </fieldset>
                       {/* jika ada datany maka berikan tampilan edit dan delete */}
                       {akunIg?.url ? (
                         <div>
                           {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
                           {isEditingInstagram ? (
-                            <Button
+                            <IconButton
                               colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm"/>}
+                              size="sm"
                               type="submit"
-                              key="updateLinks"
-                              isLoading={isLoading}
-                            >
-                              Simpan
-                            </Button>
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
                           ) : (
                             // jika tidak, maka baru tampilkan edit dan delete
                             <HStack>
-                              <Button
+                              <IconButton
                                 colorScheme="blue"
+                                aria-label="Edit"
+                                title="Edit"
+                                icon={<BsFillPencilFill/>}
+                                size="sm"
                                 onClick={() =>
                                   // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                   setIsEditingInstagram(!isEditingInstagram)
                                 }
-                              >
-                                Edit
-                              </Button>
-                              <Button colorScheme="red">Hapus</Button>
+                              />
+                              <IconButton
+                                colorScheme="red"
+                                aria-label="Hapus"
+                                title="Hapus"
+                                icon={<BsFillTrashFill/>}
+                                size="sm"
+                                onClick={() => handleDelete(akunIg)}
+                              />
                             </HStack>
                           )}
                         </div>
@@ -440,33 +617,365 @@ const ModalSocial: React.FC<ModalProps> = ({
                         // jika tidak ada data/ belum punya, maka berikan btn tambah
                         <>
                           {isEditingInstagram && (
-                            <Button
+                            <IconButton
                               colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm"/>}
+                              size="sm"
                               type="submit"
-                              key="insertLinks"
-                              isLoading={isLoading}
-                            >
-                              Simpan
-                            </Button>
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
                           )}
                         </>
                       )}
                     </HStack>
+
                     <FormErrorMessage>
                       {errInstagram.url && errInstagram.url.message}
                     </FormErrorMessage>
                   </FormControl>
                 </form>
+
                 {!akunIg?.url && !isEditingInstagram ? (
-                  <Button
+                  <IconButton
                     colorScheme="green"
+                    aria-label="Tambah"
+                    icon={<BsPlus size="sm" />}
+                    size="sm"
+                    title="Tambah"
                     onClick={() => {
                       // begitu tambah dipenyek, maka muncul btn simpan
                       setIsEditingInstagram(true);
+                    }}/>
+                ) : null}
+              </HStack>
+
+              <HStack spacing={3} pb="3" alignItems={"center"}>
+                <form onSubmit={handleTwitter(handleSave)}>
+                  <FormControl isInvalid={!!errTwitter.url}>
+                    <HStack spacing={3} alignItems={"center"}>
+                      <IconButton
+                        color="blue.400"
+                        aria-label="website"
+                        icon={<FaTwitter size="xs" />}
+                      />
+                      <Hide>
+                        {/* masukkan scr otomatis nilai id, id_tenant, title */}
+                        <Input
+                          {...registTwitter("id")}
+                          defaultValue={akunTw ? akunTw.id : ""}
+                        />
+                        <Input
+                          {...registTwitter("title")}
+                          defaultValue="Twitter"
+                        />
+                      </Hide>
+                      <fieldset disabled={!isEditingTwitter}>
+                        <Input
+                          placeholder="URL Social Twitter"
+                          onFocus={() => !isEditingTwitter}
+                          defaultValue={akunTw ? akunTw.url : ""}
+                          {...registTwitter("url", {
+                            required: "URL Twitter harus diisi!",
+                          })}
+                        />
+                      </fieldset>
+
+                      {/* jika ada datany maka berikan tampilan edit dan delete */}
+                      {akunTw?.url ? (
+                        <div>
+                          {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
+                          {isEditingTwitter ? (
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm"/>}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
+                          ) : (
+                            // jika tidak, maka baru tampilkan edit dan delete
+                            <HStack>
+                              <IconButton
+                                colorScheme="blue"
+                                aria-label="Edit"
+                                title="Edit"
+                                icon={<BsFillPencilFill/>}
+                                size="sm"
+                                onClick={() =>
+                                  // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
+                                  setIsEditingTwitter(!isEditingTwitter)
+                                }
+                              />
+
+                              <IconButton
+                                colorScheme="red"
+                                aria-label="Hapus"
+                                title="Hapus"
+                                icon={<BsFillTrashFill/>}
+                                size="sm"
+                                onClick={() => handleDelete(akunTw)}
+                              />
+                            </HStack>
+                          )}
+                        </div>
+                      ) : (
+                        // jika tidak ada data/ belum punya, maka berikan btn tambah
+                        <>
+                          {isEditingTwitter && (
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm" />}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
+                          )}
+                        </>
+                      )}
+                    </HStack>
+
+                    <FormErrorMessage>
+                      {errTwitter.url && errTwitter.url.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </form>
+
+                {!akunTw?.url && !isEditingTwitter ? (
+                  <IconButton
+                  colorScheme="green"
+                  aria-label="Tambah"
+                  icon={<BsPlus size="sm"/>}
+                  title="Tambah"
+                  size="sm"
+                    onClick={() => {
+                      // begitu tambah dipenyek, maka muncul btn simpan
+                      setIsEditingTwitter(true);
+                    }}/>
+                ) : null}
+              </HStack>
+
+              <HStack spacing={3} pb="3" alignItems={"center"}>
+                <form onSubmit={handleYoutube(handleSave)}>
+                  <FormControl isInvalid={!!errYoutube.url}>
+                    <HStack spacing={3} alignItems={"center"}>
+                      <IconButton
+                        color="red.500"
+                        aria-label="website"
+                        icon={<FaYoutube size="xs" />}
+                      />
+                      <Hide>
+                        {/* masukkan scr otomatis nilai id, id_tenant, title */}
+                        <Input
+                          {...registYoutube("id")}
+                          defaultValue={akunYt ? akunYt.id : ""}
+                        />
+                        <Input
+                          {...registYoutube("title")}
+                          defaultValue="Youtube"
+                        />
+                      </Hide>
+                      <fieldset disabled={!isEditingYoutube}>
+                        <Input
+                          placeholder="URL Social Youtube"
+                          onFocus={() => !isEditingYoutube}
+                          defaultValue={akunYt ? akunYt.url : ""}
+                          {...registYoutube("url", {
+                            required: "URL Youtube harus diisi!",
+                          })}
+                        />
+                      </fieldset>
+
+                      {/* jika ada datany maka berikan tampilan edit dan delete */}
+                      {akunYt?.url ? (
+                        <div>
+                          {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
+                          {isEditingYoutube ? (
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm" />}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
+                          ) : (
+                            // jika tidak, maka baru tampilkan edit dan delete
+                            <HStack>
+                              <IconButton
+                                colorScheme="blue"
+                                aria-label="Edit"
+                                title="Edit"
+                                icon={<BsFillPencilFill/>}
+                                size="sm"
+                                onClick={() =>
+                                  // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
+                                  setIsEditingYoutube (!isEditingYoutube)
+                                }
+                              />
+
+                              <IconButton
+                                colorScheme="red"
+                                aria-label="Hapus"
+                                title="Hapus"
+                                icon={<BsFillTrashFill/>}
+                                size="sm"
+                                onClick={() => handleDelete(akunYt)}
+                              />
+
+                            </HStack>
+                          )}
+                        </div>
+                      ) : (
+                        // jika tidak ada data/ belum punya, maka berikan btn tambah
+                        <>
+                          {isEditingYoutube && (
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm"/>}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                            />
+                          )}
+                        </>
+                      )}
+                    </HStack>
+
+                    <FormErrorMessage>
+                      {errYoutube.url && errYoutube.url.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </form>
+
+                {!akunYt?.url && !isEditingYoutube ? (
+                  <IconButton
+                    colorScheme="green"
+                    aria-label="Tambah"
+                    icon={<BsPlus size="sm"/>}
+                    size="sm"
+                    title="Tambah"
+                    onClick={() => {
+                      // begitu tambah dipenyek, maka muncul btn simpan
+                      setIsEditingYoutube(true);
+                    }}/>
+                ) : null}
+              </HStack>
+
+              <HStack spacing={3} pb="3" alignItems={"center"}>
+                <form onSubmit={handleLinkedin(handleSave)}>
+                  <FormControl isInvalid={!!errLinkedin.url}>
+                    <HStack spacing={3} alignItems={"center"}>
+                      <IconButton
+                        aria-label="website"
+                        color="blue.500"
+                        icon={<FaLinkedin size="xs" />}
+                      />
+                      <Hide>
+                        {/* masukkan scr otomatis nilai id, id_tenant, title */}
+                        <Input
+                          {...registLinkedin("id")}
+                          defaultValue={akunLd ? akunLd.id : ""}
+                        />
+                        <Input
+                          {...registLinkedin("title")}
+                          defaultValue="Linkedin"
+                        />
+                      </Hide>
+                      <fieldset disabled={!isEditingLinkedin}>
+                        <Input
+                          placeholder="URL Social Linkedin"
+                          onFocus={() => !isEditingLinkedin}
+                          defaultValue={akunLd ? akunLd.url : ""}
+                          {...registLinkedin("url", {
+                            required: "URL Linkedin harus diisi!",
+                          })}
+                        />
+                      </fieldset>
+
+                      {/* jika ada datany maka berikan tampilan edit dan delete */}
+                      {akunLd?.url ? (
+                        <div>
+                          {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
+                          {isEditingLinkedin ? (
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm" />}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                             />
+                          ) : (
+                            // jika tidak, maka baru tampilkan edit dan delete
+                            <HStack>
+                              <IconButton
+                                colorScheme="blue"
+                                aria-label="Edit"
+                                title="Edit"
+                                icon={<BsFillPencilFill/>}
+                                size="sm"
+                                onClick={() =>
+                                  // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
+                                  setIsEditingLinkedin(!isEditingLinkedin)
+                                }
+                              />
+                              <IconButton
+                                colorScheme="red"
+                                aria-label="Hapus"
+                                title="Hapus"
+                                icon={<BsFillTrashFill/>}
+                                size="sm"
+                                onClick={() => handleDelete(akunLd)}
+                              />
+                            </HStack>
+                          )}
+                        </div>
+                      ) : (
+                        // jika tidak ada data/ belum punya, maka berikan btn tambah
+                        <>
+                          {isEditingLinkedin && (
+                            <IconButton
+                              colorScheme="orange"
+                              aria-label="Simpan"
+                              icon={<BsCheck size="sm" />}
+                              size="sm"
+                              type="submit"
+                              title="Simpan"
+                              disabled={isLoading}
+                           />
+                          )}
+                        </>
+                      )}
+                    </HStack>
+
+                    <FormErrorMessage>
+                      {errLinkedin.url && errLinkedin.url.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </form>
+
+                {!akunLd?.url && !isEditingLinkedin ? (
+                  <IconButton
+                    colorScheme="green"
+                    aria-label="Tambah"
+                    icon={<BsPlus size="sm" />}
+                    size="sm"
+                    title="Tambah"
+                    onClick={() => {
+                      // begitu tambah dipenyek, maka muncul btn simpan
+                      setIsEditingLinkedin(true);
                     }}
-                  >
-                    Tambah
-                  </Button>
+                  />
                 ) : null}
               </HStack>
             </>

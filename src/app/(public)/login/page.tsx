@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "../../components/utils/AuthContext";
 import { useState } from "react";
-import {RiLoginBoxLine} from "react-icons/ri"
+import { RiLoginBoxLine } from "react-icons/ri";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -36,7 +36,7 @@ interface Formlogin {
 }
 
 export default function Login() {
-  const { user,login, loading, loadingValidation } = useAuth();
+  const { user, login, loading, loadingValidation } = useAuth();
   const router = useRouter();
 
   // const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
@@ -101,7 +101,7 @@ export default function Login() {
             >
               <Stack align={"center"} mb="3">
                 {/* <FaRegCircleUser fontSize="3.5rem" /> */}
-                <Img src="/img/LOGO-STP.png" h="60px" />
+                <Img src="/img/siteman-primary.png" h="60px" />
                 <Heading
                   fontSize={"4xl"}
                   whiteSpace={"nowrap"}
@@ -169,8 +169,8 @@ export default function Login() {
                       isLoading={loading}
                       mt="2"
                     >
-                      <RiLoginBoxLine/>&nbsp;
-                      Login
+                      <RiLoginBoxLine />
+                      &nbsp; Login
                     </Button>
                   </Stack>
                 </form>
