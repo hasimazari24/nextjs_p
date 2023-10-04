@@ -26,12 +26,8 @@ import {
 import { CheckIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
-import { TbWorldWww } from "react-icons/tb";
-import {
-  AiOutlineFacebook,
-  AiOutlineLinkedin,
-  AiOutlineCamera,
-} from "react-icons/ai";
+import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin, FaGlobe } from "react-icons/fa";
+import {AiOutlineCamera} from "react-icons/ai";
 import Link from "next/link";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import ModalSocial from "../../components/modal/modal-social";
@@ -584,12 +580,17 @@ const MyProfile: React.FC = () => {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
-                              <IconButton
-                                colorScheme="blue"
-                                aria-label="web"
-                                title="Website"
-                                icon={<TbWorldWww size="xs" />}
-                              />
+                            <IconButton
+                                  color="blue.300"
+                                  aria-label="web"
+                                  size="sm"
+                                  icon={<FaGlobe size="sm" /> } 
+                                  title={link.url}
+                                  _hover={{
+                                    color: "blue.500", // Ganti dengan warna saat hover
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)"
+                                />
                             </HStack>
                           </Link>
                         );
@@ -597,11 +598,71 @@ const MyProfile: React.FC = () => {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
-                              <IconButton
-                                colorScheme="facebook"
-                                aria-label="web"
-                                icon={<AiOutlineFacebook size="xs" />}
-                              />
+                            <IconButton
+                                  color="blue.600"
+                                  aria-label="web"
+                                  icon={<FaFacebook size="sm" />} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color:"blue.900"
+                                  }}
+                                   backgroundColor="rgba(0, 0, 0, 0)" 
+                                />
+                            </HStack>
+                          </Link>
+                        );
+                      } else if (link.title === "Instagram") {
+                        return (
+                          <Link href={link.url} key={link.id} target="_blank">
+                            <HStack alignItems={"center"} pr="3">
+                            <IconButton
+                                  color="pink.500"
+                                  aria-label="web"
+                                  icon={<FaInstagram size="sm" />} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color:"pink.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                />
+                            </HStack>
+                          </Link>
+                        );
+                      } else if (link.title === "Twitter") {
+                        return (
+                          <Link href={link.url} key={link.id} target="_blank">
+                            <HStack alignItems={"center"} pr="3">
+                            <IconButton
+                                  color="blue.400"
+                                  aria-label="web"
+                                  icon={<FaTwitter size="sm"/>} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color:"blue.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                />
+                            </HStack>
+                          </Link>
+                        );
+                      } else if (link.title === "Youtube") {
+                        return (
+                          <Link href={link.url} key={link.id} target="_blank">
+                            <HStack alignItems={"center"} pr="3">
+                            <IconButton
+                                  color="red.500"
+                                  aria-label="web"
+                                  icon={<FaYoutube size="sm" />} 
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color:"red.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                />
                             </HStack>
                           </Link>
                         );
@@ -610,11 +671,17 @@ const MyProfile: React.FC = () => {
                           <Link href={link.url} key={link.id} target="_blank">
                             <Link href="impuls.id">
                               <HStack alignItems={"center"} pr="3">
-                                <IconButton
-                                  colorScheme="linkedin"
-                                  aria-label="web"
-                                  icon={<AiOutlineLinkedin size="xs" />}
-                                />
+                              <IconButton
+                                    color="blue.500"
+                                    aria-label="web"
+                                    icon={<FaLinkedin size="sm" />} 
+                                    size="sm"
+                                    title={link.url}
+                                    _hover={{
+                                      color:"blue.800"
+                                    }}
+                                    backgroundColor="rgba(0, 0, 0, 0)" 
+                                  />
                               </HStack>
                             </Link>
                           </Link>

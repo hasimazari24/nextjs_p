@@ -389,11 +389,15 @@ export default function MyTenant() {
                             <Link href={link.url} target="_blank">
                               <HStack alignItems={"center"} pr="4">
                                 <IconButton
-                                  color="blue.500"
+                                  color="blue.300"
                                   aria-label="web"
                                   size="sm"
-                                  icon={<FaGlobe size="sm" /> } 
-                                  title={link.url} 
+                                  icon={<FaGlobe size="sm" /> }
+                                  _hover={{
+                                    color: "blue.500", // Ganti dengan warna saat hover
+                                  }}
+                                  title={link.url}
+                                  backgroundColor="rgba(0, 0, 0, 0)"  
                                 />
                               </HStack>
                             </Link>
@@ -403,11 +407,15 @@ export default function MyTenant() {
                             <Link href={link.url} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
-                                  color="blue.700"
+                                  color="blue.600"
                                   aria-label="web"
                                   icon={<FaFacebook size="sm" />} 
                                   size="sm"
                                   title={link.url}
+                                  _hover={{
+                                    color: "blue.900", // Ganti dengan warna saat hover
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
                                 />
                               </HStack>
                             </Link>
@@ -423,6 +431,10 @@ export default function MyTenant() {
                                   icon={<FaInstagram size="sm" />} 
                                   size="sm"
                                   title={link.url}
+                                  _hover={{
+                                    color:"pink.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
                                 />
                               </HStack>
                             </Link>
@@ -438,6 +450,10 @@ export default function MyTenant() {
                                   icon={<FaTwitter size="sm"/>} 
                                   size="sm"
                                   title={link.url}
+                                  _hover={{
+                                    color:"blue.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
                                 />
                               </HStack>
                             </Link>
@@ -453,6 +469,10 @@ export default function MyTenant() {
                                   icon={<FaYoutube size="sm" />} 
                                   size="sm"
                                   title={link.url}
+                                  _hover={{
+                                    color:"red.700"
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)" 
                                 />
                               </HStack>
                             </Link>
@@ -469,6 +489,10 @@ export default function MyTenant() {
                                     icon={<FaLinkedin size="sm" />} 
                                     size="sm"
                                     title={link.url}
+                                    _hover={{
+                                      color:"blue.800"
+                                    }}
+                                    backgroundColor="rgba(0, 0, 0, 0)" 
                                   />
                                 </HStack>
                               </Link>
