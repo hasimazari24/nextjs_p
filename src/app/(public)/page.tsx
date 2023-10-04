@@ -15,9 +15,12 @@ import {
   IconProps,
   useColorModeValue,
   Img,
+  Center,
+  AbsoluteCenter,
 } from "@chakra-ui/react";
 import GallerySlider from "./template/GallerySlider";
 import Link from "next/link";
+import SectionStp from "./template/SectionStp";
 import React, { useEffect } from "react";
 
 export default function CallToActionWithVideo() {
@@ -56,14 +59,14 @@ export default function CallToActionWithVideo() {
 
   return (
     <>
-      <Container maxW={"7xl"}>
+      <Container maxW={"7xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
         <Stack
           align={"center"}
           spacing={{ base: 5, md: 10 }}
           py={{ base: 8, lg: 16 }}
           direction={{ base: "column", md: "row" }}
         >
-          <Stack w={"full"} flex={1} spacing={{ base: 5, md: 10 }}>
+          {/* <Stack w={"full"} flex={1} spacing={{ base: 5, md: 10 }}>
             <Heading
               lineHeight={1.2}
               fontWeight={500}
@@ -71,25 +74,54 @@ export default function CallToActionWithVideo() {
             >
               <Text as={"span"} color={"grey.700"} position={"relative"}>
                 {process.env.APP_NAME?.toUpperCase()}
+              </Text> */}
+          <Stack w={"full"} flex={1} spacing={{ base: 5, md: 10 }}>
+            <Heading
+              lineHeight={1.1}
+              fontWeight={500}
+              fontSize={{ base: "xl", sm: "2xl", lg: "4xl" }}
+            >
+              <Text
+                as={"span"}
+                position={"relative"}
+                _after={{
+                  content: "''",
+                  width: "full",
+                  height: "30%",
+                  position: "absolute",
+                  bottom: 1,
+                  left: 0,
+                  bg: "red.400",
+                  zIndex: -1,
+                }}
+              >
+                {process.env.APP_NAME?.toUpperCase()}
               </Text>
               <br />
               <Text as={"span"} color={"red.400"}>
                 {process.env.APP_DESCRIPTION?.toUpperCase()}
               </Text>
             </Heading>
-            <Text color={"gray.800"} fontSize="20px">
+            {/* <Text color={"gray.800"} fontSize="20px">
               Pusat Pengelolaan dan Pemantauan Perkembangan Tenant di Solo
               Technopark.
-            </Text>
+            </Text> */}
             <Stack
               spacing={{ base: 4, sm: 6 }}
               direction={{ base: "column", sm: "row" }}
             >
               <Button
+                // rounded={"full"}
+                // size={"lg"}
+                // fontWeight={"normal"}
+                // px={6}
                 rounded={"full"}
                 size={"lg"}
                 fontWeight={"normal"}
                 px={6}
+                colorScheme={"red"}
+                bg={"red.400"}
+                _hover={{ bg: "red.500" }}
                 leftIcon={<PlayIcon h={4} w={4} color={"gray.300"} />}
                 onClick={() => scrollToElement("PortofilioTenant")}
               >
@@ -147,6 +179,9 @@ export default function CallToActionWithVideo() {
         <Box id="PortofilioTenant">
           <GallerySlider />
         </Box>
+      </Box>
+      <Box>
+        <SectionStp />
       </Box>
     </>
   );

@@ -21,10 +21,14 @@ import {
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  SearchIcon,
 } from "@chakra-ui/icons";
+import React, {useState} from "react";
+import FullScreenModal from "./ModalSearch";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
+  const [isModalSearch, setIsModalSearch] = useState(false);
 
   return (
     <>
@@ -33,7 +37,8 @@ export default function Navbar() {
         color={useColorModeValue("gray.600", "white")}
         minH={"60px"}
         py={{ base: 2 }}
-        px={{ base: 4 }}
+        // px={{ base: 4 }}
+        px={{ base: 6, md: 20, lg: 75, "2xl": 225 }}
         borderBottom={1}
         borderStyle={"solid"}
         borderColor={useColorModeValue("gray.200", "gray.900")}
@@ -59,7 +64,11 @@ export default function Navbar() {
             fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
           >
-            <Img src="/img/LOGO-STP.png" h="30px" alt="Logo Solo Technopark" />
+            <Img
+              src="/img/siteman-primary.png"
+              h="30px"
+              alt="Logo Solo Technopark"
+            />
           </Box>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -72,29 +81,17 @@ export default function Navbar() {
           justify={"flex-end"}
           direction={"row"}
           spacing={6}
+          cursor={"pointer"}
         >
           <Button
             as={"a"}
             fontSize={"sm"}
             fontWeight={400}
             variant={"link"}
-            href={"http://localhost:3000/login"}
+            // href={"#"}
+            onClick={() => setIsModalSearch(true)}
           >
-            Sign In
-          </Button>
-          <Button
-            as={"a"}
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
+            <SearchIcon w={5} h={5} />
           </Button>
         </Stack>
       </Flex>
@@ -102,6 +99,11 @@ export default function Navbar() {
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
+
+      <FullScreenModal
+        isOpen={isModalSearch}
+        onClose={() => setIsModalSearch(false)}
+      />
     </>
   );
 }
