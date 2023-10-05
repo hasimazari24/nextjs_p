@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   Container,
   Stack,
@@ -11,6 +11,7 @@ import {
   Button,
   Image,
   Icon,
+  Link,
   IconButton,
   createIcon,
   IconProps,
@@ -22,7 +23,6 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { usePublic } from "../utils/PublicContext";
-import Link from "next/link";
 
 interface Beranda {
   id: string;
@@ -34,83 +34,17 @@ interface Beranda {
 
 function page() {
   const { beranda, getPortofolioDetail } = usePublic();
-  console.log(beranda);
-    const cards = [
-    {
-        title: "Garena",
-        text: "Perusahaan teknologi Asia yang berfokus pada game, e-sports, dan solusi digital, memimpin industri hiburan digital dengan inovasi dan dampak global.",
-        image:
-        "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/512/1907/1907675.png",
-        link: "/portolio-detail",
-    },
-    {
-        title: "Shopee",
-        text: "Platform e-commerce terkemuka di Asia Tenggara, menyediakan berbagai produk dan layanan dengan fokus pada pengalaman belanja online yang inovatif..",
-        image:
-        "https://plus.unsplash.com/premium_photo-1661774910035-05257f7d73a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/512/1538/1538293.png",
-        link: "/portolio-detail",
-    },
-    {
-        title: "Tokopedia",
-        text: "Platform e-commerce besar di Indonesia, yang menawarkan beragam produk dan layanan dengan penekanan pada pengalaman belanja yang inklusif.",
-        image:
-        "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/512/12053/12053266.png",
-        link: "/portolio-detail",
-    },
-    {
-        title: "Tokopedia 2",
-        text: "Platform e-commerce besar di Indonesia, yang menawarkan beragam produk dan layanan dengan penekanan pada pengalaman belanja yang inklusif.",
-        image:
-        "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/128/11940/11940420.png",
-        link: "/portolio-detail",
-    },
-    {
-        title: "Tokopedia 3",
-        text: "Platform e-commerce besar di Indonesia, yang menawarkan beragam produk dan layanan dengan penekanan pada pengalaman belanja yang inklusif.",
-        image:
-        "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/128/11722/11722397.png",
-        link: "/portolio-detail",
-    },
-    {
-        title: "Tokopedia 4",
-        text: "Platform e-commerce besar di Indonesia, yang menawarkan beragam produk dan layanan dengan penekanan pada pengalaman belanja yang inklusif.",
-        image:
-        "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/128/11940/11940446.png",
-        link: "/portolio-detail",
-    },
-    {
-        title: "Tokopedia 5",
-        text: "Platform e-commerce besar di Indonesia, yang menawarkan beragam produk dan layanan dengan penekanan pada pengalaman belanja yang inklusif.",
-        image:
-        "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/128/11134/11134906.png",
-        link: "/portolio-detail",
-    },
-    {
-        title: "Tokopedia 6",
-        text: "Platform e-commerce besar di Indonesia, yang menawarkan beragam produk dan layanan dengan penekanan pada pengalaman belanja yang inklusif.",
-        image:
-        "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80",
-        logo: "https://cdn-icons-png.flaticon.com/128/10988/10988039.png",
-        link: "/portolio-detail",
-    },
-    ];
+  // console.log(beranda);
 
-    const [isHovered, setIsHovered] = useState<{ [key: number]: boolean }>({});
+  const [isHovered, setIsHovered] = useState<{ [key: number]: boolean }>({});
 
-    const handleMouseEnter = (index: number) => {
-      setIsHovered((prevState) => ({ ...prevState, [index]: true }));
-    };
+  const handleMouseEnter = (index: number) => {
+    setIsHovered((prevState) => ({ ...prevState, [index]: true }));
+  };
 
-    const handleMouseLeave = (index: number) => {
-      setIsHovered((prevState) => ({ ...prevState, [index]: false }));
-    };
+  const handleMouseLeave = (index: number) => {
+    setIsHovered((prevState) => ({ ...prevState, [index]: false }));
+  };
 
   return (
     <div>
@@ -131,92 +65,94 @@ function page() {
               Portofolio
             </Heading>
           </Stack>
-          <Box>
-            {beranda && beranda.length > 0 ? (
-              beranda.map((p: Beranda) => (
-                <div key={p.id}>
-                  <p>{p.name}</p>
-                  <p>{p.motto}</p>
-                  {/* <Link
-                    href={{
-                      pathname: "/dashboard/authed/[user]",
-                      query: { user: username },
-                    }}
-                    as="/dashboard/[user]"
-                  >
-                    Profile
-                  </Link> */}
-                  <Link
-                    href={{
-                      pathname: `/portofolio-detail?id=${p.id}`,
-                      query: { id: p.id },
-                    }}
-                    as="/portofolio-detail/"
-                  >
-                    <Button key="toDt">Detail</Button>
-                  </Link>
-                </div>
-              ))
-            ) : (
-              <p>Tidak ada Data</p>
-            )}
-          </Box>
-          <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing={"15px"}>
-            {cards.map((image, index) => (
-              <Box
-                key={index}
-                position="relative"
-                cursor="pointer"
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={() => handleMouseLeave(index)}
+
+          {beranda && beranda.length === 0 && (
+            <Box textAlign="center" py={10} px={6}>
+              <Heading
+                display="inline-block"
+                as="h2"
+                size="2xl"
+                bgGradient="linear(to-r, red.400, red.600)"
+                backgroundClip="text"
               >
-                <Box
-                  w={{ base: "150px", md: "200px" }}
-                  rounded="xl"
-                  borderWidth={"1px"}
-                  shadow="md"
-                  height={{
-                    base: "80px",
-                    sm: "80px",
-                    md: "100px",
-                    lg: "100px",
-                  }}
-                  transition="background-color 0.3s ease"
-                  filter={
-                    isHovered[index] ? "brightness(100%)" : "brightness(60%)"
-                  }
-                  bg={
-                    isHovered[index]
-                      ? "white"
-                      : `url(${image.image}) center/cover no-repeat`
-                  }
-                ></Box>
-                <Center
-                  position="absolute"
-                  top="50%"
-                  left="50%"
-                  transform="translate(-50%, -50%)"
-                  zIndex="1"
+                404
+              </Heading>
+              <Text fontSize="18px" mt={3} mb={2}>
+                Not Found
+              </Text>
+              <Text color={"gray.500"} mb={6}>
+                Mungkin saja karena sudah dihapus atau belum dibuat. Coba
+                hubungi admin untuk info lebih lanjut atau kembali ke Home.
+              </Text>
+
+              <Link href={process.env.APP_URL}>
+                <Button
+                  colorScheme="red"
+                  bgGradient="linear(to-r, red.400, red.500, red.600)"
+                  color="white"
+                  variant="solid"
                 >
-                  <Image
-                    className="module-inside"
-                    src={image.logo}
-                    alt="Slide"
-                    height={{
-                      base: "40px",
-                      sm: "40px",
-                      md: "60px",
-                      lg: "60px",
-                    }}
-                    fit={"cover"}
+                  Kembali ke Beranda
+                </Button>
+              </Link>
+            </Box>
+          )}
+
+          <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing={"15px"}>
+            {beranda &&
+              beranda.length > 0 &&
+              beranda.map((p: Beranda, index) => (
+                <Box
+                  key={p.id}
+                  position="relative"
+                  cursor="pointer"
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={() => handleMouseLeave(index)}
+                >
+                  <Box
+                    w={{ base: "150px", md: "200px" }}
+                    rounded="xl"
+                    borderWidth={"1px"}
                     shadow="md"
-                    // filter={
-                    //   isHovered[index] ? "brightness(100%)" : "brightness(150%)"
-                    // }
-                  />
-                </Center>
-              </Box>
-            ))}
+                    height={{
+                      base: "80px",
+                      sm: "80px",
+                      md: "100px",
+                      lg: "100px",
+                    }}
+                    transition="background-color 0.3s ease"
+                    filter={
+                      isHovered[index] ? "brightness(100%)" : "brightness(60%)"
+                    }
+                    bg={
+                      isHovered[index]
+                        ? "white"
+                        : `url(${p.image_banner_url}) center/cover no-repeat`
+                    }
+                  ></Box>
+                  <Center
+                    position="absolute"
+                    top="50%"
+                    left="50%"
+                    transform="translate(-50%, -50%)"
+                    zIndex="1"
+                  >
+                    <Image
+                      className="module-inside"
+                      src={p.image_url}
+                      alt="Slide"
+                      height={{
+                        base: "40px",
+                        sm: "40px",
+                        md: "60px",
+                        lg: "60px",
+                      }}
+                      fit={"cover"}
+                      shadow="md"
+                    />
+                  </Center>
+                </Box>
+              ))}
           </SimpleGrid>
         </Stack>
       </Container>
@@ -224,4 +160,4 @@ function page() {
   );
 }
 
-export default page
+export default page;
