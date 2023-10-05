@@ -226,7 +226,7 @@ export default function CallToActionWithVideo() {
           </Flex>
         </Stack>
       </Container>
-      <Box bg={useColorModeValue("gray.50", "gray.500")}>
+      <Box bg={useColorModeValue("gray.100", "gray.400")}>
         {/* <Container maxW={"7xl"}>
           <Stack
             // align={"center"}

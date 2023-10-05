@@ -4,6 +4,7 @@ import {
   Box,
   Flex,
   Text,
+  Link,
   IconButton,
   Button,
   Stack,
@@ -14,7 +15,8 @@ import {
   PopoverContent,
   useColorModeValue,
   useBreakpointValue,
-  useDisclosure,Img,
+  useDisclosure,
+  Img,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -23,7 +25,7 @@ import {
   ChevronRightIcon,
   SearchIcon,
 } from "@chakra-ui/icons";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import FullScreenModal from "./ModalSearch";
 
 export default function Navbar() {
@@ -59,17 +61,22 @@ export default function Navbar() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Box
-            justifyContent={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={useColorModeValue("gray.800", "white")}
-          >
-            <Img
-              src="/img/siteman-primary.png"
-              h="30px"
-              alt="Logo Solo Technopark"
-            />
-          </Box>
+          <Link href={process.env.APP_URL}>
+            <Box
+              justifyContent={useBreakpointValue({
+                base: "center",
+                md: "left",
+              })}
+              fontFamily={"heading"}
+              color={useColorModeValue("gray.800", "white")}
+            >
+              <Img
+                src="/img/siteman-primary.png"
+                h="30px"
+                alt="Logo Solo Technopark"
+              />
+            </Box>
+          </Link>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
@@ -114,7 +121,12 @@ const DesktopNav = () => {
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
-    <Stack direction={"row"} spacing={4} justifyContent="center" alignItems="center">
+    <Stack
+      direction={"row"}
+      spacing={4}
+      justifyContent="center"
+      alignItems="center"
+    >
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
@@ -273,12 +285,10 @@ interface NavItem {
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Beranda",
-    href: "#",
+    href: "/",
   },
   {
     label: "Portofolio",
-    href: "#",
+    href: "/portofolio",
   },
 ];
-
-
