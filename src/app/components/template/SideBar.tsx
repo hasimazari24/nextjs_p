@@ -51,7 +51,9 @@ const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (link === pathname) setIsLoading(false);
+    if (link === pathname) {
+      setIsLoading(false);
+    };
   }, [pathname]);
 
   return (

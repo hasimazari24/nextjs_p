@@ -123,16 +123,31 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
           // spacing="1px"
           // cursor="pointer"
         >
-          <HStack alignItems="center" justify={"center"} spacing="8px">
+          <HStack alignItems="center" justify={"center"}>
             <Link href="/">
-              <AiOutlineHome size="20px" />
+              <AiOutlineHome size="20px" mr="2.5" />
             </Link>
             <Text>pages</Text>
-            <Text>
-              {namePath.map((name) => (
-                <>/&nbsp;{` ${name}`}</>
-              ))}
-            </Text>
+            <Text>/</Text>
+            <Link href={`/${namePath[0]}`}>
+              <Text
+                _hover={{ textDecoration: "underline" }}
+              >{`${namePath[0]}`}</Text>
+            </Link>
+
+            {namePath[1] ? (
+              <>
+                <Text>/</Text>
+                <Text>{`${namePath[1]}`}</Text>
+              </>
+            ) : null}
+
+            {/* {namePath.map((name) => (
+              <>
+                <Text>/</Text>
+                <Text>{`${name}`}</Text>
+              </>
+            ))} */}
           </HStack>
         </Flex>
         {/* <Text fontSize="xs" color="gray.600">
@@ -205,7 +220,13 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                     <Divider orientation="horizontal" />
 
                     <HStack justifyContent="space-between" pt="3">
-                      <Link href="/myprofile" passHref onClick={()=> {if(pathname !== "/myprofile") setIsLoading(true);}}>
+                      <Link
+                        href="/myprofile"
+                        passHref
+                        onClick={() => {
+                          if (pathname !== "/myprofile") setIsLoading(true);
+                        }}
+                      >
                         <Button
                           colorScheme="teal"
                           key="Profile"

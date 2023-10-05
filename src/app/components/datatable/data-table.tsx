@@ -288,7 +288,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                         </Td>
                       );
                     })}
-                    <Td>{props.children(row.values)}</Td>
+                    <Td>{props.children(props.data[i])}</Td>
                   </Tr>
                 ) : (
                   //jika tidak ada row values id, maka ...
