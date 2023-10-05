@@ -119,7 +119,7 @@ const ModalSocial: React.FC<ModalProps> = ({
   const akunIg = formData?.find((links) => links.title === "Instagram");
   const akunTw = formData?.find((links) => links.title === "Twitter");
   const akunYt = formData?.find((links) => links.title === "Youtube");
-  const akunLd = formData?.find((links) => links.title === "Linkedin");
+  const akunLd = formData?.find((links) => links.title === "LinkedIn");
   
 
   const [isEditingWebsite, setIsEditingWebsite] = useState<boolean>(false);
@@ -307,7 +307,9 @@ const ModalSocial: React.FC<ModalProps> = ({
     resetYoutube();
   };
 
-  // console.log(formData);
+  useEffect(() => {
+    // getBeranda();
+  }, [formData, akunWeb]);
 
   return (
     <>
@@ -887,7 +889,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                         />
                         <Input
                           {...registLinkedin("title")}
-                          defaultValue="Linkedin"
+                          defaultValue="LinkedIn"
                         />
                       </Hide>
                       <fieldset disabled={!isEditingLinkedin}>
