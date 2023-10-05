@@ -408,13 +408,6 @@ const ModalEdit: React.FC<ModalProps> = ({
                   type="file"
                   onChange={(e) => onAvatarChange(e.target.files)}
                 />
-                {idImageAvatar && (
-                  <Input
-                    type="hidden"
-                    // {...fields.image}
-                    defaultValue={`${idImageAvatar}`}
-                  />
-                )}
                 <Box mt={3} textAlign={"center"}>
                   Avatar
                 </Box>

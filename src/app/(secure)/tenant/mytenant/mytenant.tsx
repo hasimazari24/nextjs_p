@@ -37,7 +37,14 @@ import { CiGlobe } from "react-icons/ci";
 import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
 import { FiFacebook } from "react-icons/fi";
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin, FaGlobe } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaLinkedin,
+  FaGlobe,
+} from "react-icons/fa";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import ModalEdit from "../modal-edit";
 import {
@@ -196,17 +203,13 @@ export default function MyTenant() {
                   <Image
                     rounded={"md"}
                     alt={"product image"}
-                    src={
-                      "https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080"
-                    }
+                    src={dataMyTenant?.image_banner_url}
                     fit={"cover"}
                     align={"center"}
                     w={"full"}
                     h={{ base: "150px", sm: "300px", lg: "300px" }}
-
                   />
 
-                    
                   <Flex
                     justify={"center"}
                     mt={{ base: "-50px", sm: "-100", lg: "-100" }}
@@ -214,9 +217,7 @@ export default function MyTenant() {
                     <Avatar
                       h={{ base: "100px", sm: "200px", lg: "200px" }}
                       w="100%"
-                      src={
-                        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-                      }
+                      src={dataMyTenant?.image_url}
                       css={{
                         border: "5px solid white",
                       }}
@@ -392,12 +393,12 @@ export default function MyTenant() {
                                   color="blue.300"
                                   aria-label="web"
                                   size="sm"
-                                  icon={<FaGlobe size="sm" /> }
+                                  icon={<FaGlobe size="sm" />}
                                   _hover={{
                                     color: "blue.500", // Ganti dengan warna saat hover
                                   }}
                                   title={link.url}
-                                  backgroundColor="rgba(0, 0, 0, 0)"  
+                                  backgroundColor="rgba(0, 0, 0, 0)"
                                 />
                               </HStack>
                             </Link>
@@ -409,18 +410,17 @@ export default function MyTenant() {
                                 <IconButton
                                   color="blue.600"
                                   aria-label="web"
-                                  icon={<FaFacebook size="sm" />} 
+                                  icon={<FaFacebook size="sm" />}
                                   size="sm"
                                   title={link.url}
                                   _hover={{
                                     color: "blue.900", // Ganti dengan warna saat hover
                                   }}
-                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                  backgroundColor="rgba(0, 0, 0, 0)"
                                 />
                               </HStack>
                             </Link>
                           );
-
                         } else if (link.title === "Instagram") {
                           return (
                             <Link href={link.url} target="_blank">
@@ -428,18 +428,17 @@ export default function MyTenant() {
                                 <IconButton
                                   color="pink.500"
                                   aria-label="web"
-                                  icon={<FaInstagram size="sm" />} 
+                                  icon={<FaInstagram size="sm" />}
                                   size="sm"
                                   title={link.url}
                                   _hover={{
-                                    color:"pink.700"
+                                    color: "pink.700",
                                   }}
-                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                  backgroundColor="rgba(0, 0, 0, 0)"
                                 />
                               </HStack>
                             </Link>
                           );
-
                         } else if (link.title === "Twitter") {
                           return (
                             <Link href={link.url} target="_blank">
@@ -447,18 +446,17 @@ export default function MyTenant() {
                                 <IconButton
                                   color="blue.400"
                                   aria-label="web"
-                                  icon={<FaTwitter size="sm"/>} 
+                                  icon={<FaTwitter size="sm" />}
                                   size="sm"
                                   title={link.url}
                                   _hover={{
-                                    color:"blue.700"
+                                    color: "blue.700",
                                   }}
-                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                  backgroundColor="rgba(0, 0, 0, 0)"
                                 />
                               </HStack>
                             </Link>
                           );
-
                         } else if (link.title === "Youtube") {
                           return (
                             <Link href={link.url} target="_blank">
@@ -466,18 +464,17 @@ export default function MyTenant() {
                                 <IconButton
                                   color="red.500"
                                   aria-label="web"
-                                  icon={<FaYoutube size="sm" />} 
+                                  icon={<FaYoutube size="sm" />}
                                   size="sm"
                                   title={link.url}
                                   _hover={{
-                                    color:"red.700"
+                                    color: "red.700",
                                   }}
-                                  backgroundColor="rgba(0, 0, 0, 0)" 
+                                  backgroundColor="rgba(0, 0, 0, 0)"
                                 />
                               </HStack>
                             </Link>
                           );
-
                         } else if (link.title === "Linkedin") {
                           return (
                             <Link href={link.url} target="_blank">
@@ -486,13 +483,13 @@ export default function MyTenant() {
                                   <IconButton
                                     color="blue.500"
                                     aria-label="web"
-                                    icon={<FaLinkedin size="sm" />} 
+                                    icon={<FaLinkedin size="sm" />}
                                     size="sm"
                                     title={link.url}
                                     _hover={{
-                                      color:"blue.800"
+                                      color: "blue.800",
                                     }}
-                                    backgroundColor="rgba(0, 0, 0, 0)" 
+                                    backgroundColor="rgba(0, 0, 0, 0)"
                                   />
                                 </HStack>
                               </Link>

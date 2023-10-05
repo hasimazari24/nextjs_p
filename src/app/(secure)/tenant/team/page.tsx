@@ -10,7 +10,9 @@ import {
   Text,
   HStack,
   Heading,
-  Flex, Checkbox,
+  Avatar,
+  Flex,
+  Checkbox,
 } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
@@ -25,7 +27,8 @@ import ConfirmationModal from "@/app/components/modal/modal-confirm";
 interface DataItem {
   // id_tenant: string;
   id: string;
-  image: string;
+  image_id: string;
+  image_url: string;
   username: string;
   fullname: string;
   position: string;
@@ -34,7 +37,7 @@ interface DataItem {
 }
 
 export default function PageTeam() {
-  const hidenCols = ["id"];
+  const hidenCols = ["id", "username"];
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -83,7 +86,8 @@ export default function PageTeam() {
     },
     {
       Header: "image",
-      accessor: "image",
+      accessor: "image_url",
+      Cell: ({ value }) => <Avatar size={"sm"} src={value} />,
     },
     {
       Header: "username",
@@ -99,14 +103,14 @@ export default function PageTeam() {
     },
     {
       Header: "Admin",
-      width : 20,
+      width: 20,
       accessor: "is_admin",
       Cell: ({ value }) =>
         value ? (
           // <Center>
-            <Checkbox defaultChecked isDisabled size="lg" />
-          // </Center>
-        ) : null,
+          <Checkbox defaultChecked isDisabled size="lg" />
+        ) : // </Center>
+        null,
     },
     {
       Header: "Show Public",
@@ -127,25 +131,25 @@ export default function PageTeam() {
   const [loadingTeam, setLoadingTeam] = useState<boolean>(false);
   const router = useRouter();
 
-  if(!idTenant) {
+  if (!idTenant) {
     router.push("/tenant");
-  };
+  }
 
   const getTeam = async () => {
     try {
       setLoadingTeam(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response =  await axiosCustom.get(`/tenant/${idTenant}/get-user`);
+      const response = await axiosCustom.get(`/tenant/${idTenant}/get-user`);
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
         setDataTeam(response.data.data.user_tenant);
-        
+
         setNamaTenant(response.data.data.name);
         // setIdTenant(id);
         setLoadingTeam(false); // Set isLoading to false to stop the spinner
       }, 1000);
-      
+
       return () => clearTimeout(timer);
     } catch (error) {
       console.error("Gagal memuat data:", error);
@@ -174,7 +178,8 @@ export default function PageTeam() {
           size="sm"
         >
           <EditIcon />
-        </Button> &nbsp;
+        </Button>{" "}
+        &nbsp;
         <Button
           title="Hapus Tim"
           colorScheme="red"
@@ -192,7 +197,9 @@ export default function PageTeam() {
   const handleSearch = async (query: string) => {
     try {
       setIsLoadingSearch(true);
-      const response = await axiosCustom.get(`/user/search-user-tenant/${query}`);
+      const response = await axiosCustom.get(
+        `/user/search-user-tenant/${query}`,
+      );
       // console.log(response);
       const timer = setTimeout(() => {
         if (response.status === 200 && response.data.data) {
@@ -225,10 +232,7 @@ export default function PageTeam() {
         data,
       );
       if (response.status === 201) {
-        handleShowMessage(
-          `Anggota Tim berhasil ditambahkan`,
-          false,
-        );
+        handleShowMessage(`Anggota Tim berhasil ditambahkan`, false);
         setIsLoadSave(false);
         await getTeam();
         setIsModalSearchOpen(false);
@@ -236,10 +240,7 @@ export default function PageTeam() {
     } catch (error: any) {
       console.log(error);
       if (error?.response) {
-        handleShowMessage(
-          `Terjadi Kesalahan: ${error.response.data}`,
-          true,
-        );
+        handleShowMessage(`Terjadi Kesalahan: ${error.response.data}`, true);
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setIsLoadSave(false);
     }
@@ -261,7 +262,7 @@ export default function PageTeam() {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `tenant/${idTenant}/delete-user/${dataDeleteId}`
+          `tenant/${idTenant}/delete-user/${dataDeleteId}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
