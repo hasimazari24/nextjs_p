@@ -46,6 +46,7 @@ import Link from "next/link";
 // import { RiLogoutBoxRLine } from "@react-icons/all-files/ri/RiLogoutBoxRLine";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../utils/AuthContext";
+import { usePathname } from "next/navigation";
 
 interface LinkItemProps {
   name: string;
@@ -69,6 +70,15 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
 
   const { user, logout, loadingLogOut } = useAuth();
   const getUser: any = user;
+  const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(false);
+  //split membagi string ke array setiap ada /
+  // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda / 
+  const namePath = pathname.split('/').filter(Boolean);
+
+  useEffect(() => {
+      if (pathname === '/myprofile') setIsLoading(false);
+  },[pathname, namePath]);
 
   return (
     <Flex
@@ -94,33 +104,41 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
         <Img src="/img/LOGO-STP.png" h="50px" />
       </Box> */}
 
-      <HStack display={{ base: "flex", md: "flex-start" }}>
-        <VStack
+      <HStack
+        display={{ base: "flex", md: "flex-start" }}
+        align="center"
+        justify={"center"}
+      >
+        {/* <VStack
           display={{ base: "none", md: "flex" }}
           alignItems="flex-start"
           spacing="1px"
           ml="2"
+        > */}
+        <Flex
+          // alignItems="center"
+          role="group"
+          display={{ base: "none", md: "flex" }}
+          alignItems="flex-start"
+          // spacing="1px"
+          // cursor="pointer"
         >
-          <Flex
-            alignItems="center"
-            // p="4"
-            // mx="4"
-            // borderRadius="lg"
-            role="group"
-            cursor="pointer"
-            // _hover={{
-            //   bg: "cyan.400",
-            //   color: "white",
-            // }}
-            // {...rest}
-          >
-            <Icon mr="2.5" fontSize="20" as={AiOutlineHome} />
-            <Text>pages / tenant</Text>
-          </Flex>
-          {/* <Text fontSize="xs" color="gray.600">
+          <HStack alignItems="center" justify={"center"} spacing="8px">
+            <Link href="/">
+              <AiOutlineHome size="20px" />
+            </Link>
+            <Text>pages</Text>
+            <Text>
+              {namePath.map((name) => (
+                <>/&nbsp;{` ${name}`}</>
+              ))}
+            </Text>
+          </HStack>
+        </Flex>
+        {/* <Text fontSize="xs" color="gray.600">
             Halaman Daftar Tenant
           </Text> */}
-        </VStack>
+        {/* </VStack> */}
       </HStack>
 
       <HStack display={{ base: "flex", md: "flex-end" }}>
@@ -187,13 +205,14 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                     <Divider orientation="horizontal" />
 
                     <HStack justifyContent="space-between" pt="3">
-                      <Link href="/myprofile" passHref>
+                      <Link href="/myprofile" passHref onClick={()=> {if(pathname !== "/myprofile") setIsLoading(true);}}>
                         <Button
                           colorScheme="teal"
                           key="Profile"
                           size="sm"
                           fontWeight="normal"
                           onClick={closeDropdown}
+                          isLoading={isLoading}
                         >
                           <ImProfile />
                           &nbsp;Profile
