@@ -45,30 +45,32 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     // Menyimpan querry pencarian ke dalam param
   // setParamSearch(data.searchQuery);
     // Validasi input kosong
-    if (!data) {
+    if (data && data.param === "") {
       return;
+    } else {
+      console.log(data);
+      // Simulasi pemanggilan API dengan timeout
+      setIsLoading(true);
+
+      setTimeout(async () => {
+        try {
+          const response = await axiosCustom.post(`/public/search`, data);
+
+          //data api diwadahi result sko response
+          const results = response.data.data;
+          console.log(response);
+          setSearchResults(results);
+          setIsLoading(false);
+          setIsSearchOpen(true); //set ke True saat pencarian dimulai//
+        } catch (error) {
+          console.error("Error fetching data from Api", error);
+          setIsLoading(false);
+          setIsSearchOpen(false);
+        }
+      }, 1000); // Contoh waktu tunda 1 detik
     }
     // cek isi
-    console.log(data);
-    // Simulasi pemanggilan API dengan timeout
-    setIsLoading(true);
-
-    setTimeout(async() => {
-      try {
-        const response = await axiosCustom.post(`/public/search`, data);
-      
-      //data api diwadahi result sko response
-      const results = response.data.data;
-      console.log(response);
-      setSearchResults(results);
-      setIsLoading(false);
-      setIsSearchOpen(true); //set ke True saat pencarian dimulai//
-    } catch (error) {
-      console.error('Error fetching data from Api', error);
-      setIsLoading(false);
-      setIsSearchOpen(false);
-      }
-    }, 1000); // Contoh waktu tunda 1 detik
+    
   };
 
   return (
@@ -93,7 +95,7 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               width="full"
             >
               <Input
-                {...register("param", { required: 'Field ini wajib diisi' })}
+                {...register("param")}
                 // value={searchQuery}
                 // onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Masukkan kata kunci pencarian"
@@ -150,7 +152,7 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               ) : (
                 //text disembunyikan saat tab baru dibuka dan dikukut
                 isSearchOpen && (
-                <Center>
+                <Center p="3">
                   <p>Hasil pencarian tidak ditemukan</p>
                 </Center>
                 )

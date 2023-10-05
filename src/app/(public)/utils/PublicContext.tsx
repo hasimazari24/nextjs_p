@@ -37,7 +37,7 @@ export const PublicProvider = ({ children }: { children: ReactNode }) => {
   const [beranda, setBeranda] = useState<Beranda[] | null>([]);
   const [portfolioDetail, setPortfolioDetail] = useState<any | null>([]);
   const router = useRouter();
-  const [loadingBeranda, setLoadingBeranda] = useState<boolean>(false);
+  const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
   const [loadingDetail, setLoadingDetail] = useState<boolean>(true);
   const [loadingLogOut, setLoadingLogOut] = useState<boolean>(false);
 
