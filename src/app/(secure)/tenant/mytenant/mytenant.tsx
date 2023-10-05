@@ -210,6 +210,7 @@ export default function MyTenant() {
                     fit={"cover"}
                     align={"center"}
                     w={"full"}
+                    backgroundColor={"white"}
                     h={{ base: "150px", sm: "300px", lg: "300px" }}
                   />
 
@@ -224,6 +225,7 @@ export default function MyTenant() {
                       css={{
                         border: "5px solid white",
                       }}
+                      backgroundColor={"white"}
                     />
                   </Flex>
                 </VStack>

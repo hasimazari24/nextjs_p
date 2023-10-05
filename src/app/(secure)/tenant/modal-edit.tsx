@@ -593,7 +593,8 @@ const ModalEdit: React.FC<ModalProps> = ({
                     <Image
                       src={previewAvatar}
                       h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w="100%"
+                      w={{ base: "100px", sm: "200px", lg: "200px" }}
+                      fit="cover"
                       borderRadius="full"
                       alt="Preview Avatar"
                     />
@@ -661,8 +662,10 @@ const ModalEdit: React.FC<ModalProps> = ({
                     <Image
                       src={previewBanner}
                       h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w="100%"
-                      borderRadius="full"
+                      w={"auto"}
+                      fit="cover"
+                      // borderRadius="full"
+                      rounded={"md"}
                       alt="Preview Banner"
                     />
                     <Stack
@@ -679,7 +682,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                       w="100%"
                       justifyContent={"center"}
                       align={"center"}
-                      borderRadius="full"
+                      rounded={"md"}
                     >
                       <HStack spacing="1">
                         {!isLoading && (
