@@ -122,7 +122,7 @@ const GoogleMaps = () => {
 const Footer = () => {
   return (
     <Box
-      bg={useColorModeValue("red.600", "gray.900")}
+      bgGradient="linear(to-br, red.600, red.500, red.600)"
       // style={{
       //   borderTopRightRadius: '15px', // Border radius sudut atas kanan
       //   borderTopLeftRadius: '15px',  // Border radius sudut atas kiri

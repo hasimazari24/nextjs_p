@@ -24,21 +24,8 @@ import SectionStp from "./template/SectionStp";
 import React, { useEffect } from "react";
 
 export default function CallToActionWithVideo() {
-  const images = [
-    {
-      src: "https://images.unsplash.com/photo-1559230928-34c7c281d7c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1417&q=80",
-      alt: "Image 1",
-      id: "1",
-    },
-    {
-      src: "https://plus.unsplash.com/premium_photo-1685112908051-334a2216b0c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-      alt: "Image 2",
-      id: "2",
-    },
-    // Tambahkan gambar-gambar lainnya
-  ];
-
-  const scrollToElement = (elementId:any) => { //isi nama element id yang menjadi target scroll
+  const scrollToElement = (elementId: any) => {
+    //isi nama element id yang menjadi target scroll
     const element = document.getElementById(elementId); // Ganti dengan ID elemen yang ingin Anda gulirkan
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -54,8 +41,7 @@ export default function CallToActionWithVideo() {
 
   useEffect(() => {
     window.addEventListener("load", handleHashScrolling);
-  }, [])
-  
+  }, []);
 
   return (
     <>
@@ -81,6 +67,90 @@ export default function CallToActionWithVideo() {
               fontWeight={500}
               fontSize={{ base: "xl", sm: "2xl", lg: "4xl" }}
             >
+              <Box
+                position={"absolute"}
+                w={{ base: 34, md: 34, lg: 34 }}
+                top={{ base: 80, md: 110, lg: 415 }}
+                left={{ base: 30, md: 70, lg: 500 }}
+                opacity={0.4}
+                zIndex={-1}
+              >
+                <Image
+                  src="/img/cloud-backup-svgrepo-com.svg"
+                  alt="svg"
+                ></Image>
+              </Box>
+
+              <Box
+                position={"absolute"}
+                w={{ base: 39, md: 39, lg: 41 }}
+                top={{ base: 140, md: 350, lg: 100 }}
+                left={{ base: 290, md: 280, lg: 680 }}
+                opacity={0.4}
+                zIndex={-1}
+              >
+                <Image
+                  src="/img/statistics-1-svgrepo-com.svg"
+                  alt="svg"
+                ></Image>
+              </Box>
+
+              <Box
+                position={"absolute"}
+                w={{ base: 38, md: 38, lg: 38 }}
+                top={{ base: 245, md: 110, lg: 175 }}
+                left={{ base: 210, md: 480, lg: 280 }}
+                opacity={0.4}
+                zIndex={-1}
+              >
+                <Image
+                  src="/img/creativity-1-svgrepo-com.svg"
+                  alt="svg"
+                ></Image>
+              </Box>
+
+              <Box
+                position={"absolute"}
+                w={{ base: 38, md: 39, lg: 41 }}
+                top={{ base: 570, md: 405, lg: 500 }}
+                left={{ base: 235, md: 740, lg: 1000 }}
+                opacity={0.4}
+                zIndex={1}
+              >
+                <Image
+                  src="/img/multi-select-svgrepo-com.svg"
+                  alt="svg"
+                ></Image>
+              </Box>
+
+              <Box
+                position={"absolute"}
+                w={{ base: 180, md: 245, lg: 305 }}
+                top={{ base: 220, md: 175, lg: 35 }}
+                left={{ base: 0, md: -35, lg: 730 }}
+                opacity={0.1}
+                zIndex={0}
+              >
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern
+                      id="fill"
+                      viewBox="0,0,100,100"
+                      width="10%"
+                      height="5%"
+                    >
+                      <circle cx="50" cy="50" r="12.5" fill="DarkBlue"></circle>
+                    </pattern>
+                  </defs>
+                  <path
+                    d="M62.5,71.5Q25,93,25,50Q25,7,62.5,28.5Q100,50,62.5,71.5Z"
+                    stroke="none"
+                    stroke-width="0"
+                    fill="url(#fill)"
+                  ></path>
+                </svg>
+              </Box>
+
               <Text
                 as={"span"}
                 position={"relative"}
@@ -119,10 +189,10 @@ export default function CallToActionWithVideo() {
                 size={"lg"}
                 fontWeight={"normal"}
                 px={6}
-                colorScheme={"red"}
-                bg={"red.400"}
-                _hover={{ bg: "red.500" }}
-                leftIcon={<PlayIcon h={4} w={4} color={"gray.300"} />}
+                colorScheme={"gray"}
+                bg={"gray.100"}
+                _hover={{ bg: "gray.200" }}
+                leftIcon={<PlayIcon h={4} w={4} color={"gray.400"} />}
                 onClick={() => scrollToElement("PortofilioTenant")}
               >
                 Get Started
