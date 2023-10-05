@@ -54,6 +54,7 @@ import {
   ViewIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
+// import SplitWithImage from '@/app/(public)/portofolio-detail/page';
 
 interface MyTenantProps {
   is_admin: boolean;
@@ -74,7 +75,7 @@ export default function MyTenant() {
     setIsError(err);
     setModalNotif(true);
   };
-
+  const [selectedSocialLinks, setSelectedSocialLinks] = useState<Array<tenantLinks>>([]);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [dataMyTenant, setDataMyTenant] = useState<any | null>([]);
   const [dataTenantLinks, setDataTenantLinks] = useState<Array<tenantLinks>>(
@@ -88,6 +89,8 @@ export default function MyTenant() {
         setDataMyTenant(response.data.data);
         setIs_Admin(response.data.data.is_admin);
         setDataTenantLinks(response.data.data.tenant_link);
+        // menyimpan social links yang sudah dipilih
+        // setSelectedSocialLinks(response.data.data.tenant_link); //
       });
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -523,6 +526,7 @@ export default function MyTenant() {
               </Center>
             </Flex>
           )}
+          {/* <SplitWithImage selectedSocialLinks={selectedSocialLinks} /> */}
         </>
       )}
       <ModalSocial
