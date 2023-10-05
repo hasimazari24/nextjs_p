@@ -3,8 +3,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
   Input,
   Button,
@@ -19,27 +17,58 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { useForm, SubmitHandler } from 'react-hook-form';
+import axios, { axiosCustom } from "@/app/api/axios";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const FullScreenModal: React.FC<ModalProps> = ({isOpen, onClose}) => {
+interface FormData {
+  param: string;
+}
+
+const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [paramSearch, setParamSearch] = useState<string|null>(null);
 
-  const handleSearch = () => {
+  
+  
+  
+  const handleSearch: SubmitHandler<any> = async (data: string) => {
+    // Menyimpan querry pencarian ke dalam param
+  // setParamSearch(data.searchQuery);
+    // Validasi input kosong
+    if (!data) {
+      return;
+    }
+    // cek isi
+    console.log(data);
     // Simulasi pemanggilan API dengan timeout
     setIsLoading(true);
-    setTimeout(() => {
-      const results = ["Hasil 1", "Hasil 2", "Hasil 3"]; // Ganti dengan data hasil pencarian sesungguhnya
+
+    setTimeout(async() => {
+      try {
+        const response = await axiosCustom.post(`/public/search`, data);
+      
+      //data api diwadahi result sko response
+      const results = response.data.data;
+      console.log(response);
       setSearchResults(results);
       setIsLoading(false);
+      setIsSearchOpen(true); //set ke True saat pencarian dimulai//
+    } catch (error) {
+      console.error('Error fetching data from Api', error);
+      setIsLoading(false);
       setIsSearchOpen(false);
-    }, 1000); // Contoh waktu tunda 2 detik
+      }
+    }, 1000); // Contoh waktu tunda 1 detik
   };
 
   return (
@@ -48,56 +77,52 @@ const FullScreenModal: React.FC<ModalProps> = ({isOpen, onClose}) => {
       onClose={() => {
         onClose();
         setSearchResults([]);
+        reset(); // Menggunakan reset untuk mengosongkan input
+        setIsSearchOpen(false); //set ke False saat modal ditutup
       }}
       size={"xl"}
     >
       <ModalOverlay />
       <ModalContent>
-        {/* <ModalCloseButton /> */}
-        {/* <ModalHeader>
-          
-        </ModalHeader> */}
         <ModalBody p="3">
-          <HStack
-            alignItems={"center"}
-            justify="center" // Horizontal tengah
-            transition="0.5s" // Efek transisi
-            width="full"
-            // boxSize={"full"}
-          >
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Masukkan kata kunci pencarian"
-              size="lg"
-              // mb={isLoading ? 4 : 0}
-            />
-            <Button
-              onClick={handleSearch}
-              bg={"red.400"}
-              _hover={{ bg: "red.500" }}
-              size="lg"
-              color="white"
+          <form onSubmit={handleSubmit(handleSearch)}>
+            <HStack
+              alignItems={"center"}
+              justify="center"
+              transition="0.5s"
+              width="full"
             >
-              <SearchIcon />
-            </Button>
-          </HStack>
+              <Input
+                {...register("param", { required: 'Field ini wajib diisi' })}
+                // value={searchQuery}
+                // onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Masukkan kata kunci pencarian"
+                size="lg"
+              />
+              <Button
+                type="submit"
+                bg={"red.400"}
+                _hover={{ bg: "red.500" }}
+                size="lg"
+                color="white"
+              >
+                <SearchIcon />
+              </Button>
+            </HStack>
+            {errors.param && <p>{errors.param.message}</p>}
+            <Button type="submit" style={{ display: "none" }}></Button>
+          </form>
           {isLoading ? (
             <Center>
               <Spinner className="spinner" size="md" color="blue.500" m="3" />
             </Center>
           ) : (
-            <Stack
-            //   mt={searchResults && searchResults.length > 0 ? "3" : "0"}
-              w="full"
-              direction={"column"}
-            >
-              {searchResults ? (
+            <Stack w="full" direction={"column"}>
+              {searchResults && searchResults.length > 0 ? (
                 searchResults.map((result, index) => (
-                  <SlideFade in={searchResults.length > 0} offsetY="20px">
+                  <SlideFade in={searchResults.length > 0} offsetY="20px" key={index}>
                     <Box
                       rounded="md"
-                      key={index}
                       _hover={{
                         bg: "red.400",
                         "& .textResult": {
@@ -113,27 +138,22 @@ const FullScreenModal: React.FC<ModalProps> = ({isOpen, onClose}) => {
                       cursor="pointer"
                       bg="gray.50"
                     >
-                      <Text
-                        fontSize="12px"
-                        color="gray.500"
-                        className="textH"
-                      >
+                      <Text fontSize="12px" color="gray.500" className="textH">
                         PORTOFOLIO
                       </Text>
-                      <Text
-                        fontSize="18px"
-                        color="gray.800"
-                        className="textResult"
-                      >
-                        {result}
+                      <Text fontSize="18px" color="gray.800" className="textResult">
+                        {result?.name}
                       </Text>
                     </Box>
                   </SlideFade>
                 ))
               ) : (
+                //text disembunyikan saat tab baru dibuka dan dikukut
+                isSearchOpen && (
                 <Center>
                   <p>Hasil pencarian tidak ditemukan</p>
                 </Center>
+                )
               )}
             </Stack>
           )}
