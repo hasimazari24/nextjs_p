@@ -92,9 +92,9 @@ const MyProfile: React.FC = () => {
     // ambil input nya
     const file = e?.[0];
     // ambil type dari file
-    const UPLOAD_FILE_TYPE = file.type;
+    const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
-    const UPLOAD_FILE_SIZE = file.size;
+    const UPLOAD_FILE_SIZE = file?.size;
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
       file.value = null;
@@ -343,15 +343,16 @@ const MyProfile: React.FC = () => {
                       <Image
                         src={previewAvatar}
                         h={{ base: "100px", sm: "200px", lg: "200px" }}
-                        w="100%"
+                        w={{ base: "100px", sm: "200px", lg: "200px" }}
                         borderRadius="full"
                         alt="Preview Avatar"
+                        fit={"cover"}
                       />
                     ) : (
                       <Image
                         src={dataTampil?.image_url}
                         h={{ base: "100px", sm: "200px", lg: "200px" }}
-                        w="100%"
+                        w={{ base: "100px", sm: "200px", lg: "200px" }}
                         borderRadius="full"
                         alt="Avatar"
                       />
@@ -453,13 +454,13 @@ const MyProfile: React.FC = () => {
                       type="file"
                       onChange={(e) => onAvatarChange(e.target.files)}
                     />
-                    {idImageAvatar && (
+                    {/* {idImageAvatar && (
                       <Input
                         type="hidden"
                         // {...fields.image}
                         defaultValue={`${idImageAvatar}`}
                       />
-                    )}
+                    )} */}
                     <Flex justify="flex-end">
                       <Button
                         leftIcon={<CheckIcon />}
@@ -569,17 +570,17 @@ const MyProfile: React.FC = () => {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
-                            <IconButton
-                                  color="blue.300"
-                                  aria-label="web"
-                                  size="sm"
-                                  icon={<FaGlobe size="sm" /> } 
-                                  title={link.url}
-                                  _hover={{
-                                    color: "blue.500", // Ganti dengan warna saat hover
-                                  }}
-                                  backgroundColor="rgba(0, 0, 0, 0)"
-                                />
+                              <IconButton
+                                color="blue.300"
+                                aria-label="web"
+                                size="sm"
+                                icon={<FaGlobe size="sm" />}
+                                title={link.url}
+                                _hover={{
+                                  color: "blue.500", // Ganti dengan warna saat hover
+                                }}
+                                backgroundColor="rgba(0, 0, 0, 0)"
+                              />
                             </HStack>
                           </Link>
                         );
@@ -587,17 +588,17 @@ const MyProfile: React.FC = () => {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
-                            <IconButton
-                                  color="blue.600"
-                                  aria-label="web"
-                                  icon={<FaFacebook size="sm" />} 
-                                  size="sm"
-                                  title={link.url}
-                                  _hover={{
-                                    color:"blue.900"
-                                  }}
-                                   backgroundColor="rgba(0, 0, 0, 0)" 
-                                />
+                              <IconButton
+                                color="blue.600"
+                                aria-label="web"
+                                icon={<FaFacebook size="sm" />}
+                                size="sm"
+                                title={link.url}
+                                _hover={{
+                                  color: "blue.900",
+                                }}
+                                backgroundColor="rgba(0, 0, 0, 0)"
+                              />
                             </HStack>
                           </Link>
                         );
@@ -605,17 +606,17 @@ const MyProfile: React.FC = () => {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
-                            <IconButton
-                                  color="pink.500"
-                                  aria-label="web"
-                                  icon={<FaInstagram size="sm" />} 
-                                  size="sm"
-                                  title={link.url}
-                                  _hover={{
-                                    color:"pink.700"
-                                  }}
-                                  backgroundColor="rgba(0, 0, 0, 0)" 
-                                />
+                              <IconButton
+                                color="pink.500"
+                                aria-label="web"
+                                icon={<FaInstagram size="sm" />}
+                                size="sm"
+                                title={link.url}
+                                _hover={{
+                                  color: "pink.700",
+                                }}
+                                backgroundColor="rgba(0, 0, 0, 0)"
+                              />
                             </HStack>
                           </Link>
                         );
@@ -623,17 +624,17 @@ const MyProfile: React.FC = () => {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
-                            <IconButton
-                                  color="blue.400"
-                                  aria-label="web"
-                                  icon={<FaTwitter size="sm"/>} 
-                                  size="sm"
-                                  title={link.url}
-                                  _hover={{
-                                    color:"blue.700"
-                                  }}
-                                  backgroundColor="rgba(0, 0, 0, 0)" 
-                                />
+                              <IconButton
+                                color="blue.400"
+                                aria-label="web"
+                                icon={<FaTwitter size="sm" />}
+                                size="sm"
+                                title={link.url}
+                                _hover={{
+                                  color: "blue.700",
+                                }}
+                                backgroundColor="rgba(0, 0, 0, 0)"
+                              />
                             </HStack>
                           </Link>
                         );
@@ -641,17 +642,17 @@ const MyProfile: React.FC = () => {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">
-                            <IconButton
-                                  color="red.500"
-                                  aria-label="web"
-                                  icon={<FaYoutube size="sm" />} 
-                                  size="sm"
-                                  title={link.url}
-                                  _hover={{
-                                    color:"red.700"
-                                  }}
-                                  backgroundColor="rgba(0, 0, 0, 0)" 
-                                />
+                              <IconButton
+                                color="red.500"
+                                aria-label="web"
+                                icon={<FaYoutube size="sm" />}
+                                size="sm"
+                                title={link.url}
+                                _hover={{
+                                  color: "red.700",
+                                }}
+                                backgroundColor="rgba(0, 0, 0, 0)"
+                              />
                             </HStack>
                           </Link>
                         );
@@ -660,17 +661,17 @@ const MyProfile: React.FC = () => {
                           <Link href={link.url} key={link.id} target="_blank">
                             <Link href="impuls.id">
                               <HStack alignItems={"center"} pr="3">
-                              <IconButton
-                                    color="blue.500"
-                                    aria-label="web"
-                                    icon={<FaLinkedin size="sm" />} 
-                                    size="sm"
-                                    title={link.url}
-                                    _hover={{
-                                      color:"blue.800"
-                                    }}
-                                    backgroundColor="rgba(0, 0, 0, 0)" 
-                                  />
+                                <IconButton
+                                  color="blue.500"
+                                  aria-label="web"
+                                  icon={<FaLinkedin size="sm" />}
+                                  size="sm"
+                                  title={link.url}
+                                  _hover={{
+                                    color: "blue.800",
+                                  }}
+                                  backgroundColor="rgba(0, 0, 0, 0)"
+                                />
                               </HStack>
                             </Link>
                           </Link>

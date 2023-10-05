@@ -115,9 +115,9 @@ const ModalEdit: React.FC<ModalProps> = ({
     // ambil input nya
     const file = e?.[0];
     // ambil type dari file
-    const UPLOAD_FILE_TYPE = file.type;
+    const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
-    const UPLOAD_FILE_SIZE = file.size;
+    const UPLOAD_FILE_SIZE = file?.size;
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
       file.value = null;
@@ -136,16 +136,42 @@ const ModalEdit: React.FC<ModalProps> = ({
 
   // fungsi ketika button delete avatar click
   const onButtonDeleteAvatar = () => {
-    // jika dalam kondisi tambah user, arakhkan ke delete asset
-    if (!isEdit && isOpen) {
-      axiosCustom.delete(`/assets/${idImageAvatar}/delete`);
-      setIdImageAvatar(null);
-    } else {
-      setIdImageAvatar(`delete=${idImageAvatarOld}`);
+    try {
+      // jika dalam kondisi tambah user, arakhkan ke delete asset
+      if (!isEdit && isOpen) {
+        axiosCustom.delete(`/assets/${idImageAvatar}/delete`);
+        setIdImageAvatar(null);
+      } else {
+        // console.log("hapus ini kah?");
+        setIdImageAvatar(`delete=${idImageAvatarOld}`);
+      }
+      setDataEdited([]);
+      setPreviewAvatar("/img/avatar-default.jpg");
+      setIdImageAvatarOld(null);
+      setBtnDeleteAvatar(false);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
     }
-    setPreviewAvatar("/img/avatar-default.jpg");
-    setIdImageAvatarOld(null);
-    setBtnDeleteAvatar(false);
+  };
+
+  const [dataEdited, setDataEdited] = useState(formData ? formData : []);
+
+  const initialAvatar = () => {
+    if (isOpen && isEdit && dataEdited && dataEdited.length !== 0) {
+      if (dataEdited?.image_id !== null) {
+        if (idImageAvatarOld !== dataEdited.image_id) {
+          setIdImageAvatarOld(dataEdited?.image_id);
+          setPreviewAvatar(dataEdited?.image_url);
+          setBtnDeleteAvatar(true);
+        }
+      }
+    }
   };
 
   // logic update avatar disini
@@ -175,7 +201,10 @@ const ModalEdit: React.FC<ModalProps> = ({
       }
     }
     uploadAvatar();
-  }, [avatar]);
+    initialAvatar();
+    setDataEdited(formData);
+    // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
+  }, [avatar, formData, initialAvatar()]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -255,16 +284,8 @@ const ModalEdit: React.FC<ModalProps> = ({
     }
   };
 
-  // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  if (isOpen && isEdit && formData) {
-    if (formData?.image_id !== null) {
-      if (idImageAvatarOld !== formData.image_id) {
-        setIdImageAvatarOld(formData.image_id);
-        setPreviewAvatar(formData.image_url);
-        setBtnDeleteAvatar(true);
-      }
-    }
-  }
+  console.log(formData);
+  console.log(dataEdited);
 
   return (
     <>
@@ -426,9 +447,10 @@ const ModalEdit: React.FC<ModalProps> = ({
                     <Image
                       src={previewAvatar}
                       h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w="100%"
+                      w={{ base: "100px", sm: "200px", lg: "200px" }}
                       borderRadius="full"
                       alt="Preview Avatar"
+                      fit={"cover"}
                     />
                     <Stack
                       position="absolute"
