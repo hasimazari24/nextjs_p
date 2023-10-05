@@ -5,6 +5,7 @@ import { Column } from "react-table";
 import { useEffect, useState, useContext } from "react";
 import ModalEdit from "./modal-edit";
 import ModalDetail from "./modal-detail";
+import ModalSocial from "../../components/modal/modal-social";
 import {
   Button,
   Center,
@@ -19,7 +20,6 @@ import {
   Avatar,
 } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
-import ModalSocial from "../../components/modal/modal-social";
 import ModalNotif from "../../components/modal/modal-notif";
 import { AddIcon, DeleteIcon, EditIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
@@ -46,6 +46,11 @@ interface DataItem {
   image_banner_id: string;
   image_url: string;
   image_banner_url: string;
+  // tenant_link : [{
+  //   id : string,
+  //   title:string,
+  //   url:string
+  // }];
 }
 
 export default function page() {
@@ -167,7 +172,7 @@ export default function page() {
   // const [selectedData, setSelectedData] = useState<any | null>(null);
 
   const [isModalSocial, setIsModalSocial] = useState<any | null>(null);
-  const [editingSocial, setEditingSocial] = useState<any | null>(null);
+   const [editingSocial, setEditingSocial] = useState<any | null>(null);
 
   //handle hapus
   const [dataDeleteId, setDataDeleteId] = useState<number | null>(null);
@@ -212,18 +217,18 @@ export default function page() {
               &nbsp; Lihat Situs
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/tenant/catalog?id=${rowData.id}`)}
+              onClick={() => router.push(`/tenant/catalog/${rowData.id}`)}
             >
               <HamburgerIcon />
               &nbsp; Catalog Tenant
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/tenant/team?id=${rowData.id}`)}
+              onClick={() => router.push(`/tenant/team/${rowData.id}`)}
             >
               <SiMicrosoftteams />
               &nbsp; Team Tenant
             </MenuItem>
-            <MenuItem onClick={() => handleSocial(rowData.id)}>
+            <MenuItem onClick={() => handleSocial(rowData)}>
               <GrShareOption />
               &nbsp; Social Links Tenant
             </MenuItem>
@@ -279,7 +284,7 @@ export default function page() {
   const handleSocial = (item: any) => {
     setEditingSocial(item);
     setIsModalSocial(true);
-    // console.log(dataDetail);
+    // console.log(editingSocial);
   };
 
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
@@ -411,6 +416,17 @@ export default function page() {
                 onClose={() => setModalNotif(false)}
                 message={message}
                 isError={isError}
+              />
+
+              <ModalSocial
+                isOpen={isModalSocial}
+                onClose={() => setIsModalSocial(false)}
+                onSubmit={() => {
+                  getTampil();
+                }}
+                formData={editingSocial?.tenant_link}
+                idTenant={editingSocial?.id}
+                onDelete={() => getTampil()}
               />
             </>
           )}

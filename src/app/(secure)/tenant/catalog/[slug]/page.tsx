@@ -2,7 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
-import { useSearchParams, useRouter, useParams } from "next/navigation";
+import {
+  useSearchParams,
+  useRouter,
+  useParams,
+  notFound,
+} from "next/navigation";
 import {
   Button,
   Center,
@@ -25,7 +30,7 @@ interface DataItem {
   description: string;
 }
 
-export default function PageCatalog() {
+export default function PageCatalog({ params }: { params: { slug: string } }) {
   const hidenCols = ["id"];
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -68,25 +73,35 @@ export default function PageCatalog() {
 
   const [dataCatalog, setDataCatalog] = useState<Array<DataItem>>([]);
   const searchParams = useSearchParams();
+  // console.log(params);
   const idTenant = searchParams.get("id");
+  // const idTenant = params.id;
   const [namaTenant, setNamaTenant] = useState("");
   const [loadingCatalog, setLoadingCatalog] = useState<boolean>(false);
   const router = useRouter();
-  if (!idTenant) {
-    router.push("/tenant");
-    // handleShowMessage(`Silahkan pilih tenant terlebih dahulu!`, true);
+  // if (!params.catalog) {
+  //   router.push("/tenant");
+  //   // handleShowMessage(`Silahkan pilih tenant terlebih dahulu!`, true);
+  // }
+
+  // const getParamsId = params.catalog.split("catalog-")[1];
+  const getParamsId = params.slug;
+
+  if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
+    return notFound();
   }
 
   const getCatalog = async () => {
     try {
       setLoadingCatalog(true);
       // Panggil API menggunakan Axios dengan async/await
-      await axiosCustom.get(`/tenant-catalog/${idTenant}`).then((response) => {
-        console.log(response);
+      const response = await axiosCustom.get(`/tenant-catalog/${getParamsId}`);
+      if (response.data.data) {
+        // console.log(response);
         setDataCatalog(response.data.data.catalog);
         setNamaTenant(response.data.data.name);
-      });
-      
+      }
+
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
         // setIdTenant(id);
@@ -94,19 +109,23 @@ export default function PageCatalog() {
       }, 1000);
 
       return () => clearTimeout(timer);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Gagal memuat data:", error);
+      setNamaTenant("false");
       setLoadingCatalog(false);
     }
   };
 
-  console.log(dataCatalog);
+  // console.log(dataCatalog);
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    if(idTenant) getCatalog();
+    getCatalog();
+    if (namaTenant && namaTenant === "false") {
+      return notFound();
+    }
     // Clear the timeout when the component is unmounted
-  }, []);
+  }, [namaTenant]);
 
   const renderActions = (rowData: any) => {
     return (
@@ -233,7 +252,7 @@ export default function PageCatalog() {
                 }}
               >
                 <AiOutlineRollback />
-                &nbsp;Daftar Tenant
+                &nbsp;Data Tenant
               </Button>
               <Button
                 colorScheme="green"
@@ -284,7 +303,7 @@ export default function PageCatalog() {
           getCatalog();
         }}
         isEdit={false}
-        idTenant={idTenant}
+        idTenant={getParamsId}
       />
 
       {/* Modal hapus data */}

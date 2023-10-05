@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
-import { useSearchParams, useRouter, useParams } from "next/navigation";
+import { useSearchParams, useRouter, useParams, notFound } from "next/navigation";
 import {
   Button,
   Center,
@@ -19,7 +19,7 @@ import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 // import { AiOutlineRollback } from "@react-icons/all-files/ai/AiOutlineRollback";
 import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
-import SearchModal from "@/app/(secure)/tenant/team/SearchModal";
+import SearchModal from "@/app/(secure)/tenant/team/[slug]/SearchModal";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import ModalTeam from "./modal-team";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
@@ -36,7 +36,14 @@ interface DataItem {
   is_public: boolean;
 }
 
-export default function PageTeam() {
+export default function PageTeam({ params }: { params: { slug: string } }) {
+  const getParamsId = params.slug;
+  // console.log(getParamsId);
+
+  if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
+    return notFound();
+  }
+
   const hidenCols = ["id", "username"];
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -126,20 +133,20 @@ export default function PageTeam() {
 
   const [dataTeam, setDataTeam] = useState<any[]>([]);
   const searchParams = useSearchParams();
-  const idTenant = searchParams.get("id");
+  // const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState("");
   const [loadingTeam, setLoadingTeam] = useState<boolean>(false);
   const router = useRouter();
 
-  if (!idTenant) {
-    router.push("/tenant");
-  }
+  // if (!idTenant) {
+  //   router.push("/tenant");
+  // }
 
   const getTeam = async () => {
     try {
       setLoadingTeam(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant/${idTenant}/get-user`);
+      const response = await axiosCustom.get(`/tenant/${getParamsId}/get-user`);
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
       const timer = setTimeout(() => {
@@ -152,6 +159,7 @@ export default function PageTeam() {
 
       return () => clearTimeout(timer);
     } catch (error) {
+      setNamaTenant("false")
       console.error("Gagal memuat data:", error);
       setLoadingTeam(false);
     }
@@ -159,7 +167,11 @@ export default function PageTeam() {
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    if (idTenant) getTeam();
+    // if (idTenant) 
+    getTeam();
+    if (namaTenant && namaTenant === "false") {
+      return notFound();
+    }
     // Clear the timeout when the component is unmounted
   }, []);
 
@@ -228,7 +240,7 @@ export default function PageTeam() {
     setIsLoadSave(true);
     try {
       const response = await axiosCustom.post(
-        `/tenant/${idTenant}/add-user`,
+        `/tenant/${getParamsId}/add-user`,
         data,
       );
       if (response.status === 201) {
@@ -262,7 +274,7 @@ export default function PageTeam() {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `tenant/${idTenant}/delete-user/${dataDeleteId}`,
+          `tenant/${getParamsId}/delete-user/${dataDeleteId}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -326,7 +338,7 @@ export default function PageTeam() {
                 }}
               >
                 <AiOutlineRollback />
-                &nbsp;Daftar Tenant
+                &nbsp;Data Tenant
               </Button>
               <Button
                 colorScheme="green"
@@ -386,7 +398,7 @@ export default function PageTeam() {
           getTeam();
         }}
         formData={editingData}
-        idTenant={idTenant}
+        idTenant={getParamsId}
       />
 
       <ModalNotif
