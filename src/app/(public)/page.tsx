@@ -112,7 +112,7 @@ export default function CallToActionWithVideo() {
               <Box
                 position={"absolute"}
                 w={{ base: 38, md: 39, lg: 41 }}
-                top={{ base: 570, md: 405, lg: 500 }}
+                top={{ base: 550, md: 405, lg: 500 }}
                 left={{ base: 235, md: 740, lg: 1000 }}
                 opacity={0.4}
                 zIndex={1}
@@ -172,10 +172,10 @@ export default function CallToActionWithVideo() {
                 {process.env.APP_DESCRIPTION?.toUpperCase()}
               </Text>
             </Heading>
-            {/* <Text color={"gray.800"} fontSize="20px">
+            <Text color={"gray.800"} fontSize="20px">
               Pusat Pengelolaan dan Pemantauan Perkembangan Tenant di Solo
               Technopark.
-            </Text> */}
+            </Text>
             <Stack
               spacing={{ base: 4, sm: 6 }}
               direction={{ base: "column", sm: "row" }}
