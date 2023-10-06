@@ -24,18 +24,21 @@ import {
   Spinner
 } from "@chakra-ui/react";
 import { usePublic } from "../utils/PublicContext";
+import { useRouter } from "next/navigation";
 
 interface Beranda {
   id: string;
   name: string;
   motto: string;
+  slug:string;
   image_url: string;
   image_banner_url: string;
 }
 
 function page() {
-  const { beranda, getPortofolioDetail, loadingBeranda } = usePublic();
+  const { beranda, loadingBeranda } = usePublic();
   // console.log(beranda);
+  const router = useRouter();
 
   const [isHovered, setIsHovered] = useState<{ [key: number]: boolean }>({});
 
@@ -49,7 +52,7 @@ function page() {
 
   return (
     <div>
-      <Container maxW={"7xl"}>
+      <Container maxW={"7xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
         <Stack
           align={"center"}
           //   spacing={{ base: 8, md: 10 }}
@@ -85,9 +88,12 @@ function page() {
                       cursor="pointer"
                       onMouseEnter={() => handleMouseEnter(index)}
                       onMouseLeave={() => handleMouseLeave(index)}
+                      title={p.name}
+                      onClick={()=> router.push(`/portofolio/${p.slug}`)}
                     >
                       <Box
-                        w={{ base: "150px", md: "200px" }}
+                        minW={{ base: "150px", md: "180px" }}
+                        w={"full"}
                         rounded="xl"
                         borderWidth={"1px"}
                         shadow="md"

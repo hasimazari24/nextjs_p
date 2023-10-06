@@ -13,6 +13,7 @@ import {
   Text,
   Button,
   Center,
+  Spinner,
 } from "@chakra-ui/react";
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import Link from "next/link";
@@ -30,7 +31,7 @@ export default function GallerySlider() {
   const [activeSlide, setActiveSlide] = useState(0);
   // init state data cards
   // const [cards, setCards] = useState<Array<tenantBeranda>>([]);
-  const { beranda } = usePublic();
+  const { beranda, loadingBeranda } = usePublic();
   const cards = beranda || [];
   // untuk jumlah yang tayang ngaturnya disini aja ya bos
   const SLIDES_TO_SHOW = cards.length <= 5 ? cards.length : 5;
@@ -47,7 +48,7 @@ export default function GallerySlider() {
     textShadow: "0 0 20px black",
     fontWeight: "bold",
     fontSize: "20px",
-    background: `url(${process.env.API_URL}/storage/view/tenant-banner-default.jpg) center/cover no-repeat`,
+    background: `url("/img/tenant-banner-default.jpg") center/cover no-repeat`,
   };
   // setting untuk slider
   const sliderSettings = {
@@ -97,7 +98,23 @@ export default function GallerySlider() {
   // console.log(`SLIDES_TO_SHOW : ${SLIDES_TO_SHOW}`);
   // console.log(`varwidth : ${cards.length <= 3 ? true : false}`);
 
-  return (
+  return loadingBeranda ? (
+    <Box
+      sx={boxStyles}
+      filter="grayscale(80%)"
+      height={{
+        base: "400px",
+        sm: "400px",
+        md: "600px",
+        lg: "600px",
+      }}
+    >
+      <Center h="100%" m="10" flexDirection={"column"}>
+        <Spinner className="spinner" size="xl" color="blue.500" />
+        <Text>Sedang memuat data</Text>
+      </Center>
+    </Box>
+  ) : (
     <>
       {cards && cards.length > 0 ? (
         <>
@@ -177,12 +194,19 @@ export default function GallerySlider() {
               </Stack>
               <Box mt={{ base: "-130px", md: "-200px" }}>
                 <Slider {...sliderSettings}>
-                  {cards && cards.map((card, index) => (
+                  {cards &&
+                    cards.map((card, index) => (
                       <Box
                         className="slick-slider"
                         key={index}
                         width={{
                           base: "auto",
+                          sm: "150px",
+                          md: "280px",
+                          lg: "280px",
+                        }}
+                        minW={{
+                          base: "100px",
                           sm: "150px",
                           md: "280px",
                           lg: "280px",

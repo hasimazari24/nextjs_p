@@ -13,6 +13,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  InputRightElement,
+  InputGroup,
   Hide,
   Flex,
   Text,
@@ -28,7 +30,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, DeleteIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { AiOutlineCamera } from "react-icons/ai";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
@@ -214,6 +216,8 @@ const ModalEdit: React.FC<ModalProps> = ({
     setIsHovered(false);
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleShowMessage = (msg: string, err: boolean) => {
     setMessage(msg);
     setIsError(err);
@@ -284,8 +288,8 @@ const ModalEdit: React.FC<ModalProps> = ({
     }
   };
 
-  console.log(formData);
-  console.log(dataEdited);
+  // console.log(formData);
+  // console.log(dataEdited);
 
   return (
     <>
@@ -367,15 +371,29 @@ const ModalEdit: React.FC<ModalProps> = ({
                         <FormLabel>Password</FormLabel>
                       </Box>
                       <Box flex={["1", "75%"]}>
-                        <Input
-                          {...register("password", {
-                            required: "Password harus diisi!",
-                            minLength: {
-                              value: 4,
-                              message: "Password minimal 4 karakter",
-                            },
-                          })}
-                        />
+                        <InputGroup>
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            {...register("password", {
+                              required: "Password harus diisi!",
+                              minLength: {
+                                value: 4,
+                                message: "Password minimal 4 karakter",
+                              },
+                            })}
+                          />
+
+                          <InputRightElement h={"full"}>
+                            <Button
+                              variant={"ghost"}
+                              onClick={() =>
+                                setShowPassword((showPassword) => !showPassword)
+                              }
+                            >
+                              {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                            </Button>
+                          </InputRightElement>
+                        </InputGroup>
 
                         <FormErrorMessage>
                           {errors.password && errors.password.message}

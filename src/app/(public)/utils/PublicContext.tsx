@@ -14,6 +14,7 @@ interface Beranda {
   id: string;
   name: string;
   motto:string;
+  slug:string;
   image_url: string;
   image_banner_url: string;
 }
@@ -71,13 +72,13 @@ export const PublicProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getPortofolioDetail = async (idTenant:string) => {
+  const getPortofolioDetail = async (slug:string) => {
     try {
       setLoadingDetail(true);
       // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      await axiosCustom.get(`public/portfolio/${idTenant}`).then((response) => {
+      await axiosCustom.get(`public/portfolio/${slug}`).then((response) => {
         setPortfolioDetail(response.data.data);
-        router.push("/portofolio-detail");
+        router.push("/portofolio/");
       });
       // Jika login berhasil, atur informasi pengguna di sini
       
