@@ -133,12 +133,7 @@ const Footer = () => {
       px={{ base: 2, sm: 4, md: 12, lg: 75, "2xl": 190 }}
     >
       <Container as={Stack} maxW={"7xl"} py={10}>
-        <SimpleGrid
-          // templateColumns={{ sm: "1fr 1fr", md: "2fr 1fr 1fr 2fr" }}
-          // spacing={8}
-          minChildWidth={"120px"}
-          spacing={"40px"}
-        >
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={"40px"}>
           <Box>
             <Box
               //border="2px solid white"
@@ -153,7 +148,7 @@ const Footer = () => {
             </Text>
 
             <SimpleGrid
-              columns={{ base: 4, sm: 4, md: 6 }}
+              columns={6}
               spacing={0}
               maxWidth={"300px"}
               marginTop={2}
@@ -202,65 +197,6 @@ const Footer = () => {
               </SocialButton>
             </SimpleGrid>
           </Box>
-          {/* <Stack spacing={2}>
-            <Box
-              //border="2px solid white"
-              borderRadius="10px"
-              padding="2"
-              //bg="gray.500"
-            >
-              <Logo color={useColorModeValue("gray.700", "white")} />
-            </Box>
-            <Text fontSize={"sm"}>
-              © 2023 Solo Technopark. All rights reserved
-            </Text>
-            <Stack direction={"row"} spacing={6}>
-              <SocialButton
-                label={"Facebook"}
-                href={
-                  "https://www.facebook.com/solotechnopark.id?mibextid=ZbWKwL"
-                }
-              >
-                <FaFacebookF />
-              </SocialButton>
-              <SocialButton
-                label={"Instagram"}
-                href={
-                  "https://www.instagram.com/solotechnopark_official/?hl=id"
-                }
-              >
-                <FaInstagram />
-              </SocialButton>
-              <SocialButton
-                label={"Twitter"}
-                href={"https://twitter.com/solo_technopark"}
-              >
-                <FaTwitter />
-              </SocialButton>
-            </Stack>
-            <HStack spacing={6}>
-              <SocialButton
-                label={"Linkedld"}
-                href={"https://www.linkedin.com/company/solo-technopark/"}
-              >
-                <FaLinkedin />
-              </SocialButton>
-              <SocialButton
-                label={"TikTok"}
-                href={"https://www.tiktok.com/@solotechnopark"}
-              >
-                <FaTiktok />
-              </SocialButton>
-              <SocialButton
-                label={"YouTube"}
-                href={
-                  "https://www.youtube.com/channel/UCqtTWpV2tExmQ1pQQLILd2Q"
-                }
-              >
-                <FaYoutube />
-              </SocialButton>
-            </HStack>
-          </Stack> */}
 
           <Stack align={"flex-start"}>
             <ListHeader>Hubungi Kami</ListHeader>

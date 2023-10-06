@@ -212,19 +212,20 @@ export default function page() {
             <GrMoreVertical />
           </MenuButton>
           <MenuList>
-            <MenuItem>
-              <BiLinkExternal />
-              &nbsp; Lihat Situs
-            </MenuItem>
+            <Link href={`/portofolio-detail/${rowData?.slug}`} target="_blank">
+              <MenuItem>
+                <BiLinkExternal />
+                &nbsp; Lihat Situs
+              </MenuItem>
+            </Link>
+
             <MenuItem
               onClick={() => router.push(`/tenant/catalog/${rowData.id}`)}
             >
               <HamburgerIcon />
               &nbsp; Catalog Tenant
             </MenuItem>
-            <MenuItem
-              onClick={() => router.push(`/tenant/team/${rowData.id}`)}
-            >
+            <MenuItem onClick={() => router.push(`/tenant/team/${rowData.id}`)}>
               <SiMicrosoftteams />
               &nbsp; Team Tenant
             </MenuItem>

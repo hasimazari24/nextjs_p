@@ -54,6 +54,7 @@ import {
   ViewIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
+import { useRouter } from "next/navigation";
 // import SplitWithImage from '@/app/(public)/portofolio-detail/page';
 
 interface MyTenantProps {
@@ -75,12 +76,15 @@ export default function MyTenant() {
     setIsError(err);
     setModalNotif(true);
   };
-  const [selectedSocialLinks, setSelectedSocialLinks] = useState<Array<tenantLinks>>([]);
+  const [selectedSocialLinks, setSelectedSocialLinks] = useState<
+    Array<tenantLinks>
+  >([]);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [dataMyTenant, setDataMyTenant] = useState<any | null>([]);
   const [dataTenantLinks, setDataTenantLinks] = useState<Array<tenantLinks>>(
     [],
   );
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const getMyTenant = async () => {
     try {
@@ -157,20 +161,25 @@ export default function MyTenant() {
                     <GrMoreVertical />
                   </MenuButton>
                   <MenuList>
+                    <Link href={`/portofolio-detail/${dataMyTenant?.slug}`} target="_blank">
                     <MenuItem>
                       <BiLinkExternal />
                       &nbsp; Lihat Situs
                     </MenuItem>
+                    </Link>
+                    
                     <MenuItem
-                    onClick={() =>
-                      router.push(`/tenant/catalog/${rowData.id}`)
-                    }
+                      onClick={() =>
+                        router.push(`/tenant/catalog/${dataMyTenant?.id}`)
+                      }
                     >
                       <HamburgerIcon />
                       &nbsp; Catalog Tenant
                     </MenuItem>
                     <MenuItem
-                    onClick={() => router.push(`/tenant/team/${rowData.id}`)}
+                      onClick={() =>
+                        router.push(`/tenant/team/${dataMyTenant?.id}`)
+                      }
                     >
                       <SiMicrosoftteams />
                       &nbsp; Team Tenant
