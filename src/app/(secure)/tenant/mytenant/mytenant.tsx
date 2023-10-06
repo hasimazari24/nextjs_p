@@ -162,15 +162,15 @@ export default function MyTenant() {
                       &nbsp; Lihat Situs
                     </MenuItem>
                     <MenuItem
-                    // onClick={() =>
-                    //   router.push(`/tenant/catalog?id=${rowData.id}`)
-                    // }
+                    onClick={() =>
+                      router.push(`/tenant/catalog/${rowData.id}`)
+                    }
                     >
                       <HamburgerIcon />
                       &nbsp; Catalog Tenant
                     </MenuItem>
                     <MenuItem
-                    // onClick={() => router.push(`/tenant/team?id=${rowData.id}`)}
+                    onClick={() => router.push(`/tenant/team/${rowData.id}`)}
                     >
                       <SiMicrosoftteams />
                       &nbsp; Team Tenant
