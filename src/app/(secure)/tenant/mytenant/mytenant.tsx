@@ -462,7 +462,7 @@ export default function MyTenant() {
                               </HStack>
                             </Link>
                           );
-                        } else if (link.title === "Youtube") {
+                        } else if (link.title === "YouTube") {
                           return (
                             <Link href={link.url} target="_blank">
                               <HStack alignItems={"center"} pr="3">
@@ -480,7 +480,7 @@ export default function MyTenant() {
                               </HStack>
                             </Link>
                           );
-                        } else if (link.title === "Linkedin") {
+                        } else if (link.title === "LinkedIn") {
                           return (
                             <Link href={link.url} target="_blank">
                               <Link href="impuls.id">

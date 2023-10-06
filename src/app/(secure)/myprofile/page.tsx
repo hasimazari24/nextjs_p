@@ -638,7 +638,7 @@ const MyProfile: React.FC = () => {
                             </HStack>
                           </Link>
                         );
-                      } else if (link.title === "Youtube") {
+                      } else if (link.title === "YouTube") {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
                             <HStack alignItems={"center"} pr="3">

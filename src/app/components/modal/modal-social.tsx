@@ -91,17 +91,17 @@ const ModalSocial: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const{
-    register: registYoutube,
-    handleSubmit: handleYoutube,
-    formState: {errors: errYoutube},
-    reset: resetYoutube,
+    register: registYouTube,
+    handleSubmit: handleYouTube,
+    formState: {errors: errYouTube},
+    reset: resetYouTube,
   } = useForm<FormValues>();
 
   const{
-    register: registLinkedin,
-    handleSubmit: handleLinkedin,
-    formState: {errors: errLinkedin},
-    reset: resetLinkedin,
+    register: registLinkedIn,
+    handleSubmit: handleLinkedIn,
+    formState: {errors: errLinkedIn},
+    reset: resetLinkedIn,
   } = useForm<FormValues>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -118,7 +118,7 @@ const ModalSocial: React.FC<ModalProps> = ({
   const akunFb = formData?.find((links) => links.title === "Facebook");
   const akunIg = formData?.find((links) => links.title === "Instagram");
   const akunTw = formData?.find((links) => links.title === "Twitter");
-  const akunYt = formData?.find((links) => links.title === "Youtube");
+  const akunYt = formData?.find((links) => links.title === "YouTube");
   const akunLd = formData?.find((links) => links.title === "LinkedIn");
   
 
@@ -126,8 +126,8 @@ const ModalSocial: React.FC<ModalProps> = ({
   const [isEditingFacebook, setIsEditingFacebook] = useState<boolean>(false);
   const [isEditingInstagram, setIsEditingInstagram] = useState<boolean>(false);
   const [isEditingTwitter, setIsEditingTwitter] = useState<boolean>(false);
-  const [isEditingYoutube, setIsEditingYoutube] = useState<boolean>(false);
-  const [isEditingLinkedin, setIsEditingLinkedin] = useState<boolean>(false);
+  const [isEditingYouTube, setIsEditingYouTube] = useState<boolean>(false);
+  const [isEditingLinkedIn, setIsEditingLinkedIn] = useState<boolean>(false);
  
 
   const handleSave = async (data: any) => {
@@ -261,7 +261,7 @@ const ModalSocial: React.FC<ModalProps> = ({
         } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
         setIsLoadingDelete(false);
       }
-    } else if (idTenant) {
+    } else if (idUser && dataDeleteId) {
       try {
         setIsLoadingDelete(true);
         const response = await axiosCustom.delete(
@@ -298,13 +298,15 @@ const ModalSocial: React.FC<ModalProps> = ({
     setIsEditingInstagram(false);
     setIsEditingFacebook(false);
     setIsEditingTwitter(false);
-    setIsEditingYoutube(false);
+    setIsEditingYouTube(false);
+    setIsEditingLinkedIn(false);
     setDataDeleteId(null);
     resetWebsite();
     resetInstagram();
     resetFacebook();
     resetTwitter();
-    resetYoutube();
+    resetYouTube();
+    resetLinkedIn();
   };
 
   useEffect(() => {
@@ -588,7 +590,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                               size="sm"
                               type="submit"
                               title="Simpan"
-                              disabled={isLoading}
+                              disabled={!isLoading}
                             />
                           ) : (
                             // jika tidak, maka baru tampilkan edit dan delete
@@ -763,8 +765,8 @@ const ModalSocial: React.FC<ModalProps> = ({
               </HStack>
 
               <HStack spacing={3} pb="3" alignItems={"center"}>
-                <form onSubmit={handleYoutube(handleSave)}>
-                  <FormControl isInvalid={!!errYoutube.url}>
+                <form onSubmit={handleYouTube(handleSave)}>
+                  <FormControl isInvalid={!!errYouTube.url}>
                     <HStack spacing={3} alignItems={"center"}>
                       <IconButton
                         color="red.500"
@@ -774,21 +776,21 @@ const ModalSocial: React.FC<ModalProps> = ({
                       <Hide>
                         {/* masukkan scr otomatis nilai id, id_tenant, title */}
                         <Input
-                          {...registYoutube("id")}
+                          {...registYouTube("id")}
                           defaultValue={akunYt ? akunYt.id : ""}
                         />
                         <Input
-                          {...registYoutube("title")}
-                          defaultValue="Youtube"
+                          {...registYouTube("title")}
+                          defaultValue="YouTube"
                         />
                       </Hide>
-                      <fieldset disabled={!isEditingYoutube}>
+                      <fieldset disabled={!isEditingYouTube}>
                         <Input
-                          placeholder="URL Social Youtube"
-                          onFocus={() => !isEditingYoutube}
+                          placeholder="URL Social YouTube"
+                          onFocus={() => !isEditingYouTube}
                           defaultValue={akunYt ? akunYt.url : ""}
-                          {...registYoutube("url", {
-                            required: "URL Youtube harus diisi!",
+                          {...registYouTube("url", {
+                            required: "URL YouTube harus diisi!",
                           })}
                         />
                       </fieldset>
@@ -797,7 +799,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       {akunYt?.url ? (
                         <div>
                           {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
-                          {isEditingYoutube ? (
+                          {isEditingYouTube ? (
                             <IconButton
                               colorScheme="orange"
                               aria-label="Simpan"
@@ -818,7 +820,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 size="sm"
                                 onClick={() =>
                                   // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
-                                  setIsEditingYoutube (!isEditingYoutube)
+                                  setIsEditingYouTube (!isEditingYouTube)
                                 }
                               />
 
@@ -837,7 +839,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       ) : (
                         // jika tidak ada data/ belum punya, maka berikan btn tambah
                         <>
-                          {isEditingYoutube && (
+                          {isEditingYouTube && (
                             <IconButton
                               colorScheme="orange"
                               aria-label="Simpan"
@@ -853,12 +855,12 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </HStack>
 
                     <FormErrorMessage>
-                      {errYoutube.url && errYoutube.url.message}
+                      {errYouTube.url && errYouTube.url.message}
                     </FormErrorMessage>
                   </FormControl>
                 </form>
 
-                {!akunYt?.url && !isEditingYoutube ? (
+                {!akunYt?.url && !isEditingYouTube ? (
                   <IconButton
                     colorScheme="green"
                     aria-label="Tambah"
@@ -867,14 +869,14 @@ const ModalSocial: React.FC<ModalProps> = ({
                     title="Tambah"
                     onClick={() => {
                       // begitu tambah dipenyek, maka muncul btn simpan
-                      setIsEditingYoutube(true);
+                      setIsEditingYouTube(true);
                     }}/>
                 ) : null}
               </HStack>
 
               <HStack spacing={3} pb="3" alignItems={"center"}>
-                <form onSubmit={handleLinkedin(handleSave)}>
-                  <FormControl isInvalid={!!errLinkedin.url}>
+                <form onSubmit={handleLinkedIn(handleSave)}>
+                  <FormControl isInvalid={!!errLinkedIn.url}>
                     <HStack spacing={3} alignItems={"center"}>
                       <IconButton
                         aria-label="website"
@@ -884,21 +886,21 @@ const ModalSocial: React.FC<ModalProps> = ({
                       <Hide>
                         {/* masukkan scr otomatis nilai id, id_tenant, title */}
                         <Input
-                          {...registLinkedin("id")}
+                          {...registLinkedIn("id")}
                           defaultValue={akunLd ? akunLd.id : ""}
                         />
                         <Input
-                          {...registLinkedin("title")}
+                          {...registLinkedIn("title")}
                           defaultValue="LinkedIn"
                         />
                       </Hide>
-                      <fieldset disabled={!isEditingLinkedin}>
+                      <fieldset disabled={!isEditingLinkedIn}>
                         <Input
-                          placeholder="URL Social Linkedin"
-                          onFocus={() => !isEditingLinkedin}
+                          placeholder="URL Social LinkedIn"
+                          onFocus={() => !isEditingLinkedIn}
                           defaultValue={akunLd ? akunLd.url : ""}
-                          {...registLinkedin("url", {
-                            required: "URL Linkedin harus diisi!",
+                          {...registLinkedIn("url", {
+                            required: "URL I harus diisi!",
                           })}
                         />
                       </fieldset>
@@ -907,7 +909,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       {akunLd?.url ? (
                         <div>
                           {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol tambah */}
-                          {isEditingLinkedin ? (
+                          {isEditingLinkedIn ? (
                             <IconButton
                               colorScheme="orange"
                               aria-label="Simpan"
@@ -928,7 +930,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 size="sm"
                                 onClick={() =>
                                   // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
-                                  setIsEditingLinkedin(!isEditingLinkedin)
+                                  setIsEditingLinkedIn(!isEditingLinkedIn)
                                 }
                               />
                               <IconButton
@@ -945,7 +947,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       ) : (
                         // jika tidak ada data/ belum punya, maka berikan btn tambah
                         <>
-                          {isEditingLinkedin && (
+                          {isEditingLinkedIn && (
                             <IconButton
                               colorScheme="orange"
                               aria-label="Simpan"
@@ -961,12 +963,12 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </HStack>
 
                     <FormErrorMessage>
-                      {errLinkedin.url && errLinkedin.url.message}
+                      {errLinkedIn.url && errLinkedIn.url.message}
                     </FormErrorMessage>
                   </FormControl>
                 </form>
 
-                {!akunLd?.url && !isEditingLinkedin ? (
+                {!akunLd?.url && !isEditingLinkedIn ? (
                   <IconButton
                     colorScheme="green"
                     aria-label="Tambah"
@@ -975,7 +977,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                     title="Tambah"
                     onClick={() => {
                       // begitu tambah dipenyek, maka muncul btn simpan
-                      setIsEditingLinkedin(true);
+                      setIsEditingLinkedIn(true);
                     }}
                   />
                 ) : null}
