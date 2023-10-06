@@ -89,7 +89,7 @@ function page() {
                       onMouseEnter={() => handleMouseEnter(index)}
                       onMouseLeave={() => handleMouseLeave(index)}
                       title={p.name}
-                      onClick={()=> router.push(`/portofolio/${p.slug}`)}
+                      onClick={()=> router.push(`/portofolio-detail/${p.slug}`)}
                     >
                       <Box
                         minW={{ base: "150px", md: "180px" }}
