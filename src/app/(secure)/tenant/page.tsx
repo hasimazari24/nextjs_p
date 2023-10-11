@@ -237,6 +237,16 @@ function PageTenant() {
               <SiMicrosoftteams />
               &nbsp; Team Tenant
             </MenuItem>
+            <MenuItem
+              onClick={() => router.push(`/tenant/program/${rowData.id}`)}
+            >
+              <GrShareOption />
+              &nbsp; Program Tenant
+            </MenuItem>
+            <MenuItem onClick={() =>  router.push(`/tenant/awards/${rowData.id}`)}>
+              <GrShareOption />
+              &nbsp; Awards Tenant
+            </MenuItem>
             <MenuItem onClick={() => handleSocial(rowData)}>
               <GrShareOption />
               &nbsp; Social Links Tenant
