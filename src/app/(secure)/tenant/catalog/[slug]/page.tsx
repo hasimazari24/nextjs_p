@@ -125,7 +125,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       return notFound();
     }
     // Clear the timeout when the component is unmounted
-  }, [namaTenant]);
+  }, []);
 
   const renderActions = (rowData: any) => {
     return (
