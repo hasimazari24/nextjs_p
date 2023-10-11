@@ -95,7 +95,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
     try {
       setLoadingCatalog(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant-catalog/${getParamsId}`);
+      const response = await axiosCustom.get(`/tenant/${getParamsId}/get-catalog`);
       if (response.data.data) {
         // console.log(response);
         setDataCatalog(response.data.data.catalog);
@@ -183,9 +183,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       try {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
-        const response = await axiosCustom.delete(
-          "/tenant-catalog" + `/${dataDeleteId}`,
-        );
+        const response = await axiosCustom.delete(`/tenant/${getParamsId}/delete-catalog/${dataDeleteId}`);
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
         const timer = setTimeout(() => {
@@ -248,7 +246,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
                 key="kembali"
                 size="sm"
                 onClick={() => {
-                  router.push("/tenant");
+                  router.push(`/tenant`);
                 }}
               >
                 <AiOutlineRollback />
@@ -287,7 +285,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
         onSubmit={() => {
           handleSaveData;
           setEditingData(null);
-          getCatalog();
+          getCatalog();  
           // getTampil();
         }}
         isEdit={true}

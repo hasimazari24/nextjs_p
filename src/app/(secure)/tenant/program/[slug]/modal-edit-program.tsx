@@ -41,11 +41,10 @@ interface ModalProps {
 
 interface FormValues {
   id: string;
-  title: string;
-  description: string;
+  program: string;
 }
 
-const ModalEditCatalog: React.FC<ModalProps> = ({
+const ModalEditProgram: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
@@ -61,10 +60,9 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const fields = {
-    title: register("title", { required: "Judul harus diisi!" }),
-    description: register("description", {
-      required: "Deskripsi harus diisi!",
-    }),
+    program: register("program", {
+      required: "Program harus diisi!"
+    })
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +84,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         // Mode edit, kirim data melalui PUT request
         // console.log(data); axiosCustom.put("/")
         await axiosCustom
-          .put(`/tenant/${idTenant}/update-catalog/${data.id}`, data)
+          .put(`/tenant/${idTenant}/update-program/${data.id}`, data)
           .then((response) => {
             // setData(response.data.data);
 
@@ -101,9 +99,8 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         // Mode tambah, kirim data melalui POST request
         const getIdTenant: any = idTenant;
         await axiosCustom
-          .post(`/tenant/${getIdTenant}/add-catalog`, {
-            title: data.title,
-            description: data.description,
+          .post(`/tenant/${getIdTenant}/add-program`, {
+            program: data.program,
           })
           .then((response) => {
             // console.log(response);
@@ -161,37 +158,19 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                   </FormControl>
                 </Hide>
 
-                <FormControl isInvalid={!!errors.title} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Judul</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...fields.title}
-                        defaultValue={formData?.title}
-                        // className={`form-control ${errors.name ? "is-invalid"}`}
-                      />
-                      <FormErrorMessage>
-                        {errors.title && errors.title.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
 
-                <FormControl isInvalid={!!errors.description} mb="3">
+                <FormControl isInvalid={!!errors.program} mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Deskripsi</FormLabel>
+                      <FormLabel>Program</FormLabel>
                     </Box>
                     <Box flex={["1", "80%"]}>
                       <Textarea
-                        {...fields.description}
-                        defaultValue={formData?.description}
+                        {...fields.program}
+                        defaultValue={formData?.program}
                       />
                       <FormErrorMessage>
-                        {errors.description && errors.description.message}
+                        {errors.program && errors.program.message}
                       </FormErrorMessage>
                     </Box>
                   </Flex>
@@ -236,4 +215,4 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   );
 };
 
-export default ModalEditCatalog;
+export default ModalEditProgram;
