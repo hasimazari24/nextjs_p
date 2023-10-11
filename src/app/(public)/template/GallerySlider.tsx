@@ -17,21 +17,68 @@ import {
 } from "@chakra-ui/react";
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import Link from "next/link";
-import { usePublic } from "../utils/PublicContext";
+// import { usePublic } from "../utils/PublicContext";
+import AlertBar from "../../components/modal/AlertBar";
+import { useRouter } from "next/navigation";
+import { axiosCustom } from "../../api/axios";
 
-interface tenantBeranda {
+// interface tenantBeranda {
+//   id: string;
+//   name: string;
+//   motto: string;
+//   image_url: string;
+//   image_banner_url: string;
+// }
+
+interface Beranda {
   id: string;
   name: string;
   motto: string;
+  slug: string;
   image_url: string;
   image_banner_url: string;
 }
+
 export default function GallerySlider() {
+  const [beranda, setBeranda] = useState<Beranda[] | null>([]);
+  const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [status, setstatus] = useState<
+    "success" | "info" | "warning" | "error"
+  >("error");
+  const getBeranda = async () => {
+  // setLoadingBeranda(true);
+    try {
+      // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
+      await axiosCustom.get("/public/beranda").then((response) => {
+        // Jika login berhasil, atur informasi pengguna di sini;
+        setBeranda(response.data.data);
+        setLoadingBeranda(false);
+        // router.push("/dashboard");
+        // console.log(response);
+      });
+    } catch (error: any) {
+      console.log(error);
+      if (error?.response) {
+        setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
+      } else setMsg(`Terjadi Kesalahan: ${error.message}`);
+      setstatus("error");
+      setIsOpen(true);
+      setLoadingBeranda(false);
+    }
+  };
+
+  useEffect(() => {
+    getBeranda();
+  }, []);
   // init state untuk menampilkan slide yg aktif
   const [activeSlide, setActiveSlide] = useState(0);
   // init state data cards
   // const [cards, setCards] = useState<Array<tenantBeranda>>([]);
-  const { beranda, loadingBeranda } = usePublic();
+  // const { beranda, loadingBeranda } = usePublic();
+  // const cards = await getBeranda();
   const cards = beranda || [];
   // untuk jumlah yang tayang ngaturnya disini aja ya bos
   const SLIDES_TO_SHOW = cards.length <= 5 ? cards.length : 5;
@@ -110,7 +157,7 @@ export default function GallerySlider() {
       }}
     >
       <Center h="100%" m="10" flexDirection={"column"}>
-        <Spinner className="spinner" size="xl" color="blue.500" />
+        <Spinner className="spinner" size="xl" color="blue.500" mb="3" />
         <Text>Sedang memuat data</Text>
       </Center>
     </Box>
@@ -173,7 +220,7 @@ export default function GallerySlider() {
                   <Box>
                     <Center>
                       <Link
-                        href={`portfolio-detail?id=${cards[activeSlide]?.id}`}
+                        href={`/tenant-detail/${cards[activeSlide]?.slug}`}
                       >
                         <Button
                           rounded={"full"}

@@ -31,6 +31,7 @@ import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
 import MyTenant from "./mytenant/mytenant";
 import { useAuth } from "@/app/components/utils/AuthContext";
+import dynamic from "next/dynamic";
 
 interface DataItem {
   id: string;
@@ -53,7 +54,13 @@ interface DataItem {
   // }];
 }
 
-export default function page() {
+interface tenantLinks {
+  id: string;
+  title: string;
+  url: string;
+}
+
+function PageTenant() {
   const { user } = useAuth();
   const getUser: any = user;
 
@@ -171,8 +178,9 @@ export default function page() {
   const [isModalAddOpen, setIsModalAddOpen] = useState(false);
   // const [selectedData, setSelectedData] = useState<any | null>(null);
 
+  const [idTenant, setIdTenant] = useState<any | null>(null);
   const [isModalSocial, setIsModalSocial] = useState<any | null>(null);
-   const [editingSocial, setEditingSocial] = useState<any | null>(null);
+   const [editingSocial, setEditingSocial] = useState<Array<tenantLinks>>([]);
 
   //handle hapus
   const [dataDeleteId, setDataDeleteId] = useState<number | null>(null);
@@ -212,7 +220,7 @@ export default function page() {
             <GrMoreVertical />
           </MenuButton>
           <MenuList>
-            <Link href={`/portofolio-detail/${rowData?.slug}`} target="_blank">
+            <Link href={`/tenant-detail/${rowData?.slug}`} target="_blank">
               <MenuItem>
                 <BiLinkExternal />
                 &nbsp; Lihat Situs
@@ -283,7 +291,8 @@ export default function page() {
   };
 
   const handleSocial = (item: any) => {
-    setEditingSocial(item);
+    setEditingSocial(item?.tenant_link);
+    setIdTenant(item?.id);
     setIsModalSocial(true);
     // console.log(editingSocial);
   };
@@ -421,12 +430,12 @@ export default function page() {
 
               <ModalSocial
                 isOpen={isModalSocial}
-                onClose={() => setIsModalSocial(false)}
+                onClose={() => {setIsModalSocial(false);setEditingSocial([])}}
                 onSubmit={() => {
                   getTampil();
                 }}
-                formData={editingSocial?.tenant_link}
-                idTenant={editingSocial?.id}
+                formData={editingSocial}
+                idTenant={idTenant}
                 onDelete={() => getTampil()}
               />
             </>
@@ -438,3 +447,8 @@ export default function page() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(PageTenant), {
+  ssr: false,
+  suspense: true,
+});

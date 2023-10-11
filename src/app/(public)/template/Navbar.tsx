@@ -288,7 +288,7 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/",
   },
   {
-    label: "Portofolio",
-    href: "/portofolio",
+    label: "Tenant",
+    href: "/tenant",
   },
 ];

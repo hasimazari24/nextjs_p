@@ -32,6 +32,7 @@ import Link from "next/link";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import ModalSocial from "../../components/modal/modal-social";
 import { profile } from "console";
+import dynamic from "next/dynamic";
 
 type profile = {
   id?: string;
@@ -723,4 +724,7 @@ const MyProfile: React.FC = () => {
   );
 };
 
-export default MyProfile;
+export default dynamic(() => Promise.resolve(MyProfile), {
+  ssr: false,
+  suspense: true,
+});

@@ -26,6 +26,7 @@ import { GrMoreVertical, GrShareOption } from "react-icons/gr";
 import { useRouter } from "next/navigation";
 import { axiosCustom } from "@/app/api/axios";
 import { MdLockReset } from "react-icons/md";
+import dynamic from "next/dynamic";
 
 interface DataItem {
   image_id: string;
@@ -38,7 +39,7 @@ interface DataItem {
   fullname: string;
 }
 
-export default function page() {
+function PageUser() {
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -338,3 +339,8 @@ export default function page() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(PageUser), {
+  ssr: false,
+  suspense: true,
+});

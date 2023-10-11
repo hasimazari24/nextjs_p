@@ -134,7 +134,7 @@ export default function portfolioDetail({
     try {
       setLoadingDetail(true);
       // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      await axiosCustom.get(`public/portfolio/${slug}`).then((response) => {
+      await axiosCustom.get(`public/tenant/${slug}`).then((response) => {
         setPortfolioDetail(response.data.data);
         setDataTenantLinks(response.data.data.tenant_link);
       });

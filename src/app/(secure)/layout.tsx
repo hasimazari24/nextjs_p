@@ -13,20 +13,24 @@ import Sidebar from "../components/template/SideBar";
 import Header from "../components/template/Header";
 import { redirect } from "next/navigation";
 import { useAuth } from "../components/utils/AuthContext";
-import { useEffect } from "react";
+import React, { Suspense, ReactNode } from "react";
+import LoadingModal from "@/app/loading";
 
 export const metadata = {
   title: process.env.APP_NAME,
   description: process.env.APP_DESCRIPTION,
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+
+export default function Layout({ children }: { children: ReactNode }){
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, loadingValidation } = useAuth();
 
   if (user === 401) {
     redirect("/login");
   }
+
+  const susKey = crypto.randomUUID();
 
   return (
     <main>
@@ -70,12 +74,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               // borderWidth="1px"
             >
               <Box p="6" height="full" width="full">
-                {children}
+                <Suspense key={susKey} fallback={<LoadingModal />}>
+                  {children}
+                </Suspense>
               </Box>
             </Flex>
           </Box>
         </Box>
       )}
+      {/* </Suspense> */}
     </main>
   );
 }

@@ -161,7 +161,7 @@ export default function MyTenant() {
                     <GrMoreVertical />
                   </MenuButton>
                   <MenuList>
-                    <Link href={`/portofolio-detail/${dataMyTenant?.slug}`} target="_blank">
+                    <Link href={`/tenant-detail/${dataMyTenant?.slug}`} target="_blank">
                     <MenuItem>
                       <BiLinkExternal />
                       &nbsp; Lihat Situs

@@ -2,6 +2,8 @@
 import { Providers } from "./components/utils/Providers";
 import { AuthProvider } from "./components/utils/AuthContext";
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import LoadingModal from "./loading";
 
 export const metadata: Metadata = {
   title: process.env.APP_NAME,
@@ -16,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
-          <AuthProvider>{children}</AuthProvider>
-        </Providers>
+        {/* <Suspense fallback={<LoadingModal />}> */}
+          <Providers>
+            <AuthProvider>{children}</AuthProvider>
+          </Providers>
+        {/* </Suspense> */}
       </body>
     </html>
   );
