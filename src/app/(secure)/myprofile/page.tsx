@@ -716,7 +716,7 @@ const MyProfile: React.FC = () => {
         onSubmit={() => {
           getTampil();
         }}
-        formData={dataLinks}
+        // formData={dataLinks}
         idUser={dataTampil?.id}
         onDelete={() => getTampil()}
       />

@@ -546,7 +546,6 @@ export default function MyTenant() {
         onSubmit={() => {
           getMyTenant();
         }}
-        formData={dataTenantLinks}
         idTenant={dataMyTenant?.id}
         onDelete={() => getMyTenant()}
       />
