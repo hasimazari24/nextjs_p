@@ -16,10 +16,10 @@ import { useAuth } from "../components/utils/AuthContext";
 import React, { Suspense, ReactNode } from "react";
 import LoadingModal from "@/app/loading";
 
-export const metadata = {
-  title: process.env.APP_NAME,
-  description: process.env.APP_DESCRIPTION,
-};
+// export const metadata = {
+//   title: process.env.APP_NAME,
+//   description: process.env.APP_DESCRIPTION,
+// };
 
 
 export default function Layout({ children }: { children: ReactNode }){

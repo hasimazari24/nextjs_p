@@ -9,10 +9,10 @@ import { Box, Flex } from "@chakra-ui/react";
 // import { Suspense } from "react";
 // import LoadingModal from "./loading";
 
-export const metadata: Metadata = {
-  title: process.env.APP_NAME,
-  description: process.env.APP_DESCRIPTION,
-};
+// export const metadata: Metadata = {
+//   title: process.env.APP_NAME,
+//   description: process.env.APP_DESCRIPTION,
+// };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
