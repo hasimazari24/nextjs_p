@@ -24,9 +24,10 @@ import ModalNotif from "../../components/modal/modal-notif";
 import { AddIcon, DeleteIcon, EditIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 // import { useNavigate } from "react-router-dom";
-import { GrMoreVertical, GrShareOption } from "react-icons/gr";
+import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
 import { SiMicrosoftteams } from "react-icons/si";
-import { BiLinkExternal } from "react-icons/bi";
+import { LiaClipboardListSolid } from "react-icons/lia";
+import { BiLinkExternal, BiBookBookmark } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
 import MyTenant from "./mytenant/mytenant";
@@ -36,6 +37,7 @@ import dynamic from "next/dynamic";
 interface DataItem {
   id: string;
   name: string;
+  slug: string;
   motto: string;
   description: string;
   address: string;
@@ -75,6 +77,7 @@ function PageTenant() {
 
   const hidenCols = [
     "id",
+    "slug",
     "founder",
     "email",
     "contact",
@@ -90,6 +93,7 @@ function PageTenant() {
       Header: "Logo",
       accessor: "image_url",
       Cell: ({ value }) => <Avatar size={"sm"} src={value} />,
+      width: "30px",
     },
     {
       Header: "Image Banner URL",
@@ -112,6 +116,10 @@ function PageTenant() {
       accessor: "name",
     },
     {
+      Header: "Slug",
+      accessor: "slug",
+    },
+    {
       Header: "Deskripsi",
       accessor: "description",
     },
@@ -122,6 +130,11 @@ function PageTenant() {
     {
       Header: "Alamat",
       accessor: "address",
+      width: "450px",
+      minWidth: 260,
+      maxWidth: 450,
+      // dibikin kayak gni biar auto wrap ketika textnya kepanjangan shg tdk merusak col width
+      Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
     },
     {
       Header: "Kontak",
@@ -138,6 +151,9 @@ function PageTenant() {
     {
       Header: "Level Tenant",
       accessor: "level_tenant",
+      width: "150px",
+      minWidth: 160,
+      maxWidth: 200,
     },
   ];
 
@@ -180,7 +196,7 @@ function PageTenant() {
 
   const [idTenant, setIdTenant] = useState<any | null>(null);
   const [isModalSocial, setIsModalSocial] = useState<any | null>(null);
-   const [editingSocial, setEditingSocial] = useState<Array<tenantLinks>>([]);
+  //  const [editingSocial, setEditingSocial] = useState<Array<tenantLinks>>([]);
 
   //handle hapus
   const [dataDeleteId, setDataDeleteId] = useState<number | null>(null);
@@ -230,7 +246,7 @@ function PageTenant() {
             <MenuItem
               onClick={() => router.push(`/tenant/catalog/${rowData.id}`)}
             >
-              <HamburgerIcon />
+              <BiBookBookmark />
               &nbsp; Catalog Tenant
             </MenuItem>
             <MenuItem onClick={() => router.push(`/tenant/team/${rowData.id}`)}>
@@ -240,11 +256,13 @@ function PageTenant() {
             <MenuItem
               onClick={() => router.push(`/tenant/program/${rowData.id}`)}
             >
-              <GrShareOption />
+              <LiaClipboardListSolid />
               &nbsp; Program Tenant
             </MenuItem>
-            <MenuItem onClick={() =>  router.push(`/tenant/awards/${rowData.id}`)}>
-              <GrShareOption />
+            <MenuItem
+              onClick={() => router.push(`/tenant/awards/${rowData.id}`)}
+            >
+              <GrTrophy />
               &nbsp; Awards Tenant
             </MenuItem>
             <MenuItem onClick={() => handleSocial(rowData)}>
@@ -301,7 +319,7 @@ function PageTenant() {
   };
 
   const handleSocial = (item: any) => {
-    setEditingSocial(item?.tenant_link);
+    // setEditingSocial(item?.tenant_link);
     setIdTenant(item?.id);
     setIsModalSocial(true);
     // console.log(editingSocial);
@@ -440,11 +458,10 @@ function PageTenant() {
 
               <ModalSocial
                 isOpen={isModalSocial}
-                onClose={() => {setIsModalSocial(false);setEditingSocial([])}}
+                onClose={() => {setIsModalSocial(false);}}
                 onSubmit={() => {
                   getTampil();
                 }}
-                formData={editingSocial}
                 idTenant={idTenant}
                 onDelete={() => getTampil()}
               />
