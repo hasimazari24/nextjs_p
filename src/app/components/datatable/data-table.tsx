@@ -34,6 +34,8 @@ import {
   useRowSelect,
   useSortBy,
   useTable,
+  useResizeColumns,
+  useBlockLayout,
 } from "react-table";
 import GotoForm from "./goto-form";
 import Pagination from "./pagination";
@@ -76,6 +78,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
     nextPage,
     previousPage,
     setPageSize,
+    pageSize,
     pageOptions,
     gotoPage,
     state: { pageIndex },
@@ -85,9 +88,12 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
       columns: props.column,
       initialState: {
         pageSize: 5,
-        hiddenColumns: props.hiddenColumns
+        hiddenColumns: props.hiddenColumns,
       },
+      autoResetPage: false,
+      autoResetFilters: false,
     },
+    useResizeColumns, // Aktifkan useResizeColumns
     useFilters,
     useGlobalFilter,
     useSortBy,
@@ -132,7 +138,10 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
         flexWrap={"wrap"}
       >
         <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
-          <Stack direction={{ base: "column",md: "row", lg: "row" }} alignItems={"center"}>
+          <Stack
+            direction={{ base: "column", md: "row", lg: "row" }}
+            alignItems={"center"}
+          >
             {props.filterOptions.map((option) => {
               if (Array.isArray(option.values)) {
                 return (
@@ -153,7 +162,15 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                 return (
                   <>
                     <HStack mb="2" alignItems={"center"} pr="3">
-                      <Text whiteSpace={{ base: "nowrap",md:"normal",lg:"nowrap" }}>{option.label}</Text>
+                      <Text
+                        whiteSpace={{
+                          base: "nowrap",
+                          md: "normal",
+                          lg: "nowrap",
+                        }}
+                      >
+                        {option.label}
+                      </Text>
                       <Checkbox
                         onChange={(e) =>
                           setFilter(option.key, e.target.checked ? true : null)
@@ -165,9 +182,9 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                 );
               } else
                 return (
-                  <InputGroup px="2">
+                  <InputGroup>
                     <InputLeftElement pointerEvents="none">
-                      <Button leftIcon={<SearchIcon />}></Button>
+                      <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
                     </InputLeftElement>
                     <Input
                       pl="3rem"
@@ -190,7 +207,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
           {/* <Stack direction={["column","row"]}> */}
           <Text>Showing</Text>
           <Select
-            w="20"
+            w="auto"
             minW="20"
             fontSize="sm"
             onChange={(e) => {
@@ -212,22 +229,44 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
       </Stack>
 
       <TableContainer>
-        <Table {...getTableProps()} mt="4" variant="striped">
+        <Table {...getTableProps()} mt="4" variant="striped" w="100%">
           {/* <Table variant="striped" color="blue.50" className="table"> */}
           <Thead>
             {headerGroups.map((headerGroups, i) => {
               return (
-                <Tr {...headerGroups.getHeaderGroupProps()} key={i}>
+                <Tr
+                  {...headerGroups.getHeaderGroupProps()}
+                  key={i}
+                >
                   {headerGroups.headers.map((column, i) => {
+                    const attrCol = props.column.find(
+                      (col) => col.accessor === column.id,
+                    );
                     return (
-                      <Th {...column.getHeaderProps()} key={i} fontSize="sm">
+                      <Th
+                        {...(column.getHeaderProps() || {})}
+                        key={i}
+                        fontSize="sm"
+                        w={attrCol ? attrCol?.width : "auto"}
+                        minW={attrCol ? attrCol?.minWidth : "auto"}
+                        maxW={attrCol ? attrCol?.maxWidth : "auto"}
+                      >
                         <Box mb="2" {...column.getSortByToggleProps()}>
                           <HStack
                             display="flex"
                             alignItems="center"
                             // spacing="2"
                           >
-                            <Box>{column.render("Header")}</Box>
+                            <Text
+                              whiteSpace={{
+                                base: "nowrap",
+                                md: "normal",
+                                lg: "normal",
+                              }}
+                            >
+                              {column.render("Header")}
+                            </Text>
+                            {/* <Box></Box> */}
                             {column.isSorted ? (
                               <>
                                 {column.isSortedDesc ? (
@@ -276,19 +315,26 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                 //jika terdapat row dengan values id
                 return row.values.id ? (
                   <Tr {...row.getRowProps()} key={i}>
-                    {row.cells.map((cell) => {
+                    {row.cells.map((cell, x) => {
+                      const attrCol = props.column.find(
+                        (col) => col.accessor === cell.column.id,
+                      );
                       return (
                         <Td
-                          {...cell.getCellProps()}
-                          minW={cell.column.id === "selection" ? "0" : "160px"}
+                          {...(cell.getCellProps() || {})} // Gunakan {} jika cell.getCellProps() adalah undefined
+                          // minW={cell.column.id === "selection" ? "0" : "160px"}
                           className={cell.column.id}
                           key={cell.column.id}
+                          w={attrCol ? attrCol?.width : "auto"}
+                          minW={attrCol ? attrCol?.minWidth : "auto"}
+                          maxW={attrCol ? attrCol?.minWidth : "auto"}
                         >
                           {cell.render("Cell")}
                         </Td>
                       );
                     })}
-                    <Td>{props.children(props.data[i])}</Td>
+                    {/* <Td>{props.children(props.data[i])}</Td> */}
+                    <Td>{props.children(row.values)}</Td>
                   </Tr>
                 ) : (
                   //jika tidak ada row values id, maka ...
