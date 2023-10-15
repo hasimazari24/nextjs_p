@@ -234,10 +234,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
           <Thead>
             {headerGroups.map((headerGroups, i) => {
               return (
-                <Tr
-                  {...headerGroups.getHeaderGroupProps()}
-                  key={i}
-                >
+                <Tr {...headerGroups.getHeaderGroupProps()} key={i}>
                   {headerGroups.headers.map((column, i) => {
                     const attrCol = props.column.find(
                       (col) => col.accessor === column.id,
@@ -291,7 +288,9 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       </Th>
                     );
                   })}
-                  <Th width="100px">Action</Th>
+                  <Th width="100px" fontSize="sm">
+                    <Text>Action</Text>
+                  </Th>
                 </Tr>
               );
             })}

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import {
   Modal,
@@ -15,6 +16,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/navigation";
 
 interface ModalProps {
   isOpen: boolean;
@@ -33,15 +35,17 @@ const ModalNotif: React.FC<ModalProps> = ({
   const timerRef = useRef<number | null>(null);
   const autoCloseDuration = 5000;
   const [progressValue, setProgressValue] = useState(100);
+  const router = useRouter();
 
   // Efek samping untuk mengatur timer ketika modal terbuka
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !isError) {
       let intervalId: NodeJS.Timeout;
 
       // Setelah durasi yang ditentukan, tutup modal
       timerRef.current = window.setTimeout(() => {
         onClose();
+        router.refresh();
         setProgressValue(100); //balikin value jadi 100 ketika close
       }, autoCloseDuration);
 
@@ -69,7 +73,15 @@ const ModalNotif: React.FC<ModalProps> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          if (isError === false) { router.refresh() };
+        }}
+        size="lg"
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -97,14 +109,26 @@ const ModalNotif: React.FC<ModalProps> = ({
           <ModalBody width={"full"}>
             <Center mb="3">
               <Box pr="2" pl="2">
-                <Text fontSize={"auto"} textAlign={"center"}>{message}</Text>
+                <Text fontSize={"auto"} textAlign={"center"}>
+                  {message}
+                </Text>
               </Box>
             </Center>
-            <Progress colorScheme="green" size="md" value={progressValue} />
+            {!isError && (
+              <Progress colorScheme="green" size="md" value={progressValue} />
+            )}
           </ModalBody>
           <ModalFooter>
             <Flex justify="center">
-              <Button colorScheme="blue" onClick={onClose}>
+              <Button
+                colorScheme="blue"
+                onClick={() => {
+                  onClose();
+                  if (isError === false) {
+                    router.refresh();
+                  }
+                }}
+              >
                 Tutup Sekarang
               </Button>
             </Flex>

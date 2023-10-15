@@ -76,9 +76,9 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda / 
   const namePath = pathname.split('/').filter(Boolean);
 
-  useEffect(() => {
-      if (pathname === '/myprofile') setIsLoading(false);
-  },[pathname, namePath]);
+  // useEffect(() => {
+  //     if (pathname === '/myprofile') setIsLoading(false);
+  // },[pathname, namePath]);
 
   return (
     <Flex
@@ -171,9 +171,15 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
             transition="all 0.3s"
             _focus={{ boxShadow: "none" }}
           >
-            <Popover placement="bottom" isLazy strategy="fixed">
+            <Popover
+              placement="bottom"
+              isLazy
+              strategy="fixed"
+              isOpen={isOpen}
+              onClose={closeDropdown}
+            >
               <PopoverTrigger>
-                <HStack cursor={"pointer"}>
+                <HStack cursor={"pointer"} onClick={toggleDropdown}>
                   <Avatar
                     size={"sm"}
                     src={getUser ? getUser.image_url : null}
@@ -223,9 +229,9 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                       <Link
                         href="/myprofile"
                         passHref
-                        onClick={() => {
-                          if (pathname !== "/myprofile") setIsLoading(true);
-                        }}
+                        // onClick={() => {
+                        //   if (pathname !== "/myprofile") setIsLoading(true);
+                        // }}
                       >
                         <Button
                           colorScheme="teal"
