@@ -25,6 +25,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { CheckIcon, CloseIcon, DeleteIcon, EditIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
+import { useRouter } from "next/navigation";
 
 type AwardItem = {
   id: string;
@@ -35,14 +36,14 @@ type AwardItem = {
 }
 
 interface editProps {
-  isOpen: boolean;
-  onClose: () => void; 
-  onSubmit: () => void;
+  // isOpen: boolean;
+  // onClose: () => void; 
+  // onSubmit: (err:boolean) => void;
   rowData?: any;
   idTenant?: string;
 }
 
-const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idTenant }) => {
+const EditAwards:React.FC<editProps> = ({rowData, idTenant }) => {
     const {
       register,
       handleSubmit,
@@ -58,7 +59,7 @@ const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idT
     };
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setModalOpen] = useState<boolean>(isOpen);
+  const [isModalOpen, setModalOpen] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -67,8 +68,11 @@ const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idT
     setIsError(err);
     setModalNotif(true);
   };
+
+  const router = useRouter();
   
   const [avatar, setAvatar] = useState<File>();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [previewAvatar, setPreviewAvatar] = useState<string>("");
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
@@ -131,7 +135,7 @@ const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idT
   const [dataEdited, setDataEdited] = useState(rowData ? rowData : []);
 
   const initialAvatar = () => {
-    if (isOpen && dataEdited && dataEdited.length !== 0) {
+    if (isEditModalOpen && dataEdited && dataEdited.length !== 0) {
       console.log(previewAvatar);
       if (dataEdited?.image_id !== null) {
         if (idImageAvatarOld !== dataEdited.image_id) {
@@ -169,7 +173,7 @@ const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idT
     uploadAvatar();
     setDataEdited(rowData);
     initialAvatar();
-    console.log(dataEdited);
+    // console.log(dataEdited);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
   }, [avatar, rowData, initialAvatar()]);
 
@@ -193,15 +197,16 @@ const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idT
               // setData(response.data.data);
 
               if (response.status === 200) {
+                // router.refresh();
                 handleShowMessage("Data berhasil diubah.", false);
               }
             });
       }
-
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
-      onClose(); // Tutup modal
+      // onSubmit(isError); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      setIsEditModalOpen(false); // Tutup modal
       resetAll();// Reset formulir
       setIsLoading(false);
+      
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
       // console.error(error);
@@ -227,11 +232,24 @@ const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idT
   
   return (
     <div>
+      <Button
+        bgColor="blue.100"
+        _hover={{
+          bg: "blue.200",
+        }}
+        title="Edit Data"
+        onClick={() => setIsEditModalOpen(true)}
+        key="editData"
+        size="sm"
+      >
+        <EditIcon />
+      </Button>
+
       <Modal
-        isOpen={isOpen}
+        isOpen={isEditModalOpen}
         onClose={() => {
           resetAll();
-          onClose();
+          setIsEditModalOpen(false);
         }}
         size="xl"
       >
@@ -351,7 +369,7 @@ const EditAwards:React.FC<editProps> = ({isOpen, onClose, onSubmit, rowData, idT
                 colorScheme="red"
                 onClick={() => {
                   resetAll();
-                  onClose();
+                  setIsEditModalOpen(false);
                 }}
                 size="sm"
               >

@@ -3,12 +3,15 @@ import React, { useState } from "react";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
+import { Button } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 interface deleteProps {
-  isOpen:boolean, onClose:()=>void, onSubmit:()=>void, dataDelete?:any, idTenant?:string
+  dataDelete?:any, idTenant?:string
 }
 
-const DeleteAwards:React.FC<deleteProps> = ({isOpen, onClose, dataDelete, idTenant, onSubmit}) => {
+const DeleteAwards:React.FC<deleteProps> = ({dataDelete, idTenant}) => {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -35,11 +38,9 @@ const DeleteAwards:React.FC<deleteProps> = ({isOpen, onClose, dataDelete, idTena
           if (response.status === 200) {
             setIsLoadingDelete(false);
             handleShowMessage("Data berhasil dihapus.", false);
-            onClose();
+            setIsDeleteModalOpen(false);
           }
         }, 1000);
-
-        onSubmit();
 
         return () => clearTimeout(timer);
       } catch (error: any) {
@@ -56,9 +57,19 @@ const DeleteAwards:React.FC<deleteProps> = ({isOpen, onClose, dataDelete, idTena
 
   return (
     <div>
+      <Button
+        title="Hapus Data"
+        colorScheme="red"
+        onClick={() => setIsDeleteModalOpen(true)}
+        key="hapusData"
+        size="sm"
+      >
+        <DeleteIcon />
+      </Button>
+      
       <ConfirmationModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={deleteData}
         dataConfirm={`Yakin ingin hapus data penghargaan dengan nama : ${dataDelete?.name} ?`}
         isLoading={isLoadingDelete}

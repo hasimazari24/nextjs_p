@@ -18,8 +18,8 @@ import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import LoadingModal from "../../loading";
 import DataTable from "@/app/components/datatable/data-table";
 import { AiOutlineRollback } from "react-icons/ai";
-import EditAwards from "./editAwards";
 import AddAwards from "./addAwards";
+import EditAwards from "./editAwards";
 import DeleteAwards from "./deleteAwards";
 
 interface AwardItem {
@@ -54,7 +54,7 @@ const getAwards = async (paramsId: string): Promise<DataItem[]> => {
     console.error("Gagal memuat data:", error);
     return [];
   }
-}
+};
 
 export default function PageAwards({ params }: { params: { slug: string } }) {
   const getParamsId = params.slug;
@@ -63,150 +63,90 @@ export default function PageAwards({ params }: { params: { slug: string } }) {
   }
   const router = useRouter();
 
-  const [dataAwards, setDataAwards] = useState<DataItem[]>([]);
-  const [awardItem, setAwardItem] = useState<AwardItem[]>([]);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [dataEdited, setDataEdited] = useState<AwardItem[]>([]);
+  // const [getData, setData] = useState<any | null>(null);
 
-  const getUpdatedData = async ():Promise<void> => {
-    try {
-       const response = await axiosCustom.get(
-         `/tenant/${getParamsId}/get-award`,
-       );
-      const newDataAwards:DataItem[] = [await response.data.data];
-      const newAwardItem = newDataAwards.flatMap((dataItem) =>
-        Array.isArray(dataItem.award)
-          ? dataItem.award.map((award) => ({
-              id: award.id,
-              image_id: award.image_id,
-              image_url: award.image_url,
-              name: award.name,
-              rank: award.rank,
-            }))
-          : [],
-      );
-      setDataAwards(newDataAwards);
-      setAwardItem(newAwardItem);
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
-  };
-
-  useEffect(()=>{
-    getUpdatedData();
-  },[])
+  const dataAwards: DataItem[] = use(getAwards(getParamsId));
 
   // Use the map function to flatten the nested arrays of awards
   // const awardItem: AwardItem[] = dataAwards.map((item) => item.award);
+  const awardItem: AwardItem[] = dataAwards.flatMap((dataItem) =>
+    Array.isArray(dataItem.award)
+      ? dataItem.award.map((award) => ({
+          id: award.id,
+          image_id: award.image_id,
+          image_url: award.image_url,
+          name: award.name,
+          rank: award.rank,
+        }))
+      : [],
+  );
   // const router = useRouter();
 
   const filterOptions = [{ key: "name", label: "Nama Award" }];
   const hidenCols = ["id"];
-  const columns: ReadonlyArray<Column<AwardItem>> = [
-    {
-      Header: "Avatar",
-      accessor: "image_url",
-      Cell: ({ value }) => <Avatar size={"sm"} src={value} />,
-      width: "30px",
-    },
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Nama Award",
-      accessor: "name",
-    },
-    {
-      Header: "Rank",
-      accessor: "rank",
-      width: "160px",
-      Cell: ({ value }) => <Text whiteSpace="normal">{value}</Text>,
-    },
-  ];
-
-  // const columns: ReadonlyArray<Column<AwardItem>> = React.useMemo(
-  //   () => [
-      
-  //   ],
-  //   [],
-  // );
+ const columns: ReadonlyArray<Column<AwardItem>> = [
+   {
+     Header: "Avatar",
+     accessor: "image_url",
+     Cell: ({ value }) => <Avatar size={"sm"} src={value} />,
+     width: "30px",
+   },
+   {
+     Header: "id",
+     accessor: "id",
+   },
+   {
+     Header: "Nama Award",
+     accessor: "name",
+   },
+   {
+     Header: "Rank",
+     accessor: "rank",
+     width: "260px",
+     Cell: ({ value }) => <Text whiteSpace="normal">{value}</Text>,
+   },
+ ];
   const renderActions = (rowData: any) => {
     return (
       <HStack>
-        <Button
-          bgColor="blue.100"
-          _hover={{
-            bg: "blue.200",
-          }}
-          title="Edit Data"
-          key="editData"
-          size="sm"
-          onClick={() => handleEdit(rowData)}
-        >
-          <EditIcon />
-        </Button>
+        <EditAwards idTenant={getParamsId} rowData={rowData} />
         &nbsp;
-        <Button
-          title="Hapus Data"
-          colorScheme="red"
-          onClick={() => handleDelete(rowData)}
-          key="hapusData"
-          size="sm"
-        >
-          <DeleteIcon />
-        </Button>
+        <DeleteAwards idTenant={getParamsId} dataDelete={rowData} />
+        &nbsp;
       </HStack>
     );
   };
 
-  const handleEdit = (item:any) => {
-    setIsEditModalOpen(true);
-    setDataEdited(item);
-  }
-
-  const handleDelete = (item:any) => {
-    setIsDeleteModalOpen(true);
-    setDataEdited(item);
-  }
-
-  console.log(dataEdited);
-
   return (
     <div>
+      <Flex
+        justifyContent={"space-between"}
+        pb="2"
+        direction={["column", "row"]}
+      >
+        <Heading fontSize={"2xl"}>
+          AWARDS TENANT : {dataAwards.map((item) => item.name.toUpperCase())}
+        </Heading>
+        <HStack>
+          <Button
+            bgColor="grey.400"
+            color="white"
+            _hover={{
+              bg: "grey.500",
+            }}
+            key="kembali"
+            size="sm"
+            onClick={() => {
+              router.push("/tenant");
+            }}
+          >
+            <AiOutlineRollback />
+            &nbsp;Data Tenant
+          </Button>
+          <AddAwards idTenant={getParamsId} />
+        </HStack>
+      </Flex>
       <Suspense fallback={<LoadingModal />}>
-        <Flex
-          justifyContent={"space-between"}
-          pb="2"
-          direction={["column", "row"]}
-        >
-          <Heading fontSize={"2xl"}>
-            AWARDS TENANT : {dataAwards.map((item) => item.name.toUpperCase())}
-          </Heading>
-          <HStack>
-            <Button
-              bgColor="grey.400"
-              color="white"
-              _hover={{
-                bg: "grey.500",
-              }}
-              key="kembali"
-              size="sm"
-              onClick={() => {
-                router.push("/tenant");
-              }}
-            >
-              <AiOutlineRollback />
-              &nbsp;Data Tenant
-            </Button>
-            <AddAwards
-              idTenant={getParamsId}
-              onSubmit={() => getUpdatedData()}
-            />
-          </HStack>
-        </Flex>
-
         <DataTable
           data={awardItem}
           column={columns}
@@ -215,28 +155,6 @@ export default function PageAwards({ params }: { params: { slug: string } }) {
         >
           {(rowData: any) => renderActions(rowData)}
         </DataTable>
-
-        <EditAwards
-          isOpen={isEditModalOpen}
-          onClose={() => {
-            setIsEditModalOpen(false);
-            setDataEdited([]);
-          }}
-          idTenant={getParamsId}
-          rowData={dataEdited}
-          onSubmit={() => getUpdatedData()}
-        />
-
-        <DeleteAwards
-          isOpen={isDeleteModalOpen}
-          onClose={() => {
-            setIsDeleteModalOpen(false);
-            setDataEdited([]);
-          }}
-          idTenant={getParamsId}
-          dataDelete={dataEdited}
-          onSubmit={() => getUpdatedData()}
-        />
       </Suspense>
     </div>
   );
