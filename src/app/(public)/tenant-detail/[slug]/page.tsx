@@ -1,549 +1,183 @@
-"use client";
+'use client'
 
 import {
-  Box,
-  Td,
-  Tr,
-  IconButton,
-  Table,
-  Tbody,
-  Center,
   Container,
-  Spinner,
-  HStack,
   Stack,
-  Text,
-  Image,
   Flex,
-  VStack,
-  Button,
+  Box,
   Heading,
-  SimpleGrid,
-  StackDivider,
-  useColorModeValue,
+  Text,
+  Button,
+  Image,
+  Icon,
+  IconButton,
+  createIcon,
+  Center,
+  VStack,
   Avatar,
-  AvatarGroup,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import {
-  IoAnalyticsSharp,
-  IoLogoBitcoin,
-  IoSearchSharp,
-} from "react-icons/io5";
-import React, { ReactElement, useState, useEffect } from "react";
-import ModalSocial from "@/app/components/modal/modal-social";
-import { GrMoreVertical } from "react-icons/gr";
-import { SiMicrosoftteams } from "react-icons/si";
-import { BiLinkExternal } from "react-icons/bi";
-import { CiGlobe } from "react-icons/ci";
-import Link from "next/link";
-import { FiFacebook } from "react-icons/fi";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaYoutube,
-  FaLinkedin,
-  FaGlobe,
-} from "react-icons/fa";
-import { notFound } from "next/navigation";
-import { axiosCustom } from "@/app/api/axios";
-import AlertBar from "@/app/components/modal/AlertBar";
+  IconProps,
+  useColorModeValue,
+  HStack,
+  Spacer,
+} from '@chakra-ui/react'
+import Awards from "../../template/AwardTenant";
+import DetailComponent from "../../template/DetaillTenant";
 
-interface FeatureProps {
-  text: string;
-  iconBg: string;
-  icon?: ReactElement;
-}
+import { IoMedal, IoLogoFacebook } from "react-icons/io5";
+import { FaMedal, FaInfo } from "react-icons/fa";
+import { useMediaQuery } from '@chakra-ui/react';
 
-interface tenantLinks {
-  id: string;
-  title: string;
-  url: string;
-}
 
-interface SplitWithImageProps {
-  selectedSocialLinks: any[]; // Sesuaikan dengan tipe yang benar
-}
+export default function TenantDetail() {
 
-const Feature = ({ text, icon, iconBg }: FeatureProps) => {
+  const [isDesktop] = useMediaQuery("(min-width: 768px)");
+
   return (
-    <Stack direction={"row"} align={"center"}>
-      <Flex
-        w={8}
-        h={8}
-        align={"center"}
-        justify={"center"}
-        rounded={"full"}
-        bg={iconBg}
-      >
-        {icon}
-      </Flex>
-      <Text fontWeight={600}>{text}</Text>
-    </Stack>
-  );
-};
-
-export default function portfolioDetail({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const getParamsId = params.slug;
-  // console.log(getParamsId);
-
-  const avatars = [
-    {
-      name: "Ryan Florence",
-      url: "https://bit.ly/ryan-florence",
-    },
-    {
-      name: "Segun Adebayo",
-      url: "https://bit.ly/sage-adebayo",
-    },
-    {
-      name: "Kent Dodds",
-      url: "https://bit.ly/kent-c-dodds",
-    },
-    {
-      name: "Prosper Otemuyiwa",
-      url: "https://bit.ly/prosper-baba",
-    },
-    {
-      name: "Christian Nwamba",
-      url: "https://bit.ly/code-beast",
-    },
-  ];
-  // if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
-  //   return notFound();
-  // }
-
-  const [portfolioDetail, setPortfolioDetail] = useState<any | null>([]);
-  const [dataTenantLinks, setDataTenantLinks] = useState<Array<tenantLinks>>(
-    [],
-  );
-  const [loadingDetail, setLoadingDetail] = useState<boolean>(true);
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [status, setstatus] = useState<
-    "success" | "info" | "warning" | "error"
-  >("error");
-
-  const getPortofolioDetail = async (slug: string) => {
-    try {
-      setLoadingDetail(true);
-      // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      await axiosCustom.get(`public/tenant/${slug}`).then((response) => {
-        setPortfolioDetail(response.data.data);
-        setDataTenantLinks(response.data.data.tenant_link);
-      });
-    } catch (error: any) {
-      if (error?.response) {
-        // error.response?.status === 401 ? setUser(401) : setUser(null);\
-        console.log(error.response.data.message);
-        // setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
-      } else {
-        setMsg(`Terjadi Kesalahan: ${error.message}`);
-        setstatus("error");
-        setIsOpen(true);
-      }
-      setPortfolioDetail(null);
-    } finally {
-      setLoadingDetail(false);
-    }
-  };
-
-  useEffect(() => {
-    getPortofolioDetail(getParamsId);
-    // if (!portfolioDetail) {
-    //   return notFound();
-    // }
-  }, []);
-  return (
-    <>
-      <Container maxW={"7xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
-        {loadingDetail ? (
-          <Center h="100%" m="10" flexDirection={"column"}>
-            <Spinner className="spinner" size="xl" color="blue.500" />
-            <Text>Sedang memuat data</Text>
-          </Center>
-        ) : (
-          <>
-            <SimpleGrid
-              columns={{ base: 1, lg: 2 }}
-              // spacing={{ base: 8, md: 10, lg: 20 }}
-              spacing={{ base: 8, md: 10 }}
-              py={{ base: 10, md: 10 }}
+    <Container maxW={'7xl'} px={0}>
+      <Stack>
+        <Center py={0}>
+          <Stack
+            w={'full'}
+            bg={useColorModeValue('white', 'gray.800')}
+            boxShadow={'2xl'}
+            rounded={'md'}
+            overflow={'hidden'}
             >
-              <Stack spacing={{ base: 5, md: 10 }}>
-                <Box as={"header"}>
-                  <HStack spacing={8}>
-                    <Box
-                      w="75px"
-                      h="75px"
-                      borderRadius="full"
-                      overflow="hidden"
-                    >
-                      <img src={portfolioDetail?.image_url} alt="Foto Profil" />
-                    </Box>
-                    <VStack align="start" spacing={1}>
-                      <Heading
-                        lineHeight={1.1}
-                        fontWeight={600}
-                        fontSize={{ base: "xl", sm: "3xl", lg: "4xl" }}
-                      >
-                        {portfolioDetail?.name}
-                      </Heading>
-                      <HStack>
-                        <Text
-                          color={useColorModeValue("gray.900", "gray.400")}
-                          fontWeight={300}
-                          fontSize={"xl"}
-                        >
-                          Level Tenant :
-                        </Text>
-                        <Text
-                          color={useColorModeValue("gray.900", "gray.400")}
-                          fontWeight={600}
-                          fontSize={"xl"}
-                        >
-                          {portfolioDetail?.level_tenant}
-                        </Text>
-                      </HStack>
-                    </VStack>
-                  </HStack>
-                </Box>
+            <Box
+              h={'560px'}
+              w={'full'}
+              position="relative">
+                {/* Begron */}
+              <Box
+                backgroundImage="url('https://images.pexels.com/photos/269077/pexels-photo-269077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')"
+                backgroundSize="cover"
+                backgroundPosition="center"
+                position="absolute"
+                style={{filter : 'brightness(0.5)'}}
+                top={0}
+                left={0}
+                w="100%"
+                h="100%"
+              />
 
-                <Stack
-                  spacing={{ base: 4, sm: 6 }}
-                  direction={"column"}
-                  divider={
-                    <StackDivider
-                      borderColor={useColorModeValue("gray.200", "gray.600")}
-                    />
-                  }
+              {/* Tulisan */}
+              <Stack
+                position="absolute"
+                top="45%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                textAlign="center"
+                maxW="100%"
+         
                 >
-                  <Box>
-                    <Text
-                      fontSize={{ base: "16px", lg: "18px" }}
-                      color={useColorModeValue("yellow.500", "yellow.300")}
-                      fontWeight={"500"}
-                      textTransform={"uppercase"}
-                      mb={"4"}
-                    >
-                      Deskripsi
-                    </Text>
-                    <Text fontSize={"lg"}>{portfolioDetail?.description}</Text>
-                  </Box>
-
-                  {/* <Box>
-                  <Text
-                    fontSize={{ base: "16px", lg: "18px" }}
-                    color={useColorModeValue("yellow.500", "yellow.300")}
-                    fontWeight={"500"}
-                    textTransform={"uppercase"}
-                    mb={"4"}
+                <VStack spacing={1}>
+                  <Text 
+                    fontSize={['3xl','5xl']} 
+                    fontWeight="bold"
+                    color="white"
+                    style={{lineHeight:'1.1', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.6)'}}
                   >
-                    Motto
+                    Tokopedia Indonesia
                   </Text>
-                  <Text fontSize={"lg"}>{portfolioDetail?.motto}</Text>
-                </Box> */}
-
-                  <Box>
-                    <Text
-                      fontSize={{ base: "16px", lg: "18px" }}
-                      color={useColorModeValue("yellow.500", "yellow.300")}
-                      fontWeight={"500"}
-                      textTransform={"uppercase"}
-                      mb={"4"}
-                    >
-                      Tenant Details
-                    </Text>
-
-                    <SimpleGrid spacing={10}>
-                      <Table pt="0" pb="0">
-                        <Tbody>
-                          <Tr key={2} pb="3">
-                            <Td width="20%" pr="0" pl="0" pt="0">
-                              Founder
-                            </Td>
-                            <Td
-                              width="5%"
-                              pr="0"
-                              pl="0"
-                              pt="0"
-                              textAlign="center"
-                            >
-                              :
-                            </Td>
-                            <Td width="75%" pr="0" pt="0" pl="0">
-                              {portfolioDetail?.founder}
-                            </Td>
-                          </Tr>
-
-                          <Tr key={1}>
-                            <Td width="20%" pr="0" pl="0">
-                              Alamat
-                            </Td>
-                            <Td width="5%" textAlign="center" pr="0" pl="0">
-                              :
-                            </Td>
-                            <Td width="75%" pr="0" pl="0">
-                              {portfolioDetail?.address}
-                            </Td>
-                          </Tr>
-
-                          <Tr key={4} pb="3">
-                            <Td width="20%" pr="0" pl="0">
-                              E-mail
-                            </Td>
-                            <Td width="5%" pr="0" pl="0" textAlign="center">
-                              :
-                            </Td>
-                            <Td width="75%" pr="0" pl="0">
-                              {portfolioDetail?.email}
-                            </Td>
-                          </Tr>
-                          <Tr key={5} borderBottom={"hidden"} pb="0">
-                            <Td width="20%" pr="0" pl="0" pb="0">
-                              Kontak
-                            </Td>
-                            <Td
-                              width="5%"
-                              pr="0"
-                              pl="0"
-                              pb="0"
-                              textAlign="center"
-                            >
-                              :
-                            </Td>
-                            <Td width="75%" pr="0" pb="0" pl="0">
-                              {portfolioDetail?.contact}
-                            </Td>
-                          </Tr>
-                        </Tbody>
-                      </Table>
-                    </SimpleGrid>
-                  </Box>
-                </Stack>
+                  <Text
+                  fontSize={['lg','2xl']} 
+                  fontWeight="reguler"
+                  color="white"
+                  style={{lineHeight:'1.2', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.6)'}}
+                  >
+                    Supaya silaturahmi tidak terputus, Pinjam Dulu Seratus. Tetapi alangkah baiknya Limaratus
+                  </Text>
+                </VStack>
+                <VStack >
+                    <HStack>
+                      <Text 
+                      fontSize={['md','lg']} 
+                      fontWeight="reguler"
+                      color="white"
+                      style={{textShadow: '2px 2px 4px rgba(0, 0, 0, 0.6)'}}
+                      >
+                        Level Tenant : <Text as="span" color="yellow.300">Inkubasi</Text>
+                      </Text>
+                    </HStack>
+                </VStack>
               </Stack>
-              <Stack spacing={{ base: 5, md: 10 }}>
-                <Image
-                  rounded={"md"}
-                  alt={"feature image"}
-                  src={portfolioDetail?.image_banner_url}
-                  fit={"cover"}
-                  align={"center"}
-                  w={"full"}
-                  backgroundColor={"white"}
-                  h={{ base: "150px", sm: "300px", lg: "300px" }}
-                />
-                <Stack
-                  spacing={{ base: 4, sm: 6 }}
-                  direction={"column"}
-                  divider={
-                    <StackDivider
-                      borderColor={useColorModeValue("gray.200", "gray.600")}
-                    />
-                  }
-                >
-                  <Box>
-                    <Text
-                      fontSize={{ base: "16px", lg: "18px" }}
-                      color={useColorModeValue("yellow.500", "yellow.300")}
-                      fontWeight={"500"}
-                      textTransform={"uppercase"}
-                      mb={"4"}
-                    >
-                      Team Tenant
-                    </Text>
-                    <AvatarGroup>
-                      {avatars.map((avatar) => (
-                        <Avatar
-                          key={avatar.name}
-                          name={avatar.name}
-                          src={avatar.url}
-                          // eslint-disable-next-line react-hooks/rules-of-hooks
-                          // size={useBreakpointValue({ base: "md", md: "lg" })}
-                          position={"relative"}
-                          zIndex={2}
-                          _before={{
-                            content: '""',
-                            width: "full",
-                            height: "full",
-                            rounded: "full",
-                            transform: "scale(1.125)",
-                            bgGradient: "linear(to-bl, red.400,pink.400)",
-                            position: "absolute",
-                            zIndex: -1,
-                            top: 0,
-                            left: 0,
-                          }}
-                        />
-                      ))}
-                    </AvatarGroup>
-                  </Box>
-
-                  <Box>
-                    <Text
-                      fontSize={{ base: "16px", lg: "18px" }}
-                      color={useColorModeValue("yellow.500", "yellow.300")}
-                      fontWeight={"500"}
-                      textTransform={"uppercase"}
-                      mb={"4"}
-                    >
-                      Sosial Media
-                    </Text>
-                    <Stack direction={["column", "row"]}>
-                      {dataTenantLinks.length !== 0
-                        ? dataTenantLinks.map((link) => {
-                            if (link.title === "Website") {
-                              return (
-                                <Link href={link.url} target="_blank">
-                                  <HStack alignItems={"center"} pr="4">
-                                    <IconButton
-                                      color="blue.300"
-                                      aria-label="web"
-                                      size="sm"
-                                      icon={<FaGlobe size="sm" />}
-                                      _hover={{
-                                        color: "blue.500", // Ganti dengan warna saat hover
-                                      }}
-                                      title={link.url}
-                                      backgroundColor="rgba(0, 0, 0, 0)"
-                                    />
-                                  </HStack>
-                                </Link>
-                              );
-                            } else if (link.title === "Facebook") {
-                              return (
-                                <Link href={link.url} target="_blank">
-                                  <HStack alignItems={"center"} pr="3">
-                                    <IconButton
-                                      color="blue.600"
-                                      aria-label="web"
-                                      icon={<FaFacebook size="sm" />}
-                                      size="sm"
-                                      title={link.url}
-                                      _hover={{
-                                        color: "blue.900", // Ganti dengan warna saat hover
-                                      }}
-                                      backgroundColor="rgba(0, 0, 0, 0)"
-                                    />
-                                  </HStack>
-                                </Link>
-                              );
-                            } else if (link.title === "Instagram") {
-                              return (
-                                <Link href={link.url} target="_blank">
-                                  <HStack alignItems={"center"} pr="3">
-                                    <IconButton
-                                      color="pink.500"
-                                      aria-label="web"
-                                      icon={<FaInstagram size="sm" />}
-                                      size="sm"
-                                      title={link.url}
-                                      _hover={{
-                                        color: "pink.700",
-                                      }}
-                                      backgroundColor="rgba(0, 0, 0, 0)"
-                                    />
-                                  </HStack>
-                                </Link>
-                              );
-                            } else if (link.title === "Twitter") {
-                              return (
-                                <Link href={link.url} target="_blank">
-                                  <HStack alignItems={"center"} pr="3">
-                                    <IconButton
-                                      color="blue.400"
-                                      aria-label="web"
-                                      icon={<FaTwitter size="sm" />}
-                                      size="sm"
-                                      title={link.url}
-                                      _hover={{
-                                        color: "blue.700",
-                                      }}
-                                      backgroundColor="rgba(0, 0, 0, 0)"
-                                    />
-                                  </HStack>
-                                </Link>
-                              );
-                            } else if (link.title === "YouTube") {
-                              return (
-                                <Link href={link.url} target="_blank">
-                                  <HStack alignItems={"center"} pr="3">
-                                    <IconButton
-                                      color="red.500"
-                                      aria-label="web"
-                                      icon={<FaYoutube size="sm" />}
-                                      size="sm"
-                                      title={link.url}
-                                      _hover={{
-                                        color: "red.700",
-                                      }}
-                                      backgroundColor="rgba(0, 0, 0, 0)"
-                                    />
-                                  </HStack>
-                                </Link>
-                              );
-                            } else if (link.title === "LinkedIn") {
-                              return (
-                                <Link href={link.url} target="_blank">
-                                  <Link href="impuls.id">
-                                    <HStack alignItems={"center"} pr="3">
-                                      <IconButton
-                                        color="blue.500"
-                                        aria-label="web"
-                                        icon={<FaLinkedin size="sm" />}
-                                        size="sm"
-                                        title={link.url}
-                                        _hover={{
-                                          color: "blue.800",
-                                        }}
-                                        backgroundColor="rgba(0, 0, 0, 0)"
-                                      />
-                                    </HStack>
-                                  </Link>
-                                </Link>
-                              );
-                            }
-                          })
-                        : null}
-                    </Stack>
-                  </Box>
-                </Stack>
-              </Stack>
-            </SimpleGrid>
-
-            <Stack
-              align={"center"}
-              //   spacing={{ base: 8, md: 10 }}
-              py={{ base: 10, md: 10 }}
-              overflow={"hidden"}
+            </Box>
+            <Flex justify={'center'} mt={[-24,-36,-40]}>
+              <Avatar
+                boxSize={['180px', '240px', '300px']}
+                mb={6}
+                src={
+                  'https://www.tagar.id/Asset/uploads2019/1575050504675-logo-tokopedia.jpg'
+                }
+                css={{
+                  border: '8px solid white',
+                }}
+              />
+            </Flex>
+            <Flex
+            bg={"url('/img/liquid-velvet.svg')center/cover no-repeat fixed"}
+            justifyContent="center"  
             >
-              <Stack w={"full"} flex={1} spacing={{ base: 5, md: 10 }} mb="3">
-                <Heading
-                  lineHeight={1.2}
-                  fontWeight={500}
-                  fontSize={{ base: "xl", sm: "2xl", lg: "3xl" }}
-                  textAlign={"center"}
+              
+              <Stack spacing={4} p={10}>
+                <VStack spacing={2}>
+                  <HStack justifyContent="center">
+                      <Box
+                       w={["20px", "30px"]}
+                       h={["20px", "30px"]}
+                      bg="white"
+                      borderRadius="full"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      >
+                        <Icon as={FaMedal} 
+                        w={["15px", "20px"]} 
+                        h={["15px", "20px"]}
+                        color="red.500"
+                         />
+                      </Box>
+                      <Text fontWeight="bold" 
+                      color="white"
+                      fontSize={['sm','lg']}
+                      >
+                      OUR ACHIEVEMENT
+                      </Text>
+                  </HStack>
+                  <Text fontWeight="bold" 
+                  color="white" 
+                  fontSize={['xl','2xl','3xl']}
+                  >
+                  Prestasi yang Kami Raih
+                  </Text>
+                </VStack>
+                <HStack 
+                align={isDesktop ? 'center' : 'start'} 
+                justify={isDesktop ? 'center' : 'center'} 
+                spacing={'6'}
                 >
-                  Catalog
-                </Heading>
+                  {isDesktop ? ( 
+                  <>
+                  <Awards></Awards> 
+                  <Awards></Awards>
+                  <Awards></Awards>
+                  </>
+                  ) :(
+                    <VStack align={'center'} spacing={'-2'}>
+                      <Awards></Awards>
+                      <Awards></Awards>
+                      <Awards></Awards>
+                    </VStack>
+                  )}
+                </HStack>
               </Stack>
-            </Stack>
-          </>
-        )}
-      </Container>
-
-      <AlertBar
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        message={msg}
-        status={status}
-      />
-    </>
-  );
+            </Flex>
+            <DetailComponent></DetailComponent>
+          </Stack>
+        </Center>
+      </Stack>
+    </Container>
+  )
 }
+
+

@@ -41,7 +41,7 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   
   
   
-  const handleSearch: SubmitHandler<any> = async (data: string) => {
+  const handleSearch: SubmitHandler<any> = async (data) => {
     // Menyimpan querry pencarian ke dalam param
   // setParamSearch(data.searchQuery);
     // Validasi input kosong
