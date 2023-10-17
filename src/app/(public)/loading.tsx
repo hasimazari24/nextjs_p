@@ -4,6 +4,7 @@ import {
   Spinner,
   Center,
   Box,
+  Text
 } from "@chakra-ui/react";
 
 interface Props {
@@ -14,8 +15,16 @@ interface Props {
 const LoadingModal = () => {
   return (
     <Box rounded="md">
-      <Center h="100%" m="10">
-        <Spinner className="spinner" size="xl" color="blue.500" />
+      <Center h="100%" m="10" flexDirection={"column"}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          mb="3"
+        />
+        <Text as="i">Sedang memuat data, mohon tunggu sebentar ...</Text>
       </Center>
     </Box>
   );

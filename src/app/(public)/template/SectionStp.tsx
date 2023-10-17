@@ -3,6 +3,7 @@
 import {
   Box,
   chakra,
+  Container,
   Flex,
   SimpleGrid,
   Stat,
@@ -19,6 +20,16 @@ interface StatsCardProps {
   title: string;
   stat: string;
   icon: ReactNode;
+}
+
+interface SectionStp {
+  total_tenant: number;
+  level_tenant: {
+    pra_inkubasi: Number;
+    inkubasi: Number;
+    inkubasi_lanjutan: Number;
+    scale_up: Number;
+  };
 }
 
 function StatsCard(props: StatsCardProps) {
@@ -53,49 +64,44 @@ function StatsCard(props: StatsCardProps) {
   );
 }
 
-export default function BasicStatistics() {
+export default function BasicStatistics(props: SectionStp) {
+  const { total_tenant, level_tenant } = props;
   return (
-    <Box
-      maxW="7xl"
-      mx={"auto"}
-      pt={5}
-      px={{ base: 2, sm: 12, md: 17 }}
-      mb="55px"
-    >
+    <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }} mb="55">
       <chakra.h1
         textAlign={"center"}
         fontSize={"4xl"}
         py={10}
         fontWeight={"bold"}
       >
-        Tenant Solo Technopark
+        {total_tenant} Tenant Solo Technopark
       </chakra.h1>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 4 }}
         spacing={{ base: 5, lg: 8 }}
-        px={{ base: 3, md: 20 }}
+        // px={{ base: 3, md: 20 }}
       >
         <StatsCard
           title={"Pra Inkubasi"}
-          stat={"0"}
+          stat={`${level_tenant.pra_inkubasi}`}
           icon={<BsPerson size={"3em"} />}
         />
         <StatsCard
           title={"Inkubasi"}
-          stat={"0"}
+          stat={`${level_tenant.inkubasi}`}
           icon={<FiServer size={"3em"} />}
         />
         <StatsCard
           title={"Inkubasi Lanjutan"}
-          stat={"0"}
+          stat={`${level_tenant.inkubasi_lanjutan}`}
           icon={<GoLocation size={"3em"} />}
         />
         <StatsCard
           title={"Scale Up"}
-          stat={"0"}
+          stat={`${level_tenant.pra_inkubasi}`}
           icon={<BsBuilding size={"3em"} />}
         />
       </SimpleGrid>
-    </Box>
+    </Container>
   );
 }

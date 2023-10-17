@@ -11,7 +11,6 @@ import {
   Button,
   Image,
   Icon,
-  Link,
   IconButton,
   createIcon,
   IconProps,
@@ -25,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { usePublic } from "../utils/PublicContext";
 import { useRouter } from "next/navigation";
+import NextLink from 'next/link';
 
 interface Beranda {
   id: string;
@@ -89,7 +89,7 @@ function page() {
                       onMouseEnter={() => handleMouseEnter(index)}
                       onMouseLeave={() => handleMouseLeave(index)}
                       title={p.name}
-                      onClick={()=> router.push(`/tenant-detail/${p.slug}`)}
+                      onClick={() => router.push(`/tenant-detail/${p.slug}`)}
                     >
                       <Box
                         minW={{ base: "150px", md: "180px" }}
@@ -158,7 +158,7 @@ function page() {
                     hubungi admin untuk info lebih lanjut atau kembali ke Home.
                   </Text>
 
-                  <Link href={process.env.APP_URL}>
+                  <NextLink href={`${process.env.APP_URL}`} passHref>
                     <Button
                       colorScheme="red"
                       bgGradient="linear(to-r, red.400, red.500, red.600)"
@@ -167,7 +167,7 @@ function page() {
                     >
                       Kembali ke Beranda
                     </Button>
-                  </Link>
+                  </NextLink>
                 </Box>
               )}
             </>

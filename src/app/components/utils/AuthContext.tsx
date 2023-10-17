@@ -63,6 +63,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(loggedInUser);
           router.push("/dashboard");
           setLoading(false);
+          setMsg(`Login Berhasil, selamat datang ${loggedInUser?.fullname}`);
+          setstatus("success");
+          setIsOpen(true);
         });
     } catch (error: any) {
       // console.log(error);
@@ -112,6 +115,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (response.status === 200) {
           setUser(null);
           setLoadingLogOut(false);
+          setMsg(`Anda telah Log Out`);
+          setstatus("success");
+          setIsOpen(true);
         }
       });
     } catch (error: any) {

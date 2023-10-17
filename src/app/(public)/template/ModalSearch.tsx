@@ -58,14 +58,15 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
           //data api diwadahi result sko response
           const results = response.data.data;
-          console.log(response);
+          // console.log(response);
           setSearchResults(results);
           setIsLoading(false);
           setIsSearchOpen(true); //set ke True saat pencarian dimulai//
         } catch (error) {
           console.error("Error fetching data from Api", error);
           setIsLoading(false);
-          setIsSearchOpen(false);
+          setIsSearchOpen(true);
+          setSearchResults([]);
         }
       }, 1000); // Contoh waktu tunda 1 detik
     }
@@ -141,7 +142,7 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                       bg="gray.50"
                     >
                       <Text fontSize="12px" color="gray.500" className="textH">
-                        PORTOFOLIO
+                        TENANT
                       </Text>
                       <Text fontSize="18px" color="gray.800" className="textResult">
                         {result?.name}

@@ -30,7 +30,7 @@ import { axiosCustom } from "../../api/axios";
 //   image_banner_url: string;
 // }
 
-interface Beranda {
+interface Tenant {
   id: string;
   name: string;
   motto: string;
@@ -39,40 +39,18 @@ interface Beranda {
   image_banner_url: string;
 }
 
-export default function GallerySlider() {
-  const [beranda, setBeranda] = useState<Beranda[] | null>([]);
-  const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
+interface GalleryProps {
+  beranda : Tenant[]
+}
+
+const GallerySlider: React.FC<GalleryProps> = ({ beranda }) => {
+  // const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
 
   const [isOpen, setIsOpen] = useState(false);
   const [msg, setMsg] = useState("");
   const [status, setstatus] = useState<
     "success" | "info" | "warning" | "error"
   >("error");
-  const getBeranda = async () => {
-  // setLoadingBeranda(true);
-    try {
-      // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
-      await axiosCustom.get("/public/beranda").then((response) => {
-        // Jika login berhasil, atur informasi pengguna di sini;
-        setBeranda(response.data.data);
-        setLoadingBeranda(false);
-        // router.push("/dashboard");
-        // console.log(response);
-      });
-    } catch (error: any) {
-      console.log(error);
-      if (error?.response) {
-        setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
-      } else setMsg(`Terjadi Kesalahan: ${error.message}`);
-      setstatus("error");
-      setIsOpen(true);
-      setLoadingBeranda(false);
-    }
-  };
-
-  useEffect(() => {
-    getBeranda();
-  }, []);
   // init state untuk menampilkan slide yg aktif
   const [activeSlide, setActiveSlide] = useState(0);
   // init state data cards
@@ -145,23 +123,7 @@ export default function GallerySlider() {
   // console.log(`SLIDES_TO_SHOW : ${SLIDES_TO_SHOW}`);
   // console.log(`varwidth : ${cards.length <= 3 ? true : false}`);
 
-  return loadingBeranda ? (
-    <Box
-      sx={boxStyles}
-      filter="grayscale(80%)"
-      height={{
-        base: "400px",
-        sm: "400px",
-        md: "600px",
-        lg: "600px",
-      }}
-    >
-      <Center h="100%" m="10" flexDirection={"column"}>
-        <Spinner className="spinner" size="xl" color="blue.500" mb="3" />
-        <Text>Sedang memuat data</Text>
-      </Center>
-    </Box>
-  ) : (
+  return (
     <>
       {cards && cards.length > 0 ? (
         <>
@@ -189,7 +151,10 @@ export default function GallerySlider() {
                 backgroundPosition="center"
                 backgroundRepeat="no-repeat"
                 backgroundSize="cover"
-                backgroundImage={`url(${cards[activeSlide]?.image_banner_url})`}
+                backgroundImage={`url(${
+                  cards[activeSlide]?.image_banner_url ||
+                  "img/tenant-banner-default.jpg"
+                })`}
                 filter="auto"
                 brightness="60%"
               />
@@ -219,9 +184,7 @@ export default function GallerySlider() {
                   </Text>
                   <Box>
                     <Center>
-                      <Link
-                        href={`/tenant-detail/${cards[activeSlide]?.slug}`}
-                      >
+                      <Link href={`/tenant-detail/${cards[activeSlide]?.slug}`}>
                         <Button
                           rounded={"full"}
                           size={"lg"}
@@ -303,3 +266,5 @@ export default function GallerySlider() {
     </>
   );
 }
+
+export default GallerySlider;

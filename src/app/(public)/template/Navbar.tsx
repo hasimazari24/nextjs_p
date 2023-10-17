@@ -4,7 +4,6 @@ import {
   Box,
   Flex,
   Text,
-  Link,
   IconButton,
   Button,
   Stack,
@@ -17,6 +16,7 @@ import {
   useBreakpointValue,
   useDisclosure,
   Img,
+  Container
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -27,91 +27,100 @@ import {
 } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import FullScreenModal from "./ModalSearch";
+import NextLink from "next/link";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const [isModalSearch, setIsModalSearch] = useState(false);
 
   return (
-    <>
-      <Flex
-        bg={useColorModeValue("white", "gray.800")}
-        color={useColorModeValue("gray.600", "white")}
-        minH={"60px"}
-        py={{ base: 2 }}
-        // px={{ base: 4 }}
-        px={{ base: 6, md: 20, lg: 75, "2xl": 225 }}
-        borderBottom={1}
-        borderStyle={"solid"}
-        borderColor={useColorModeValue("gray.200", "gray.900")}
-        align={"center"}
-      >
+    <Box
+      borderBottom={1}
+      borderStyle={"solid"}
+      borderColor={useColorModeValue("gray.200", "gray.900")}
+    >
+      <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
         <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
+          bg={useColorModeValue("white", "gray.800")}
+          color={useColorModeValue("gray.600", "white")}
+          minH={"60px"}
+          py={{ base: 2 }}
+          // px={{ base: 4 }}
+          // px={{ base: 6, md: 20, lg: 75, "2xl": 225 }}
+          // px={{ base: 6, md: 20, "2xl": 55 }}
+          align={"center"}
         >
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-        </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Link href={process.env.APP_URL}>
-            <Box
-              justifyContent={useBreakpointValue({
-                base: "center",
-                md: "left",
-              })}
-              fontFamily={"heading"}
-              color={useColorModeValue("gray.800", "white")}
-            >
-              <Img
-                src="/img/siteman-primary.png"
-                h="30px"
-                alt="Logo Solo Technopark"
-              />
-            </Box>
-          </Link>
-
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
-            <DesktopNav />
-          </Flex>
-        </Flex>
-
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          spacing={6}
-          cursor={"pointer"}
-        >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            // href={"#"}
-            onClick={() => setIsModalSearch(true)}
+          <Flex
+            flex={{ base: 1, md: "auto" }}
+            ml={{ base: -2 }}
+            display={{ base: "flex", md: "none" }}
           >
-            <SearchIcon w={5} h={5} />
-          </Button>
-        </Stack>
-      </Flex>
+            <IconButton
+              onClick={onToggle}
+              icon={
+                isOpen ? (
+                  <CloseIcon w={3} h={3} />
+                ) : (
+                  <HamburgerIcon w={5} h={5} />
+                )
+              }
+              variant={"ghost"}
+              aria-label={"Toggle Navigation"}
+            />
+          </Flex>
+          <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+            <NextLink href={`${process.env.APP_URL}`} passHref>
+              <Box
+                justifyContent={useBreakpointValue({
+                  base: "center",
+                  md: "left",
+                })}
+                fontFamily={"heading"}
+                color={useColorModeValue("gray.800", "white")}
+              >
+                <Img
+                  src="/img/siteman-primary.png"
+                  h="30px"
+                  alt="Logo Solo Technopark"
+                />
+              </Box>
+            </NextLink>
 
-      <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
-      </Collapse>
+            <Flex display={{ base: "none", md: "flex" }} ml={10}>
+              <DesktopNav />
+            </Flex>
+          </Flex>
 
-      <FullScreenModal
-        isOpen={isModalSearch}
-        onClose={() => setIsModalSearch(false)}
-      />
-    </>
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={"flex-end"}
+            direction={"row"}
+            spacing={6}
+            cursor={"pointer"}
+          >
+            <Button
+              as={"a"}
+              fontSize={"sm"}
+              fontWeight={400}
+              variant={"link"}
+              // href={"#"}
+              onClick={() => setIsModalSearch(true)}
+            >
+              <SearchIcon w={5} h={5} />
+            </Button>
+          </Stack>
+        </Flex>
+
+        <Collapse in={isOpen} animateOpacity>
+          <MobileNav />
+        </Collapse>
+
+        <FullScreenModal
+          isOpen={isModalSearch}
+          onClose={() => setIsModalSearch(false)}
+        />
+      </Container>
+    </Box>
   );
 }
 
@@ -131,20 +140,22 @@ const DesktopNav = () => {
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
-              <Box
-                as="a"
-                p={2}
-                href={navItem.href ?? "#"}
-                fontSize={"sm"}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: "none",
-                  color: linkHoverColor,
-                }}
-              >
-                {navItem.label}
-              </Box>
+              <NextLink href={navItem.href ?? "#"} passHref>
+                <Box
+                  // as="a"
+                  p={2}
+                  // href=
+                  fontSize={"sm"}
+                  fontWeight={500}
+                  color={linkColor}
+                  _hover={{
+                    textDecoration: "none",
+                    color: linkHoverColor,
+                  }}
+                >
+                  {navItem.label}
+                </Box>
+              </NextLink>
             </PopoverTrigger>
 
             {navItem.children && (
@@ -289,6 +300,6 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Tenant",
-    href: "/tenant",
+    href: "/portofolio",
   },
 ];

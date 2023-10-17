@@ -56,7 +56,7 @@ const getAwards = async (paramsId: string): Promise<DataItem[]> => {
   }
 };
 
-export default function PageAwards({ params }: { params: { slug: string } }) {
+function PageAwards({ params }: { params: { slug: string } }) {
   const getParamsId = params.slug;
   if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
     return notFound();
@@ -159,3 +159,5 @@ export default function PageAwards({ params }: { params: { slug: string } }) {
     </div>
   );
 }
+
+export default PageAwards;

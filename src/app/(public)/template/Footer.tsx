@@ -130,15 +130,21 @@ const Footer = () => {
       //   borderBottomLeftRadius: '0',  // Border radius sudut bawah kiri
       // }}
       color={useColorModeValue("gray.50", "gray.200")}
-      px={{ base: 2, sm: 4, md: 12, lg: 75, "2xl": 190 }}
+      // px={{ base: 2, sm: 4, md: 12, lg: 75, "2xl": 190 }}
     >
-      <Container as={Stack} maxW={"7xl"} py={10}>
+      <Container
+        as={Stack}
+        maxW={"8xl"}
+        py={10}
+        px={{ base: 6, md: 20, "2xl": 55 }}
+      >
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={"40px"}>
           <Box>
             <Box
               //border="2px solid white"
               borderRadius="10px"
-              padding="2"
+              // padding="2"
+              pb="2"
               //bg="gray.500"
             >
               <Logo color={useColorModeValue("gray.700", "white")} />
