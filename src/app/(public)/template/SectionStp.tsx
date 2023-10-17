@@ -98,7 +98,7 @@ export default function BasicStatistics(props: SectionStp) {
         />
         <StatsCard
           title={"Scale Up"}
-          stat={`${level_tenant.pra_inkubasi}`}
+          stat={`${level_tenant.scale_up}`}
           icon={<BsBuilding size={"3em"} />}
         />
       </SimpleGrid>
