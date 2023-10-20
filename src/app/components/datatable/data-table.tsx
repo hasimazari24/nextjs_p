@@ -288,7 +288,15 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       </Th>
                     );
                   })}
-                  <Th width="100px" fontSize="sm">
+                  <Th
+                    width="100px"
+                    fontSize="sm"
+                    id="action"
+                    display={
+                      props.hiddenColumns.includes("action") ? "none" : "table-cell"
+                    }
+                    borderBottom={"none"}
+                  >
                     <Text>Action</Text>
                   </Th>
                 </Tr>
