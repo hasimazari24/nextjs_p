@@ -52,7 +52,7 @@ function page() {
 
   return (
     <div>
-      <Container maxW={"7xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
+      <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
         <Stack
           align={"center"}
           //   spacing={{ base: 8, md: 10 }}

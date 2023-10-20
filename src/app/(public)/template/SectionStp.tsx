@@ -10,6 +10,8 @@ import {
   StatLabel,
   StatNumber,
   useColorModeValue,
+  Text,
+  HStack,
 } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
 import { BsPerson, BsBuilding } from "react-icons/bs";
@@ -68,14 +70,31 @@ export default function BasicStatistics(props: SectionStp) {
   const { total_tenant, level_tenant } = props;
   return (
     <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }} mb="55">
-      <chakra.h1
-        textAlign={"center"}
+      <HStack
+        alignItems={"center"}
+        justify={"center"}
         fontSize={"4xl"}
         py={10}
         fontWeight={"bold"}
       >
-        {total_tenant} Tenant Solo Technopark
-      </chakra.h1>
+        <Text
+          as={"span"}
+          position={"relative"}
+          _after={{
+            content: "''",
+            width: "full",
+            height: "30%",
+            position: "absolute",
+            bottom: 2,
+            left: 0,
+            bg: "red.400",
+            zIndex: -1,
+          }}
+        >
+          {total_tenant} TENANT
+        </Text>
+        <Text pl="3"> SOLO TECHNOPARK</Text>
+      </HStack>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 4 }}
         spacing={{ base: 5, lg: 8 }}

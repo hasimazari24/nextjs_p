@@ -227,8 +227,10 @@ const GallerySlider: React.FC<GalleryProps> = ({ beranda }) => {
                       >
                         <Center>
                           <Image
-                            src={card.image_url}
-                            alt="Slide"
+                            src={
+                              card.image_url || "/img/tenant-logo-default.png"
+                            }
+                            alt="Logo Tenant"
                             height={{
                               base: "80px",
                               sm: "80px",
