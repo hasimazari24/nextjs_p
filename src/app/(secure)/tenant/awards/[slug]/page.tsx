@@ -21,6 +21,9 @@ import { AiOutlineRollback } from "react-icons/ai";
 import AddAwards from "./addAwards";
 import EditAwards from "./editAwards";
 import DeleteAwards from "./deleteAwards";
+import { UserRoles, permissions } from "@/app/type/role-access-control.d";
+import { useAuth } from "@/app/components/utils/AuthContext";
+import NotFound from "@/app/components/template/NotFound";
 
 interface AwardItem {
   id: string;
@@ -36,9 +39,12 @@ interface DataItem {
   award: AwardItem;
 }
 
-type AwardObject = {
-  [key: string]: AwardItem;
-};
+interface UserLog {
+  // id: string;
+  fullname: string;
+  role: UserRoles;
+  image_url: string;
+}
 
 const getAwards = async (paramsId: string): Promise<DataItem[]> => {
   try {
@@ -63,27 +69,76 @@ function PageAwards({ params }: { params: { slug: string } }) {
   }
   const router = useRouter();
 
-  // const [getData, setData] = useState<any | null>(null);
+  const [dataAwardsLoading, setDataAwardsLoading] = useState(true);
+  // const [dataAwards, setDataAwards] = useState<DataItem[]>([]);
+  const [awardItem, setAwardItem] = useState<AwardItem[]>([]);
+  const [namaTenant, setNamaTenant] = useState<string | null>();
 
-  const dataAwards: DataItem[] = use(getAwards(getParamsId));
+  const fetchData = async (): Promise<void> => {
+    try {
+      const response = await axiosCustom.get(
+        `/tenant/${getParamsId}/get-award`,
+      );
+      const newDataAwards: DataItem[] = [await response.data.data];
+      const newAwardItem = newDataAwards.flatMap((dataItem) =>
+        Array.isArray(dataItem.award)
+          ? dataItem.award.map((award) => ({
+              id: award.id,
+              image_id: award.image_id,
+              image_url: award.image_url,
+              name: award.name,
+              rank: award.rank,
+            }))
+          : [],
+      );
+      const namatenant = newDataAwards
+        .map((item) => item.name.toUpperCase())
+        .toString();
+      setNamaTenant(namatenant);
+      // setDataAwards(newDataAwards);
+      setAwardItem(newAwardItem);
+      setDataAwardsLoading(false);
+    } catch (error) {
+      console.error("Error updating data:", error);
+      setNamaTenant(null);
+      setDataAwardsLoading(false);
+    }
+  };
 
-  // Use the map function to flatten the nested arrays of awards
-  // const awardItem: AwardItem[] = dataAwards.map((item) => item.award);
-  const awardItem: AwardItem[] = dataAwards.flatMap((dataItem) =>
-    Array.isArray(dataItem.award)
-      ? dataItem.award.map((award) => ({
-          id: award.id,
-          image_id: award.image_id,
-          image_url: award.image_url,
-          name: award.name,
-          rank: award.rank,
-        }))
-      : [],
-  );
-  // const router = useRouter();
+  useEffect(() => {
+
+    fetchData();
+  }, [getParamsId]);
 
   const filterOptions = [{ key: "name", label: "Nama Award" }];
-  const hidenCols = ["id"];
+
+  const { user } = useAuth();
+  let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+  }
+
+  let awardsFeatures: any | null | undefined = null; // Inisialisasikan fitur pada menunya
+  let allMenu: any | null = null;
+  if (getUser !== null) {
+    // ambil permission sesuai login role
+    awardsFeatures = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "backPanelTenant_catalog",
+    );
+    //ambil permision features all menu (hanya utk admin)
+    allMenu = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "allmenu",
+    );
+  }
+  let hidenCols: string[] = ["id"];
+  if (
+    (awardsFeatures?.access.includes("tmbhAwards") &&
+      allMenu?.access.includes("all_access")) === false
+  ) {
+    hidenCols.push("action");
+  } 
+
  const columns: ReadonlyArray<Column<AwardItem>> = [
    {
      Header: "Avatar",
@@ -107,55 +162,72 @@ function PageAwards({ params }: { params: { slug: string } }) {
    },
  ];
   const renderActions = (rowData: any) => {
-    return (
+    return awardsFeatures?.access.includes("editAwards") ||
+      allMenu?.access.includes("all_access") ? (
       <HStack>
         <EditAwards idTenant={getParamsId} rowData={rowData} />
         &nbsp;
         <DeleteAwards idTenant={getParamsId} dataDelete={rowData} />
         &nbsp;
       </HStack>
-    );
+    ) : null;
   };
 
   return (
     <div>
-      <Flex
-        justifyContent={"space-between"}
-        pb="2"
-        direction={["column", "row"]}
-      >
-        <Heading fontSize={"2xl"}>
-          AWARDS TENANT : {dataAwards.map((item) => item.name.toUpperCase())}
-        </Heading>
-        <HStack>
-          <Button
-            bgColor="grey.400"
-            color="white"
-            _hover={{
-              bg: "grey.500",
-            }}
-            key="kembali"
-            size="sm"
-            onClick={() => {
-              router.push("/tenant");
-            }}
-          >
-            <AiOutlineRollback />
-            &nbsp;Data Tenant
-          </Button>
-          <AddAwards idTenant={getParamsId} />
-        </HStack>
-      </Flex>
-      <Suspense fallback={<LoadingModal />}>
-        <DataTable
-          data={awardItem}
-          column={columns}
-          hiddenColumns={hidenCols}
-          filterOptions={filterOptions}
-        >
-          {(rowData: any) => renderActions(rowData)}
-        </DataTable>
-      </Suspense>
+      {dataAwardsLoading ? (
+        <LoadingModal />
+      ) : (
+        <>
+          {namaTenant ? (
+            <Suspense fallback={<LoadingModal />}>
+              <Flex
+                justifyContent={"space-between"}
+                pb="2"
+                direction={["column", "row"]}
+              >
+                <Heading fontSize={"2xl"}>AWARDS TENANT : {namaTenant}</Heading>
+                <HStack>
+                  <Button
+                    bgColor="grey.400"
+                    color="white"
+                    _hover={{
+                      bg: "grey.500",
+                    }}
+                    key="kembali"
+                    size="sm"
+                    onClick={() => {
+                      router.push("/tenant");
+                    }}
+                  >
+                    <AiOutlineRollback />
+                    &nbsp;Data Tenant
+                  </Button>
+                  {awardsFeatures?.access.includes("tmbhAwards") ||
+                  allMenu?.access.includes("all_access") ? (
+                    <AddAwards idTenant={getParamsId} />
+                  ) : null}
+                </HStack>
+              </Flex>
+              <DataTable
+                data={awardItem}
+                column={columns}
+                hiddenColumns={hidenCols}
+                filterOptions={filterOptions}
+              >
+                {(rowData: any) => renderActions(rowData)}
+              </DataTable>
+            </Suspense>
+          ) : (
+            <NotFound
+              statusCode={404}
+              msg={"Not Found"}
+              statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman tenant."
+              backToHome="/tenant"
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

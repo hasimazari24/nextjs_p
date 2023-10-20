@@ -45,7 +45,7 @@ const ModalNotif: React.FC<ModalProps> = ({
       // Setelah durasi yang ditentukan, tutup modal
       timerRef.current = window.setTimeout(() => {
         onClose();
-        router.refresh();
+        // router.refresh();
         setProgressValue(100); //balikin value jadi 100 ketika close
       }, autoCloseDuration);
 
@@ -77,7 +77,7 @@ const ModalNotif: React.FC<ModalProps> = ({
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          if (isError === false) { router.refresh() };
+          // if (isError === false) { router.refresh() };
         }}
         size="lg"
         closeOnOverlayClick={false}
@@ -124,9 +124,9 @@ const ModalNotif: React.FC<ModalProps> = ({
                 colorScheme="blue"
                 onClick={() => {
                   onClose();
-                  if (isError === false) {
-                    router.refresh();
-                  }
+                  // if (isError === false) {
+                  //   router.refresh();
+                  // }
                 }}
               >
                 Tutup Sekarang

@@ -33,6 +33,7 @@ import Link from "next/link";
 import MyTenant from "./mytenant/mytenant";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import dynamic from "next/dynamic";
+import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 
 interface DataItem {
   id: string;
@@ -62,9 +63,39 @@ interface tenantLinks {
   url: string;
 }
 
+interface UserLog {
+  // id: string;
+  fullname: string;
+  role: UserRoles;
+  image_url: string;
+}
+
 function PageTenant() {
   const { user } = useAuth();
-  const getUser: any = user;
+  let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+  }
+
+  let backPanelTenantFeatures: any | null | undefined = null; // Inisialisasikan fitur pada menunya
+  let allMenu: any | null = null;
+  if (getUser !== null) {
+    // ambil permission sesuai login role
+    backPanelTenantFeatures = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "backPanelTenant",
+    );
+    //ambil permision features all menu (hanya utk admin)
+    allMenu = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "allmenu",
+    );
+    // console.log(backPanelTenantFeatures);
+    // console.log(allMenu);
+    // console.log(
+    //   backPanelTenantFeatures?.access.includes("editTenant") ||
+    //     allMenu?.access.includes("all_access"),
+    // );
+  }
 
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -269,26 +300,32 @@ function PageTenant() {
               <GrShareOption />
               &nbsp; Social Links Tenant
             </MenuItem>
-            <MenuItem onClick={() => handleDelete(rowData)}>
-              <DeleteIcon />
-              &nbsp; Hapus Tenant
-            </MenuItem>
+            {backPanelTenantFeatures?.access.includes("deleteTenant") ||
+            allMenu?.access.includes("all_access") ? (
+              <MenuItem onClick={() => handleDelete(rowData)}>
+                <DeleteIcon />
+                &nbsp; Hapus Tenant
+              </MenuItem>
+            ) : null}
           </MenuList>
         </Menu>
         &nbsp;
-        <Button
-          bgColor="blue.100"
-          _hover={{
-            bg: "blue.200",
-          }}
-          // color="white"
-          title="Edit Data"
-          onClick={() => handleEdit(rowData)}
-          key="editData"
-          size="sm"
-        >
-          <EditIcon />
-        </Button>
+        {backPanelTenantFeatures?.access.includes("editTenant") ||
+        allMenu?.access.includes("all_access") ? (
+          <Button
+            bgColor="blue.100"
+            _hover={{
+              bg: "blue.200",
+            }}
+            // color="white"
+            title="Edit Data"
+            onClick={() => handleEdit(rowData)}
+            key="editData"
+            size="sm"
+          >
+            <EditIcon />
+          </Button>
+        ) : null}
       </>
     );
   };
@@ -369,7 +406,7 @@ function PageTenant() {
 
   return (
     <div>
-      {getUser?.role === "Super Admin" ? (
+      {getUser?.role === "Super Admin" || "Management" || "Mentor" ? (
         <>
           {isLoading ? (
             <Center h="100%" m="10">
@@ -383,15 +420,19 @@ function PageTenant() {
                 direction={["column", "row"]}
               >
                 <Heading fontSize={"2xl"}>DAFTAR TENANT</Heading>
-                <Button
-                  colorScheme="green"
-                  key="tambahData"
-                  size="md"
-                  onClick={handleAdd}
-                >
-                  <AddIcon />
-                  &nbsp;Tambah Baru
-                </Button>
+
+                {backPanelTenantFeatures?.access.includes("tmbhTenant") ||
+                allMenu?.access.includes("all_access") ? (
+                  <Button
+                    colorScheme="green"
+                    key="tambahData"
+                    size="md"
+                    onClick={handleAdd}
+                  >
+                    <AddIcon />
+                    &nbsp;Tambah Baru
+                  </Button>
+                ) : null}
               </Flex>
               <Box>
                 <DataTable
@@ -458,7 +499,9 @@ function PageTenant() {
 
               <ModalSocial
                 isOpen={isModalSocial}
-                onClose={() => {setIsModalSocial(false);}}
+                onClose={() => {
+                  setIsModalSocial(false);
+                }}
                 onSubmit={() => {
                   getTampil();
                 }}

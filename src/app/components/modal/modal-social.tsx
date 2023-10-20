@@ -33,8 +33,10 @@ import ModalNotif from "./modal-notif";
 import ConfirmationModal from "./modal-confirm";
 import { axiosCustom } from "@/app/api/axios";
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin, FaGlobe } from "react-icons/fa";
- import { BsCheck, BsPlus, BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
-import { linkSync } from "fs";
+import { BsCheck, BsPlus, BsFillPencilFill, BsFillTrashFill } from "react-icons/bs";
+import { useAuth } from "@/app/components/utils/AuthContext";
+import dynamic from "next/dynamic";
+import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 
 interface Formdata {
   id: string;
@@ -56,6 +58,13 @@ interface FormValues {
   id_tenant: string;
   title: string;
   url: string;
+}
+
+interface UserLog {
+  // id: string;
+  fullname: string;
+  role: UserRoles;
+  image_url: string;
 }
 
 const ModalSocial: React.FC<ModalProps> = ({
@@ -107,6 +116,28 @@ const ModalSocial: React.FC<ModalProps> = ({
     formState: { errors: errLinkedIn },
     reset: resetLinkedIn,
   } = useForm<FormValues>();
+
+  const { user } = useAuth();
+  let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+  }
+
+  let features: any | null | undefined = null; // Inisialisasikan canAccessBtn
+  let allMenu: any | null = null;
+  if (getUser !== null) {
+    features = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "backPanelTenant_links",
+    );
+    allMenu = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "allmenu",
+    );
+  }
+
+  const features_access =
+    features?.access.includes("all_access") ||
+    allMenu?.access.includes("all_access");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGetData, setIsLoadingGetData] = useState(true);
@@ -565,6 +596,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Edit"
                                       icon={<BsFillPencilFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() =>
                                         // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                         setIsEditingFacebook(!isEditingWebsite)
@@ -576,6 +610,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Hapus"
                                       icon={<BsFillTrashFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() => handleDelete(akunWeb[0])}
                                     />
                                   </HStack>
@@ -618,6 +655,8 @@ const ModalSocial: React.FC<ModalProps> = ({
                         // begitu tambah dipenyek, maka muncul btn simpan
                         setIsEditingWebsite(true);
                       }}
+                      display={features_access ? "flex" : "none"}
+                      isDisabled={isLoading}
                     />
                   ) : null}
                 </HStack>
@@ -703,6 +742,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Edit"
                                       icon={<BsFillPencilFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() =>
                                         // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                         setIsEditingFacebook(!isEditingFacebook)
@@ -714,6 +756,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Hapus"
                                       icon={<BsFillTrashFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() => handleDelete(akunFb[0])}
                                     />
                                   </HStack>
@@ -752,6 +797,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       icon={<BsPlus size="sm" />}
                       size="sm"
                       title="Tambah"
+                      display={features_access ? "flex" : "none"}
                       onClick={() => {
                         // begitu tambah dipenyek, maka muncul btn simpan
                         setIsEditingFacebook(true);
@@ -841,6 +887,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Edit"
                                       icon={<BsFillPencilFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() =>
                                         // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                         setIsEditingInstagram(
@@ -854,6 +903,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Hapus"
                                       icon={<BsFillTrashFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() => handleDelete(akunIg[0])}
                                     />
                                   </HStack>
@@ -892,6 +944,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       icon={<BsPlus size="sm" />}
                       size="sm"
                       title="Tambah"
+                      display={features_access ? "flex" : "none"}
                       onClick={() => {
                         // begitu tambah dipenyek, maka muncul btn simpan
                         setIsEditingInstagram(true);
@@ -981,6 +1034,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Edit"
                                       icon={<BsFillPencilFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() =>
                                         // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                         setIsEditingTwitter(!isEditingTwitter)
@@ -992,6 +1048,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Hapus"
                                       icon={<BsFillTrashFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() => handleDelete(akunTw[0])}
                                     />
                                   </HStack>
@@ -1030,6 +1089,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       icon={<BsPlus size="sm" />}
                       size="sm"
                       title="Tambah"
+                      display={features_access ? "flex" : "none"}
                       onClick={() => {
                         // begitu tambah dipenyek, maka muncul btn simpan
                         setIsEditingTwitter(true);
@@ -1119,6 +1179,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Edit"
                                       icon={<BsFillPencilFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() =>
                                         // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                         setIsEditingYouTube(!isEditingYouTube)
@@ -1130,6 +1193,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Hapus"
                                       icon={<BsFillTrashFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() => handleDelete(akunYt[0])}
                                     />
                                   </HStack>
@@ -1168,6 +1234,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       icon={<BsPlus size="sm" />}
                       size="sm"
                       title="Tambah"
+                      display={features_access ? "flex" : "none"}
                       onClick={() => {
                         // begitu tambah dipenyek, maka muncul btn simpan
                         setIsEditingYouTube(true);
@@ -1257,6 +1324,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Edit"
                                       icon={<BsFillPencilFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() =>
                                         // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
                                         setIsEditingLinkedIn(!isEditingLinkedIn)
@@ -1268,6 +1338,9 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       title="Hapus"
                                       icon={<BsFillTrashFill />}
                                       size="sm"
+                                      display={
+                                        features_access ? "flex" : "none"
+                                      }
                                       onClick={() => handleDelete(akunLd[0])}
                                     />
                                   </HStack>
@@ -1306,6 +1379,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                       icon={<BsPlus size="sm" />}
                       size="sm"
                       title="Tambah"
+                      display={features_access ? "flex" : "none"}
                       onClick={() => {
                         // begitu tambah dipenyek, maka muncul btn simpan
                         setIsEditingLinkedIn(true);

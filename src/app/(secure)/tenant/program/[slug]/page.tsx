@@ -23,14 +23,50 @@ import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
 import ModalEditProgram from "./modal-edit-program";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
+import { UserRoles, permissions } from "@/app/type/role-access-control.d";
+import { useAuth } from "@/app/components/utils/AuthContext";
+import NotFound from "@/app/components/template/NotFound";
 
 interface DataItem {
   id: string;
   program: string;
 }
 
+interface UserLog {
+  // id: string;
+  fullname: string;
+  role: UserRoles;
+  image_url: string;
+}
+
 export default function PageProgram({ params }: { params: { slug: string } }) {
-  const hidenCols = ["id"];
+  const { user } = useAuth();
+  let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+  }
+
+  let programFeatures: any | null | undefined = null; // Inisialisasikan fitur pada menunya
+  let allMenu: any | null = null;
+  if (getUser !== null) {
+    // ambil permission sesuai login role
+    programFeatures = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "backPanelTenant_catalog",
+    );
+    //ambil permision features all menu (hanya utk admin)
+    allMenu = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "allmenu",
+    );
+  }
+  let hidenCols: string[] = ["id"];
+  if (
+    (programFeatures?.access.includes("tmbhProgram") &&
+      allMenu?.access.includes("all_access")) === false
+  ) {
+    hidenCols.push("action");
+  } 
+
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -71,7 +107,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
   // console.log(params);
   const idTenant = searchParams.get("id");
   // const idTenant = params.id;
-  const [namaTenant, setNamaTenant] = useState("");
+  const [namaTenant, setNamaTenant] = useState<string | null>();
   const [loadingProgram, setLoadingProgram] = useState<boolean>(false);
   const router = useRouter();
   // if (!params.program) {
@@ -106,7 +142,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
-      setNamaTenant("false");
+      setNamaTenant(null);
       setLoadingProgram(false);
     }
   };
@@ -116,14 +152,12 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
     getProgram();
-    if (namaTenant && namaTenant === "false") {
-      return notFound();
-    }
     // Clear the timeout when the component is unmounted
   }, []);
 
   const renderActions = (rowData: any) => {
-    return (
+    return programFeatures?.access.includes("editProgram") ||
+      allMenu?.access.includes("all_access") ? (
       <>
         <Button
           bgColor="blue.100"
@@ -148,7 +182,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
           <DeleteIcon />
         </Button>
       </>
-    );
+    ) : null;
   };
 
   const handleEdit = (item: any) => {
@@ -223,52 +257,66 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
         </Center>
       ) : (
         <>
-          <Text fontSize="lg" fontWeight="bold"></Text>
+          {namaTenant ? (
+            <>
+              <Text fontSize="lg" fontWeight="bold"></Text>
 
-          <Flex
-            justifyContent={"space-between"}
-            pb="2"
-            direction={["column", "row"]}
-          >
-            <Heading fontSize={"2xl"}>
-              PROGRAM TENANT : {namaTenant.toUpperCase()}
-            </Heading>
-            <HStack>
-              <Button
-                bgColor="grey.400"
-                color="white"
-                _hover={{
-                  bg: "grey.500",
-                }}
-                key="kembali"
-                size="sm"
-                onClick={() => {
-                  router.push("/tenant");
-                }}
+              <Flex
+                justifyContent={"space-between"}
+                pb="2"
+                direction={["column", "row"]}
               >
-                <AiOutlineRollback />
-                &nbsp;Data Tenant
-              </Button>
-              <Button
-                colorScheme="green"
-                key="tambahData"
-                size="sm"
-                onClick={handleAdd}
-              >
-                <AddIcon />
-                &nbsp;Tambah Baru
-              </Button>
-            </HStack>
-          </Flex>
+                <Heading fontSize={"2xl"}>
+                  PROGRAM TENANT : {namaTenant?.toUpperCase()}
+                </Heading>
+                <HStack>
+                  <Button
+                    bgColor="grey.400"
+                    color="white"
+                    _hover={{
+                      bg: "grey.500",
+                    }}
+                    key="kembali"
+                    size="sm"
+                    onClick={() => {
+                      router.push("/tenant");
+                    }}
+                  >
+                    <AiOutlineRollback />
+                    &nbsp;Data Tenant
+                  </Button>
+                  {programFeatures?.access.includes("tmbhProgram") ||
+                  allMenu?.access.includes("all_access") ? (
+                    <Button
+                      colorScheme="green"
+                      key="tambahData"
+                      size="sm"
+                      onClick={handleAdd}
+                    >
+                      <AddIcon />
+                      &nbsp;Tambah Baru
+                    </Button>
+                  ) : null}
+                </HStack>
+              </Flex>
 
-          <DataTable
-            data={dataProgram}
-            column={columns}
-            hiddenColumns={hidenCols}
-            filterOptions={filterOptions}
-          >
-            {(rowData: any) => renderActions(rowData)}
-          </DataTable>
+              <DataTable
+                data={dataProgram}
+                column={columns}
+                hiddenColumns={hidenCols}
+                filterOptions={filterOptions}
+              >
+                {(rowData: any) => renderActions(rowData)}
+              </DataTable>
+            </>
+          ) : (
+            <NotFound
+              statusCode={404}
+              msg={"Not Found"}
+              statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman tenant."
+              backToHome="/tenant"
+            />
+          )}
         </>
       )}
 

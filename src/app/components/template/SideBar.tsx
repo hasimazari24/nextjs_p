@@ -18,6 +18,7 @@ import { IconType } from "react-icons";
 import { useAuth } from "../utils/AuthContext";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 
 interface LinkItemProps {
   name: string;
@@ -73,7 +74,7 @@ const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
         role="group"
         cursor="pointer"
         _hover={{
-          bg: "cyan.400",
+          bg: "red.400",
           color: "white",
         }}
         {...rest}
@@ -104,20 +105,11 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
 
   const renderMenu = () => {
     if (getUser) {
-      if (getUser?.role === "Super Admin") {
-        return LinkItems_admin.map((link) => (
-          <NavItem key={link.name} icon={link.icon} link={link.href}>
-            {link.name}
-          </NavItem>
-        ));
-      }
-      if (getUser?.role === "Tenant") {
-        return LinkItems_tenant.map((link) => (
-          <NavItem key={link.name} icon={link.icon} link={link.href}>
-            {link.name}
-          </NavItem>
-        ));
-      }
+      return permissions[getUser.role]?.link_menu.map((link) => (
+        <NavItem key={link.name} icon={link.icon} link={link.href}>
+          {link.name}
+        </NavItem>
+      ));
     }
   };
   return (

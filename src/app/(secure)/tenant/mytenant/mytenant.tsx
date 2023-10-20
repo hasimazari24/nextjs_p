@@ -55,6 +55,8 @@ import {
   HamburgerIcon,
 } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
+import { UserRoles, permissions } from "@/app/type/role-access-control.d";
+import { useAuth } from "@/app/components/utils/AuthContext";
 // import SplitWithImage from '@/app/(public)/portofolio-detail/page';
 
 interface MyTenantProps {
@@ -65,6 +67,13 @@ interface tenantLinks {
   id: string;
   title: string;
   url: string;
+}
+
+interface UserLog {
+  // id: string;
+  fullname: string;
+  role: UserRoles;
+  image_url: string;
 }
 
 export default function MyTenant() {
@@ -120,10 +129,32 @@ export default function MyTenant() {
   };
 
   const [is_admin, setIs_Admin] = useState<boolean>(dataMyTenant?.is_admin);
+  const { user } = useAuth();
+  let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+  }
+
+  let myTenant: any | null | undefined = null; 
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
     getMyTenant();
+    if (is_admin) {
+      if (getUser !== null) {
+        // ambil permission sesuai login role
+        myTenant = permissions[getUser.role]?.features.find(
+          (feature) => feature.menu === "myTenant",
+        );
+        // console.log(backPanelTenantFeatures);
+        // console.log(allMenu);
+        // console.log(
+        //   backPanelTenantFeatures?.access.includes("editTenant") ||
+        //     allMenu?.access.includes("all_access"),
+        // );
+      }
+    }
     // Clear the timeout when the component is unmounted
   }, []);
 

@@ -11,11 +11,12 @@ import {
 import AlertBar from "../modal/AlertBar";
 import { useRouter } from "next/navigation";
 import { axiosCustom } from "../../api/axios";
+import { UserRoles } from "@/app/type/role-access-control";
 
 interface User {
   // id: string;
   fullname: string;
-  role: string;
+  role: UserRoles;
   image_url: string;
 }
 
