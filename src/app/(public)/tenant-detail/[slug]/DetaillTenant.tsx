@@ -21,6 +21,8 @@ import {
 } from "@chakra-ui/react";
 import ContactInfo from "./ContactTenant";
 import { FaInfo, FaMedal } from "react-icons/fa"; // Tambahkan import untuk ikon FaInfo
+import { AiOutlineCrown } from "react-icons/ai";
+import { wrap } from "module";
 
 const DetailComponent = () => {
   return (
@@ -96,6 +98,13 @@ const DetailComponent = () => {
             alignItems="flex-start"
             justifyContent="flex-start"
           >
+            <ContactInfo
+              icon={AiOutlineCrown}
+              title="Founder"
+              content="Alex Major"
+              label="founder"
+              size={24}
+            />
             <ContactInfo
               icon={MdMailOutline}
               title="Email"

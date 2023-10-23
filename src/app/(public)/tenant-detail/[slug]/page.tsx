@@ -22,6 +22,8 @@ import {
 } from "@chakra-ui/react";
 import Awards from "../../template/AwardTenant";
 import DetailComponent from "./DetaillTenant";
+import DetailSocial from "./DetailSocial";
+import TeamTenant from "../TeamTenant";
 
 import { IoMedal, IoLogoFacebook } from "react-icons/io5";
 import { FaMedal, FaInfo } from "react-icons/fa";
@@ -58,13 +60,14 @@ export default function TenantDetail() {
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
             backgroundPosition="center"
+            aria-label="background-cover"
             position="absolute"
             filter="auto"
             brightness="60%"
             top={0}
             left={0}
-            w="100%"
-            h="100%"
+            w={"100%"}
+            h={"100%"}
           />
 
           {/* Tulisan */}
@@ -165,18 +168,11 @@ export default function TenantDetail() {
                 OUR ACHIEVEMENT
               </Text>
             </HStack>
-            <Text
-              fontWeight="bold"
-              color="white"
-              fontSize={["xl", "2xl", "3xl"]}
-            >
-              Prestasi yang Kami Raih
-            </Text>
           </VStack>
           <Stack
             // align={{ base: "start", md: "center" }}
             justify={{ base: "start", md: "center" }}
-            spacing={"6"}
+            spacing={['2','6']}
             direction={{ base: "column", md: "row" }}
           >
             <>
@@ -187,9 +183,13 @@ export default function TenantDetail() {
           </Stack>
         </Stack>
         {/* </Flex> */}
-        <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
+        <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }} my={'50px'}>
           <DetailComponent></DetailComponent>
         </Container>
+        <Container maxW={"full"} px={'full'} my={'50px'} >
+          <DetailSocial></DetailSocial>
+        </Container>
+        <TeamTenant></TeamTenant>
       </Stack>
       {/* </Center> */}
       {/* </Stack> */}
