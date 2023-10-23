@@ -16,6 +16,7 @@ import {
   HStack,
   Heading,
   Flex,
+  Avatar,
 } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
@@ -31,6 +32,8 @@ interface DataItem {
   id: string;
   title: string;
   description: string;
+  image_id: string;
+  image_url: string;
 }
 
 interface UserLog {
@@ -93,6 +96,12 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
   const filterOptions = [{ key: "title", label: "Judul" }];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
+    {
+      Header: "Avatar",
+      accessor: "image_url",
+      Cell: ({ value }) => <Avatar size={"sm"} src={value} />,
+      width: "30px",
+    },
     {
       Header: "id",
       accessor: "id",
