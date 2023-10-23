@@ -24,6 +24,11 @@ import {
   IconButton,
   Stack,
   Image,
+  RadioGroup,
+  Radio,
+  SimpleGrid,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -55,6 +60,7 @@ interface FormValues {
   level_tenant: string;
   image?: string;
   image_banner?: string;
+  is_public?:boolean;
 }
 
 const ModalEdit: React.FC<ModalProps> = ({
@@ -122,6 +128,7 @@ const ModalEdit: React.FC<ModalProps> = ({
       email: `${data.email}`,
       founder: `${data.founder}`,
       level_tenant: `${data.level_tenant}`,
+      is_public: data.is_public === "true" ? true : false,
     };
     // append jika idimgava not null
     if (idImageAvatar) dataBaru.image = idImageAvatar;
@@ -159,11 +166,11 @@ const ModalEdit: React.FC<ModalProps> = ({
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
-      setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+      setPreviewAvatar(null); // reset preview
       setIdImageAvatarOld(null); // kosongkan idimage
       setIdImageAvatar(null); // kosongkan idimage
       setBtnDeleteAvatar(false); // hilangkan btndelete image
-      setPreviewBanner("/img/tenant-banner-default.jpg"); // reset preview
+      setPreviewBanner(null); // reset preview
       setIdImageBannerOld(null); // kosongkan idimagebanner
       setIdImageBanner(null); // kosongkan idimagebanner
       setBtnDeleteBanner(false); // hilangkan btndelete image banner
@@ -183,9 +190,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
   const [isHovered, setIsHovered] = useState(false);
   const [avatar, setAvatar] = useState<File>();
-  const [previewAvatar, setPreviewAvatar] = useState<string>(
-    "/img/tenant-logo-default.jpg",
-  );
+  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
   const [btnDeleteAvatar, setBtnDeleteAvatar] = useState<Boolean>(false);
@@ -204,7 +209,7 @@ const ModalEdit: React.FC<ModalProps> = ({
     } else {
       setIdImageAvatar(`delete=${idImageAvatarOld}`);
     }
-    setPreviewAvatar("/img/avatar-default.jpg");
+    setPreviewAvatar(null);
     setIdImageAvatarOld(null);
     setBtnDeleteAvatar(false);
   };
@@ -259,9 +264,7 @@ const ModalEdit: React.FC<ModalProps> = ({
 
   const [isHoveredBanner, setIsHoveredBanner] = useState(false);
   const [banner, setBanner] = useState<File>();
-  const [previewBanner, setPreviewBanner] = useState<string>(
-    "/img/tenant-banner-default.jpg",
-  );
+  const [previewBanner, setPreviewBanner] = useState<string | null>(null);
   const [idImageBanner, setIdImageBanner] = useState<string | null>(null);
   const [idImageBannerOld, setIdImageBannerOld] = useState<string | null>(null);
   const [btnDeleteBanner, setBtnDeleteBanner] = useState<Boolean>(false);
@@ -280,7 +283,7 @@ const ModalEdit: React.FC<ModalProps> = ({
     } else {
       setIdImageBanner(`delete=${idImageBannerOld}`);
     }
-    setPreviewBanner("/img/avatar-default.jpg");
+    setPreviewBanner(null);
     setIdImageBannerOld(null);
     setBtnDeleteBanner(false);
   };
@@ -387,16 +390,16 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
-          setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+          setPreviewAvatar(null); // reset preview
           setIdImageAvatarOld(null); // kosongkan idimage
           setIdImageAvatar(null); // kosongkan idimage
           setBtnDeleteAvatar(false); // hilangkan btndelete image
-          setPreviewBanner("/img/tenant-banner-default.jpg"); // reset preview
+          setPreviewBanner(null); // reset preview
           setIdImageBannerOld(null); // kosongkan idimagebanner
           setIdImageBanner(null); // kosongkan idimagebanner
           setBtnDeleteBanner(false); // hilangkan btndelete image banner
         }}
-        size="xl"
+        size="6xl"
       >
         <ModalOverlay />
         <ModalContent>
@@ -404,310 +407,415 @@ const ModalEdit: React.FC<ModalProps> = ({
             <ModalHeader>{isEdit ? "Edit Data" : "Tambah Data"}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <div className="data-form">
-                <Hide>
-                  <FormControl isInvalid={!!errors.id} mb="3">
-                    <Input
-                      type="text"
-                      {...register("id")}
-                      defaultValue={formData?.id}
-                      // className={`form-control ${errors.name ? "is-invalid"}`}
-                    />
-                    <FormErrorMessage>
-                      {errors.id && errors.id.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </Hide>
-
-                <FormControl isInvalid={!!errors.name} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Nama</FormLabel>
+              <Stack direction={["column", "row"]} spacing={8}>
+                <Box>
+                  <Input
+                    ref={inputFile}
+                    style={{ display: "none" }}
+                    type="file"
+                    onChange={(e) => onFileChange(e.target.files, "logo")}
+                  />
+                  <Box mt={3} textAlign={"center"}>
+                    Avatar
+                  </Box>
+                  <Flex
+                    justify={"center"}
+                    //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
+                  >
+                    <Box
+                      mt={1}
+                      position="relative"
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      mb="3"
+                      cursor={"pointer"}
+                      boxShadow="md"
+                      borderRadius="full"
+                      borderColor="gray.300"
+                      borderWidth={"2px"}
+                      // rounded={"md"}
+                    >
+                      <Image
+                        src={previewAvatar || "/img/tenant-logo-default.png"}
+                        h={"150px"}
+                        w={"150px"}
+                        fit="cover"
+                        borderRadius="full"
+                        alt="Preview Avatar"
+                      />
+                      <Stack
+                        position="absolute"
+                        bottom="0"
+                        right="0"
+                        padding="2"
+                        spacing="2"
+                        direction="column"
+                        background="rgba(0, 0, 0, 0.7)"
+                        opacity={isHovered ? 1 : 0} // Mengatur opacity berdasarkan isHovered
+                        transition="opacity 0.2s ease-in-out" // Efek transisi
+                        h={"100%"}
+                        w="100%"
+                        justifyContent={"center"}
+                        align={"center"}
+                        borderRadius="full"
+                      >
+                        <HStack spacing="1">
+                          {!isLoading && (
+                            <IconButton
+                              onClick={onButtonEditAvatar}
+                              aria-label="Edit"
+                              title="Ubah"
+                              icon={<AiOutlineCamera size="20px" />}
+                              colorScheme="teal"
+                            />
+                          )}
+                          {!isLoading && btnDeleteAvatar && (
+                            <IconButton
+                              onClick={onButtonDeleteAvatar}
+                              aria-label="Delete"
+                              title="Hapus"
+                              icon={<DeleteIcon />}
+                              colorScheme="red"
+                            />
+                          )}
+                        </HStack>
+                      </Stack>
                     </Box>
-                    <Box flex={["1", "80%"]}>
+                  </Flex>
+
+                  <Input
+                    ref={inputBanner}
+                    style={{ display: "none" }}
+                    type="file"
+                    onChange={(e) => onFileChange(e.target.files, "banner")}
+                  />
+                  <Box mt={3} textAlign={"center"}>
+                    Banner
+                  </Box>
+                  <Flex
+                    justify={"center"}
+                    //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
+                  >
+                    <Box
+                      mt={1}
+                      position="relative"
+                      onMouseEnter={handleMouseEnterBanner}
+                      onMouseLeave={handleMouseLeaveBanner}
+                      mb="3"
+                      cursor={"pointer"}
+                      boxShadow="md"
+                      borderColor="gray.300"
+                      borderWidth={"2px"}
+                      rounded={"md"}
+                    >
+                      <Image
+                        src={previewBanner || "/img/tenant-banner-default.jpg"}
+                        w={{ base: "200px", sm: "300px", lg: "300px" }}
+                        h={"auto"}
+                        minH="100px"
+                        fit="cover"
+                        alt="Preview Banner"
+                      />
+                      <Stack
+                        position="absolute"
+                        bottom="0"
+                        right="0"
+                        padding="2"
+                        spacing="2"
+                        direction="column"
+                        background="rgba(0, 0, 0, 0.7)"
+                        opacity={isHoveredBanner ? 1 : 0} // Mengatur opacity berdasarkan isHovered
+                        transition="opacity 0.2s ease-in-out" // Efek transisi
+                        // h={previewBanner ? "100%" : "200px"}
+                        h="100%"
+                        minH="100px"
+                        w={"100%"}
+                        justifyContent={"center"}
+                        align={"center"}
+                        rounded={"md"}
+                      >
+                        <HStack spacing="1">
+                          {!isLoading && (
+                            <IconButton
+                              onClick={onButtonEditBanner}
+                              aria-label="Edit"
+                              title="Ubah"
+                              icon={<AiOutlineCamera size="20px" />}
+                              colorScheme="teal"
+                            />
+                          )}
+                          {!isLoading && btnDeleteBanner && (
+                            <IconButton
+                              onClick={onButtonDeleteBanner}
+                              aria-label="Delete"
+                              title="Hapus"
+                              icon={<DeleteIcon />}
+                              colorScheme="red"
+                            />
+                          )}
+                        </HStack>
+                      </Stack>
+                    </Box>
+                  </Flex>
+                </Box>
+                <Box w="full">
+                  <Hide>
+                    <FormControl isInvalid={!!errors.id} mb="3">
                       <Input
                         type="text"
-                        {...fields.name}
-                        defaultValue={formData?.name}
+                        {...register("id")}
+                        defaultValue={formData?.id}
                         // className={`form-control ${errors.name ? "is-invalid"}`}
                       />
                       <FormErrorMessage>
-                        {errors.name && errors.name.message}
+                        {errors.id && errors.id.message}
                       </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.description} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Deskripsi</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Textarea
-                        {...fields.description}
-                        defaultValue={formData?.description}
-                      />
-                      <FormErrorMessage>
-                        {errors.description && errors.description.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.address} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Alamat</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Textarea
-                        {...fields.address}
-                        height="10px"
-                        defaultValue={formData?.address}
-                      />
-                      <FormErrorMessage>
-                        {errors.address && errors.address.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.motto} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Motto</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...fields.motto}
-                        defaultValue={formData?.motto}
-                      />
-                      <FormErrorMessage>
-                        {errors.motto && errors.motto.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.contact} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Kontak</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...fields.contact}
-                        defaultValue={formData?.contact}
-                      />
-                      <FormErrorMessage>
-                        {errors.contact && errors.contact.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.email} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>E-Mail</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        // type="text"
-                        {...fields.email}
-                        defaultValue={formData?.email}
-                      />
-                      <FormErrorMessage>
-                        {errors.email && errors.email.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.founder} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Founder</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...fields.founder}
-                        defaultValue={formData?.founder}
-                      />
-                      <FormErrorMessage>
-                        {errors.founder && errors.founder.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.level_tenant} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Level Tenant</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Select
-                        defaultValue={formData?.level_tenant}
-                        {...fields.level_tenant}
+                    </FormControl>
+                  </Hide>
+                  <FormControl as="fieldset" mb="3">
+                    <Flex
+                      flexDir={{ base: "column", md: "row" }}
+                      // align={{ base: "start", md: "center" }}
+                    >
+                      <Box
+                        minWidth={["100%", "100px"]}
+                        marginRight={["0", "2"]}
                       >
-                        <option value="Pra Inkubasi">Pra Inkubasi</option>
-                        <option value="Inkubasi">Inkubasi</option>
-                        <option value="Inkubasi Lanjutan">
-                          Inkubasi Lanjutan
-                        </option>
-                        <option value="Scale Up">Scale Up</option>
-                      </Select>
-                      <FormErrorMessage>
-                        {errors.level_tenant && errors.level_tenant.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
-
-                <Input
-                  ref={inputFile}
-                  style={{ display: "none" }}
-                  type="file"
-                  onChange={(e) => onFileChange(e.target.files, "logo")}
-                />
-                <Box mt={3} textAlign={"center"}>
-                  Avatar
-                </Box>
-                <Flex
-                  justify={"center"}
-                  //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
-                >
-                  <Box
-                    mt={1}
-                    position="relative"
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    mb="3"
-                    cursor={"pointer"}
+                        <FormLabel>Tampilkan ke halaman public ?</FormLabel>
+                      </Box>
+                      <Box flex={["1", "50%"]}>
+                        <RadioGroup
+                          defaultValue={
+                            formData ? (formData.is_public === true ? "true" : "false") : "true"
+                          }
+                        >
+                          <Radio value="true" pr="4" {...register("is_public")}>
+                            Ya
+                          </Radio>
+                          <Radio value="false" {...register("is_public")}>
+                            Tidak
+                          </Radio>
+                        </RadioGroup>
+                      </Box>
+                    </Flex>
+                  </FormControl>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2 }}
+                    spacing={{ base: "0", md: "4" }}
+                    w="auto"
                   >
-                    <Image
-                      src={previewAvatar}
-                      h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w={{ base: "100px", sm: "200px", lg: "200px" }}
-                      fit="cover"
-                      borderRadius="full"
-                      alt="Preview Avatar"
-                    />
-                    <Stack
-                      position="absolute"
-                      bottom="0"
-                      right="0"
-                      padding="2"
-                      spacing="2"
-                      direction="column"
-                      background="rgba(0, 0, 0, 0.7)"
-                      opacity={isHovered ? 1 : 0} // Mengatur opacity berdasarkan isHovered
-                      transition="opacity 0.2s ease-in-out" // Efek transisi
-                      h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w="100%"
-                      justifyContent={"center"}
-                      align={"center"}
-                      borderRadius="full"
-                    >
-                      <HStack spacing="1">
-                        {!isLoading && (
-                          <IconButton
-                            onClick={onButtonEditAvatar}
-                            aria-label="Edit"
-                            title="Ubah"
-                            icon={<AiOutlineCamera size="20px" />}
-                            colorScheme="teal"
-                          />
-                        )}
-                        {!isLoading && btnDeleteAvatar && (
-                          <IconButton
-                            onClick={onButtonDeleteAvatar}
-                            aria-label="Delete"
-                            title="Hapus"
-                            icon={<DeleteIcon />}
-                            colorScheme="red"
-                          />
-                        )}
-                      </HStack>
-                    </Stack>
-                  </Box>
-                </Flex>
+                    <FormControl isInvalid={!!errors.name} mb="3">
+                      <Flex
+                        flexDir={{ base: "column", md: "row" }}
+                        align={{ base: "start", md: "center" }}
+                      >
+                        <Box
+                          minWidth={["100%", "100px"]}
+                          marginRight={["0", "2"]}
+                        >
+                          <FormLabel marginRight="2">Nama</FormLabel>
+                        </Box>
 
-                <Input
-                  ref={inputBanner}
-                  style={{ display: "none" }}
-                  type="file"
-                  onChange={(e) => onFileChange(e.target.files, "banner")}
-                />
-                <Box mt={3} textAlign={"center"}>
-                  Banner
-                </Box>
-                <Flex
-                  justify={"center"}
-                  //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
-                >
-                  <Box
-                    mt={1}
-                    position="relative"
-                    onMouseEnter={handleMouseEnterBanner}
-                    onMouseLeave={handleMouseLeaveBanner}
-                    mb="3"
-                    cursor={"pointer"}
-                  >
-                    <Image
-                      src={previewBanner}
-                      h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w={"auto"}
-                      fit="cover"
-                      // borderRadius="full"
-                      rounded={"md"}
-                      alt="Preview Banner"
-                    />
-                    <Stack
-                      position="absolute"
-                      bottom="0"
-                      right="0"
-                      padding="2"
-                      spacing="2"
-                      direction="column"
-                      background="rgba(0, 0, 0, 0.7)"
-                      opacity={isHoveredBanner ? 1 : 0} // Mengatur opacity berdasarkan isHovered
-                      transition="opacity 0.2s ease-in-out" // Efek transisi
-                      h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w="100%"
-                      justifyContent={"center"}
-                      align={"center"}
-                      rounded={"md"}
+                        <Box width="full">
+                          <Input
+                            type="text"
+                            {...fields.name}
+                            defaultValue={formData?.name}
+                            // className={`form-control ${errors.name ? "is-invalid"}`}
+                          />
+                          <FormErrorMessage>
+                            {errors.name && errors.name.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+
+                    <FormControl isInvalid={!!errors.founder} mb="3">
+                      <Flex
+                        flexDir={{ base: "column", md: "row" }}
+                        align={{ base: "start", md: "center" }}
+                      >
+                        <Box
+                          minWidth={["100%", "80px"]}
+                          marginRight={["0", "2"]}
+                        >
+                          <FormLabel>Founder</FormLabel>
+                        </Box>
+                        <Box w="full">
+                          <Input
+                            type="text"
+                            {...fields.founder}
+                            defaultValue={formData?.founder}
+                          />
+                          <FormErrorMessage>
+                            {errors.founder && errors.founder.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+                  </SimpleGrid>
+                  <FormControl isInvalid={!!errors.description} mb="3">
+                    <Flex
+                      flexDir={{ base: "column", md: "row" }}
+                      align={{ base: "start", md: "center" }}
                     >
-                      <HStack spacing="1">
-                        {!isLoading && (
-                          <IconButton
-                            onClick={onButtonEditBanner}
-                            aria-label="Edit"
-                            title="Ubah"
-                            icon={<AiOutlineCamera size="20px" />}
-                            colorScheme="teal"
+                      <Box
+                        minWidth={["100%", "100px"]}
+                        marginRight={["0", "2"]}
+                      >
+                        <FormLabel>Deskripsi</FormLabel>
+                      </Box>
+                      <Box w="full">
+                        <Textarea
+                          {...fields.description}
+                          defaultValue={formData?.description}
+                        />
+                        <FormErrorMessage>
+                          {errors.description && errors.description.message}
+                        </FormErrorMessage>
+                      </Box>
+                    </Flex>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.address} mb="3">
+                    <Flex
+                      flexDir={{ base: "column", md: "row" }}
+                      align={{ base: "start", md: "center" }}
+                    >
+                      <Box
+                        minWidth={["100%", "100px"]}
+                        marginRight={["0", "2"]}
+                      >
+                        <FormLabel>Alamat</FormLabel>
+                      </Box>
+                      <Box w="full">
+                        <Textarea
+                          {...fields.address}
+                          height="10px"
+                          defaultValue={formData?.address}
+                        />
+                        <FormErrorMessage>
+                          {errors.address && errors.address.message}
+                        </FormErrorMessage>
+                      </Box>
+                    </Flex>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.motto} mb="3">
+                    <Flex
+                      flexDir={{ base: "column", md: "row" }}
+                      align={{ base: "start", md: "center" }}
+                    >
+                      <Box
+                        minWidth={["100%", "100px"]}
+                        marginRight={["0", "2"]}
+                      >
+                        <FormLabel>Motto</FormLabel>
+                      </Box>
+                      <Box w="full">
+                        <Textarea
+                          {...fields.motto}
+                          height="10px"
+                          defaultValue={formData?.motto}
+                        />
+                        <FormErrorMessage>
+                          {errors.motto && errors.motto.message}
+                        </FormErrorMessage>
+                      </Box>
+                    </Flex>
+                  </FormControl>
+
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2 }}
+                    spacing={{ base: "0", md: "4" }}
+                    w="auto"
+                  >
+                    <FormControl isInvalid={!!errors.contact} mb="3">
+                      <Flex
+                        flexDir={{ base: "column", md: "row" }}
+                        align={{ base: "start", md: "center" }}
+                      >
+                        <Box
+                          minWidth={["100%", "100px"]}
+                          marginRight={["0", "2"]}
+                        >
+                          <FormLabel>Kontak</FormLabel>
+                        </Box>
+                        <Box w="full">
+                          <Input
+                            type="text"
+                            {...fields.contact}
+                            defaultValue={formData?.contact}
                           />
-                        )}
-                        {!isLoading && btnDeleteBanner && (
-                          <IconButton
-                            onClick={onButtonDeleteBanner}
-                            aria-label="Delete"
-                            title="Hapus"
-                            icon={<DeleteIcon />}
-                            colorScheme="red"
+                          <FormErrorMessage>
+                            {errors.contact && errors.contact.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+
+                    <FormControl isInvalid={!!errors.email} mb="3">
+                      <Flex
+                        flexDir={{ base: "column", md: "row" }}
+                        align={{ base: "start", md: "center" }}
+                      >
+                        <Box
+                          minWidth={["100%", "80px"]}
+                          marginRight={["0", "2"]}
+                        >
+                          <FormLabel>E-Mail</FormLabel>
+                        </Box>
+                        <Box w="full">
+                          <Input
+                            // type="text"
+                            {...fields.email}
+                            defaultValue={formData?.email}
                           />
-                        )}
-                      </HStack>
-                    </Stack>
-                  </Box>
-                </Flex>
-              </div>
+                          <FormErrorMessage>
+                            {errors.email && errors.email.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+                  </SimpleGrid>
+                  <SimpleGrid
+                    columns={{ base: 1, md: 2 }}
+                    spacing={{ base: "0", md: "4" }}
+                    w="auto"
+                  >
+                    <FormControl isInvalid={!!errors.level_tenant} mb="3">
+                      <Flex
+                        flexDir={{ base: "column", md: "row" }}
+                        align={{ base: "start", md: "center" }}
+                      >
+                        <Box
+                          minWidth={["100%", "100px"]}
+                          marginRight={["0", "2"]}
+                        >
+                          <FormLabel>Level Tenant</FormLabel>
+                        </Box>
+                        <Box w="full">
+                          <Select
+                            defaultValue={formData?.level_tenant}
+                            {...fields.level_tenant}
+                          >
+                            <option value="Pra Inkubasi">Pra Inkubasi</option>
+                            <option value="Inkubasi">Inkubasi</option>
+                            <option value="Inkubasi Lanjutan">
+                              Inkubasi Lanjutan
+                            </option>
+                            <option value="Scale Up">Scale Up</option>
+                          </Select>
+                          <FormErrorMessage>
+                            {errors.level_tenant && errors.level_tenant.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+                    <></>
+                  </SimpleGrid>
+                </Box>
+              </Stack>
             </ModalBody>
             <ModalFooter>
               <Button
@@ -727,11 +835,11 @@ const ModalEdit: React.FC<ModalProps> = ({
                   onClose();
                   reset();
                   setIsLoading(false);
-                  setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+                  setPreviewAvatar(null); // reset preview
                   setIdImageAvatarOld(null); // kosongkan idimage
                   setIdImageAvatar(null); // kosongkan idimage
                   setBtnDeleteAvatar(false); // hilangkan btndelete image
-                  setPreviewBanner("/img/tenant-banner-default.jpg"); // reset preview
+                  setPreviewBanner(null); // reset preview
                   setIdImageBannerOld(null); // kosongkan idimagebanner
                   setIdImageBanner(null); // kosongkan idimagebanner
                   setBtnDeleteBanner(false); // hilangkan btndelete image banner

@@ -18,6 +18,7 @@ import {
   MenuList,
   Box,
   Avatar,
+  Checkbox,
 } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalNotif from "../../components/modal/modal-notif";
@@ -26,6 +27,7 @@ import { useRouter } from "next/navigation";
 // import { useNavigate } from "react-router-dom";
 import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
 import { SiMicrosoftteams } from "react-icons/si";
+import { BsCalendar2Event } from "react-icons/bs";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { BiLinkExternal, BiBookBookmark } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
@@ -50,6 +52,7 @@ interface DataItem {
   image_banner_id: string;
   image_url: string;
   image_banner_url: string;
+  is_public: boolean;
   // tenant_link : [{
   //   id : string,
   //   title:string,
@@ -183,8 +186,26 @@ function PageTenant() {
       Header: "Level Tenant",
       accessor: "level_tenant",
       width: "150px",
+      filter: (rows, id, filterValues) => {
+        if (filterValues === "") {
+          return rows;
+        }
+        return rows.filter((row) => row.values["level_tenant"] === filterValues);
+      },
       minWidth: 160,
       maxWidth: 200,
+    },
+    {
+      Header: "Show Public",
+      accessor: "is_public",
+      width: 40,
+      minWidth: 40,
+      Cell: ({ value }) =>
+        value ? (
+          <Center>
+            <Checkbox defaultChecked isDisabled size="lg" />
+          </Center>
+        ) : null,
     },
   ];
 
@@ -246,6 +267,11 @@ function PageTenant() {
       label: "Level",
       values: ["Pra Inkubasi", "Inkubasi", "Inkubasi Lanjutan", "Scale Up"],
     },
+    {
+      key: "is_public",
+      label: "Hanya Public",
+      type: "val_check",
+    },
   ];
 
   const renderActions = (rowData: any) => {
@@ -295,6 +321,12 @@ function PageTenant() {
             >
               <GrTrophy />
               &nbsp; Awards Tenant
+            </MenuItem>
+            <MenuItem
+              onClick={() => router.push(`/tenant/gallery/${rowData.id}`)}
+            >
+              <BsCalendar2Event />
+              &nbsp; Gallery Events Tenant
             </MenuItem>
             <MenuItem onClick={() => handleSocial(rowData)}>
               <GrShareOption />
@@ -406,7 +438,7 @@ function PageTenant() {
 
   return (
     <div>
-      {getUser?.role === "Super Admin" || "Management" || "Mentor" ? (
+      {getUser?.role !== "Tenant" ? (
         <>
           {isLoading ? (
             <Center h="100%" m="10">
