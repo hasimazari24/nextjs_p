@@ -70,29 +70,14 @@ const ModalTeam: React.FC<ModalProps> = ({
   };
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalNotif, setModalNotif] = useState(false);
+  const [isModalNotifTeam, setModalNotifTeam] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const handleShowMessage = (msg: string, err: boolean) => {
+    setModalNotifTeam(true);
     setMessage(msg);
     setIsError(err);
-    setModalNotif(true);
   };
-
-   const [selectedOption, setSelectedOption] = useState<boolean | undefined>(
-     undefined,
-   );
-   const handleIsAdmin = (value: string) => {
-     setSelectedOption(value === "ya_admin");
-   };
-
-   //pastikan nilai di dalam() sesuai default valuenya radioSelected
-   const [selectedIsPublic, setSelecteIsPublic] = useState<boolean | undefined>(
-     undefined,
-   );
-   const handleIsPublic = (value: string) => {
-     setSelecteIsPublic(value === "ya_public");
-   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
@@ -107,19 +92,16 @@ const ModalTeam: React.FC<ModalProps> = ({
         is_public: data.is_public === "ya_public" ? true : false,
       };
       // console.log(simpan);
-      await axiosCustom 
-        .put(`/tenant/${idTenant}/update-user`, simpan)
-        .then((response) => {
-          // setData(response.data.data);
-
-          if (response.status === 200) {
-            handleShowMessage("Data berhasil diubah.", false);
-          }
-        });
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
-      onClose(); // Tutup modal
-      reset(); // Reset formulir
-      setIsLoading(false);
+      const response = await axiosCustom.put(`/tenant/${idTenant}/update-user`, simpan);
+      if (response.status === 200) {
+        setModalNotifTeam(true);
+        handleShowMessage("Data berhasil diubah.", false);
+        onSubmit();
+        onClose(); // Tutup modal
+        reset(); // Reset formulir
+        setIsLoading(false);
+      }
+      
     } catch (error: any) {
       console.error(error);
       if (error?.response) {
@@ -132,7 +114,6 @@ const ModalTeam: React.FC<ModalProps> = ({
     }
   };
 
-  console.log(formData?.is_admin);
   return (
     <>
       <Modal
@@ -264,13 +245,14 @@ const ModalTeam: React.FC<ModalProps> = ({
           </form>
         </ModalContent>
       </Modal>
-
-      <ModalNotif
-        isOpen={isModalNotif}
-        onClose={() => setModalNotif(false)}
-        message={message}
-        isError={isError}
-      />
+      <div id="notif2">
+        <ModalNotif
+          isOpen={isModalNotifTeam}
+          onClose={() => setModalNotifTeam(false)}
+          message={message}
+          isError={isError}
+        />
+      </div>
     </>
   );
 };

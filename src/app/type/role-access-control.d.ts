@@ -69,7 +69,15 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: [],
       },
       {
-        menu: "backPanelTenant_team",
+        menu: "backPanelTenant_team_login",
+        access: [],
+      },
+      {
+        menu: "backPanelTenant_team_nonlogin",
+        access: [],
+      },
+      {
+        menu: "backPanelTenant_team_social",
         access: [],
       },
       {
@@ -104,8 +112,16 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: ["editCatalog", "hapusCatalog", "tmbhCatalog"],
       },
       {
-        menu: "backPanelTenant_team",
+        menu: "backPanelTenant_team_login",
         access: ["editTeam", "hapusTeam", "tmbhTeam"],
+      },
+      {
+        menu: "backPanelTenant_team_nonlogin",
+        access: ["editTeam", "hapusTeam", "tmbhTeam"],
+      },
+      {
+        menu: "backPanelTenant_team_social",
+        access: ["all_access"],
       },
       {
         menu: "backPanelTenant_links",
@@ -139,7 +155,15 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: [],
       },
       {
-        menu: "backPanelTenant_team",
+        menu: "backPanelTenant_team_login",
+        access: [],
+      },
+      {
+        menu: "backPanelTenant_team_nonlogin",
+        access: [],
+      },
+      {
+        menu: "backPanelTenant_team_social",
         access: [],
       },
       {
@@ -174,7 +198,15 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: [],
       },
       {
-        menu: "backPanelTenant_team",
+        menu: "backPanelTenant_team_login",
+        access: [],
+      },
+      {
+        menu: "backPanelTenant_team_nonlogin",
+        access: [],
+      },
+      {
+        menu: "backPanelTenant_team_social",
         access: [],
       },
       {
