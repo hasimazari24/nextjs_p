@@ -150,8 +150,8 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                     mb="2"
                   >
                     <option value="">Semua {option.label}</option>
-                    {option.values.map((value) => (
-                      <option key={value} value={value}>
+                    {option.values.map((value, index) => (
+                      <option key={index} value={value}>
                         {value}
                       </option>
                     ))}

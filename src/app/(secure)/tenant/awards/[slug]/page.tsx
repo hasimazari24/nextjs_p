@@ -165,9 +165,17 @@ function PageAwards({ params }: { params: { slug: string } }) {
     return awardsFeatures?.access.includes("editAwards") ||
       allMenu?.access.includes("all_access") ? (
       <HStack>
-        <EditAwards idTenant={getParamsId} rowData={rowData} />
+        <EditAwards
+          idTenant={getParamsId}
+          rowData={rowData}
+          onSubmit={() => fetchData()}
+        />
         &nbsp;
-        <DeleteAwards idTenant={getParamsId} dataDelete={rowData} />
+        <DeleteAwards
+          idTenant={getParamsId}
+          dataDelete={rowData}
+          onSubmit={() => fetchData()}
+        />
         &nbsp;
       </HStack>
     ) : null;
@@ -205,7 +213,10 @@ function PageAwards({ params }: { params: { slug: string } }) {
                   </Button>
                   {awardsFeatures?.access.includes("tmbhAwards") ||
                   allMenu?.access.includes("all_access") ? (
-                    <AddAwards idTenant={getParamsId} />
+                    <AddAwards
+                      idTenant={getParamsId}
+                      onSubmit={() => fetchData()}
+                    />
                   ) : null}
                 </HStack>
               </Flex>

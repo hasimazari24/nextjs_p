@@ -140,7 +140,7 @@ const ModalSocial: React.FC<ModalProps> = ({
     allMenu?.access.includes("all_access");
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingGetData, setIsLoadingGetData] = useState(true);
+  const [isLoadingGetData, setIsLoadingGetData] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -351,6 +351,7 @@ const ModalSocial: React.FC<ModalProps> = ({
   };
 
   const getUpdatedSocial = async () => {
+    setIsLoadingGetData(true);
     if (idTenant) {
       try {
         const response = await axiosCustom.get(`/tenant/${idTenant}/get-link`);
@@ -376,7 +377,7 @@ const ModalSocial: React.FC<ModalProps> = ({
           setIsLoadingGetData(false);
         }
         // console.log(response);
-        // console.log(akunFb);
+        console.log(akunWeb);
       } catch (error: any) {
         if (error?.response) {
           handleShowMessage(
@@ -429,45 +430,12 @@ const ModalSocial: React.FC<ModalProps> = ({
     }
   };
 
-  // const [dataEdited, setDataEdited] = useState<any | null>([]);
-  // const getEdited = () => {
-  //   if (dataEdited && dataEdited.length !== 0 && dataEdited !== null) {
-  //     dataEdited.forEach((data:Formdata) => {
-  //       switch (data.title) {
-  //         case "Website":
-  //           akunWeb.push(data);
-  //           // setAkunWeb(data);
-  //           console.log("kok masuk sih");
-  //           console.log(akunWeb);
-  //           break;
-  //         case "Facebook":
-  //           akunFb.push(data);
-  //           console.log("kok masuk FB");
-  //           console.log(akunFb[0]);
-  //           break;
-  //         case "Instagram":
-  //           akunIg.push(data);
-  //           break;
-  //         case "Twitter":
-  //           akunTw.push(data);
-  //           break;
-  //         case "YouTube":
-  //           akunYt.push(data);
-  //           break;
-  //         case "LinkedIn":
-  //           akunLd.push(data);
-  //           break;
-  //       }
-  //     });
-  //   }
-  // }
-
   useEffect(() => {
     // const [dataEdited, setDataEdited] = useState(formData ? formData : []);
 
     getUpdatedSocial();
     // setDataEdited(formData);
-  }, [idTenant, idUser, isOpen]);
+  }, [isOpen === true]);
 
   // console.log(akunWeb[0]?.url);
   // console.log(akunFb);
@@ -481,6 +449,12 @@ const ModalSocial: React.FC<ModalProps> = ({
     resetTwitter();
     resetYouTube();
     resetLinkedIn();
+    setAkunWeb([]);
+    setAkunFb([]);
+    setAkunIg([]);
+    setAkunTw([]);
+    setAkunYt([]);
+    setAkunLd([]);
   };
 
   const setFalse = () => {
@@ -497,9 +471,9 @@ const ModalSocial: React.FC<ModalProps> = ({
       <Modal
         isOpen={isOpen}
         onClose={() => {
-          onClose();
           resetAll();
           setFalse();
+          onClose();
         }}
         size="lg"
       >
@@ -601,7 +575,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                                       }
                                       onClick={() =>
                                         // begitu tmbl edit dipenyet maka buat status menjalankan edit shg btn diganti btn Simpan (diatas)
-                                        setIsEditingFacebook(!isEditingWebsite)
+                                        setIsEditingWebsite(!isEditingWebsite)
                                       }
                                     />
                                     <IconButton

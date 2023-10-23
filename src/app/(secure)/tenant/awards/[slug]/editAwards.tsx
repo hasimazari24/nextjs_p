@@ -38,12 +38,12 @@ type AwardItem = {
 interface editProps {
   // isOpen: boolean;
   // onClose: () => void; 
-  // onSubmit: (err:boolean) => void;
+  onSubmit: () => void;
   rowData?: any;
   idTenant?: string;
 }
 
-const EditAwards:React.FC<editProps> = ({rowData, idTenant }) => {
+const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
     const {
       register,
       handleSubmit,
@@ -202,7 +202,7 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant }) => {
               }
             });
       }
-      // onSubmit(isError); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       setIsEditModalOpen(false); // Tutup modal
       resetAll();// Reset formulir
       setIsLoading(false);

@@ -40,11 +40,11 @@ type AwardItem = {
 }
 
 interface editProps {
-  // onSubmit: () => void;
+  onSubmit: () => void;
   idTenant?:string;
 }
 
-const AddAwards:React.FC<editProps> = ({idTenant}) => {
+const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
   const {
     register,
     handleSubmit,
@@ -179,7 +179,7 @@ const AddAwards:React.FC<editProps> = ({idTenant}) => {
           }
         });
 
-      // onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       // onClose(); // Tutup modal
       resetAll();
       // Setelah data disimpan, atur pesan berhasil ke dalam state

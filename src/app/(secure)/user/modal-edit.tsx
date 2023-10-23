@@ -22,15 +22,24 @@ import {
   useDisclosure,
   Textarea,
   Select,
-  Avatar,
   Image,
   HStack,
   IconButton,
   Stack,
+  Center,
+  Avatar,
+  AvatarBadge,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CheckIcon, CloseIcon, DeleteIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import {
+  CheckIcon,
+  CloseIcon,
+  DeleteIcon,
+  ViewIcon,
+  ViewOffIcon,
+  SmallCloseIcon,
+} from "@chakra-ui/icons";
 import { AiOutlineCamera } from "react-icons/ai";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
@@ -92,8 +101,8 @@ const ModalEdit: React.FC<ModalProps> = ({
   const [isError, setIsError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [avatar, setAvatar] = useState<File>();
-  const [previewAvatar, setPreviewAvatar] = useState<string>(
-    "/img/avatar-default.jpg",
+  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
+    undefined,
   );
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
@@ -148,7 +157,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         setIdImageAvatar(`delete=${idImageAvatarOld}`);
       }
       setDataEdited([]);
-      setPreviewAvatar("/img/avatar-default.jpg");
+      setPreviewAvatar(undefined);
       setIdImageAvatarOld(null);
       setBtnDeleteAvatar(false);
     } catch (error: any) {
@@ -270,7 +279,7 @@ const ModalEdit: React.FC<ModalProps> = ({
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
-      setPreviewAvatar("/img/avatar-default.jpg"); // reset preview
+      setPreviewAvatar(undefined); // reset preview
       setIdImageAvatarOld(null); // kosongkan idimage
       setIdImageAvatar(null); // kosongkan idimage
       setBtnDeleteAvatar(false); // hilangkan btndelete image
@@ -298,7 +307,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
-          setPreviewAvatar("/img/avatar-default.jpg"); // reset preview
+          setPreviewAvatar(undefined); // reset preview
           setIdImageAvatarOld(null); // kosongkan idimageold
           setIdImageAvatar(null); // kosongkan idimage
           setBtnDeleteAvatar(false); // hilangkan btndelete image
@@ -327,6 +336,52 @@ const ModalEdit: React.FC<ModalProps> = ({
                 </Hide>
 
                 {/* <>{setIdImageAvatarOld(formData?.image)}</> */}
+                <FormControl mb="3">
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                  >
+                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
+                      <FormLabel>Avatar Profil</FormLabel>
+                      <Center>
+                        {previewAvatar ? (
+                          <Avatar size="xl" src={previewAvatar}>
+                            <AvatarBadge
+                              as={IconButton}
+                              size="sm"
+                              rounded="full"
+                              top="-10px"
+                              colorScheme="red"
+                              aria-label="remove Image"
+                              icon={<SmallCloseIcon />}
+                              onClick={onButtonDeleteAvatar}
+                              isDisabled={isLoading}
+                            />
+                          </Avatar>
+                        ) : (
+                          <Avatar size="xl" />
+                        )}
+                      </Center>
+                    </Box>
+                    <Box flex={["1", "75%"]}>
+                      <Input
+                        ref={inputFile}
+                        style={{ display: "none" }}
+                        type="file"
+                        onChange={(e) => onAvatarChange(e.target.files)}
+                      />
+                      <Button
+                        fontWeight={"12"}
+                        w="full"
+                        onClick={() => onButtonEditAvatar()}
+                        isDisabled={isLoading}
+                      >
+                        Ubah Avatar Profil
+                      </Button>
+                    </Box>
+                  </Flex>
+                </FormControl>
 
                 <FormControl isInvalid={!!errors.fullname} mb="3">
                   <Flex flexDirection={["column", "row"]}>
@@ -441,72 +496,6 @@ const ModalEdit: React.FC<ModalProps> = ({
                     </Box>
                   </Flex>
                 </FormControl>
-                <Input
-                  ref={inputFile}
-                  style={{ display: "none" }}
-                  type="file"
-                  onChange={(e) => onAvatarChange(e.target.files)}
-                />
-                <Box mt={3} textAlign={"center"}>
-                  Avatar
-                </Box>
-                <Flex
-                  justify={"center"}
-                  //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
-                >
-                  <Box
-                    mt={1}
-                    position="relative"
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    mb="3"
-                    cursor={"pointer"}
-                  >
-                    <Image
-                      src={previewAvatar}
-                      h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w={{ base: "100px", sm: "200px", lg: "200px" }}
-                      borderRadius="full"
-                      alt="Preview Avatar"
-                      fit={"cover"}
-                    />
-                    <Stack
-                      position="absolute"
-                      bottom="0"
-                      right="0"
-                      padding="2"
-                      spacing="2"
-                      direction="column"
-                      background="rgba(0, 0, 0, 0.7)"
-                      opacity={isHovered ? 1 : 0} // Mengatur opacity berdasarkan isHovered
-                      transition="opacity 0.2s ease-in-out" // Efek transisi
-                      h={{ base: "100px", sm: "200px", lg: "200px" }}
-                      w="100%"
-                      justifyContent={"center"}
-                      align={"center"}
-                      borderRadius="full"
-                    >
-                      <HStack spacing="1">
-                        <IconButton
-                          onClick={onButtonEditAvatar}
-                          aria-label="Edit"
-                          title="Ubah"
-                          icon={<AiOutlineCamera size="20px" />}
-                          colorScheme="teal"
-                        />
-                        {btnDeleteAvatar && (
-                          <IconButton
-                            onClick={onButtonDeleteAvatar}
-                            aria-label="Delete"
-                            title="Hapus"
-                            icon={<DeleteIcon />}
-                            colorScheme="red"
-                          />
-                        )}
-                      </HStack>
-                    </Stack>
-                  </Box>
-                </Flex>
               </div>
             </ModalBody>
             <ModalFooter>
@@ -527,7 +516,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                   onClose();
                   reset();
                   setIsLoading(false);
-                  setPreviewAvatar("/img/avatar-default.jpg"); // reset preview
+                  setPreviewAvatar(undefined); // reset preview
                   setIdImageAvatarOld(null); // kosongkan idimage
                   setIdImageAvatar(null); // kosongkan idimage
                   setBtnDeleteAvatar(false); // hilangkan btndelete image

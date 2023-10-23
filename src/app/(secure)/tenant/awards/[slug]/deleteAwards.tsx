@@ -7,10 +7,12 @@ import { Button } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 interface deleteProps {
-  dataDelete?:any, idTenant?:string
+  onSubmit: () => void;
+  dataDelete?: any;
+  idTenant?: string;
 }
 
-const DeleteAwards:React.FC<deleteProps> = ({dataDelete, idTenant}) => {
+const DeleteAwards:React.FC<deleteProps> = ({dataDelete, idTenant, onSubmit}) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -39,6 +41,7 @@ const DeleteAwards:React.FC<deleteProps> = ({dataDelete, idTenant}) => {
             setIsLoadingDelete(false);
             handleShowMessage("Data berhasil dihapus.", false);
             setIsDeleteModalOpen(false);
+            onSubmit();
           }
         }, 1000);
 
