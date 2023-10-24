@@ -215,7 +215,7 @@ const ModalEdit: React.FC<ModalProps> = ({
     initialAvatar();
     setDataEdited(formData);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  }, [avatar, formData, initialAvatar()]);
+  }, [avatar, formData]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);

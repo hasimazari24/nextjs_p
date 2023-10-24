@@ -40,7 +40,7 @@ interface ModalProps {
   // title: string;
   isEdit?: boolean; // Tambahkan prop isEdit untuk menentukan apakah ini mode edit
   formData?: any; // Jika mode edit, kirim data yang akan diedit
-  idTenant?: string | null;
+  idTenant?: string;
 }
 
 interface FormValues {
@@ -48,7 +48,6 @@ interface FormValues {
   title: string;
   description: string;
   image?: string;
-  image_banner?: string;
 }
 
 const ModalEditCatalog: React.FC<ModalProps> = ({
@@ -112,9 +111,8 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         // });
       } else {
         // Mode tambah, kirim data melalui POST request
-        const getIdTenant: any = idTenant;
         await axiosCustom
-          .post(`/tenant/${getIdTenant}/add-catalog`, {
+          .post(`/tenant/${idTenant}/add-catalog`, {
             title: data.title,
             description: data.description,
           })
@@ -202,7 +200,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
       }
     }
     uploadAvatar();
-  }, [avatar]);
+  }, [avatar, isOpen]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);

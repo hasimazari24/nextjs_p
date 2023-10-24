@@ -131,7 +131,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
       (feature) => feature.menu === "allmenu",
     );
   }
-  let hidenCols: string[] = ["id"];
+  let hidenCols: string[] = ["id","image_id"];
   if (
     (awardsFeatures?.access.includes("tmbhAwards") &&
       allMenu?.access.includes("all_access")) === false
@@ -149,6 +149,10 @@ function PageAwards({ params }: { params: { slug: string } }) {
    {
      Header: "id",
      accessor: "id",
+   },
+   {
+     Header: "image_id",
+     accessor: "image_id",
    },
    {
      Header: "Nama Award",

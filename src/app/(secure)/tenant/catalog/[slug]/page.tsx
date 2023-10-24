@@ -351,6 +351,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
         }}
         isEdit={true}
         formData={editingData}
+        idTenant={getParamsId}
       />
 
       {/* untuk menambah data baru */}

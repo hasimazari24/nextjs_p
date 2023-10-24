@@ -44,22 +44,21 @@ interface editProps {
 }
 
 const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
-    const {
-      register,
-      handleSubmit,
-      reset,
-      formState: { errors },
-    } = useForm<AwardItem>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AwardItem>();
 
-    const fields = {
-      name: register("name", { required: "Nama penghargaan harus diisi!" }),
-      rank: register("rank", {
-        required: "Ranking award harus diisi berupa juara berapa!",
-      }),
-    };
+  const fields = {
+    name: register("name", { required: "Nama penghargaan harus diisi!" }),
+    rank: register("rank", {
+      required: "Ranking award harus diisi berupa juara berapa!",
+    }),
+  };
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setModalOpen] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -70,10 +69,12 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
   };
 
   const router = useRouter();
-  
+
   const [avatar, setAvatar] = useState<File>();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [previewAvatar, setPreviewAvatar] = useState<string>("");
+  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
+    undefined,
+  );
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
   const inputFile = useRef<HTMLInputElement>(null);
@@ -118,8 +119,7 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
   const onButtonDeleteAvatar = () => {
     try {
       setIdImageAvatar(`delete=${idImageAvatarOld}`);
-      setDataEdited([]);
-      setPreviewAvatar("");
+      setPreviewAvatar(undefined);
       setIdImageAvatarOld(null);
     } catch (error: any) {
       // tampilken error
@@ -132,15 +132,12 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
     }
   };
 
-  const [dataEdited, setDataEdited] = useState(rowData ? rowData : []);
-
   const initialAvatar = () => {
-    if (isEditModalOpen && dataEdited && dataEdited.length !== 0) {
-      console.log(previewAvatar);
-      if (dataEdited?.image_id !== null) {
-        if (idImageAvatarOld !== dataEdited.image_id) {
-          setIdImageAvatarOld(dataEdited?.image_id);
-          setPreviewAvatar(dataEdited?.image_url);
+    if (isEditModalOpen && rowData && rowData.length !== 0) {
+      if (rowData?.image_id !== null) {
+        if (idImageAvatarOld !== rowData.image_id) {
+          setIdImageAvatarOld(rowData?.image_id);
+          setPreviewAvatar(rowData?.image_url);
         }
       }
     }
@@ -171,11 +168,9 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
       }
     }
     uploadAvatar();
-    setDataEdited(rowData);
     initialAvatar();
-    // console.log(dataEdited);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  }, [avatar, rowData, initialAvatar()]);
+  }, [avatar, isEditModalOpen]);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
@@ -184,29 +179,30 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (data.id) {
         // Mode edit, kirim data melalui PUT request
-        const dataBaru:{name:string, rank:string, image?:string} = {
+        const dataBaru: { name: string; rank: string; image?: string } = {
           name: `${data.name}`,
           rank: `${data.rank}`,
         };
         if (idImageAvatar) {
           dataBaru.image = idImageAvatar;
         }
-          await axiosCustom
-            .put(`/tenant/${idTenant}/update-award/${data.id}`, dataBaru)
-            .then((response) => {
-              // setData(response.data.data);
+        // console.log(dataBaru);
+        await axiosCustom
+          .put(`/tenant/${idTenant}/update-award/${data.id}`, dataBaru)
+          .then((response) => {
+            // setData(response.data.data);
 
-              if (response.status === 200) {
-                // router.refresh();
-                handleShowMessage("Data berhasil diubah.", false);
-              }
-            });
+            if (response.status === 200) {
+              // router.refresh();
+              handleShowMessage("Data berhasil diubah.", false);
+            }
+          });
       }
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       setIsEditModalOpen(false); // Tutup modal
-      resetAll();// Reset formulir
+      resetAll(); // Reset formulir
       setIsLoading(false);
-      
+
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
       // console.error(error);
@@ -221,15 +217,14 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
   };
 
   const resetAll = () => {
-    setModalOpen(false);
+    setIsEditModalOpen(false);
     reset(); // Reset formulir
     setIsLoading(false);
-    setPreviewAvatar(""); // reset preview
+    setPreviewAvatar(undefined); // reset preview
     setIdImageAvatarOld(null); // kosongkan idimage
     setIdImageAvatar(null); // kosongkan idimage
-    setDataEdited([]);
   };
-  
+
   return (
     <div>
       <Button
@@ -249,7 +244,6 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
         isOpen={isEditModalOpen}
         onClose={() => {
           resetAll();
-          setIsEditModalOpen(false);
         }}
         size="xl"
       >
@@ -269,23 +263,20 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
                     <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
                       <FormLabel>logo Penghargaan</FormLabel>
                       <Center>
-                        {previewAvatar ? (
-                          <Avatar size="xl" src={previewAvatar}>
-                            <AvatarBadge
-                              as={IconButton}
-                              size="sm"
-                              rounded="full"
-                              top="-10px"
-                              colorScheme="red"
-                              aria-label="remove Image"
-                              icon={<SmallCloseIcon />}
-                              onClick={onButtonDeleteAvatar}
-                              isDisabled={isLoading}
-                            />
-                          </Avatar>
-                        ) : (
-                          <Avatar size="xl" />
-                        )}
+                        <Avatar size="xl" src={previewAvatar}>
+                          <AvatarBadge
+                            as={IconButton}
+                            size="sm"
+                            rounded="full"
+                            top="-10px"
+                            colorScheme="red"
+                            aria-label="remove Image"
+                            icon={<SmallCloseIcon />}
+                            onClick={onButtonDeleteAvatar}
+                            isDisabled={isLoading}
+                            display={previewAvatar ? "block" : "none"}
+                          />
+                        </Avatar>
                       </Center>
                     </Box>
                     <Box flex={["1", "70%"]}>
@@ -369,7 +360,6 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
                 colorScheme="red"
                 onClick={() => {
                   resetAll();
-                  setIsEditModalOpen(false);
                 }}
                 size="sm"
               >

@@ -335,6 +335,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
         }}
         isEdit={true}
         formData={editingData}
+        idTenant={getParamsId}
       />
 
       {/* untuk menambah data baru */}

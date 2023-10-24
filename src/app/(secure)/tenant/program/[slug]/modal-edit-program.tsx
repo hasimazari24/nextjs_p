@@ -83,8 +83,9 @@ const ModalEditProgram: React.FC<ModalProps> = ({
       if (isEdit) {
         // Mode edit, kirim data melalui PUT request
         // console.log(data); axiosCustom.put("/")
+        const getIdTenant: any = idTenant;
         await axiosCustom
-          .put(`/tenant/${idTenant}/update-program/${data.id}`, data)
+          .put(`/tenant/${getIdTenant}/update-program/${data.id}`, data)
           .then((response) => {
             // setData(response.data.data);
 
