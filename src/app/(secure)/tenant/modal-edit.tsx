@@ -31,7 +31,7 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, set } from "react-hook-form";
 import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { AiOutlineCamera } from "react-icons/ai";
 import ModalNotif from "../../components/modal/modal-notif";
@@ -60,7 +60,7 @@ interface FormValues {
   level_tenant: string;
   image?: string;
   image_banner?: string;
-  is_public?:boolean;
+  is_public?: boolean;
 }
 
 const ModalEdit: React.FC<ModalProps> = ({
@@ -209,17 +209,23 @@ const ModalEdit: React.FC<ModalProps> = ({
     setBtnDeleteAvatar(false);
   };
 
-  const initialAvatar = () => {
+  type linkTemporary = undefined | string;
+
+  const initialAvatar = (linkTemporary: linkTemporary = undefined) => {
     if (isOpen && isEdit && formData) {
       if (formData?.image_id !== null) {
         if (idImageAvatarOld !== formData.image_id) {
+          if (linkTemporary !== undefined) {
+            setIdImageAvatarOld(null);
+            setPreviewAvatar(linkTemporary);
+          }
           setIdImageAvatarOld(formData.image_id);
           setPreviewAvatar(formData.image_url);
           setBtnDeleteAvatar(true);
         }
       }
     }
-  }
+  };
 
   // logic update avatar disini
   useEffect(() => {
@@ -249,7 +255,7 @@ const ModalEdit: React.FC<ModalProps> = ({
     }
 
     uploadAvatar();
-    initialAvatar();
+    initialAvatar(undefined);
   }, [avatar, isOpen]);
 
   const handleMouseEnter = () => {
@@ -261,7 +267,6 @@ const ModalEdit: React.FC<ModalProps> = ({
   };
 
   // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  
 
   const [isHoveredBanner, setIsHoveredBanner] = useState(false);
   const [banner, setBanner] = useState<File>();
@@ -289,18 +294,22 @@ const ModalEdit: React.FC<ModalProps> = ({
     setBtnDeleteBanner(false);
   };
 
-  const initialBanner = () => {
+  const initialBanner = (linkTemporary: linkTemporary = undefined) => {
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
     if (isOpen && isEdit && formData) {
       if (formData?.image_banner_id !== null) {
         if (idImageBannerOld !== formData.image_banner_id) {
+          if (linkTemporary !== undefined) {
+            setIdImageAvatarOld(null);
+            setPreviewAvatar(linkTemporary);
+          }
           setIdImageBannerOld(formData.image_banner_id);
           setPreviewBanner(formData.image_banner_url);
           setBtnDeleteBanner(true);
         }
       }
     }
-  }
+  };
 
   // logic update avatar disini
   useEffect(() => {
@@ -329,7 +338,7 @@ const ModalEdit: React.FC<ModalProps> = ({
       }
     }
     uploadBanner();
-    initialBanner();
+    initialBanner(undefined);
   }, [banner, isOpen]);
 
   const handleMouseEnterBanner = () => {
@@ -378,9 +387,13 @@ const ModalEdit: React.FC<ModalProps> = ({
       // awasi ada dua kondisi dek
       if (from === "logo") {
         setAvatar(file);
-        setPreviewAvatar(URL.createObjectURL(file));
+        const linkTemporary: string = URL.createObjectURL(file);
+        if (isOpen && isEdit && formData) initialAvatar(linkTemporary);
+        setPreviewAvatar(linkTemporary);
       } else {
         setBanner(file);
+        const linkTemporary: string = URL.createObjectURL(file);
+        if (isOpen && isEdit && formData) initialBanner(linkTemporary);
         setPreviewBanner(URL.createObjectURL(file));
       }
       setIsLoading(true);
