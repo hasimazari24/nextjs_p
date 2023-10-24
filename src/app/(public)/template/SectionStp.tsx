@@ -102,22 +102,22 @@ export default function BasicStatistics(props: SectionStp) {
       >
         <StatsCard
           title={"Pra Inkubasi"}
-          stat={`${level_tenant.pra_inkubasi}`}
+          stat={`${level_tenant?.pra_inkubasi}`}
           icon={<BsPerson size={"3em"} />}
         />
         <StatsCard
           title={"Inkubasi"}
-          stat={`${level_tenant.inkubasi}`}
+          stat={`${level_tenant?.inkubasi}`}
           icon={<FiServer size={"3em"} />}
         />
         <StatsCard
           title={"Inkubasi Lanjutan"}
-          stat={`${level_tenant.inkubasi_lanjutan}`}
+          stat={`${level_tenant?.inkubasi_lanjutan}`}
           icon={<GoLocation size={"3em"} />}
         />
         <StatsCard
           title={"Scale Up"}
-          stat={`${level_tenant.scale_up}`}
+          stat={`${level_tenant?.scale_up}`}
           icon={<BsBuilding size={"3em"} />}
         />
       </SimpleGrid>
