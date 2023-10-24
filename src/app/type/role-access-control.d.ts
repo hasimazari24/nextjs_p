@@ -43,7 +43,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
       { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
       { name: "Data User", icon: BsPeople, href: "/user" },
       { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
-      { name: "Data Asset", icon: ImFileText2, href: "#" },
+      { name: "Data Asset", icon: ImFileText2, href: "/assets" },
     ],
     features: [
       {

@@ -47,8 +47,14 @@ type DataTableProps<T extends object> = {
   column: ReadonlyArray<Column<T>>;
   // onCellClick: (rowData: any) => void;
   hiddenColumns: string[];
-  filterOptions: { key: string; label: string; values?: string[]; type?:string; }[];
+  filterOptions: {
+    key: string;
+    label: string;
+    values?: string[];
+    type?: string;
+  }[];
   children: (rowData: any) => ReactNode; // Properti children yang menerima fungsi
+  onSelectedRowsChange?: (selectedRows: T[]) => void;
 };
 
 function DataTable<T extends object>(props: DataTableProps<T>) {
@@ -81,6 +87,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
     pageSize,
     pageOptions,
     gotoPage,
+    selectedFlatRows,
     state: { pageIndex },
   } = useTable(
     {
@@ -101,31 +108,37 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
     useRowSelect,
     //Menampilkan checkbox
     // (hooks) => {
-    //   hooks.visibleColumns.push((columns) => [
-    //     {
-    //       id: "selection",
-    //       Header: ({ getToggleAllPageRowsSelectedProps }) => {
-    //         const { checked, ...props } = getToggleAllPageRowsSelectedProps();
-    //         return (
-    //           <Box>
-    //             <Checkbox {...props} isChecked={checked} />
-    //           </Box>
-    //         );
+    //   if (props.checkbox) {
+    //     hooks.visibleColumns.push((columns) => [
+    //       {
+    //         id: "selection",
+    //         Header: ({ getToggleAllPageRowsSelectedProps }) => {
+    //           const { checked, ...props } = getToggleAllPageRowsSelectedProps();
+    //           return (
+    //             <Box>
+    //               <Checkbox {...props} isChecked={checked} />
+    //             </Box>
+    //           );
+    //         },
+    //         Cell: ({ row }: any) => {
+    //           const { checked, ...props } = row.getToggleRowSelectedProps();
+    //           return (
+    //             <Box>
+    //               <Checkbox {...props} isChecked={checked} />
+    //             </Box>
+    //           );
+    //         },
+    //         disableFilters: true,
     //       },
-    //       Cell: ({ row }: any) => {
-    //         const { checked, ...props } = row.getToggleRowSelectedProps();
-    //         return (
-    //           <Box>
-    //             <Checkbox {...props} isChecked={checked} />
-    //           </Box>
-    //         );
-    //       },
-    //       disableFilters: true,
-    //     },
-    //     ...columns,
-    //   ]);
+    //       ...columns,
+    //     ]);
+    //   } 
     // }
   );
+
+  if (props.onSelectedRowsChange) {
+    props.onSelectedRowsChange(selectedFlatRows.map((d) => d.original));
+  }
 
   return (
     <Box>
@@ -293,7 +306,9 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                     fontSize="sm"
                     id="action"
                     display={
-                      props.hiddenColumns.includes("action") ? "none" : "table-cell"
+                      props.hiddenColumns.includes("action")
+                        ? "none"
+                        : "table-cell"
                     }
                     borderBottom={"none"}
                   >
@@ -360,6 +375,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
           </Tbody>
         </Table>
       </TableContainer>
+     
       <Flex justify="flex-end" alignItems="center">
         <Box mt="4" display="flex">
           {/* Berpindah halaman */}

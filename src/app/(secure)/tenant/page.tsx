@@ -2,7 +2,7 @@
 
 import DataTable from "../../components/datatable/data-table";
 import { Column } from "react-table";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import ModalEdit from "./modal-edit";
 import ModalDetail from "./modal-detail";
 import ModalSocial from "../../components/modal/modal-social";
