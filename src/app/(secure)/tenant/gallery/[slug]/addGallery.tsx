@@ -63,10 +63,6 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
 
   const fields = {
     title: register("title", { required: "Judul Events harus diisi!" }),
-    image_id: register("image_id", {
-      required:
-        "Gambar Events harus diisi!",
-    }),
     description: register("description", {
       required: "Deskripsi Event harus diisi!",
     }),
@@ -186,6 +182,11 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
+    if (!idImageAvatar)
+      return handleShowMessage(
+        `Terjadi Kesalahan: Gambar Event wajib di-isi ya.`,
+        true,
+      );
     setIsLoading(true);
     const dataBaru: {
       title: string;
@@ -196,10 +197,8 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
       title: `${data.title}`,
       description: `${data.description}`,
       event_date: `${data.event_date}`,
+      image: idImageAvatar,
     };
-    if (idImageAvatar) {
-      dataBaru.image = idImageAvatar;
-    }
     // console.log(dataBaru);
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
@@ -271,14 +270,7 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
                         ref={inputFile}
                         style={{ display: "none" }}
                         type="file"
-                        
                         onChange={(e) => onAvatarChange(e.target.files)}
-                      />
-                      <Input
-                        defaultValue={idImageAvatar ? idImageAvatar : ""}
-                        style={{ display: "none" }}
-                        type="text"
-                        {...fields.image_id}
                       />
                       <Box mt={3} textAlign={"center"}>
                         Gambar Event
@@ -352,17 +344,6 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
                           </Stack>
                         </Box>
                       </Flex>
-                      <FormErrorMessage>
-                        <Text
-                          whiteSpace={{
-                            base: "nowrap",
-                            md: "normal",
-                            lg: "normal",
-                          }}
-                        >
-                          {errors.image_id && errors.image_id.message}
-                        </Text>
-                      </FormErrorMessage>
                     </FormControl>
                   </Box>
                   <Box w="full">

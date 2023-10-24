@@ -117,7 +117,7 @@ function PageGallery({ params }: { params: { slug: string } }) {
       (feature) => feature.menu === "allmenu",
     );
   }
-  let hidenCols: string[] = ["id","event_date"];
+  let hidenCols: string[] = ["id","event_date","image_id"];
   if (
     (GalleryFeatures?.access.includes("tmbhGallery") &&
       allMenu?.access.includes("all_access")) === false
@@ -135,6 +135,10 @@ function PageGallery({ params }: { params: { slug: string } }) {
    {
      Header: "id",
      accessor: "id",
+   },
+   {
+     Header: "image_id",
+     accessor: "image_id",
    },
    {
      Header: "Judul Event",

@@ -31,7 +31,7 @@ const DeleteGallery = ({ dataDelete, idTenant, onSubmit }: deleteProps) => {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/tenant/${idTenant}/delete-award/${dataDelete?.id}`,
+          `/tenant/${idTenant}/delete-gallery/${dataDelete?.id}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -74,7 +74,7 @@ const DeleteGallery = ({ dataDelete, idTenant, onSubmit }: deleteProps) => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={deleteData}
-        dataConfirm={`Yakin ingin hapus data penghargaan dengan nama : ${dataDelete?.name} ?`}
+        dataConfirm={`Yakin ingin hapus data event dengan judul : ${dataDelete?.title} ?`}
         isLoading={isLoadingDelete}
       />
 

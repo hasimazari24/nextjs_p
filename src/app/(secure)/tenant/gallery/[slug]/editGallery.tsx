@@ -63,9 +63,6 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
 
   const fields = {
     title: register("title", { required: "Judul Events harus diisi!" }),
-    image_id: register("image_id", {
-      required: "Gambar Events harus diisi!",
-    }),
     description: register("description", {
       required: "Deskripsi Event harus diisi!",
     }),
@@ -84,8 +81,8 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const [avatar, setAvatar] = useState<File>();
-  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
-    undefined,
+  const [previewAvatar, setPreviewAvatar] = useState<string | null>(
+    null
   );
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
@@ -132,9 +129,9 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
   // fungsi ketika button delete avatar click
   const onButtonDeleteAvatar = () => {
     try {
-      setIdImageAvatar(`delete=${idImageAvatarOld}`);
-    //   setDataEdited([]);
-      setPreviewAvatar(undefined);
+      axiosCustom.delete(`/assets/${idImageAvatar}/delete`);
+      setIdImageAvatar(null);
+      setPreviewAvatar(null);
       setIdImageAvatarOld(null);
       setBtnDeleteAvatar(false);
     } catch (error: any) {
@@ -148,18 +145,20 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     }
   };
 
-  const [dataEdited, setDataEdited] = useState(rowData ? rowData : []);
-
-  if (isEditModalOpen && rowData) {
-    console.log(previewAvatar);
-    if (rowData?.image_id !== null) {
-      if (idImageAvatarOld !== rowData.image_id) {
-        setIdImageAvatarOld(rowData.image_id);
-        setPreviewAvatar(rowData.image_url);
-        setBtnDeleteAvatar(true);
+  // const [dataEdited, setDataEdited] = useState(rowData ? rowData : []);
+  const initialAvatar = () => {
+    if (isEditModalOpen && rowData && rowData.length !== 0) {
+      if (rowData?.image_id !== null) {
+        if (idImageAvatarOld !== rowData.image_id) {
+          setIdImageAvatarOld(rowData.image_id);
+          setPreviewAvatar(rowData.image_url);
+          setBtnDeleteAvatar(true);
+        }
       }
     }
-  }
+  }; 
+
+  // console.log(previewAvatar, rowData);
 
   // logic update avatar disini
   useEffect(() => {
@@ -186,9 +185,11 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
       }
     }
     uploadAvatar();
+    initialAvatar();
+    // setDataEdited(rowData);
     // console.log(dataEdited);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  }, [avatar]);
+  }, [avatar, isEditModalOpen]);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
@@ -218,14 +219,14 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
             if (response.status === 200) {
               // router.refresh();
               handleShowMessage("Data berhasil diubah.", false);
+              onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+              setIsEditModalOpen(false); // Tutup modal
+              resetAll(); // Reset formulir
+              setIsLoading(false);
             }
           });
       }
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
-      setIsEditModalOpen(false); // Tutup modal
-      resetAll(); // Reset formulir
-      setIsLoading(false);
-
+      
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
       // console.error(error);
@@ -250,7 +251,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
   const resetAll = () => {
     reset(); // Reset formulir
     setIsLoading(false);
-    setPreviewAvatar(undefined); // reset preview
+    setPreviewAvatar(null); // reset preview
     setIdImageAvatarOld(null); // kosongkan idimage
     setIdImageAvatar(null); // kosongkan idimage
     // setDataEdited([]);
@@ -294,12 +295,6 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                         style={{ display: "none" }}
                         type="file"
                         onChange={(e) => onAvatarChange(e.target.files)}
-                      />
-                      <Input
-                        value={idImageAvatar ? idImageAvatar : ""}
-                        style={{ display: "none" }}
-                        type="text"
-                        {...fields.image_id}
                       />
                       <Box mt={3} textAlign={"center"}>
                         Gambar Event
@@ -360,15 +355,6 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                                   colorScheme="teal"
                                 />
                               )}
-                              {!isLoading && btnDeleteAvatar && (
-                                <IconButton
-                                  onClick={onButtonDeleteAvatar}
-                                  aria-label="Delete"
-                                  title="Hapus"
-                                  icon={<DeleteIcon />}
-                                  colorScheme="red"
-                                />
-                              )}
                             </HStack>
                           </Stack>
                         </Box>
@@ -387,6 +373,19 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                     </FormControl>
                   </Box>
                   <Box w="full">
+                    <Hide>
+                      <FormControl isInvalid={!!errors.id} mb="3">
+                        <Input
+                          type="text"
+                          {...register("id")}
+                          defaultValue={rowData?.id}
+                          // className={`form-control ${errors.name ? "is-invalid"}`}
+                        />
+                        <FormErrorMessage>
+                          {errors.id && errors.id.message}
+                        </FormErrorMessage>
+                      </FormControl>
+                    </Hide>
                     <FormControl isInvalid={!!errors.title} mb="3" mt={3}>
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
