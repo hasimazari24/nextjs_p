@@ -109,13 +109,6 @@ const ModalEdit: React.FC<ModalProps> = ({
     setModalNotif(true);
   };
 
-  // useEffect(() => {
-  //   // Ketika modal dibuka untuk edit, isi data formulir
-  //   if (isEdit) {
-  //     reset(formData);
-  //   }
-  // }, [isEdit, formData, reset]);
-
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
     // refactoring data untuk mendukung upload avatar
@@ -166,7 +159,7 @@ const ModalEdit: React.FC<ModalProps> = ({
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
-      setPreviewAvatar(null); // reset preview
+      setPreviewAvatar(undefined); // reset preview
       setIdImageAvatarOld(null); // kosongkan idimage
       setIdImageAvatar(null); // kosongkan idimage
       setBtnDeleteAvatar(false); // hilangkan btndelete image
@@ -190,7 +183,9 @@ const ModalEdit: React.FC<ModalProps> = ({
 
   const [isHovered, setIsHovered] = useState(false);
   const [avatar, setAvatar] = useState<File>();
-  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
+    undefined,
+  );
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
   const [btnDeleteAvatar, setBtnDeleteAvatar] = useState<Boolean>(false);
@@ -209,10 +204,22 @@ const ModalEdit: React.FC<ModalProps> = ({
     } else {
       setIdImageAvatar(`delete=${idImageAvatarOld}`);
     }
-    setPreviewAvatar(null);
+    setPreviewAvatar(undefined);
     setIdImageAvatarOld(null);
     setBtnDeleteAvatar(false);
   };
+
+  const initialAvatar = () => {
+    if (isOpen && isEdit && formData) {
+      if (formData?.image_id !== null) {
+        if (idImageAvatarOld !== formData.image_id) {
+          setIdImageAvatarOld(formData.image_id);
+          setPreviewAvatar(formData.image_url);
+          setBtnDeleteAvatar(true);
+        }
+      }
+    }
+  }
 
   // logic update avatar disini
   useEffect(() => {
@@ -240,8 +247,10 @@ const ModalEdit: React.FC<ModalProps> = ({
         }
       }
     }
+
     uploadAvatar();
-  }, [avatar]);
+    initialAvatar();
+  }, [avatar, isOpen]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -252,15 +261,7 @@ const ModalEdit: React.FC<ModalProps> = ({
   };
 
   // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  if (isOpen && isEdit && formData) {
-    if (formData?.image_id !== null) {
-      if (idImageAvatarOld !== formData.image_id) {
-        setIdImageAvatarOld(formData.image_id);
-        setPreviewAvatar(formData.image_url);
-        setBtnDeleteAvatar(true);
-      }
-    }
-  }
+  
 
   const [isHoveredBanner, setIsHoveredBanner] = useState(false);
   const [banner, setBanner] = useState<File>();
@@ -287,6 +288,19 @@ const ModalEdit: React.FC<ModalProps> = ({
     setIdImageBannerOld(null);
     setBtnDeleteBanner(false);
   };
+
+  const initialBanner = () => {
+    // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
+    if (isOpen && isEdit && formData) {
+      if (formData?.image_banner_id !== null) {
+        if (idImageBannerOld !== formData.image_banner_id) {
+          setIdImageBannerOld(formData.image_banner_id);
+          setPreviewBanner(formData.image_banner_url);
+          setBtnDeleteBanner(true);
+        }
+      }
+    }
+  }
 
   // logic update avatar disini
   useEffect(() => {
@@ -315,7 +329,8 @@ const ModalEdit: React.FC<ModalProps> = ({
       }
     }
     uploadBanner();
-  }, [banner]);
+    initialBanner();
+  }, [banner, isOpen]);
 
   const handleMouseEnterBanner = () => {
     setIsHoveredBanner(true);
@@ -324,17 +339,6 @@ const ModalEdit: React.FC<ModalProps> = ({
   const handleMouseLeaveBanner = () => {
     setIsHoveredBanner(false);
   };
-
-  // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  if (isOpen && isEdit && formData) {
-    if (formData?.image_banner_id !== null) {
-      if (idImageBannerOld !== formData.image_banner_id) {
-        setIdImageBannerOld(formData.image_banner_id);
-        setPreviewBanner(formData.image_banner_url);
-        setBtnDeleteBanner(true);
-      }
-    }
-  }
 
   // buat type untuk batasi input biar tidak ugal-ugalan di jalan
   type fromFileChangeType = "logo" | "banner";
@@ -390,7 +394,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
-          setPreviewAvatar(null); // reset preview
+          setPreviewAvatar(undefined); // reset preview
           setIdImageAvatarOld(null); // kosongkan idimage
           setIdImageAvatar(null); // kosongkan idimage
           setBtnDeleteAvatar(false); // hilangkan btndelete image
@@ -462,7 +466,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                         <HStack spacing="1">
                           {!isLoading && (
                             <IconButton
-                              onClick={onButtonEditAvatar}
+                              onClick={() => onButtonEditAvatar()}
                               aria-label="Edit"
                               title="Ubah"
                               icon={<AiOutlineCamera size="20px" />}
@@ -471,7 +475,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                           )}
                           {!isLoading && btnDeleteAvatar && (
                             <IconButton
-                              onClick={onButtonDeleteAvatar}
+                              onClick={() => onButtonDeleteAvatar()}
                               aria-label="Delete"
                               title="Hapus"
                               icon={<DeleteIcon />}
@@ -586,7 +590,11 @@ const ModalEdit: React.FC<ModalProps> = ({
                       <Box flex={["1", "50%"]}>
                         <RadioGroup
                           defaultValue={
-                            formData ? (formData.is_public === true ? "true" : "false") : "true"
+                            formData
+                              ? formData.is_public === true
+                                ? "true"
+                                : "false"
+                              : "true"
                           }
                         >
                           <Radio value="true" pr="4" {...register("is_public")}>
@@ -835,7 +843,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                   onClose();
                   reset();
                   setIsLoading(false);
-                  setPreviewAvatar(null); // reset preview
+                  setPreviewAvatar(undefined); // reset preview
                   setIdImageAvatarOld(null); // kosongkan idimage
                   setIdImageAvatar(null); // kosongkan idimage
                   setBtnDeleteAvatar(false); // hilangkan btndelete image
