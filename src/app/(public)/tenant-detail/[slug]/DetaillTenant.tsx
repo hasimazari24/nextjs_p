@@ -22,12 +22,13 @@ import {
 import ContactInfo from "./ContactTenant";
 import { FaInfo, FaMedal } from "react-icons/fa"; // Tambahkan import untuk ikon FaInfo
 import { AiOutlineCrown } from "react-icons/ai";
+import DetailSocial from "./DetailSocial";
 import { wrap } from "module";
 
 const DetailComponent = () => {
   return (
-    <VStack spacing={8} py={{ base: "4", md: "6" }}>
-      <HStack justifyContent={"center"}>
+    <Stack spacing={8} py={{ base: "4", md: "6" }}>
+      {/* <HStack justifyContent={"center"}>
         <Box
           w={["20px", "30px"]}
           h={["20px", "30px"]}
@@ -47,13 +48,14 @@ const DetailComponent = () => {
         <Text fontWeight={"bold"} color={"red.500"} fontSize={["sm", "lg"]}>
           DETAIL INFORMATION
         </Text>
-      </HStack>
-
-      <SimpleGrid
-        columns={{ base: 1, lg: 2 }}
-        spacing={{ base: 6, md: 12, lg: 20 }}
+      </HStack> */}
+      <Stack  
+        // columns={{ base: 1, lg: 2 }}
+        // spacing={{ base: 6, md: 12, lg: 20 }}
+        flexDirection={{ base: "column", lg: "row" }}
+        spacing={{base: 10, md: 4, lg: 20}}
       >
-        <Box w={"full"}>
+        <Box aria-label="box-kiri">
           <Stack
             spacing={4}
             alignItems="flex-start"
@@ -62,10 +64,10 @@ const DetailComponent = () => {
             <Box>
               <Text
                 fontWeight="bold"
-                color="red.500"
+                color="gray.900"
                 fontSize={["xl", "2xl", "3xl"]}
               >
-                Tokopedia Indonesia
+                Tentang
               </Text>
             </Box>
             <Box>
@@ -82,48 +84,16 @@ const DetailComponent = () => {
                 Anda di manapun dan kapanpun.
               </Text>
             </Box>
-            <Button
-              leftIcon={<Icon as={MdMap} />}
-              colorScheme="red"
-              variant="solid"
-              size={["sm", "md"]}
-            >
-              Selengkapnya
-            </Button>
-          </Stack>
-        </Box>
-        <Box w={"full"}>
-          <Stack
+            <Stack
             spacing={6}
             alignItems="flex-start"
             justifyContent="flex-start"
           >
             <ContactInfo
-              icon={AiOutlineCrown}
-              title="Founder"
-              content="Alex Major"
-              label="founder"
-              size={24}
-            />
-            <ContactInfo
-              icon={MdMailOutline}
-              title="Email"
-              content="tokopedia.service@mail.com"
-              label="email"
-              size={24}
-            />
-            <ContactInfo
               icon={MdMap}
               title="Address"
               content="Suite 220 9954 Gottlieb Throughway sgdfhjksdjbfkslfgjl sjhdfkjsdfksdjhf sdhfjskdfksjfd"
               label="alamat"
-              size={24}
-            />
-            <ContactInfo
-              icon={MdOutlineContacts}
-              title="Contact"
-              content="62 8973672137"
-              label="kontak"
               size={24}
             />
             <ContactInfo
@@ -141,10 +111,34 @@ const DetailComponent = () => {
               size={24}
               content=""
             />
+             <ContactInfo
+              icon={AiOutlineCrown}
+              title="Founder"
+              content="Alex Major"
+              label="founder"
+              size={24}
+            />
+            </Stack>
           </Stack>
         </Box>
-      </SimpleGrid>
-    </VStack>
+        <Box aria-label="box-kanan">         
+          <Stack
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            spacing={4}
+          >
+            <Text
+              fontWeight="bold"
+              color="gray.900"
+              fontSize={["xl", "2xl", "3xl"]}
+            >
+              Contact
+            </Text>
+            <DetailSocial></DetailSocial>
+          </Stack>
+        </Box>
+      </Stack>
+    </Stack>
   );
 };
 

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { VStack, Stack, HStack, Text, Icon, Link, Tag, useBreakpointValue, Flex, Box } from "@chakra-ui/react";
 import { ReactElement } from "react";
-import { AiOutlineGlobal, AiOutlineLink } from "react-icons/ai";
 import { IconType } from "react-icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 
 
@@ -19,26 +19,30 @@ const SocialInfo = ({icon, title, href, content, label, size = 24}: SocialInfoPr
 
     const contentStyles = {
         overflow: "hidden",
-        whiteSpace: "nowrap" as any, // Mengonversi string menjadi tipe WhiteSpace
+        whiteSpace: "nowrap" as any, // Convert string dadi tipe WhiteSpace
         textOverflow: "ellipsis",
-        maxWidth: "150px", // Atur lebar maksimum sesuai kebutuhan
+        maxWidth: "150px", // Jembar e tulisan
+        fontSize : "md",
+        fontWeight: "regular",
     };
 
     return (
         <HStack
         spacing={["4","6"]} align={"center"}>
-            <Icon as= {icon} fontSize={size} pt={"1px"} color={"white"}/>
-            <VStack align={"start"} spacing={"5px"} color={"white"}>
+            <Icon as= {icon} fontSize={size} pt={"1px"} color={"black"}/>
+            <VStack align={"start"} spacing={"0"} color={"black"}>
                 <Text fontSize="xl" fontWeight={"bold"}>
                     {title}
                 </Text>
                 <HStack spacing={2}>
-                <Link href={href} color={"blue.400"}>
-                    <Text fontSize="md" fontWeight={"regular"} style={contentStyles}>
-                        {content}
-                    </Text>
+                <Link href={href} color={"blue.400"} isExternal>
+                    <HStack>
+                        <Text  style={contentStyles}>
+                            {content} 
+                        </Text>
+                        <ExternalLinkIcon mx='2px'/>
+                    </HStack>
                 </Link>
-                <Icon as={AiOutlineLink} color="blue.400" boxSize={4} />
                 </HStack>
             </VStack>
         </HStack>
