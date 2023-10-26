@@ -15,7 +15,7 @@ const DetailSocial = () => {
         spacing={4}
         w="full"
         >
-            <Box p={2}>
+            <Box>
                 <VStack spacing={4}  
                 flexWrap={"wrap"}
                 alignItems={'flex-start'} 
