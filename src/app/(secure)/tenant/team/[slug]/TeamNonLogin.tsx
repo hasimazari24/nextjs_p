@@ -84,6 +84,12 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
     );
   }
   let hidenCols: string[] = ["id"];
+  if (
+    (teamFeatures?.access.includes("tmbhProgram") &&
+      allMenu?.access.includes("all_access")) === false
+  ) {
+    hidenCols.push("action");
+  }
 
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -216,18 +222,13 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
           `/tenant/${idTenant}/delete-user-tenant-cant-login/${editingData?.id}`,
         );
 
-        // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
-        const timer = setTimeout(() => {
-          // console.log(response);
-          if (response.status === 200) {
-            setIsLoadingDelete(false);
-            setIsModalDeleteOpen(false);
-            handleShowMessage("Data berhasil dihapus.", false);
-            onSubmit();
-          }
-        }, 1000);
-
-        return () => clearTimeout(timer);
+       if (response.status === 200) {
+         setIsLoadingDelete(false);
+         setIsModalDeleteOpen(false);
+         handleShowMessage("Data berhasil dihapus.", false);
+         onSubmit();
+       }
+       
       } catch (error: any) {
         if (error?.response) {
           handleShowMessage(
@@ -252,7 +253,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
     setIsModalSocialOpen(true);
   };
   return (
-    <div>
+    <>
       <DataTable
         data={dataTeam}
         column={columns}
@@ -300,7 +301,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
         idUser={idUser}
         onDelete={() => onSubmit()}
       />
-    </div>
+    </>
   );
 }
 

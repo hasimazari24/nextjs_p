@@ -140,7 +140,7 @@ const ModalSocial: React.FC<ModalProps> = ({
   let allMenu: any | null = null;
   if (getUser !== null) {
     features = permissions[getUser.role]?.features.find(
-      (feature) => feature.menu === "backPanelTenant_team_social",
+      (feature) => feature.menu === "backPanelTenant_links",
     );
     allMenu = permissions[getUser.role]?.features.find(
       (feature) => feature.menu === "allmenu",
@@ -198,10 +198,7 @@ const ModalSocial: React.FC<ModalProps> = ({
       } else {
         // Mode tambah, kirim data melalui POST request
         await axiosCustom
-          .post(
-            `/user-tenant/${idUser}/add-link-user-tenant-cant-login`,
-            data,
-          )
+          .post(`/user-tenant/${idUser}/add-link-user-tenant-cant-login`, data)
           .then((response) => {
             // console.log(response);
             if (response.status === 201) {
@@ -212,6 +209,7 @@ const ModalSocial: React.FC<ModalProps> = ({
       setIsLoading(false);
       getUpdatedSocial();
       setFalse();
+      resetAll();
     } catch (error: any) {
       console.error(error);
       if (error?.response) {
@@ -260,36 +258,39 @@ const ModalSocial: React.FC<ModalProps> = ({
 
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const deleteData = async () => {
-    try {
-      setIsLoadingDelete(true);
-      const response = await axiosCustom.delete(
-        `tenant/${idTenant}/delete-link/${dataDelete.id}`,
-      );
-
-      // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
-      const timer = setTimeout(() => {
-        // console.log(response);
-        if (response.status === 200) {
-          setIsLoadingDelete(false);
-          setIsModalDeleteOpen(false);
-          handleShowMessage("Data berhasil dihapus.", false);
-          setDataDelete(null);
-          getUpdatedSocial();
-          setFalse();
-          resetByOne(dataDelete.title);
-        }
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    } catch (error: any) {
-      if (error?.response) {
-        handleShowMessage(
-          `Terjadi Kesalahan: ${error.response.data.message}`,
-          true,
+    if (idUser && dataDelete) {
+      try {
+        setIsLoadingDelete(true);
+        const response = await axiosCustom.delete(
+          `/user-tenant/${idUser}/delete-link-user-tenant-cant-login/${dataDelete.id}`,
         );
-      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-      setIsLoadingDelete(false);
-    }
+
+        // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
+        const timer = setTimeout(() => {
+          // console.log(response);
+          if (response.status === 200) {
+            getUpdatedSocial();
+            onDelete();
+            setFalse();
+            setIsLoadingDelete(false);
+            setIsModalDeleteOpen(false);
+            setDataDelete(null);
+            resetByOne(dataDelete.title);
+            handleShowMessage("Data berhasil dihapus.", false);
+          }
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      } catch (error: any) {
+        if (error?.response) {
+          handleShowMessage(
+            `Terjadi Kesalahan: ${error.response.data.message}`,
+            true,
+          );
+        } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+        setIsLoadingDelete(false);
+      }
+    } 
   };
 
   const getUpdatedSocial = async () => {
@@ -297,7 +298,7 @@ const ModalSocial: React.FC<ModalProps> = ({
     if (idUser) {
       try {
         const response = await axiosCustom.get(
-          `/user-tenant/${idUser}/get-link-user-tenant-cant-login`,
+          `user-tenant/${idUser}/get-link-user-tenant-cant-login`,
         );
         if (response.status === 200) {
           setAkunWeb([
@@ -324,10 +325,10 @@ const ModalSocial: React.FC<ModalProps> = ({
               (links: any) => links.title === "LinkedIn",
             ),
           ]);
+          setIsLoadingGetData(false);
         }
-        setIsLoadingGetData(false);
-        console.log(response);
-        console.log(akunWeb);
+        // console.log(response);
+        // console.log(akunWeb);
       } catch (error: any) {
         if (error?.response) {
           handleShowMessage(
@@ -339,10 +340,13 @@ const ModalSocial: React.FC<ModalProps> = ({
       }
     }
   };
+
   useEffect(() => {
+    // const [dataEdited, setDataEdited] = useState(formData ? formData : []);
     getUpdatedSocial();
     // setDataEdited(formData);
-  }, [idUser]);
+  }, [isOpen === true]);
+  // }, []);
 
   console.log(akunWeb);
 
@@ -376,16 +380,16 @@ const ModalSocial: React.FC<ModalProps> = ({
       <Modal
         isOpen={isOpen}
         onClose={() => {
-          onClose();
           resetAll();
           setFalse();
+          onClose();
         }}
         size="lg"
       >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{"Social Links Setting"}</ModalHeader>
-          <ModalCloseButton onClick={()=>resetAll()} />
+          <ModalCloseButton />
           <ModalBody>
             {isLoadingGetData ? (
               <Center h="100%" mb="5">
@@ -440,19 +444,33 @@ const ModalSocial: React.FC<ModalProps> = ({
                               disabled={!isEditingWebsite}
                               style={{ width: "100%" }}
                             >
-                              <Input
-                                placeholder="URL Social Website"
-                                onFocus={() => !isEditingWebsite}
-                                defaultValue={akunWeb[0] ? akunWeb[0].url : ""}
-                                {...registWebsite("url", {
-                                  required: "URL Website harus diisi!",
-                                })}
-                                minW={"full"}
-                              />
+                              {!isEditingWebsite && (
+                                <Input
+                                  placeholder={
+                                    akunWeb[0]?.url ?? "URL Social Website"
+                                  }
+                                  minW={"full"}
+                                />
+                              )}
+                              {isEditingWebsite && (
+                                <Input
+                                  {...registWebsite("url", {
+                                    required: "URL Website harus diisi!",
+                                  })}
+                                  onFocus={() => !isEditingWebsite}
+                                  minW={"full"}
+                                  defaultValue={akunWeb[0]?.url}
+                                />
+                              )}
                             </fieldset>
 
                             {/* jika ada datany maka berikan tampilan edit dan delete */}
-                            {akunWeb[0]?.url ? (
+                            {akunWeb[0]?.url &&
+                            !isEditingInstagram &&
+                            !isEditingFacebook &&
+                            !isEditingLinkedIn &&
+                            !isEditingYouTube &&
+                            !isEditingTwitter ? (
                               <div>
                                 {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol simpan buat edit */}
                                 {isEditingWebsite ? (
@@ -523,7 +541,13 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </form>
                   </Stack>
 
-                  {!akunWeb[0]?.url && !isEditingWebsite ? (
+                  {!akunWeb[0]?.url &&
+                  !isEditingWebsite &&
+                  !isEditingInstagram &&
+                  !isEditingFacebook &&
+                  !isEditingLinkedIn &&
+                  !isEditingYouTube &&
+                  !isEditingTwitter ? (
                     <IconButton
                       colorScheme="green"
                       aria-label="Tambah"
@@ -586,19 +610,33 @@ const ModalSocial: React.FC<ModalProps> = ({
                               disabled={!isEditingFacebook}
                               style={{ width: "100%" }}
                             >
-                              <Input
-                                placeholder="URL Social Facebook"
-                                onFocus={() => !isEditingFacebook}
-                                defaultValue={akunFb[0] ? akunFb[0].url : ""}
-                                {...registFacebook("url", {
-                                  required: "URL Facebook harus diisi!",
-                                })}
-                                minW={"full"}
-                              />
+                              {!isEditingFacebook && (
+                                <Input
+                                  placeholder={
+                                    akunFb[0]?.url ?? "URL Social Facebook"
+                                  }
+                                  minW={"full"}
+                                />
+                              )}
+                              {isEditingFacebook && (
+                                <Input
+                                  {...registFacebook("url", {
+                                    required: "URL Facebook harus diisi!",
+                                  })}
+                                  onFocus={() => !isEditingFacebook}
+                                  minW={"full"}
+                                  defaultValue={akunFb[0]?.url}
+                                />
+                              )}
                             </fieldset>
 
                             {/* jika ada datany maka berikan tampilan edit dan delete */}
-                            {akunFb[0]?.url ? (
+                            {akunFb[0]?.url &&
+                            !isEditingInstagram &&
+                            !isEditingWebsite &&
+                            !isEditingLinkedIn &&
+                            !isEditingYouTube &&
+                            !isEditingTwitter ? (
                               <div>
                                 {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol simpan buat edit */}
                                 {isEditingFacebook ? (
@@ -669,7 +707,13 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </form>
                   </Stack>
 
-                  {!akunFb[0]?.url && !isEditingFacebook ? (
+                  {!akunFb[0]?.url &&
+                  !isEditingFacebook &&
+                  !isEditingInstagram &&
+                  !isEditingWebsite &&
+                  !isEditingLinkedIn &&
+                  !isEditingYouTube &&
+                  !isEditingTwitter ? (
                     <IconButton
                       colorScheme="green"
                       aria-label="Tambah"
@@ -731,7 +775,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                               disabled={!isEditingInstagram}
                               style={{ width: "100%" }}
                             >
-                              <Input
+                              {/* <Input
                                 placeholder="URL Social Instagram"
                                 onFocus={() => !isEditingInstagram}
                                 defaultValue={akunIg[0] ? akunIg[0].url : ""}
@@ -739,11 +783,34 @@ const ModalSocial: React.FC<ModalProps> = ({
                                   required: "URL Instagram harus diisi!",
                                 })}
                                 minW={"full"}
-                              />
+                              /> */}
+                              {!isEditingInstagram && (
+                                <Input
+                                  placeholder={
+                                    akunIg[0]?.url ?? "URL Social Instagram"
+                                  }
+                                  minW={"full"}
+                                />
+                              )}
+                              {isEditingInstagram && (
+                                <Input
+                                  {...registInstagram("url", {
+                                    required: "URL Instagram harus diisi!",
+                                  })}
+                                  onFocus={() => !isEditingInstagram}
+                                  minW={"full"}
+                                  defaultValue={akunIg[0]?.url}
+                                />
+                              )}
                             </fieldset>
 
                             {/* jika ada datany maka berikan tampilan edit dan delete */}
-                            {akunIg[0]?.url ? (
+                            {akunIg[0]?.url &&
+                            !isEditingWebsite &&
+                            !isEditingFacebook &&
+                            !isEditingLinkedIn &&
+                            !isEditingYouTube &&
+                            !isEditingTwitter ? (
                               <div>
                                 {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol simpan buat edit */}
                                 {isEditingInstagram ? (
@@ -816,7 +883,13 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </form>
                   </Stack>
 
-                  {!akunIg[0]?.url && !isEditingInstagram ? (
+                  {!akunIg[0]?.url &&
+                  !isEditingInstagram &&
+                  !isEditingWebsite &&
+                  !isEditingFacebook &&
+                  !isEditingLinkedIn &&
+                  !isEditingYouTube &&
+                  !isEditingTwitter ? (
                     <IconButton
                       colorScheme="green"
                       aria-label="Tambah"
@@ -878,7 +951,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                               disabled={!isEditingTwitter}
                               style={{ width: "100%" }}
                             >
-                              <Input
+                              {/* <Input
                                 placeholder="URL Social Twitter"
                                 onFocus={() => !isEditingTwitter}
                                 defaultValue={akunTw[0] ? akunTw[0].url : ""}
@@ -886,11 +959,35 @@ const ModalSocial: React.FC<ModalProps> = ({
                                   required: "URL Twitter harus diisi!",
                                 })}
                                 minW={"full"}
-                              />
+                              /> */}
+
+                              {!isEditingTwitter && (
+                                <Input
+                                  placeholder={
+                                    akunTw[0]?.url ?? "URL Social Twitter"
+                                  }
+                                  minW={"full"}
+                                />
+                              )}
+                              {isEditingTwitter && (
+                                <Input
+                                  {...registTwitter("url", {
+                                    required: "URL Twitter harus diisi!",
+                                  })}
+                                  onFocus={() => !isEditingTwitter}
+                                  minW={"full"}
+                                  defaultValue={akunTw[0]?.url}
+                                />
+                              )}
                             </fieldset>
 
                             {/* jika ada datany maka berikan tampilan edit dan delete */}
-                            {akunTw[0]?.url ? (
+                            {akunTw[0]?.url &&
+                            !isEditingInstagram &&
+                            !isEditingFacebook &&
+                            !isEditingLinkedIn &&
+                            !isEditingYouTube &&
+                            !isEditingWebsite ? (
                               <div>
                                 {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol simpan buat edit */}
                                 {isEditingTwitter ? (
@@ -961,7 +1058,13 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </form>
                   </Stack>
 
-                  {!akunTw[0]?.url && !isEditingTwitter ? (
+                  {!akunTw[0]?.url &&
+                  !isEditingTwitter &&
+                  !isEditingInstagram &&
+                  !isEditingFacebook &&
+                  !isEditingLinkedIn &&
+                  !isEditingYouTube &&
+                  !isEditingWebsite ? (
                     <IconButton
                       colorScheme="green"
                       aria-label="Tambah"
@@ -1023,7 +1126,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                               disabled={!isEditingYouTube}
                               style={{ width: "100%" }}
                             >
-                              <Input
+                              {/* <Input
                                 placeholder="URL Social YouTube"
                                 onFocus={() => !isEditingYouTube}
                                 defaultValue={akunYt[0] ? akunYt[0].url : ""}
@@ -1031,11 +1134,35 @@ const ModalSocial: React.FC<ModalProps> = ({
                                   required: "URL YouTube harus diisi!",
                                 })}
                                 minW={"full"}
-                              />
+                              /> */}
+
+                              {!isEditingYouTube && (
+                                <Input
+                                  placeholder={
+                                    akunYt[0]?.url ?? "URL Social YouTube"
+                                  }
+                                  minW={"full"}
+                                />
+                              )}
+                              {isEditingYouTube && (
+                                <Input
+                                  {...registYouTube("url", {
+                                    required: "URL YouTube harus diisi!",
+                                  })}
+                                  onFocus={() => !isEditingYouTube}
+                                  minW={"full"}
+                                  defaultValue={akunYt[0]?.url}
+                                />
+                              )}
                             </fieldset>
 
                             {/* jika ada datany maka berikan tampilan edit dan delete */}
-                            {akunYt[0]?.url ? (
+                            {akunYt[0]?.url &&
+                            !isEditingInstagram &&
+                            !isEditingFacebook &&
+                            !isEditingLinkedIn &&
+                            !isEditingWebsite &&
+                            !isEditingTwitter ? (
                               <div>
                                 {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol simpan buat edit */}
                                 {isEditingYouTube ? (
@@ -1106,7 +1233,13 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </form>
                   </Stack>
 
-                  {!akunYt[0]?.url && !isEditingYouTube ? (
+                  {!akunYt[0]?.url &&
+                  !isEditingYouTube &&
+                  !isEditingInstagram &&
+                  !isEditingFacebook &&
+                  !isEditingLinkedIn &&
+                  !isEditingWebsite &&
+                  !isEditingTwitter ? (
                     <IconButton
                       colorScheme="green"
                       aria-label="Tambah"
@@ -1168,7 +1301,7 @@ const ModalSocial: React.FC<ModalProps> = ({
                               disabled={!isEditingLinkedIn}
                               style={{ width: "100%" }}
                             >
-                              <Input
+                              {/* <Input
                                 placeholder="URL Social LinkedIn"
                                 onFocus={() => !isEditingLinkedIn}
                                 defaultValue={akunLd[0] ? akunLd[0].url : ""}
@@ -1176,11 +1309,35 @@ const ModalSocial: React.FC<ModalProps> = ({
                                   required: "URL LinkedIn harus diisi!",
                                 })}
                                 minW={"full"}
-                              />
+                              /> */}
+
+                              {!isEditingLinkedIn && (
+                                <Input
+                                  placeholder={
+                                    akunLd[0]?.url ?? "URL Social LinkedIn"
+                                  }
+                                  minW={"full"}
+                                />
+                              )}
+                              {isEditingLinkedIn && (
+                                <Input
+                                  {...registLinkedIn("url", {
+                                    required: "URL LinkedIn harus diisi!",
+                                  })}
+                                  onFocus={() => !isEditingLinkedIn}
+                                  minW={"full"}
+                                  defaultValue={akunLd[0]?.url}
+                                />
+                              )}
                             </fieldset>
 
                             {/* jika ada datany maka berikan tampilan edit dan delete */}
-                            {akunLd[0]?.url ? (
+                            {akunLd[0]?.url &&
+                            !isEditingInstagram &&
+                            !isEditingFacebook &&
+                            !isEditingWebsite &&
+                            !isEditingYouTube &&
+                            !isEditingTwitter ? (
                               <div>
                                 {/* periksa dulu apakah tombol edit dipenyet, jika yaa maka yg tampil tombol simpan buat edit */}
                                 {isEditingLinkedIn ? (
@@ -1251,7 +1408,13 @@ const ModalSocial: React.FC<ModalProps> = ({
                     </form>
                   </Stack>
 
-                  {!akunLd[0]?.url && !isEditingLinkedIn ? (
+                  {!akunLd[0]?.url &&
+                  !isEditingLinkedIn &&
+                  !isEditingInstagram &&
+                  !isEditingFacebook &&
+                  !isEditingWebsite &&
+                  !isEditingYouTube &&
+                  !isEditingTwitter ? (
                     <IconButton
                       colorScheme="green"
                       aria-label="Tambah"

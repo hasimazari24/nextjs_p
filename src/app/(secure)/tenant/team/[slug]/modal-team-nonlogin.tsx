@@ -46,14 +46,14 @@ interface FormValues {
   is_public: string;
 }
 
-const ModalTeamNonLogin: React.FC<ModalProps> = ({
+const ModalTeamNonLogin = ({
   isOpen,
   onClose,
   onSubmit,
-  isEdit=false,
+  isEdit = false,
   formData,
   idTenant,
-}) => {
+}: ModalProps) => {
   const {
     register,
     handleSubmit,
@@ -68,11 +68,11 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
   };
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalNotifTeam, setModalNotifTeam] = useState(false);
+  const [isModalNotifTeam, setIsModalNotifTeam] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const handleShowMessage = (msg: string, err: boolean) => {
-    setModalNotifTeam(true);
+    setIsModalNotifTeam(true);
     setMessage(msg);
     setIsError(err);
   };
@@ -117,6 +117,8 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
       file.value = null;
     } else {
       setAvatar(file);
+      const linkTemporary: string = URL.createObjectURL(file);
+      if (isOpen && isEdit && formData) initialAvatar(linkTemporary);
       setPreviewAvatar(URL.createObjectURL(file));
       setIsLoading(true);
     }
@@ -133,7 +135,6 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
         // console.log("hapus ini kah?");
         setIdImageAvatar(`delete=${idImageAvatarOld}`);
       }
-      setDataEdited([]);
       setPreviewAvatar(undefined);
       setIdImageAvatarOld(null);
       setBtnDeleteAvatar(false);
@@ -148,14 +149,16 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
     }
   };
 
-  const [dataEdited, setDataEdited] = useState(formData ? formData : []);
-
-  const initialAvatar = () => {
-    if (isOpen && isEdit && dataEdited && dataEdited.length !== 0) {
-      if (dataEdited?.image_id !== null) {
-        if (idImageAvatarOld !== dataEdited.image_id) {
-          setIdImageAvatarOld(dataEdited?.image_id);
-          setPreviewAvatar(dataEdited?.image_url);
+  const initialAvatar = (linkTemporary: undefined | string = undefined) => {
+    if (isOpen && isEdit && formData && formData.length !== 0) {
+      if (formData?.image_id !== null) {
+        if (idImageAvatarOld !== formData.image_id) {
+          if (linkTemporary !== undefined) {
+            setIdImageAvatarOld(null);
+            setPreviewAvatar(linkTemporary);
+          }
+          setIdImageAvatarOld(formData?.image_id);
+          setPreviewAvatar(formData?.image_url);
           setBtnDeleteAvatar(true);
         }
       }
@@ -189,14 +192,19 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
       }
     }
     uploadAvatar();
-    initialAvatar();
-    setDataEdited(formData);
+    initialAvatar(undefined);
+    console.log("isModalNotifTeam changed:", isModalNotifTeam);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  }, [avatar, formData, initialAvatar()]);
+  }, [avatar, isOpen]);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
-    const simpan: { fullname: string; position: string; is_public:boolean; image?: string } = {
+    const simpan: {
+      fullname: string;
+      position: string;
+      is_public: boolean;
+      image?: string;
+    } = {
       // id: data.id,
       fullname: data.fullname,
       position: data.position,
@@ -221,6 +229,7 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
 
             if (response.status === 200) {
               handleShowMessage("Data berhasil diubah.", false);
+              onSubmit();
             }
           });
         // .catch((error) => {
@@ -233,14 +242,14 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
           .then((response) => {
             // console.log(response);
             if (response.status === 201) {
+              onSubmit();
               handleShowMessage("Data berhasil disimpan.", false);
             }
           });
       }
-
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       resetAll();
       setIsLoading(false);
+      
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
       console.error(error);
@@ -254,6 +263,8 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
     }
   };
 
+  console.log(isModalNotifTeam);
+
   const resetAll = () => {
     onClose(); // Tutup modal
     reset(); // Reset formulir
@@ -262,7 +273,7 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
     setIdImageAvatar(null); // kosongkan idimage
     setBtnDeleteAvatar(false); // hilangkan btndelete image
     setIsLoading(false);
-  }
+  };
 
   return (
     <>
@@ -435,7 +446,7 @@ const ModalTeamNonLogin: React.FC<ModalProps> = ({
       <div id="notif2">
         <ModalNotif
           isOpen={isModalNotifTeam}
-          onClose={() => setModalNotifTeam(false)}
+          onClose={() => setIsModalNotifTeam(false)}
           message={message}
           isError={isError}
         />

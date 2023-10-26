@@ -81,6 +81,12 @@ function TeamLogin({ dataTeam, onSubmit, idTenant }: NonLoginTeam) {
     );
   }
   let hidenCols: string[] = ["id"];
+  if (
+    (teamFeatures?.access.includes("tmbhTeam") &&
+      allMenu?.access.includes("all_access")) === false
+  ) {
+    hidenCols.push("action");
+  }
 
   const [isModalNotif, setIsModalNotif] = useState(false);
   const [message, setMessage] = useState("");

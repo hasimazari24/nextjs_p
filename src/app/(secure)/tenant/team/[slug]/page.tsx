@@ -2,7 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
-import { useSearchParams, useRouter, useParams, notFound } from "next/navigation";
+import {
+  useSearchParams,
+  useRouter,
+  useParams,
+  notFound,
+} from "next/navigation";
 import {
   Button,
   Center,
@@ -39,6 +44,7 @@ import NotFound from "@/app/components/template/NotFound";
 import TeamLogin from "./TeamLogin";
 import TeamNonLogin from "./TeamNonLogin";
 import ModalTeamNonLogin from "./modal-team-nonlogin";
+import dynamic from "next/dynamic";
 
 interface UserLog {
   // id: string;
@@ -66,14 +72,17 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
     allMenu = permissions[getUser.role]?.features.find(
       (feature) => feature.menu === "allmenu",
     );
+
+    if (!teamFeatures && !allMenu) {
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
+    }
   }
-  let hidenCols: string[] = ["id", "username"];
-  if (
-    (teamFeatures?.access.includes("tmbhTeam") &&
-    allMenu?.access.includes("all_access")) === false
-  ) {
-    hidenCols.push("action");
-  } 
 
   const getParamsId = params.slug;
   // console.log(getParamsId);
@@ -82,13 +91,13 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
     return notFound();
   }
 
-  const [isModalNotif, setModalNotif] = useState(false);
+  const [isModalNotifPage, setIsModalNotifPage] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const handleShowMessage = (msg: string, err: boolean) => {
     setMessage(msg);
     setIsError(err);
-    setModalNotif(true);
+    setIsModalNotifPage(true);
   };
 
   //handle add team
@@ -101,7 +110,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
   const [dataTeamNonLogin, setDataTeamNon] = useState<any[]>([]);
   const searchParams = useSearchParams();
   // const idTenant = searchParams.get("id");
-  const [namaTenant, setNamaTenant] = useState<string|null>();
+  const [namaTenant, setNamaTenant] = useState<string | null>();
   const [loadingTeam, setLoadingTeam] = useState<boolean>(false);
   const router = useRouter();
 
@@ -127,7 +136,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
 
       return () => clearTimeout(timer);
     } catch (error) {
-      setNamaTenant(null)
+      setNamaTenant(null);
       console.error("Gagal memuat data:", error);
       setLoadingTeam(false);
     }
@@ -135,7 +144,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    // if (idTenant) 
+    // if (idTenant)
     getTeam();
     if (namaTenant && namaTenant === "false") {
       return notFound();
@@ -195,6 +204,11 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
       setIsLoadSave(false);
     }
   };
+  const DynamicDataComponent = dynamic(() => import("./TeamNonLogin"), {
+    ssr: false,
+    suspense : true,
+    loading: () => <p>Loading ...</p>, // Tampilan loading saat komponen dimuat
+  });
 
   return (
     <div>
@@ -302,15 +316,13 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                   <TabPanel>
                     <TeamLogin
                       dataTeam={dataTeamLogin}
-                      onSubmit={() => {
-                        getTeam();
-                      }}
+                      onSubmit={getTeam}
                       idTenant={getParamsId}
                     />
                   </TabPanel>
                   {/* initially not mounted */}
                   <TabPanel>
-                    <TeamNonLogin
+                    <DynamicDataComponent
                       dataTeam={dataTeamNonLogin}
                       onSubmit={() => getTeam()}
                       idTenant={getParamsId}
@@ -358,8 +370,8 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
       />
 
       <ModalNotif
-        isOpen={isModalNotif}
-        onClose={() => setModalNotif(false)}
+        isOpen={isModalNotifPage}
+        onClose={() => setIsModalNotifPage(false)}
         message={message}
         isError={isError}
       />
