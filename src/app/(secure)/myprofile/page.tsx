@@ -26,8 +26,15 @@ import {
 import { CheckIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin, FaGlobe } from "react-icons/fa";
-import {AiOutlineCamera} from "react-icons/ai";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaLinkedin,
+  FaGlobe,
+} from "react-icons/fa";
+import { AiOutlineCamera } from "react-icons/ai";
 import Link from "next/link";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import ModalSocial from "../../components/modal/modal-social";
@@ -44,7 +51,7 @@ type profile = {
 
 interface pwd {
   password?: string;
-  password_old?: string;
+  old_password?: string;
   password_confirmation?: string;
 }
 
@@ -170,12 +177,8 @@ const MyProfile: React.FC = () => {
         message: "Password minimal 6 karakter",
       },
     }),
-    password_old: registerPwd("password_old", {
+    old_password: registerPwd("old_password", {
       required: "Isikan Password Lama!",
-      minLength: {
-        value: 6,
-        message: "Password minimal 6 karakter",
-      },
     }),
     password_confirmation: registerPwd("password_confirmation", {
       required: "Isikan Konfirmasi Password baru!",
@@ -245,7 +248,7 @@ const MyProfile: React.FC = () => {
             const timer = setTimeout(() => {
               setIsLoadingEdit(false);
             }, 1000);
-            handleShowMessage("Data berhasil diubah.", false);
+            handleShowMessage(response.data.message, false);
             // jika data yg dikirim ada image
             if (dataBaru.image) {
               // cek dulu dek jika bisa dipecah jadi dua maka kosongkan idimgold
@@ -261,7 +264,7 @@ const MyProfile: React.FC = () => {
         });
       await getTampil();
     } catch (error: any) {
-      console.error("Gagal memuat data:", error);
+      // console.error("Gagal memuat data:", error);
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
@@ -276,21 +279,23 @@ const MyProfile: React.FC = () => {
   const onSubmitPassword: SubmitHandler<pwd> = async (data) => {
     setIsLoadingEdit(true);
     try {
-      await axiosCustom.put("/user/update-password", data).then((response) => {
-        // setData(response.data.data);
-        console.log(response);
-        if (response.status === 200) {
-          const timer = setTimeout(() => {
-            setIsLoadingEdit(false);
-            resetPwd();
-          }, 1000);
-          handleShowMessage("Data berhasil diubah.", false);
-          return () => clearTimeout(timer);
-        }
-      });
+      await axiosCustom
+        .patch("/user/update-password", data)
+        .then((response) => {
+          // setData(response.data.data);
+          // console.log(response);
+          if (response.status === 200) {
+            const timer = setTimeout(() => {
+              setIsLoadingEdit(false);
+              resetPwd();
+            }, 1000);
+            handleShowMessage(response.data.message, false);
+            return () => clearTimeout(timer);
+          }
+        });
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
-      console.log(error);
+      // console.log(error);
       if (error?.response) {
         handleShowMessage(
           `Terjadi Kesalahan: ${error.response.data.message}`,
@@ -400,7 +405,12 @@ const MyProfile: React.FC = () => {
                     <FormControl isInvalid={!!errProfile.fullname} mb="3">
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                          <FormLabel minW="110px">Nama Lengkap</FormLabel>
+                          <FormLabel minW="110px">
+                            Nama Lengkap&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box flex={["1", "75%"]}>
                           <Input
@@ -417,7 +427,12 @@ const MyProfile: React.FC = () => {
                     <FormControl isInvalid={!!errProfile.username} mb="3">
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                          <FormLabel minW="110px">Username</FormLabel>
+                          <FormLabel minW="110px">
+                            Username&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box flex={["1", "75%"]}>
                           <Input
@@ -434,7 +449,12 @@ const MyProfile: React.FC = () => {
                     <FormControl isInvalid={!!errProfile.email} mb="3">
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                          <FormLabel minW="110px">E-Mail</FormLabel>
+                          <FormLabel minW="110px">
+                            E-Mail&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box flex={["1", "75%"]}>
                           <Input
@@ -455,13 +475,6 @@ const MyProfile: React.FC = () => {
                       type="file"
                       onChange={(e) => onAvatarChange(e.target.files)}
                     />
-                    {/* {idImageAvatar && (
-                      <Input
-                        type="hidden"
-                        // {...fields.image}
-                        defaultValue={`${idImageAvatar}`}
-                      />
-                    )} */}
                     <Flex justify="flex-end">
                       <Button
                         leftIcon={<CheckIcon />}
@@ -483,21 +496,24 @@ const MyProfile: React.FC = () => {
                   </Text>
                   <Box w="full">
                     <form onSubmit={handlePwd(onSubmitPassword)}>
-                      <FormControl isInvalid={!!errPwd.password_old} mb="3">
+                      <FormControl isInvalid={!!errPwd.old_password} mb="3">
                         <Flex flexDirection={["column", "row"]}>
                           <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                            <FormLabel minW="110px">Password Lama</FormLabel>
+                            <FormLabel minW="110px">
+                              Password Lama&nbsp;
+                              <Text as={"span"} color={"red"}>
+                                *
+                              </Text>
+                            </FormLabel>
                           </Box>
                           <Box flex={["1", "75%"]}>
                             <Input
-                              type="text"
-                              {...fields_pwd.password_old}
-                              defaultValue={dataTampil?.password_old}
-                              // className={`form-control ${errors.name ? "is-invalid"}`}
+                              type="password"
+                              {...fields_pwd.old_password}
                             />
                             <FormErrorMessage>
-                              {errPwd.password_old &&
-                                errPwd.password_old.message}
+                              {errPwd.old_password &&
+                                errPwd.old_password.message}
                             </FormErrorMessage>
                           </Box>
                         </Flex>
@@ -506,15 +522,15 @@ const MyProfile: React.FC = () => {
                       <FormControl isInvalid={!!errPwd.password} mb="4">
                         <Flex flexDirection={["column", "row"]}>
                           <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                            <FormLabel minW="110px">Password Baru</FormLabel>
+                            <FormLabel minW="110px">
+                              Password Baru&nbsp;
+                              <Text as={"span"} color={"red"}>
+                                *
+                              </Text>
+                            </FormLabel>
                           </Box>
                           <Box flex={["1", "75%"]}>
-                            <Input
-                              type="text"
-                              {...fields_pwd.password}
-                              defaultValue={dataTampil?.password}
-                              // className={`form-control ${errors.name ? "is-invalid"}`}
-                            />
+                            <Input type="password" {...fields_pwd.password} />
                             <FormErrorMessage>
                               {errPwd.password && errPwd.password.message}
                             </FormErrorMessage>
@@ -528,13 +544,17 @@ const MyProfile: React.FC = () => {
                       >
                         <Flex flexDirection={["column", "row"]}>
                           <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                            <FormLabel minW="110px">Konfirmasi</FormLabel>
+                            <FormLabel minW="110px">
+                              Konfirmasi&nbsp;
+                              <Text as={"span"} color={"red"}>
+                                *
+                              </Text>
+                            </FormLabel>
                           </Box>
                           <Box flex={["1", "75%"]}>
                             <Input
-                              type="text"
+                              type="password"
                               {...fields_pwd.password_confirmation}
-                              defaultValue={dataTampil?.password_confirmation}
                             />
                             <FormErrorMessage>
                               {errPwd.password_confirmation &&
@@ -549,7 +569,7 @@ const MyProfile: React.FC = () => {
                           leftIcon={<CheckIcon />}
                           colorScheme="green"
                           type="submit"
-                          isLoading={isLoading}
+                          isLoading={isLoadingEdit}
                           size="md"
                         >
                           Simpan Password
