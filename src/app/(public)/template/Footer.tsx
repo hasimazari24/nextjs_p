@@ -10,11 +10,12 @@ import {
   Text,
   Icon,
   VisuallyHidden,
-  Input,
   Image,
-  IconButton,
   useColorModeValue,
-  Center,
+  SlideFade,
+  // Input,
+  // IconButton,
+  // Center,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import {
@@ -28,9 +29,9 @@ import {
   FaMapPin,
   FaPhoneAlt,
   FaEnvelopeOpen,
-  FaGlobe,
+  // FaGlobe,
 } from "react-icons/fa";
-import { BiBorderRadius, BiMailSend } from "react-icons/bi";
+// import { BiBorderRadius, BiMailSend } from "react-icons/bi";
 
 const Logo = (props: any) => {
   return (
@@ -138,115 +139,118 @@ const Footer = () => {
         py={10}
         px={{ base: 6, md: 20, "2xl": 55 }}
       >
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={"40px"}>
-          <Box>
-            <Box
-              //border="2px solid white"
-              borderRadius="10px"
-              // padding="2"
-              pb="2"
-              //bg="gray.500"
-            >
-              <Logo color={useColorModeValue("gray.700", "white")} />
+        <SlideFade in={true} offsetY="20px">
+          <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={"40px"}>
+            <Box>
+              <Box
+                //border="2px solid white"
+                borderRadius="10px"
+                // padding="2"
+                pb="2"
+                //bg="gray.500"
+              >
+                <Logo color={useColorModeValue("gray.700", "white")} />
+              </Box>
+              <Text fontSize={"sm"}>
+                © 2023 Solo Technopark. All rights reserved
+              </Text>
+
+              <SimpleGrid
+                columns={6}
+                spacing={0}
+                maxWidth={"300px"}
+                marginTop={2}
+              >
+                <SocialButton
+                  label={"Facebook"}
+                  href={
+                    "https://www.facebook.com/solotechnopark.id?mibextid=ZbWKwL"
+                  }
+                >
+                  <FaFacebookF />
+                </SocialButton>
+                <SocialButton
+                  label={"Instagram"}
+                  href={
+                    "https://www.instagram.com/solotechnopark_official/?hl=id"
+                  }
+                >
+                  <FaInstagram />
+                </SocialButton>
+                <SocialButton
+                  label={"Twitter"}
+                  href={"https://twitter.com/solo_technopark"}
+                >
+                  <FaTwitter />
+                </SocialButton>
+                <SocialButton
+                  label={"Linkedld"}
+                  href={"https://www.linkedin.com/company/solo-technopark/"}
+                >
+                  <FaLinkedin />
+                </SocialButton>
+                <SocialButton
+                  label={"TikTok"}
+                  href={"https://www.tiktok.com/@solotechnopark"}
+                >
+                  <FaTiktok />
+                </SocialButton>
+                <SocialButton
+                  label={"YouTube"}
+                  href={
+                    "https://www.youtube.com/channel/UCqtTWpV2tExmQ1pQQLILd2Q"
+                  }
+                >
+                  <FaYoutube />
+                </SocialButton>
+              </SimpleGrid>
             </Box>
-            <Text fontSize={"sm"}>
-              © 2023 Solo Technopark. All rights reserved
-            </Text>
 
-            <SimpleGrid
-              columns={6}
-              spacing={0}
-              maxWidth={"300px"}
-              marginTop={2}
-            >
-              <SocialButton
-                label={"Facebook"}
-                href={
-                  "https://www.facebook.com/solotechnopark.id?mibextid=ZbWKwL"
-                }
-              >
-                <FaFacebookF />
-              </SocialButton>
-              <SocialButton
-                label={"Instagram"}
-                href={
-                  "https://www.instagram.com/solotechnopark_official/?hl=id"
-                }
-              >
-                <FaInstagram />
-              </SocialButton>
-              <SocialButton
-                label={"Twitter"}
-                href={"https://twitter.com/solo_technopark"}
-              >
-                <FaTwitter />
-              </SocialButton>
-              <SocialButton
-                label={"Linkedld"}
-                href={"https://www.linkedin.com/company/solo-technopark/"}
-              >
-                <FaLinkedin />
-              </SocialButton>
-              <SocialButton
-                label={"TikTok"}
-                href={"https://www.tiktok.com/@solotechnopark"}
-              >
-                <FaTiktok />
-              </SocialButton>
-              <SocialButton
-                label={"YouTube"}
-                href={
-                  "https://www.youtube.com/channel/UCqtTWpV2tExmQ1pQQLILd2Q"
-                }
-              >
-                <FaYoutube />
-              </SocialButton>
-            </SimpleGrid>
-          </Box>
-
-          <Stack align={"flex-start"}>
-            <ListHeader>Hubungi Kami</ListHeader>
-            <HStack spacing={3} alignItems="center">
-              <Icon as={FaBuilding} w={4} h={4} color="teal.200" />
-              <Box
-                as="a"
-                href={
-                  "https://www.google.com/maps/place/Solo+Techno+Park/@-7.5560692,110.8512916,17z/data=!3m1!4b1!4m6!3m5!1s0x2e7a16e2b5ffa643:0xa0bf36ec85b94dfb!8m2!3d-7.5560692!4d110.8538665!16s%2Fg%2F1pp2tkfp9?entry=ttu"
-                }
-              >
-                Gedung Solo Trade Center
-              </Box>
-            </HStack>
-            <HStack spacing={3} alignItems="center">
-              <Icon as={FaMapPin} w={4} h={4} color="teal.200" />
-              <Box
-                as="a"
-                href={
-                  "https://www.google.com/maps/place/Solo+Techno+Park/@-7.5560692,110.8512916,17z/data=!3m1!4b1!4m6!3m5!1s0x2e7a16e2b5ffa643:0xa0bf36ec85b94dfb!8m2!3d-7.5560692!4d110.8538665!16s%2Fg%2F1pp2tkfp9?entry=ttu"
-                }
-              >
-                Jl. Ki Hajar Dewantara No. 19 Jebres Kec. Jebres, Kota Surakarta
-              </Box>
-            </HStack>
-            <HStack spacing={3} alignItems="center">
-              <Icon as={FaPhoneAlt} w={4} h={4} color="teal.200" />
-              <Box as="a" href={"wa.me/+62271666628"}>
-                +62 271 666 628
-              </Box>
-            </HStack>
-            <HStack spacing={3} alignItems="center">
-              <Icon as={FaEnvelopeOpen} w={4} h={4} color="teal.200" />
-              <Box as="a" href={"mailto:info@solotechnopark.id"}>
-                info@solotechnopark.id
-              </Box>
-            </HStack>
-          </Stack>
-          <Stack align={"flex-start"}>
-            <ListHeader>Find Us</ListHeader>
-            {/* Google Maps */}
-            <GoogleMaps />
-          </Stack>
-        </SimpleGrid>
+            <Stack align={"flex-start"}>
+              <ListHeader>Hubungi Kami</ListHeader>
+              <HStack spacing={3} alignItems="center">
+                <Icon as={FaBuilding} w={4} h={4} color="teal.200" />
+                <Box
+                  as="a"
+                  href={
+                    "https://www.google.com/maps/place/Solo+Techno+Park/@-7.5560692,110.8512916,17z/data=!3m1!4b1!4m6!3m5!1s0x2e7a16e2b5ffa643:0xa0bf36ec85b94dfb!8m2!3d-7.5560692!4d110.8538665!16s%2Fg%2F1pp2tkfp9?entry=ttu"
+                  }
+                >
+                  Gedung Solo Trade Center
+                </Box>
+              </HStack>
+              <HStack spacing={3} alignItems="center">
+                <Icon as={FaMapPin} w={4} h={4} color="teal.200" />
+                <Box
+                  as="a"
+                  href={
+                    "https://www.google.com/maps/place/Solo+Techno+Park/@-7.5560692,110.8512916,17z/data=!3m1!4b1!4m6!3m5!1s0x2e7a16e2b5ffa643:0xa0bf36ec85b94dfb!8m2!3d-7.5560692!4d110.8538665!16s%2Fg%2F1pp2tkfp9?entry=ttu"
+                  }
+                >
+                  Jl. Ki Hajar Dewantara No. 19 Jebres Kec. Jebres, Kota
+                  Surakarta
+                </Box>
+              </HStack>
+              <HStack spacing={3} alignItems="center">
+                <Icon as={FaPhoneAlt} w={4} h={4} color="teal.200" />
+                <Box as="a" href={"wa.me/+62271666628"}>
+                  +62 271 666 628
+                </Box>
+              </HStack>
+              <HStack spacing={3} alignItems="center">
+                <Icon as={FaEnvelopeOpen} w={4} h={4} color="teal.200" />
+                <Box as="a" href={"mailto:info@solotechnopark.id"}>
+                  info@solotechnopark.id
+                </Box>
+              </HStack>
+            </Stack>
+            <Stack align={"flex-start"}>
+              <ListHeader>Find Us</ListHeader>
+              {/* Google Maps */}
+              <GoogleMaps />
+            </Stack>
+          </SimpleGrid>
+        </SlideFade>
       </Container>
     </Box>
   );

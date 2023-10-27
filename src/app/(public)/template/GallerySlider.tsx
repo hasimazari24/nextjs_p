@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -13,14 +13,15 @@ import {
   Text,
   Button,
   Center,
-  Spinner,
+  SlideFade,
+  // Spinner,
 } from "@chakra-ui/react";
-import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import Link from "next/link";
+// import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 // import { usePublic } from "../utils/PublicContext";
-import AlertBar from "../../components/modal/AlertBar";
-import { useRouter } from "next/navigation";
-import { axiosCustom } from "../../api/axios";
+// import AlertBar from "../../components/modal/AlertBar";
+// import { useRouter } from "next/navigation";
+// import { axiosCustom } from "../../api/axios";
 
 // interface tenantBeranda {
 //   id: string;
@@ -35,22 +36,23 @@ interface Tenant {
   name: string;
   motto: string;
   slug: string;
+  level_tenant: string;
   image_url: string;
   image_banner_url: string;
 }
 
 interface GalleryProps {
-  beranda : Tenant[]
+  beranda: Tenant[];
 }
 
 const GallerySlider: React.FC<GalleryProps> = ({ beranda }) => {
   // const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [status, setstatus] = useState<
-    "success" | "info" | "warning" | "error"
-  >("error");
+  // const [isOpen, setIsOpen] = useState(false);
+  // const [msg, setMsg] = useState("");
+  // const [status, setstatus] = useState<
+  //   "success" | "info" | "warning" | "error"
+  // >("error");
   // init state untuk menampilkan slide yg aktif
   const [activeSlide, setActiveSlide] = useState(0);
   // init state data cards
@@ -59,9 +61,9 @@ const GallerySlider: React.FC<GalleryProps> = ({ beranda }) => {
   // const cards = await getBeranda();
   const cards = beranda || [];
   // untuk jumlah yang tayang ngaturnya disini aja ya bos
-  const SLIDES_TO_SHOW = cards.length <= 5 ? cards.length : 5;
+  // const SLIDES_TO_SHOW = cards.length <= 5 ? cards.length : 5;
   // jika datanya kurang dari 3 maka state nya false., biar card nya gk dobel
- const infinite = cards.length >= SLIDES_TO_SHOW && cards.length >= 5;
+  // const infinite = cards.length >= SLIDES_TO_SHOW && cards.length >= 5;
   // style untuk box jika tampilan data kosong dan juga sebagai fallback (loading..)
   const boxStyles = {
     width: "100%",
@@ -130,23 +132,13 @@ const GallerySlider: React.FC<GalleryProps> = ({ beranda }) => {
           <div>
             <Box
               position={"relative"}
-              height={{
-                base: "400px",
-                sm: "400px",
-                md: "600px",
-                lg: "600px",
-              }}
+              h={"100vh"}
               width={"100%"}
               overflow={"hidden"}
             >
               <Box
                 key={activeSlide}
-                height={{
-                  base: "400px",
-                  sm: "400px",
-                  md: "600px",
-                  lg: "600px",
-                }}
+                h={"100vh"}
                 width={"100%"}
                 backgroundPosition="center"
                 backgroundRepeat="no-repeat"
@@ -156,50 +148,67 @@ const GallerySlider: React.FC<GalleryProps> = ({ beranda }) => {
                   "img/tenant-banner-default.jpg"
                 })`}
                 filter="auto"
-                brightness="60%"
+                brightness="40%"
               />
               <Stack align="center" justify="center">
                 <Box
                   w={"auto"}
-                  maxW={"lg"}
+                  maxW={"8xl"}
                   position="absolute"
                   top={{ base: "15%", md: "20%" }}
                   transform="translate(0, -20%)"
                   color={"white"}
                   p="3"
                 >
-                  <Heading
-                    fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-                    textAlign="center"
-                    mb="4"
-                  >
-                    {cards[activeSlide]?.name}
-                  </Heading>
-                  <Text
-                    fontSize={{ base: "md", lg: "lg" }}
-                    textAlign="center"
-                    mb="4"
-                  >
-                    {cards[activeSlide]?.motto}
-                  </Text>
-                  <Box>
-                    <Center>
-                      <Link href={`/tenant-detail/${cards[activeSlide]?.slug}`}>
-                        <Button
-                          rounded={"full"}
-                          size={"lg"}
-                          _hover={{
-                            bg: "blue.200",
-                          }}
-                          color={"white"}
-                          fontWeight={"normal"}
-                          variant="outline"
+                  <SlideFade in={true} offsetY="20px">
+                    <Heading
+                      fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                      fontWeight={"bold"}
+                      textAlign="center"
+                      mb="4"
+                    >
+                      {cards[activeSlide]?.name}
+                    </Heading>
+                    <Text
+                      fontSize={{ base: "md", lg: "lg" }}
+                      textAlign="center"
+                      mb="4"
+                    >
+                      {cards[activeSlide]?.motto}
+                    </Text>
+                    <Text
+                      fontSize={{ base: "14px", md: "lg", lg: "lg" }}
+                      fontWeight="reguler"
+                      textAlign="center"
+                      mb="4"
+                    >
+                      Level Tenant :{" "}
+                      <Text as="b" color="red.200">
+                        {cards[activeSlide]?.level_tenant}
+                      </Text>
+                    </Text>
+
+                    <Box>
+                      <Center>
+                        <Link
+                          href={`/tenant-detail/${cards[activeSlide]?.slug}`}
                         >
-                          Lihat Selengkapnya
-                        </Button>
-                      </Link>
-                    </Center>
-                  </Box>
+                          <Button
+                            rounded={"full"}
+                            size={"lg"}
+                            _hover={{
+                              bg: "blue.200",
+                            }}
+                            color={"white"}
+                            fontWeight={"normal"}
+                            variant="outline"
+                          >
+                            Lihat Selengkapnya
+                          </Button>
+                        </Link>
+                      </Center>
+                    </Box>
+                  </SlideFade>
                 </Box>
               </Stack>
               <Box mt={{ base: "-130px", md: "-200px" }}>
@@ -249,24 +258,20 @@ const GallerySlider: React.FC<GalleryProps> = ({ beranda }) => {
         </>
       ) : (
         <Flex
-          height={{
-            base: "400px",
-            sm: "400px",
-            md: "600px",
-            lg: "600px",
-          }}
+          h={"100vh"}
           flexWrap="wrap"
           gap="24px"
           justifyContent="space-evenly"
         >
-          {/* adding filter property to the element */}
           <Box sx={boxStyles} filter="grayscale(80%)">
-            Belum ada data.
+            <SlideFade in={true} offsetY="20px">
+              Belum ada data.
+            </SlideFade>
           </Box>
         </Flex>
       )}
     </>
   );
-}
+};
 
 export default GallerySlider;

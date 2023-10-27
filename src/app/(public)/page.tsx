@@ -1,43 +1,36 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-} from "react";
-import {
-  useColorModeValue,
-  Box
-} from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { useColorModeValue, Box } from "@chakra-ui/react";
 import GallerySlider from "./template/GallerySlider";
 import SectionStp from "./template/SectionStp";
 import HeadingPage from "./template/HeadingPage";
 import { axiosCustom } from "../api/axios";
-import AlertBar from "@/app/components/modal/AlertBar";
 import LoadingModal from "./loading";
 
-interface Tenant {
-  id: string;
-  name: string;
-  motto: string;
-  slug: string;
-  image_url: string;
-  image_banner_url: string;
-}
+// interface Tenant {
+//   id: string;
+//   name: string;
+//   motto: string;
+//   slug: string;
+//   image_url: string;
+//   image_banner_url: string;
+// }
 
-interface Beranda {
-  total_tenant: Number;
-  level_tenant: {
-    pra_inkubasi: Number;
-    inkubasi: Number;
-    inkubasi_lanjutan: Number;
-    scale_up: Number;
-  };
-  tenant: Tenant[];
-}
+// interface Beranda {
+//   total_tenant: Number;
+//   level_tenant: {
+//     pra_inkubasi: Number;
+//     inkubasi: Number;
+//     inkubasi_lanjutan: Number;
+//     scale_up: Number;
+//   };
+//   tenant: Tenant[];
+// }
 
-interface pageProps {
-  beranda: Beranda;
-}
+// interface pageProps {
+//   beranda: Beranda;
+// }
 
 function page() {
   const [beranda, setBeranda] = useState<any | null>([]);
@@ -47,7 +40,6 @@ function page() {
   const [status, setstatus] = useState<
     "success" | "info" | "warning" | "error"
   >("error");
-
 
   const getBeranda = async () => {
     setLoadingBeranda(true);
@@ -82,7 +74,7 @@ function page() {
         <>
           <Box
             bg={useColorModeValue("gray.200", "gray.400")}
-            id="PortofilioTenant"
+            id="GallerySliderTenant"
           >
             <GallerySlider beranda={beranda?.tenant} />
           </Box>

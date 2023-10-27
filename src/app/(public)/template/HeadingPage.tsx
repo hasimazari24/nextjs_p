@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from "react";
 import {
   Container,
   Stack,
@@ -11,34 +11,35 @@ import {
   Button,
   Image,
   Icon,
-  IconButton,
   createIcon,
   IconProps,
   useColorModeValue,
-  Img,
-  Center,
-  AbsoluteCenter,
+  SlideFade,
+  // IconButton,
+  // Img,
+  // Center,
+  // AbsoluteCenter,
 } from "@chakra-ui/react";
 
 function HeadingPage() {
-    const scrollToElement = (elementId: any) => {
-      //isi nama element id yang menjadi target scroll
-      const element = document.getElementById(elementId); // Ganti dengan ID elemen yang ingin Anda gulirkan
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    };
+  const scrollToElement = (elementId: any) => {
+    //isi nama element id yang menjadi target scroll
+    const element = document.getElementById(elementId); // Ganti dengan ID elemen yang ingin Anda gulirkan
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
-    const handleHashScrolling = () => {
-      if (window.location.hash) {
-        const elementId = window.location.hash.substring(1); // Menghilangkan karakter "#" dari hash
-        scrollToElement(elementId);
-      }
-    };
+  const handleHashScrolling = () => {
+    if (window.location.hash) {
+      const elementId = window.location.hash.substring(1); // Menghilangkan karakter "#" dari hash
+      scrollToElement(elementId);
+    }
+  };
 
-    useEffect(() => {
-      window.addEventListener("load", handleHashScrolling);
-    }, []);
+  useEffect(() => {
+    window.addEventListener("load", handleHashScrolling);
+  }, []);
 
   return (
     <div>
@@ -48,19 +49,17 @@ function HeadingPage() {
           spacing={{ base: 5, md: 10 }}
           py={{ base: 8, lg: 16 }}
           direction={{ base: "column", md: "row" }}
+          justifyContent={"center"}
+          alignItems={"center"}
         >
           <Stack w={"full"} flex={1} spacing={{ base: 5, md: 10 }}>
-            <Heading
-              lineHeight={1.1}
-              fontWeight={500}
-              fontSize={{ base: "xl", sm: "2xl", lg: "4xl" }}
-            >
+            <Heading lineHeight={1.1} fontWeight={500}>
               <Box
                 position={"absolute"}
                 w={{ base: 34, md: 34, lg: 34 }}
                 top={{ base: 80, md: 110, lg: 415 }}
                 left={{ base: 30, md: 70, lg: 500 }}
-                opacity={0.4}
+                opacity={0.2}
                 zIndex={-1}
               >
                 <Image
@@ -73,8 +72,8 @@ function HeadingPage() {
                 position={"absolute"}
                 w={{ base: 39, md: 39, lg: 41 }}
                 top={{ base: 140, md: 350, lg: 100 }}
-                left={{ base: 290, md: 280, lg: 680 }}
-                opacity={0.4}
+                left={{ base: 250, md: 280, lg: 670 }}
+                opacity={0.2}
                 zIndex={-1}
               >
                 <Image
@@ -88,7 +87,7 @@ function HeadingPage() {
                 w={{ base: 38, md: 38, lg: 38 }}
                 top={{ base: 245, md: 110, lg: 175 }}
                 left={{ base: 210, md: 480, lg: 280 }}
-                opacity={0.4}
+                opacity={0.2}
                 zIndex={-1}
               >
                 <Image
@@ -102,7 +101,7 @@ function HeadingPage() {
                 w={{ base: 38, md: 39, lg: 41 }}
                 top={{ base: 550, md: 405, lg: 500 }}
                 left={{ base: 235, md: 740, lg: 1000 }}
-                opacity={0.4}
+                opacity={0.2}
                 zIndex={1}
               >
                 <Image
@@ -139,52 +138,68 @@ function HeadingPage() {
                 </svg>
               </Box>
 
-              <Text
-                as={"span"}
-                position={"relative"}
-                _after={{
-                  content: "''",
-                  width: "full",
-                  height: "30%",
-                  position: "absolute",
-                  bottom: 1,
-                  left: 0,
-                  bg: "red.400",
-                  zIndex: -1,
-                }}
-              >
-                {process.env.APP_NAME?.toUpperCase()}
-              </Text>
-              <br />
-              <Text as={"span"} color={"red.400"}>
-                {process.env.APP_DESCRIPTION?.toUpperCase()}
-              </Text>
+              <SlideFade in={true} offsetY="20px">
+                <Text
+                  as={"span"}
+                  fontWeight={"semibold"}
+                  position={"relative"}
+                  fontSize={{
+                    base: "2xl",
+                    md: "3xl",
+                    lg: "4xl",
+                  }}
+                  _after={{
+                    content: "''",
+                    width: "full",
+                    height: "30%",
+                    position: "absolute",
+                    bottom: 1,
+                    left: 0,
+                    bg: "red.400",
+                    zIndex: -1,
+                  }}
+                >
+                  {process.env.APP_NAME?.toUpperCase()}
+                </Text>
+                <br />
+                <Text
+                  as={"span"}
+                  color={"red.400"}
+                  fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                >
+                  {process.env.APP_DESCRIPTION?.toUpperCase()}
+                </Text>
+              </SlideFade>
             </Heading>
-            <Text color={"gray.800"} fontSize="20px">
-              Pusat Pengelolaan dan Pemantauan Perkembangan Tenant di Solo
-              Technopark.
-            </Text>
+            <SlideFade in={true} offsetY="20px">
+              <Text color={"gray.800"} fontSize={{ base: "lg", md: "xl" }}>
+                Pusat Pengelolaan dan Pemantauan Perkembangan Tenant di Solo
+                Technopark.
+              </Text>
+            </SlideFade>
             <Stack
               spacing={{ base: 4, sm: 6 }}
               direction={{ base: "column", sm: "row" }}
             >
-              <Button
-                // rounded={"full"}
-                // size={"lg"}
-                // fontWeight={"normal"}
-                // px={6}
-                rounded={"full"}
-                size={"lg"}
-                fontWeight={"normal"}
-                px={6}
-                colorScheme={"gray"}
-                bg={"gray.100"}
-                _hover={{ bg: "gray.200" }}
-                leftIcon={<PlayIcon h={4} w={4} color={"gray.400"} />}
-                onClick={() => scrollToElement("PortofilioTenant")}
-              >
-                Get Started
-              </Button>
+              <SlideFade in={true} offsetY="20px">
+                <Button
+                  // rounded={"full"}
+                  // size={"lg"}
+                  // fontWeight={"normal"}
+                  // px={6}
+                  rounded={"full"}
+                  size={"lg"}
+                  fontWeight={"normal"}
+                  px={6}
+                  colorScheme={"gray"}
+                  bg={"gray.100"}
+                  _hover={{ bg: "gray.200" }}
+                  leftIcon={<PlayIcon h={4} w={4} color={"gray.400"} />}
+                  onClick={() => scrollToElement("GallerySliderTenant")}
+                >
+                  Get Started
+                </Button>
+              </SlideFade>
             </Stack>
           </Stack>
           <Flex
@@ -203,14 +218,16 @@ function HeadingPage() {
               zIndex={-1}
               color={useColorModeValue("red.50", "red.400")}
             />
-            <Image
-              alt={"STP"}
-              style={{ objectFit: "contain" }}
-              // fit={"cover"}
-              w={"100%"}
-              h={{ base: "330px", sm: "330px", md: "400px", lg: "400px" }}
-              src="/img/gb-stp.png"
-            />
+            <SlideFade in={true} offsetY="20px">
+              <Image
+                alt={"STP"}
+                style={{ objectFit: "contain" }}
+                // fit={"cover"}
+                w={"100%"}
+                h={{ base: "330px", sm: "330px", md: "400px", lg: "400px" }}
+                src="/img/ilustrasi-beranda.svg"
+              />
+            </SlideFade>
           </Flex>
         </Stack>
       </Container>
@@ -243,4 +260,4 @@ const Blob = (props: IconProps) => {
   );
 };
 
-export default HeadingPage
+export default HeadingPage;

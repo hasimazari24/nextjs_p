@@ -2,27 +2,20 @@
 
 import {
   Box,
-  chakra,
   Container,
   Flex,
-  SimpleGrid,
-  Stat,
-  StatLabel,
-  StatNumber,
-  useColorModeValue,
   Text,
-  HStack,
+  SlideFade,
+  Grid,
+  Button,
+  GridItem,
+  Heading,
+  Icon,
 } from "@chakra-ui/react";
-import { ReactNode, useState } from "react";
-import { BsPerson, BsBuilding } from "react-icons/bs";
-import { FiServer } from "react-icons/fi";
-import { GoLocation } from "react-icons/go";
-
-interface StatsCardProps {
-  title: string;
-  stat: string;
-  icon: ReactNode;
-}
+import { FaBookReader, FaNetworkWired } from "react-icons/fa";
+import { HiUserGroup } from "react-icons/hi";
+import { GiProgression } from "react-icons/gi";
+import NextLink from "next/link";
 
 interface SectionStp {
   total_tenant: number;
@@ -34,93 +27,159 @@ interface SectionStp {
   };
 }
 
-function StatsCard(props: StatsCardProps) {
-  const { title, stat, icon } = props;
-  return (
-    <Stat
-      px={{ base: 2, md: 4 }}
-      py={"5"}
-      shadow={"xl"}
-      border={"1px solid"}
-      borderColor={useColorModeValue("gray.800", "gray.500")}
-      rounded={"lg"}
-    >
-      <Flex justifyContent={"space-between"}>
-        <Box pl={{ base: 2, md: 4 }}>
-          <StatLabel fontWeight={"medium"} isTruncated>
-            {title}
-          </StatLabel>
-          <StatNumber fontSize={"2xl"} fontWeight={"medium"}>
-            {stat}
-          </StatNumber>
-        </Box>
-        <Box
-          my={"auto"}
-          color={useColorModeValue("gray.800", "gray.200")}
-          alignContent={"center"}
-        >
-          {icon}
-        </Box>
-      </Flex>
-    </Stat>
-  );
-}
-
 export default function BasicStatistics(props: SectionStp) {
   const { total_tenant, level_tenant } = props;
+  console.log({ total_tenant, level_tenant });
   return (
-    <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }} mb="55">
-      <HStack
-        alignItems={"center"}
-        justify={"center"}
-        fontSize={"4xl"}
-        py={10}
-        fontWeight={"bold"}
+    <SlideFade in={true} offsetY="20px">
+      <Container
+        maxW={"8xl"}
+        py={16}
+        textAlign={"center"}
+        px={{
+          base: 6,
+          md: 20,
+          "2xl": 55,
+        }}
       >
-        <Text
-          as={"span"}
-          position={"relative"}
-          _after={{
-            content: "''",
-            width: "full",
-            height: "30%",
-            position: "absolute",
-            bottom: 2,
-            left: 0,
-            bg: "red.400",
-            zIndex: -1,
+        <Grid
+          templateColumns={{
+            base: "repeat(2, 1fr)",
+            sm: "repeat(4, 1fr)",
+            md: "repeat(4, 1fr)",
+            lg: "repeat(4, 1fr",
           }}
+          templateRows={{
+            base: "repeat(1, 1fr)",
+            md: "repeat(2, 1fr)",
+          }}
+          gap={6}
         >
-          {total_tenant} TENANT
-        </Text>
-        <Text pl="3"> SOLO TECHNOPARK</Text>
-      </HStack>
-      <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 4 }}
-        spacing={{ base: 5, lg: 8 }}
-        // px={{ base: 3, md: 20 }}
-      >
-        <StatsCard
-          title={"Pra Inkubasi"}
-          stat={`${level_tenant?.pra_inkubasi}`}
-          icon={<BsPerson size={"3em"} />}
-        />
-        <StatsCard
-          title={"Inkubasi"}
-          stat={`${level_tenant?.inkubasi}`}
-          icon={<FiServer size={"3em"} />}
-        />
-        <StatsCard
-          title={"Inkubasi Lanjutan"}
-          stat={`${level_tenant?.inkubasi_lanjutan}`}
-          icon={<GoLocation size={"3em"} />}
-        />
-        <StatsCard
-          title={"Scale Up"}
-          stat={`${level_tenant?.scale_up}`}
-          icon={<BsBuilding size={"3em"} />}
-        />
-      </SimpleGrid>
-    </Container>
+          <GridItem
+            w="100%"
+            colSpan={{
+              base: 2,
+              sm: 4,
+              md: 2,
+            }}
+            rowSpan={{
+              base: 1,
+              sm: 1,
+              md: 2,
+            }}
+            textAlign={{ base: "center", md: "left" }}
+            my={{ base: 0, md: 10, lg: 14 }}
+          >
+            <Heading as={"h3"} size={"xl"} mb={3}>
+              Solo Technopark
+              {total_tenant !== undefined && (
+                <>
+                  <br />
+                  Memiliki&nbsp;
+                  <Text as={"span"} color={"red.400"}>
+                    {total_tenant} Tenant
+                  </Text>
+                </>
+              )}
+            </Heading>
+            <Text mb={3} size={{ base: "md", lg: "lg" }}>
+              Pusat Inovasi dan Vokasi yang Memadukan Unsur Pengembangan Iptek,
+              Kebutuhan Pasar, Industri dan Bisnis Untuk Penguatan Daya Saing
+              Daerah.
+            </Text>
+            <NextLink href={`${process.env.APP_URL}/tenant`} passHref>
+              <Button
+                colorScheme="red"
+                bgGradient="linear(to-r, red.400, red.500, red.600)"
+                color="white"
+                variant="solid"
+              >
+                Lihat Tenant
+              </Button>
+            </NextLink>
+          </GridItem>
+          <GridItem
+            w="100%"
+            p={{ base: 2, md: 3 }}
+            boxShadow="xs"
+            border="1px"
+            borderColor="gray.200"
+            rounded="lg"
+            bgColor={"gray.50"}
+            _hover={{ boxShadow: "md" }}
+          >
+            <Icon as={HiUserGroup} boxSize={8} />
+            <Flex flexDirection={"column"}>
+              <Text fontSize={"4xl"} fontWeight={"bold"}>
+                {level_tenant?.pra_inkubasi === undefined
+                  ? "-"
+                  : `${level_tenant?.pra_inkubasi}`}
+              </Text>
+              <Box fontSize={"xs"}>Pra Inkubasi</Box>
+            </Flex>
+          </GridItem>
+          <GridItem
+            w="100%"
+            p={{ base: 2, md: 3 }}
+            boxShadow="xs"
+            border="1px"
+            borderColor="gray.200"
+            rounded="lg"
+            bgColor={"gray.50"}
+            _hover={{ boxShadow: "md" }}
+          >
+            <Icon as={FaBookReader} boxSize={8} />
+            <Flex flexDirection={"column"}>
+              <Text fontSize={"4xl"} fontWeight={"bold"}>
+                {level_tenant?.inkubasi === undefined
+                  ? "-"
+                  : `${level_tenant?.inkubasi}`}
+              </Text>
+              <Box fontSize={"xs"}>Inkubasi</Box>
+            </Flex>
+          </GridItem>
+          <GridItem
+            w="100%"
+            p={{ base: 2, md: 3 }}
+            boxShadow="xs"
+            border="1px"
+            borderColor="gray.200"
+            rounded="lg"
+            bgColor={"gray.50"}
+            _hover={{ boxShadow: "md" }}
+          >
+            <Icon as={FaNetworkWired} boxSize={8} />
+            <Flex flexDirection={"column"}>
+              <Text fontSize={"4xl"} fontWeight={"bold"}>
+                {level_tenant?.inkubasi_lanjutan == undefined
+                  ? "-"
+                  : `${level_tenant?.inkubasi_lanjutan}`}
+              </Text>
+              <Box fontSize={"xs"}>Inkubasi Lanjutan</Box>
+            </Flex>
+          </GridItem>
+          <GridItem
+            w="100%"
+            p={{ base: 2, md: 3 }}
+            boxShadow="xs"
+            border="1px"
+            borderColor="gray.200"
+            rounded="lg"
+            bgColor={"gray.50"}
+            _hover={{ boxShadow: "md" }}
+          >
+            <Icon as={GiProgression} boxSize={8} />
+            <Flex flexDirection={"column"}>
+              <Text fontSize={"4xl"} fontWeight={"bold"}>
+                {level_tenant?.scale_up === undefined
+                  ? "-"
+                  : `${level_tenant?.scale_up}`}
+              </Text>
+              <Box fontSize={"xs"}>Scale Up</Box>
+            </Flex>
+          </GridItem>
+        </Grid>
+      </Container>
+    </SlideFade>
   );
 }
