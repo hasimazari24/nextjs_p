@@ -48,6 +48,7 @@ interface FormValues {
   title: string;
   description: string;
   image?: string;
+  url?: string;
 }
 
 const ModalEditCatalog: React.FC<ModalProps> = ({
@@ -70,6 +71,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
     description: register("description", {
       required: "Deskripsi harus diisi!",
     }),
+    url: register("url"),
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -83,22 +85,28 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
+    // console.log(data?.url);
     setIsLoading(true);
-    const dataBaru:{title:string, description:string, image?:string} = {
+    const dataBaru: {
+      title: string;
+      description: string;
+      image?: string;
+      url?: string;
+    } = {
       title: `${data.title}`,
       description: `${data.description}`,
-
     };
     // append jika idimgava not null
     if (idImageAvatar) dataBaru.image = idImageAvatar;
-    // append id jika isEdit
+    // append jika ada url, aku gatau ya yn enek coro sing luwih simple sko iki
+    if (data?.url) dataBaru.url = data.url;
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (isEdit) {
         // Mode edit, kirim data melalui PUT request
         // console.log(data); axiosCustom.put("/")
         await axiosCustom
-          .put(`/tenant/${idTenant}/update-catalog/${data.id}`, dataBaru)
+          .patch(`/tenant/${idTenant}/update-catalog/${data.id}`, dataBaru)
           .then((response) => {
             // setData(response.data.data);
 
@@ -231,8 +239,8 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
       "image/gif",
       "image/svg+xml",
     ];
-     // prepare max file size
-     const MAX_FILE_SIZE = 800000; //800KB
+    // prepare max file size
+    const MAX_FILE_SIZE = 800000; //800KB
     // ambil input nya
     const file = e?.[0];
     // ambil type dari file
@@ -290,15 +298,15 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                     </FormErrorMessage>
                   </FormControl>
                 </Hide>
-        
+
                 <FormControl mb="3">
-                <Flex
-                flexDirection={["column", "row"]}
-                alignItems={"center"}
-                justifyContent={"center"}
-                >
+                  <Flex
+                    flexDirection={["column", "row"]}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                  >
                     <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>logo Catalog</FormLabel>
+                      <FormLabel>Logo Catalog</FormLabel>
                       <Center>
                         {previewAvatar ? (
                           <Avatar size="xl" src={previewAvatar}>
@@ -319,7 +327,12 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                         )}
                       </Center>
                     </Box>
-                    <Box flex={["1", "70%"]}>
+                    <Box flex={["1", "20%"]} textAlign={"center"}>
+                      <Text as="i" color={"teal.300"}>
+                        <Text as="b">Note:</Text> Ukuran 250x250 px
+                      </Text>
+                    </Box>
+                    <Box flex={["1", "45%"]}>
                       <Input
                         ref={inputFile}
                         style={{ display: "none" }}
@@ -327,11 +340,13 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                         onChange={(e) => onFileChange(e.target.files)}
                       />
                       <Button
-                          fontWeight={"12"}
-                          onClick={() => onButtonEditAvatar()}
-                          w="full"
-                          isDisabled={isLoading}
-                          > Ubah logo
+                        fontWeight={"12"}
+                        onClick={() => onButtonEditAvatar()}
+                        w="full"
+                        isDisabled={isLoading}
+                      >
+                        {" "}
+                        Ubah logo
                       </Button>
                     </Box>
                   </Flex>
@@ -340,7 +355,12 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                 <FormControl isInvalid={!!errors.title} mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Judul</FormLabel>
+                      <FormLabel>
+                        Judul&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "80%"]}>
                       <Input
@@ -359,7 +379,12 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                 <FormControl isInvalid={!!errors.description} mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Deskripsi</FormLabel>
+                      <FormLabel>
+                        Deskripsi&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "80%"]}>
                       <Textarea
@@ -368,6 +393,25 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                       />
                       <FormErrorMessage>
                         {errors.description && errors.description.message}
+                      </FormErrorMessage>
+                    </Box>
+                  </Flex>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.url} mb="3">
+                  <Flex flexDirection={["column", "row"]}>
+                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                      <FormLabel>URL</FormLabel>
+                    </Box>
+                    <Box flex={["1", "80%"]}>
+                      <Input
+                        type="text"
+                        {...fields.url}
+                        defaultValue={formData?.url}
+                        // className={`form-control ${errors.name ? "is-invalid"}`}
+                      />
+                      <FormErrorMessage>
+                        {errors.url && errors.url.message}
                       </FormErrorMessage>
                     </Box>
                   </Flex>

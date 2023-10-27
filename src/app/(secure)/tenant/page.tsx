@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalNotif from "../../components/modal/modal-notif";
-import { AddIcon, DeleteIcon, EditIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 // import { useNavigate } from "react-router-dom";
 import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
@@ -60,11 +60,11 @@ interface DataItem {
   // }];
 }
 
-interface tenantLinks {
-  id: string;
-  title: string;
-  url: string;
-}
+// interface tenantLinks {
+//   id: string;
+//   title: string;
+//   url: string;
+// }
 
 interface UserLog {
   // id: string;
@@ -148,6 +148,7 @@ function PageTenant() {
     {
       Header: "Name",
       accessor: "name",
+      Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
     },
     {
       Header: "Slug",
@@ -190,7 +191,9 @@ function PageTenant() {
         if (filterValues === "") {
           return rows;
         }
-        return rows.filter((row) => row.values["level_tenant"] === filterValues);
+        return rows.filter(
+          (row) => row.values["level_tenant"] === filterValues,
+        );
       },
       minWidth: 160,
       maxWidth: 200,

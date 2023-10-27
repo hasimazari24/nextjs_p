@@ -17,12 +17,19 @@ import {
   IconButton,
   Center,
   AvatarBadge,
+  Text,
   Avatar,
   Hide,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CheckIcon, CloseIcon, DeleteIcon, EditIcon, SmallCloseIcon } from "@chakra-ui/icons";
+import {
+  CheckIcon,
+  CloseIcon,
+  DeleteIcon,
+  EditIcon,
+  SmallCloseIcon,
+} from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import { useRouter } from "next/navigation";
@@ -33,17 +40,17 @@ type AwardItem = {
   rank: string;
   image_id: string;
   image_url: string;
-}
+};
 
 interface editProps {
   // isOpen: boolean;
-  // onClose: () => void; 
+  // onClose: () => void;
   onSubmit: () => void;
   rowData?: any;
   idTenant?: string;
 }
 
-const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
+const EditAwards: React.FC<editProps> = ({ rowData, idTenant, onSubmit }) => {
   const {
     register,
     handleSubmit,
@@ -261,7 +268,7 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
                     justifyContent={"center"}
                   >
                     <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>logo Penghargaan</FormLabel>
+                      <FormLabel>Logo Penghargaan</FormLabel>
                       <Center>
                         <Avatar size="xl" src={previewAvatar}>
                           <AvatarBadge
@@ -279,7 +286,12 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
                         </Avatar>
                       </Center>
                     </Box>
-                    <Box flex={["1", "70%"]}>
+                    <Box flex={["1", "20%"]} textAlign={"center"}>
+                      <Text as="i" color={"teal.300"}>
+                        <Text as="b">Note:</Text> Ukuran 200x200 px
+                      </Text>
+                    </Box>
+                    <Box flex={["1", "45%"]}>
                       <Input
                         ref={inputFile}
                         style={{ display: "none" }}
@@ -308,10 +320,15 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
                 </Hide>
                 <FormControl isInvalid={!!errors.name} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Nama Penghargaan</FormLabel>
+                    <Box flex={["1", "35%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Nama Penghargaan&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "70%"]}>
+                    <Box flex={["1", "65%"]}>
                       <Input
                         type="text"
                         {...fields.name}
@@ -326,10 +343,15 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
                 </FormControl>
                 <FormControl isInvalid={!!errors.name} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Ranking</FormLabel>
+                    <Box flex={["1", "35%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Ranking&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "70%"]}>
+                    <Box flex={["1", "65%"]}>
                       <Input
                         type="text"
                         {...fields.rank}
@@ -377,6 +399,6 @@ const EditAwards:React.FC<editProps> = ({rowData, idTenant, onSubmit }) => {
       />
     </div>
   );
-}
+};
 
 export default EditAwards;

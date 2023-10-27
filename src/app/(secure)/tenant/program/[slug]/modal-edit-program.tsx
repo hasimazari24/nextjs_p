@@ -61,8 +61,8 @@ const ModalEditProgram: React.FC<ModalProps> = ({
 
   const fields = {
     program: register("program", {
-      required: "Program harus diisi!"
-    })
+      required: "Program harus diisi!",
+    }),
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +77,7 @@ const ModalEditProgram: React.FC<ModalProps> = ({
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
-    
+
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (isEdit) {
@@ -159,14 +159,19 @@ const ModalEditProgram: React.FC<ModalProps> = ({
                   </FormControl>
                 </Hide>
 
-
                 <FormControl isInvalid={!!errors.program} mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Program</FormLabel>
+                      <FormLabel>
+                        Program&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "80%"]}>
-                      <Textarea
+                      <Input
+                        type="text"
                         {...fields.program}
                         defaultValue={formData?.program}
                       />

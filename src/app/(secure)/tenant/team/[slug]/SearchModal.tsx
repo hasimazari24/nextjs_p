@@ -175,7 +175,12 @@ const SearchModal = ({
                 <FormControl isInvalid={!!errors.position} mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Posisi</FormLabel>
+                      <FormLabel>
+                        Posisi&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "80%"]}>
                       <Input {...fields.position} />
@@ -188,10 +193,15 @@ const SearchModal = ({
 
                 <FormControl as="fieldset" mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "46%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Atur sebagai admin tenant?</FormLabel>
+                    <Box flex={["1", "50%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Atur sebagai admin tenant?&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "54%"]}>
+                    <Box flex={["1", "50%"]}>
                       <RadioGroup
                         defaultValue="tidak_admin"
                         onChange={handleIsAdmin}
@@ -208,10 +218,15 @@ const SearchModal = ({
 
                 <FormControl as="fieldset" mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "50%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Tampilkan ke halaman public?</FormLabel>
+                    <Box flex={["1", "55%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Tampilkan ke halaman public?&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "50%"]}>
+                    <Box flex={["1", "45%"]}>
                       <RadioGroup
                         defaultValue="ya_public"
                         onChange={handleIsPublic}

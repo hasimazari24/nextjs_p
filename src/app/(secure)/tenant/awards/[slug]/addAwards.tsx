@@ -14,6 +14,7 @@ import {
   Input,
   Flex,
   Box,
+  Text,
   IconButton,
   Center,
   AvatarBadge,
@@ -37,14 +38,14 @@ type AwardItem = {
   rank: string;
   image_id?: string;
   image_url?: string;
-}
+};
 
 interface editProps {
   onSubmit: () => void;
-  idTenant?:string;
+  idTenant?: string;
 }
 
-const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
+const AddAwards: React.FC<editProps> = ({ idTenant, onSubmit }) => {
   const {
     register,
     handleSubmit,
@@ -71,7 +72,9 @@ const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
   };
 
   const [avatar, setAvatar] = useState<File>();
-  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(undefined);
+  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
+    undefined,
+  );
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const inputFile = useRef<HTMLInputElement>(null);
   // jika button edit avatar klik, brarti input file juga diklik
@@ -201,7 +204,7 @@ const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
     setIsLoading(false);
     setPreviewAvatar(undefined); // reset preview
     setIdImageAvatar(null); // kosongkan idimage
-  }
+  };
 
   return (
     <div>
@@ -236,7 +239,7 @@ const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
                     justifyContent={"center"}
                   >
                     <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>logo Penghargaan</FormLabel>
+                      <FormLabel>Logo Penghargaan</FormLabel>
                       <Center>
                         {previewAvatar ? (
                           <Avatar size="xl" src={previewAvatar}>
@@ -257,7 +260,12 @@ const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
                         )}
                       </Center>
                     </Box>
-                    <Box flex={["1", "70%"]}>
+                    <Box flex={["1", "20%"]} textAlign={"center"}>
+                      <Text as="i" color={"teal.300"}>
+                        <Text as="b">Note:</Text> Ukuran 200x200 px
+                      </Text>
+                    </Box>
+                    <Box flex={["1", "45%"]}>
                       <Input
                         ref={inputFile}
                         style={{ display: "none" }}
@@ -277,10 +285,15 @@ const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
                 </FormControl>
                 <FormControl isInvalid={!!errors.name} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Nama Penghargaan</FormLabel>
+                    <Box flex={["1", "35%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Nama Penghargaan&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "70%"]}>
+                    <Box flex={["1", "65%"]}>
                       <Input
                         type="text"
                         {...fields.name}
@@ -294,10 +307,15 @@ const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
                 </FormControl>
                 <FormControl isInvalid={!!errors.name} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Ranking</FormLabel>
+                    <Box flex={["1", "35%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Ranking&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "70%"]}>
+                    <Box flex={["1", "65%"]}>
                       <Input
                         type="text"
                         {...fields.rank}
@@ -344,6 +362,6 @@ const AddAwards:React.FC<editProps> = ({idTenant, onSubmit}) => {
       />
     </div>
   );
-}
+};
 
 export default AddAwards;

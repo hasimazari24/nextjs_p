@@ -23,6 +23,7 @@ import {
   Radio,
   IconButton,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -34,7 +35,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  isEdit?:boolean,
+  isEdit?: boolean;
   formData?: any; // Jika mode edit, kirim data yang akan diedit
   idTenant?: string | null;
 }
@@ -249,7 +250,7 @@ const ModalTeamNonLogin = ({
       }
       resetAll();
       setIsLoading(false);
-      
+
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
       console.error(error);
@@ -355,10 +356,15 @@ const ModalTeamNonLogin = ({
                 </FormControl>
                 <FormControl isInvalid={!!errors.fullname} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Nama Lengkap</FormLabel>
+                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Nama Lengkap&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "75%"]}>
+                    <Box flex={["1", "70%"]}>
                       <Input
                         {...fields.fullname}
                         defaultValue={formData?.fullname}
@@ -372,10 +378,15 @@ const ModalTeamNonLogin = ({
 
                 <FormControl isInvalid={!!errors.position} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Posisi</FormLabel>
+                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Posisi&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "75%"]}>
+                    <Box flex={["1", "70%"]}>
                       <Input
                         {...fields.position}
                         defaultValue={formData?.position}
@@ -390,7 +401,12 @@ const ModalTeamNonLogin = ({
                 <FormControl as="fieldset" mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "50%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Tampilkan ke halaman public?</FormLabel>
+                      <FormLabel>
+                        Tampilkan ke halaman public?&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "50%"]}>
                       <RadioGroup

@@ -81,9 +81,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const [avatar, setAvatar] = useState<File>();
-  const [previewAvatar, setPreviewAvatar] = useState<string | null>(
-    null
-  );
+  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
@@ -156,7 +154,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
         }
       }
     }
-  }; 
+  };
 
   // console.log(previewAvatar, rowData);
 
@@ -226,7 +224,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
             }
           });
       }
-      
+
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
       // console.error(error);
@@ -297,7 +295,10 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                         onChange={(e) => onAvatarChange(e.target.files)}
                       />
                       <Box mt={3} textAlign={"center"}>
-                        Gambar Event
+                        Gambar Event&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
                       </Box>
                       <Flex
                         justify={"center"}
@@ -389,7 +390,12 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                     <FormControl isInvalid={!!errors.title} mb="3" mt={3}>
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                          <FormLabel>Judul Event</FormLabel>
+                          <FormLabel>
+                            Judul Event&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box flex={["1", "70%"]}>
                           <Input
@@ -424,7 +430,12 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                     <FormControl isInvalid={!!errors.description} mb="3">
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                          <FormLabel>Deskripsi Event</FormLabel>
+                          <FormLabel>
+                            Deskripsi Event&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box flex={["1", "70%"]}>
                           <Textarea

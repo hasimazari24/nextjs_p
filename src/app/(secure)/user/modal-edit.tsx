@@ -385,10 +385,15 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.fullname} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Nama Lengkap</FormLabel>
+                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Nama Lengkap&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "75%"]}>
+                    <Box flex={["1", "70%"]}>
                       <Input
                         type="text"
                         {...fields.fullname}
@@ -404,10 +409,15 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.username} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Username</FormLabel>
+                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Username&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "75%"]}>
+                    <Box flex={["1", "70%"]}>
                       <Input
                         {...fields.username}
                         defaultValue={formData?.username}
@@ -422,10 +432,15 @@ const ModalEdit: React.FC<ModalProps> = ({
                 {!isEdit ? (
                   <FormControl isInvalid={!!errors.password} mb="3">
                     <Flex flexDirection={["column", "row"]}>
-                      <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                        <FormLabel>Password</FormLabel>
+                      <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
+                        <FormLabel>
+                          Password&nbsp;
+                          <Text as={"span"} color={"red"}>
+                            *
+                          </Text>
+                        </FormLabel>
                       </Box>
-                      <Box flex={["1", "75%"]}>
+                      <Box flex={["1", "70%"]}>
                         <InputGroup>
                           <Input
                             type={showPassword ? "text" : "password"}
@@ -462,10 +477,15 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.email} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>E-Mail</FormLabel>
+                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        E-Mail&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "75%"]}>
+                    <Box flex={["1", "70%"]}>
                       <Input
                         // type="text"
                         {...fields.email}
@@ -480,10 +500,15 @@ const ModalEdit: React.FC<ModalProps> = ({
 
                 <FormControl isInvalid={!!errors.role} mb="3">
                   <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Hak Akses</FormLabel>
+                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
+                      <FormLabel>
+                        Hak Akses&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
-                    <Box flex={["1", "75%"]}>
+                    <Box flex={["1", "70%"]}>
                       <Select defaultValue={formData?.role} {...fields.role}>
                         <option value="Super Admin">Super Admin</option>
                         <option value="Manajemen">Manajemen</option>

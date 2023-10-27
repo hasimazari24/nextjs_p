@@ -14,12 +14,18 @@ import {
   Spinner,
   Text,
   HStack,
+  Link,
   Heading,
   Flex,
   Avatar,
 } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
-import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
+import {
+  DeleteIcon,
+  EditIcon,
+  AddIcon,
+  ExternalLinkIcon,
+} from "@chakra-ui/icons";
 import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
 import ModalEditCatalog from "./modal-edit-catalog";
@@ -34,6 +40,7 @@ interface DataItem {
   description: string;
   image_id: string;
   image_url: string;
+  url?: string | null;
 }
 
 interface UserLog {
@@ -69,8 +76,8 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");
-  } 
-  
+  }
+
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -109,10 +116,27 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
     {
       Header: "title",
       accessor: "title",
+      Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
     },
     {
       Header: "description",
       accessor: "description",
+      // dibikin kayak gni biar auto wrap ketika textnya kepanjangan shg tdk merusak col width
+      Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
+    },
+    {
+      Header: "URL",
+      accessor: "url",
+      Cell: ({ value }) =>
+        value !== null ? (
+          <div style={{ whiteSpace: "normal" }}>
+            <Link color="teal.500" href={value} target="_blank">
+              {value} <ExternalLinkIcon mx="2px" />
+            </Link>
+          </div>
+        ) : (
+          ""
+        ),
     },
   ];
 
@@ -147,7 +171,9 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
     try {
       setLoadingCatalog(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant/${getParamsId}/get-catalog`);
+      const response = await axiosCustom.get(
+        `/tenant/${getParamsId}/get-catalog`,
+      );
       if (response.data.data) {
         // console.log(response);
         setDataCatalog(response.data.data.catalog);
@@ -231,7 +257,9 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       try {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
-        const response = await axiosCustom.delete(`/tenant/${getParamsId}/delete-catalog/${dataDeleteId}`);
+        const response = await axiosCustom.delete(
+          `/tenant/${getParamsId}/delete-catalog/${dataDeleteId}`,
+        );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
         const timer = setTimeout(() => {

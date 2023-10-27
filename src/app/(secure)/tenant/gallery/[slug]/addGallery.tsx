@@ -273,7 +273,10 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
                         onChange={(e) => onAvatarChange(e.target.files)}
                       />
                       <Box mt={3} textAlign={"center"}>
-                        Gambar Event
+                        Gambar Event&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
                       </Box>
                       <Flex
                         justify={"center"}
@@ -350,7 +353,12 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
                     <FormControl isInvalid={!!errors.title} mb="3" mt={3}>
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                          <FormLabel>Judul Event</FormLabel>
+                          <FormLabel>
+                            Judul Event&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box flex={["1", "70%"]}>
                           <Input
@@ -386,7 +394,12 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
                     <FormControl isInvalid={!!errors.description} mb="3">
                       <Flex flexDirection={["column", "row"]}>
                         <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                          <FormLabel>Deskripsi Event</FormLabel>
+                          <FormLabel>
+                            Deskripsi Event&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box flex={["1", "70%"]}>
                           <Textarea

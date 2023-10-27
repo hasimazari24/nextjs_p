@@ -8,8 +8,14 @@ import {
   ModalBody,
   ModalCloseButton,
   Box,
-  FormControl,FormLabel, Input, Flex,
-  FormErrorMessage, Button, Hide
+  FormControl,
+  FormLabel,
+  Input,
+  Flex,
+  FormErrorMessage,
+  Button,
+  Hide,
+  Text,
 } from "@chakra-ui/react";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
@@ -38,7 +44,8 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
   const {
     register,
     handleSubmit,
-    reset, setFocus,
+    reset,
+    setFocus,
     formState: { errors },
   } = useForm<dataReset>();
 
@@ -69,16 +76,14 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
     setIsLoading(true);
     console.log(data);
     try {
-      await axiosCustom
-        .post(`/user/reset-password`, data)
-        .then((response) => {
-          // setData(response.data.data);
+      await axiosCustom.post(`/user/reset-password`, data).then((response) => {
+        // setData(response.data.data);
 
-          if (response.status === 200) {
-            handleShowMessage("Password berhasil direset.", false);
-          }
-        });
-      
+        if (response.status === 200) {
+          handleShowMessage("Password berhasil direset.", false);
+        }
+      });
+
       onSubmit();
       onClose(); // Tutup modal
       reset(); // Reset formulir
@@ -124,6 +129,16 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
                   disabled
                   defaultValue={tableData?.id}
                 />
+                <Input
+                  type="text"
+                  {...register("username")}
+                  defaultValue={tableData?.username}
+                />
+                <Input
+                  type="text"
+                  {...register("email")}
+                  defaultValue={tableData?.email}
+                />
               </Hide>
               <FormControl mb="3">
                 <Flex flexDirection={["column", "row"]}>
@@ -131,13 +146,7 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
                     <FormLabel>Username</FormLabel>
                   </Box>
                   <Box flex={["1", "75%"]}>
-                    <fieldset disabled>
-                      <Input
-                        type="text"
-                        {...register("username")}
-                        defaultValue={tableData?.username}
-                      />
-                    </fieldset>
+                    <Text>{tableData?.username}</Text>
                   </Box>
                 </Flex>
               </FormControl>
@@ -147,20 +156,19 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
                     <FormLabel>E-mail</FormLabel>
                   </Box>
                   <Box flex={["1", "75%"]}>
-                    <fieldset disabled>
-                      <Input
-                        type="text"
-                        {...register("email")}
-                        defaultValue={tableData?.email}
-                      />
-                    </fieldset>
+                    <Text>{tableData?.email}</Text>
                   </Box>
                 </Flex>
               </FormControl>
               <FormControl isInvalid={!!errors.password} mb="3">
                 <Flex flexDirection={["column", "row"]}>
                   <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>
+                      Password&nbsp;
+                      <Text as={"span"} color={"red"}>
+                        *
+                      </Text>
+                    </FormLabel>
                   </Box>
                   <Box flex={["1", "75%"]}>
                     <Input type="text" {...fields.password} />

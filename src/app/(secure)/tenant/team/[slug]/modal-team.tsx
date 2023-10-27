@@ -20,7 +20,9 @@ import {
   useDisclosure,
   Textarea,
   Select,
-  RadioGroup,Radio, Stack,
+  RadioGroup,
+  Radio,
+  Stack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -44,10 +46,10 @@ interface ModalProps {
 
 interface FormValues {
   id: string;
-  fullname:string;
+  fullname: string;
   position: string;
   is_admin: string;
-  is_public:string;
+  is_public: string;
 }
 
 const ModalTeam: React.FC<ModalProps> = ({
@@ -92,7 +94,10 @@ const ModalTeam: React.FC<ModalProps> = ({
         is_public: data.is_public === "ya_public" ? true : false,
       };
       // console.log(simpan);
-      const response = await axiosCustom.put(`/tenant/${idTenant}/update-user`, simpan);
+      const response = await axiosCustom.put(
+        `/tenant/${idTenant}/update-user`,
+        simpan,
+      );
       if (response.status === 200) {
         setModalNotifTeam(true);
         handleShowMessage("Data berhasil diubah.", false);
@@ -101,7 +106,6 @@ const ModalTeam: React.FC<ModalProps> = ({
         reset(); // Reset formulir
         setIsLoading(false);
       }
-      
     } catch (error: any) {
       console.error(error);
       if (error?.response) {
@@ -147,7 +151,12 @@ const ModalTeam: React.FC<ModalProps> = ({
                 <FormControl isInvalid={!!errors.position} mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Posisi</FormLabel>
+                      <FormLabel>
+                        Posisi&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "80%"]}>
                       <Input
@@ -164,7 +173,12 @@ const ModalTeam: React.FC<ModalProps> = ({
                 <FormControl as="fieldset" mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "46%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Atur sebagai admin tenant?</FormLabel>
+                      <FormLabel>
+                        Atur sebagai admin tenant?&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "54%"]}>
                       <RadioGroup
@@ -192,7 +206,12 @@ const ModalTeam: React.FC<ModalProps> = ({
                 <FormControl as="fieldset" mb="3">
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "50%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Tampilkan ke halaman public?</FormLabel>
+                      <FormLabel>
+                        Tampilkan ke halaman public?&nbsp;
+                        <Text as={"span"} color={"red"}>
+                          *
+                        </Text>
+                      </FormLabel>
                     </Box>
                     <Box flex={["1", "50%"]}>
                       <RadioGroup

@@ -499,6 +499,11 @@ const ModalEdit: React.FC<ModalProps> = ({
                       </Stack>
                     </Box>
                   </Flex>
+                  <Box textAlign={"center"}>
+                    <Text as="i" color={"teal.400"}>
+                      <Text as="b">Note:</Text> Ukuran 128x128 px
+                    </Text>
+                  </Box>
 
                   <Input
                     ref={inputBanner}
@@ -574,6 +579,11 @@ const ModalEdit: React.FC<ModalProps> = ({
                       </Stack>
                     </Box>
                   </Flex>
+                  <Box textAlign={"center"}>
+                    <Text as="i" color={"teal.400"}>
+                      <Text as="b">Note:</Text> Ukuran 1440x280 px
+                    </Text>
+                  </Box>
                 </Box>
                 <Box w="full">
                   <Hide>
@@ -598,7 +608,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                         minWidth={["100%", "100px"]}
                         marginRight={["0", "2"]}
                       >
-                        <FormLabel>Tampilkan ke halaman public ?</FormLabel>
+                        <FormLabel>
+                          Tampilkan ke halaman public ?&nbsp;
+                          <Text as={"span"} color={"red"}>
+                            *
+                          </Text>
+                        </FormLabel>
                       </Box>
                       <Box flex={["1", "50%"]}>
                         <RadioGroup
@@ -660,7 +675,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                           minWidth={["100%", "80px"]}
                           marginRight={["0", "2"]}
                         >
-                          <FormLabel>Founder</FormLabel>
+                          <FormLabel>
+                            Founder&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box w="full">
                           <Input
@@ -684,7 +704,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                         minWidth={["100%", "100px"]}
                         marginRight={["0", "2"]}
                       >
-                        <FormLabel>Deskripsi</FormLabel>
+                        <FormLabel>
+                          Deskripsi&nbsp;
+                          <Text as={"span"} color={"red"}>
+                            *
+                          </Text>
+                        </FormLabel>
                       </Box>
                       <Box w="full">
                         <Textarea
@@ -707,7 +732,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                         minWidth={["100%", "100px"]}
                         marginRight={["0", "2"]}
                       >
-                        <FormLabel>Alamat</FormLabel>
+                        <FormLabel>
+                          Alamat&nbsp;
+                          <Text as={"span"} color={"red"}>
+                            *
+                          </Text>
+                        </FormLabel>
                       </Box>
                       <Box w="full">
                         <Textarea
@@ -731,7 +761,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                         minWidth={["100%", "100px"]}
                         marginRight={["0", "2"]}
                       >
-                        <FormLabel>Motto</FormLabel>
+                        <FormLabel>
+                          Motto&nbsp;
+                          <Text as={"span"} color={"red"}>
+                            *
+                          </Text>
+                        </FormLabel>
                       </Box>
                       <Box w="full">
                         <Textarea
@@ -760,7 +795,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                           minWidth={["100%", "100px"]}
                           marginRight={["0", "2"]}
                         >
-                          <FormLabel>Kontak</FormLabel>
+                          <FormLabel>
+                            Kontak&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box w="full">
                           <Input
@@ -784,7 +824,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                           minWidth={["100%", "80px"]}
                           marginRight={["0", "2"]}
                         >
-                          <FormLabel>E-Mail</FormLabel>
+                          <FormLabel>
+                            E-Mail&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box w="full">
                           <Input
@@ -810,10 +855,15 @@ const ModalEdit: React.FC<ModalProps> = ({
                         align={{ base: "start", md: "center" }}
                       >
                         <Box
-                          minWidth={["100%", "100px"]}
+                          minWidth={["100%", "110px"]}
                           marginRight={["0", "2"]}
                         >
-                          <FormLabel>Level Tenant</FormLabel>
+                          <FormLabel>
+                            Level Tenant&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
                         <Box w="full">
                           <Select
