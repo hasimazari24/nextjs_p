@@ -29,7 +29,6 @@ interface SectionStp {
 
 export default function BasicStatistics(props: SectionStp) {
   const { total_tenant, level_tenant } = props;
-  console.log({ total_tenant, level_tenant });
   return (
     <SlideFade in={true} offsetY="20px">
       <Container
@@ -71,17 +70,17 @@ export default function BasicStatistics(props: SectionStp) {
             my={{ base: 0, md: 10, lg: 14 }}
           >
             <Heading as={"h3"} size={"xl"} mb={3}>
+              {total_tenant === 0 && <Text as={"span"}>Tenant&nbsp;</Text>}
               Solo Technopark
-              {total_tenant !== undefined ||
-                (total_tenant === 0 && (
-                  <>
-                    <br />
-                    Memiliki&nbsp;
-                    <Text as={"span"} color={"red.400"}>
-                      {total_tenant} Tenant
-                    </Text>
-                  </>
-                ))}
+              {total_tenant !== undefined && total_tenant >= 1 && (
+                <>
+                  <br />
+                  Memiliki&nbsp;
+                  <Text as={"span"} color={"red.400"}>
+                    {total_tenant} Tenant
+                  </Text>
+                </>
+              )}
             </Heading>
             <Text mb={3} size={{ base: "md", lg: "lg" }}>
               Pusat Inovasi dan Vokasi yang Memadukan Unsur Pengembangan Iptek,
@@ -112,8 +111,7 @@ export default function BasicStatistics(props: SectionStp) {
             <Icon as={HiUserGroup} boxSize={8} />
             <Flex flexDirection={"column"}>
               <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.pra_inkubasi === undefined ||
-                level_tenant?.pra_inkubasi === 0
+                {level_tenant?.pra_inkubasi === undefined
                   ? "-"
                   : `${level_tenant?.pra_inkubasi}`}
               </Text>
@@ -133,8 +131,7 @@ export default function BasicStatistics(props: SectionStp) {
             <Icon as={FaBookReader} boxSize={8} />
             <Flex flexDirection={"column"}>
               <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.inkubasi === undefined ||
-                level_tenant?.inkubasi === 0
+                {level_tenant?.inkubasi === undefined
                   ? "-"
                   : `${level_tenant?.inkubasi}`}
               </Text>
@@ -154,8 +151,7 @@ export default function BasicStatistics(props: SectionStp) {
             <Icon as={FaNetworkWired} boxSize={8} />
             <Flex flexDirection={"column"}>
               <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.inkubasi_lanjutan === undefined ||
-                level_tenant?.inkubasi_lanjutan === 0
+                {level_tenant?.inkubasi_lanjutan === undefined
                   ? "-"
                   : `${level_tenant?.inkubasi_lanjutan}`}
               </Text>
@@ -175,8 +171,7 @@ export default function BasicStatistics(props: SectionStp) {
             <Icon as={GiProgression} boxSize={8} />
             <Flex flexDirection={"column"}>
               <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.scale_up === undefined ||
-                level_tenant?.scale_up === 0
+                {level_tenant?.scale_up === undefined
                   ? "-"
                   : `${level_tenant?.scale_up}`}
               </Text>
