@@ -74,7 +74,7 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
-    console.log(data);
+    // console.log(data);
     try {
       await axiosCustom.post(`/user/reset-password`, data).then((response) => {
         // setData(response.data.data);
