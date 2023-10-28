@@ -59,10 +59,7 @@ interface Formdata {
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
-  idTenant?: string;
   idUser?: string;
-  onDelete: () => void;
 }
 
 interface FormValues {
@@ -82,10 +79,7 @@ interface UserLog {
 const ModalSocial: React.FC<ModalProps> = ({
   isOpen,
   onClose,
-  onSubmit,
-  idTenant,
   idUser,
-  onDelete,
 }) => {
   const {
     register: registWebsite,
@@ -179,7 +173,7 @@ const ModalSocial: React.FC<ModalProps> = ({
   const handleSave = async (data: any) => {
     setIsLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (data.id) {
         // Mode edit, kirim data melalui PUT request
@@ -207,7 +201,6 @@ const ModalSocial: React.FC<ModalProps> = ({
           });
       }
       setIsLoading(false);
-      getUpdatedSocial();
       setFalse();
       resetAll();
     } catch (error: any) {
@@ -269,8 +262,7 @@ const ModalSocial: React.FC<ModalProps> = ({
         const timer = setTimeout(() => {
           // console.log(response);
           if (response.status === 200) {
-            getUpdatedSocial();
-            onDelete();
+            // getUpdatedSocial();
             setFalse();
             setIsLoadingDelete(false);
             setIsModalDeleteOpen(false);
@@ -1440,6 +1432,7 @@ const ModalSocial: React.FC<ModalProps> = ({
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={() => getUpdatedSocial()}
       />
 
       {/* Modal hapus data */}

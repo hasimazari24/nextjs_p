@@ -229,7 +229,6 @@ function TeamLogin({ dataTeam, onSubmit, idTenant }: NonLoginTeam) {
             handleShowMessage("Data berhasil dihapus.", false);
             setIsLoadingDelete(false);
             setIsModalDeleteOpen(false);
-            onSubmit();
           }
         }, 1000);
 
@@ -287,6 +286,7 @@ function TeamLogin({ dataTeam, onSubmit, idTenant }: NonLoginTeam) {
           onClose={() => setIsModalNotif(false)}
           message={message}
           isError={isError}
+          onSubmit={() => onSubmit()}
         />
       </div>
     </div>

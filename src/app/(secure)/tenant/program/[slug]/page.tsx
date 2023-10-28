@@ -58,6 +58,16 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
     allMenu = permissions[getUser.role]?.features.find(
       (feature) => feature.menu === "allmenu",
     );
+
+   if (!programFeatures && !allMenu) {
+     return (
+       <NotFound
+         statusCode={403}
+         msg={"Access Denied"}
+         statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+       />
+     );
+   }
   }
   let hidenCols: string[] = ["id"];
   if (

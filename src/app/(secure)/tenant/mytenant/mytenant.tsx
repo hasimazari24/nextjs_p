@@ -85,9 +85,6 @@ export default function MyTenant() {
     setIsError(err);
     setModalNotif(true);
   };
-  const [selectedSocialLinks, setSelectedSocialLinks] = useState<
-    Array<tenantLinks>
-  >([]);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [dataMyTenant, setDataMyTenant] = useState<any | null>([]);
   const [dataTenantLinks, setDataTenantLinks] = useState<Array<tenantLinks>>(
@@ -174,50 +171,56 @@ export default function MyTenant() {
             direction={["column", "row"]}
           >
             <Heading fontSize={"2xl"}>DATA TENANT</Heading>
-            {is_admin ? (
-              <HStack>
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    bgColor="green.100"
-                    _hover={{
-                      bg: "green.200",
-                    }}
-                    // color="white"
-                    title="More ..."
-                    // onClick={() => handleDetail(rowData)}
-                    key="dataDetail"
-                    size="sm"
+            <HStack>
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  bgColor="green.100"
+                  _hover={{
+                    bg: "green.200",
+                  }}
+                  // color="white"
+                  title="More ..."
+                  // onClick={() => handleDetail(rowData)}
+                  key="dataDetail"
+                  size="sm"
+                >
+                  <GrMoreVertical />
+                </MenuButton>
+                <MenuList>
+                  <Link
+                    href={`/tenant-detail/${dataMyTenant?.slug}`}
+                    target="_blank"
                   >
-                    <GrMoreVertical />
-                  </MenuButton>
-                  <MenuList>
-                    <Link href={`/tenant-detail/${dataMyTenant?.slug}`} target="_blank">
                     <MenuItem>
                       <BiLinkExternal />
                       &nbsp; Lihat Situs
                     </MenuItem>
-                    </Link>
-                    
-                    <MenuItem
-                      onClick={() =>
-                        router.push(`/tenant/catalog/${dataMyTenant?.id}`)
-                      }
-                    >
-                      <HamburgerIcon />
-                      &nbsp; Catalog Tenant
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() =>
-                        router.push(`/tenant/team/${dataMyTenant?.id}`)
-                      }
-                    >
-                      <SiMicrosoftteams />
-                      &nbsp; Team Tenant
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-                &nbsp;
+                  </Link>
+                  {is_admin ? (
+                    <>
+                      <MenuItem
+                        onClick={() =>
+                          router.push(`/tenant/catalog/${dataMyTenant?.id}`)
+                        }
+                      >
+                        <HamburgerIcon />
+                        &nbsp; Catalog Tenant
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() =>
+                          router.push(`/tenant/team/${dataMyTenant?.id}`)
+                        }
+                      >
+                        <SiMicrosoftteams />
+                        &nbsp; Team Tenant
+                      </MenuItem>
+                    </>
+                  ) : null}
+                </MenuList>
+              </Menu>
+              &nbsp;
+              {is_admin ? (
                 <Button
                   bgColor="blue.100"
                   _hover={{
@@ -233,8 +236,8 @@ export default function MyTenant() {
                 >
                   <EditIcon /> &nbsp; Edit Data Tenant
                 </Button>
-              </HStack>
-            ) : null}
+              ) : null}
+            </HStack>
           </Flex>
           {dataMyTenant?.name ? (
             <Container maxW={"7xl"} pl="0" pr="0">

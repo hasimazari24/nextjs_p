@@ -29,7 +29,7 @@ interface notFoundProps {
     statusCode : number,
     msg:string,
     statusDesc : string,
-    backToHome : string,
+    backToHome?: string,
 }
 
 function NotFound({ statusCode, statusDesc, msg, backToHome }: notFoundProps) {
@@ -51,17 +51,18 @@ function NotFound({ statusCode, statusDesc, msg, backToHome }: notFoundProps) {
         <Text color={"gray.500"} mb={6}>
           {statusDesc}
         </Text>
-
-        <NextLink href={`${backToHome}`} passHref>
-          <Button
-            colorScheme="red"
-            bgGradient="linear(to-r, red.400, red.500, red.600)"
-            color="white"
-            variant="solid"
-          >
-            Kembali ke Halaman Awal
-          </Button>
-        </NextLink>
+        {backToHome && (
+          <NextLink href={`${backToHome}`} passHref>
+            <Button
+              colorScheme="red"
+              bgGradient="linear(to-r, red.400, red.500, red.600)"
+              color="white"
+              variant="solid"
+            >
+              Kembali ke Halaman Awal
+            </Button>
+          </NextLink>
+        )}
       </Box>
     </div>
   );

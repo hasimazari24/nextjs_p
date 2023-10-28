@@ -303,7 +303,7 @@ const ModalSocial: React.FC<ModalProps> = ({
       try {
         setIsLoadingDelete(true);
         const response = await axiosCustom.delete(
-          `tenant/${idTenant}/delete-link/${dataDelete.id}`,
+          `/tenant/${idTenant}/delete-link/${dataDelete.id}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)

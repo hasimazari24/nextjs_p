@@ -104,6 +104,8 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
   const [isModalSearchOpen, setIsModalSearchOpen] = useState(false);
   const [isModalNonLogin, setIsModalNonLogin] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  //untuk menangkap tabs yg ingin dipilih
+  const [defaultTabsIndex, setDefaultTabsIndex] = useState<number>(0);
   const [resultNothing, setResultNothing] = useState<string | null>(null);
 
   const [dataTeamLogin, setDataTeam] = useState<any[]>([]);
@@ -114,11 +116,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
   const [loadingTeam, setLoadingTeam] = useState<boolean>(false);
   const router = useRouter();
 
-  // if (!idTenant) {
-  //   router.push("/tenant");
-  // }
-
-  const getTeam = async () => {
+  const getTeam = async (tabs:number ) => {
     try {
       setLoadingTeam(true);
       // Panggil API menggunakan Axios dengan async/await
@@ -133,6 +131,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
         // setIdTenant(id);
         setLoadingTeam(false); // Set isLoading to false to stop the spinner
       }, 1000);
+      setDefaultTabsIndex(tabs);
 
       return () => clearTimeout(timer);
     } catch (error) {
@@ -145,7 +144,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
     // if (idTenant)
-    getTeam();
+    getTeam(defaultTabsIndex);
     if (namaTenant && namaTenant === "false") {
       return notFound();
     }
@@ -193,7 +192,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
       if (response.status === 201) {
         handleShowMessage(`Anggota Tim berhasil ditambahkan`, false);
         setIsLoadSave(false);
-        await getTeam();
+        await getTeam(defaultTabsIndex);
         setIsModalSearchOpen(false);
       }
     } catch (error: any) {
@@ -290,7 +289,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                 </HStack>
               </Flex>
 
-              <Tabs isLazy>
+              <Tabs isLazy defaultIndex={defaultTabsIndex}>
                 <TabList>
                   <Tab
                     _selected={{
@@ -316,7 +315,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                   <TabPanel>
                     <TeamLogin
                       dataTeam={dataTeamLogin}
-                      onSubmit={getTeam}
+                      onSubmit={()=> getTeam(0)}
                       idTenant={getParamsId}
                     />
                   </TabPanel>
@@ -324,7 +323,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                   <TabPanel>
                     <DynamicDataComponent
                       dataTeam={dataTeamNonLogin}
-                      onSubmit={() => getTeam()}
+                      onSubmit={() => getTeam(1)}
                       idTenant={getParamsId}
                     />
                   </TabPanel>
@@ -364,7 +363,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
         isOpen={isModalNonLogin}
         onClose={() => setIsModalNonLogin(false)}
         onSubmit={() => {
-          getTeam();
+          getTeam(1);
         }}
         idTenant={getParamsId}
       />

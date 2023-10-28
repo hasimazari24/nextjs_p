@@ -69,7 +69,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: [],
       },
       {
-        menu: "backPanelTenant_team_login",
+        menu: "backPanelTenant_team",
         access: [],
       },
       {
@@ -112,7 +112,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: ["editCatalog", "hapusCatalog", "tmbhCatalog"],
       },
       {
-        menu: "backPanelTenant_team_login",
+        menu: "backPanelTenant_team",
         access: ["editTeam", "hapusTeam", "tmbhTeam"],
       },
       {
@@ -155,7 +155,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: [],
       },
       {
-        menu: "backPanelTenant_team_login",
+        menu: "backPanelTenant_team",
         access: [],
       },
       {
@@ -198,7 +198,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: [],
       },
       {
-        menu: "backPanelTenant_team_login",
+        menu: "backPanelTenant_team",
         access: [],
       },
       {

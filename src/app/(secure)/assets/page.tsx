@@ -119,7 +119,12 @@ function page() {
         const { checked, ...props } = getToggleAllPageRowsSelectedProps();
         return (
           <Box>
-            <Checkbox {...props} isChecked={checked} />
+            <Checkbox
+              {...props}
+              isChecked={checked}
+              boxShadow={"md"}
+              borderWidth={1}
+            />
           </Box>
         );
       },
@@ -127,7 +132,7 @@ function page() {
         const { checked, ...props } = row.getToggleRowSelectedProps();
         return (
           <Box>
-            <Checkbox {...props} isChecked={checked} />
+            <Checkbox {...props} isChecked={checked} boxShadow={"md"} borderWidth={1}/>
           </Box>
         );
       },
@@ -233,7 +238,7 @@ function page() {
         // console.log(response);
         if (response.status === 200) {
           setIsLoadingDelete(false);
-          handleShowMessage("Data berhasil dihapus.", false);
+          handleShowMessage(response.data?.message, false);
           // setIsDeleteModalOpen(false);
           getTampil();
         }

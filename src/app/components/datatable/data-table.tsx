@@ -97,8 +97,8 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
         pageSize: 5,
         hiddenColumns: props.hiddenColumns,
       },
-      autoResetPage: false,
-      autoResetFilters: false,
+      // autoResetPage: false,
+      // autoResetFilters: false,
     },
     useResizeColumns, // Aktifkan useResizeColumns
     useFilters,

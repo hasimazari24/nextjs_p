@@ -226,7 +226,6 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
          setIsLoadingDelete(false);
          setIsModalDeleteOpen(false);
          handleShowMessage("Data berhasil dihapus.", false);
-         onSubmit();
        }
        
       } catch (error: any) {
@@ -276,6 +275,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={() => onSubmit()}
       />
 
       <ModalTeamNonLogin
@@ -295,11 +295,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
         onClose={() => {
           setIsModalSocialOpen(false);
         }}
-        onSubmit={() => {
-          onSubmit();
-        }}
         idUser={idUser}
-        onDelete={() => onSubmit()}
       />
     </>
   );

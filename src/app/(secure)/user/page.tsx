@@ -27,6 +27,9 @@ import { useRouter } from "next/navigation";
 import { axiosCustom } from "@/app/api/axios";
 import { MdLockReset } from "react-icons/md";
 import dynamic from "next/dynamic";
+import { useAuth } from "@/app/components/utils/AuthContext";
+import { UserRoles, permissions } from "@/app/type/role-access-control.d";
+import NotFound from "@/app/components/template/NotFound";
 
 interface DataItem {
   image_id: string;
@@ -39,6 +42,12 @@ interface DataItem {
   fullname: string;
 }
 
+interface UserLog {
+  fullname: string;
+  role: UserRoles;
+  image_url: string;
+}
+
 function PageUser() {
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -48,6 +57,36 @@ function PageUser() {
     setIsError(err);
     setModalNotif(true);
   };
+
+  const { user } = useAuth();
+  let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+  }
+
+  let userFeatures: any | null | undefined = null; // Inisialisasikan fitur pada menunya
+  let allMenu: any | null = null;
+  if (getUser !== null) {
+    // ambil permission sesuai login role
+    userFeatures = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "user",
+    );
+    //ambil permision features all menu (hanya utk admin)
+    allMenu = permissions[getUser.role]?.features.find(
+      (feature) => feature.menu === "allmenu",
+    );
+
+    if (!userFeatures && !allMenu) {
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
+    }
+  }
 
   const hidenCols = ["id", "image_id"];
 

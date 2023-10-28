@@ -116,6 +116,15 @@ function PageGallery({ params }: { params: { slug: string } }) {
     allMenu = permissions[getUser.role]?.features.find(
       (feature) => feature.menu === "allmenu",
     );
+    if (!GalleryFeatures && !allMenu) {
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
+    }
   }
   let hidenCols: string[] = ["id","event_date","image_id"];
   if (

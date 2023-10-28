@@ -23,6 +23,7 @@ interface ModalProps {
   onClose: () => void;
   message: string;
   isError: boolean;
+  onSubmit?:()=>void;
 }
 
 const ModalNotif: React.FC<ModalProps> = ({
@@ -30,6 +31,7 @@ const ModalNotif: React.FC<ModalProps> = ({
   onClose,
   message,
   isError,
+  onSubmit,
 }) => {
   //   const [timer, setTimer] = useState<number | 0>(0);
   const timerRef = useRef<number | null>(null);
@@ -46,6 +48,7 @@ const ModalNotif: React.FC<ModalProps> = ({
       timerRef.current = window.setTimeout(() => {
         onClose();
         // router.refresh();
+        if (onSubmit) onSubmit();
         setProgressValue(100); //balikin value jadi 100 ketika close
       }, autoCloseDuration);
 
@@ -77,7 +80,7 @@ const ModalNotif: React.FC<ModalProps> = ({
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          // if (isError === false) { router.refresh() };
+          if (isError === false && onSubmit) { onSubmit()};
         }}
         size="lg"
         closeOnOverlayClick={false}
@@ -124,9 +127,9 @@ const ModalNotif: React.FC<ModalProps> = ({
                 colorScheme="blue"
                 onClick={() => {
                   onClose();
-                  // if (isError === false) {
-                  //   router.refresh();
-                  // }
+                  if (isError === false && onSubmit) {
+                    onSubmit();
+                  }
                 }}
               >
                 Tutup Sekarang
