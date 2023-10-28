@@ -270,6 +270,7 @@ const ModalTeam: React.FC<ModalProps> = ({
           onClose={() => setModalNotifTeam(false)}
           message={message}
           isError={isError}
+          onSubmit={() => onSubmit()}
         />
       </div>
     </>

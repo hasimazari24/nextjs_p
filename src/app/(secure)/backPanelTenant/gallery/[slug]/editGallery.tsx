@@ -119,42 +119,48 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
       file.value = null;
     } else {
       setAvatar(file);
+      const linkTemporary: string = URL.createObjectURL(file);
+      if (isEditModalOpen && rowData) initialAvatar(linkTemporary);
       setPreviewAvatar(URL.createObjectURL(file));
       setIsLoading(true);
     }
   };
 
   // fungsi ketika button delete avatar click
-  const onButtonDeleteAvatar = () => {
-    try {
-      axiosCustom.delete(`/assets/${idImageAvatar}/delete`);
-      setIdImageAvatar(null);
-      setPreviewAvatar(null);
-      setIdImageAvatarOld(null);
-      setBtnDeleteAvatar(false);
-    } catch (error: any) {
-      // tampilken error
-      if (error?.response) {
-        handleShowMessage(
-          `Terjadi Kesalahan: ${error.response.data.message}`,
-          true,
-        );
-      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-    }
-  };
-
-  // const [dataEdited, setDataEdited] = useState(rowData ? rowData : []);
-  const initialAvatar = () => {
-    if (isEditModalOpen && rowData && rowData.length !== 0) {
-      if (rowData?.image_id !== null) {
-        if (idImageAvatarOld !== rowData.image_id) {
-          setIdImageAvatarOld(rowData.image_id);
-          setPreviewAvatar(rowData.image_url);
-          setBtnDeleteAvatar(true);
+  // const onButtonDeleteAvatar = () => {
+  //   try {
+  //     axiosCustom.delete(`/assets/${idImageAvatar}/delete`);
+  //     setIdImageAvatar(null);
+  //     setPreviewAvatar(null);
+  //     setIdImageAvatarOld(null);
+  //     setBtnDeleteAvatar(false);
+  //   } catch (error: any) {
+  //     // tampilken error
+  //     if (error?.response) {
+  //       handleShowMessage(
+  //         `Terjadi Kesalahan: ${error.response.data.message}`,
+  //         true,
+  //       );
+  //     } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+  //   }
+  // };
+type linkTemporary = undefined | string;
+// const [dataEdited, setDataEdited] = useState(rowData ? rowData : []);
+const initialAvatar = (linkTemporary: linkTemporary = undefined) => {
+  if (isEditModalOpen && rowData && rowData.length !== 0) {
+    if (rowData?.image_id !== null) {
+      if (idImageAvatarOld !== rowData.image_id) {
+        if (linkTemporary !== undefined) {
+          setIdImageAvatarOld(null);
+          setPreviewAvatar(linkTemporary);
         }
+        setIdImageAvatarOld(rowData.image_id);
+        setPreviewAvatar(rowData.image_url);
+        setBtnDeleteAvatar(true);
       }
     }
-  };
+  }
+}; 
 
   // console.log(previewAvatar, rowData);
 
@@ -183,7 +189,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
       }
     }
     uploadAvatar();
-    initialAvatar();
+    initialAvatar(undefined);
     // setDataEdited(rowData);
     // console.log(dataEdited);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null

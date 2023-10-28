@@ -30,13 +30,13 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import ModalSocial from "../../../components/modal/modal-social";
-import { GrMoreVertical } from "react-icons/gr";
+import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
 import { SiMicrosoftteams } from "react-icons/si";
-import { BiLinkExternal } from "react-icons/bi";
-import { CiGlobe } from "react-icons/ci";
+import { BsCalendar2Event } from "react-icons/bs";
+import { LiaClipboardListSolid } from "react-icons/lia";
+import { BiLinkExternal, BiBookBookmark } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
-import { FiFacebook } from "react-icons/fi";
 import {
   FaFacebook,
   FaInstagram,
@@ -201,7 +201,9 @@ export default function MyTenant() {
                     <>
                       <MenuItem
                         onClick={() =>
-                          router.push(`/tenant/catalog/${dataMyTenant?.id}`)
+                          router.push(
+                            `/backPanelTenant/catalog/${dataMyTenant?.id}`,
+                          )
                         }
                       >
                         <HamburgerIcon />
@@ -209,11 +211,43 @@ export default function MyTenant() {
                       </MenuItem>
                       <MenuItem
                         onClick={() =>
-                          router.push(`/tenant/team/${dataMyTenant?.id}`)
+                          router.push(
+                            `/backPanelTenant/team/${dataMyTenant?.id}`,
+                          )
                         }
                       >
                         <SiMicrosoftteams />
                         &nbsp; Team Tenant
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() =>
+                          router.push(
+                            `/backPanelTenant/program/${dataMyTenant.id}`,
+                          )
+                        }
+                      >
+                        <LiaClipboardListSolid />
+                        &nbsp; Program Tenant
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() =>
+                          router.push(
+                            `/backPanelTenant/awards/${dataMyTenant.id}`,
+                          )
+                        }
+                      >
+                        <GrTrophy />
+                        &nbsp; Awards Tenant
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() =>
+                          router.push(
+                            `/backPanelTenant/gallery/${dataMyTenant.id}`,
+                          )
+                        }
+                      >
+                        <BsCalendar2Event />
+                        &nbsp; Gallery Events Tenant
                       </MenuItem>
                     </>
                   ) : null}

@@ -36,6 +36,7 @@ import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { AiOutlineCamera } from "react-icons/ai";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
+import { useAuth } from "@/app/components/utils/AuthContext";
 
 interface ModalProps {
   isOpen: boolean;
@@ -108,6 +109,9 @@ const ModalEdit: React.FC<ModalProps> = ({
     setIsError(err);
     setModalNotif(true);
   };
+
+  const { user } = useAuth();
+  const getUser: any = user;
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
@@ -594,6 +598,14 @@ const ModalEdit: React.FC<ModalProps> = ({
                         defaultValue={formData?.id}
                         // className={`form-control ${errors.name ? "is-invalid"}`}
                       />
+                      {getUser?.role === "Tenant" && (
+                        <Input
+                          type="text"
+                          {...fields.level_tenant}
+                          defaultValue={formData?.level_tenant}
+                          // className={`form-control ${errors.name ? "is-invalid"}`}
+                        />
+                      )}
                       <FormErrorMessage>
                         {errors.id && errors.id.message}
                       </FormErrorMessage>

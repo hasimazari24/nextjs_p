@@ -69,6 +69,15 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
     allMenu = permissions[getUser.role]?.features.find(
       (feature) => feature.menu === "allmenu",
     );
+    if (!catalogFeatures && !allMenu) {
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
+    }
   }
   let hidenCols: string[] = ["id"];
   if (
@@ -112,6 +121,10 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
     {
       Header: "id",
       accessor: "id",
+    },
+    {
+      Header: "image_id",
+      accessor: "image_id",
     },
     {
       Header: "title",
@@ -162,7 +175,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
         statusCode={404}
         msg={"Not Found"}
         statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali halaman sebelumnya."
-        backToHome="/tenant"
+        backToHome="/backPanelTenant"
       />
     );
   }
@@ -324,7 +337,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
                     key="kembali"
                     size="sm"
                     onClick={() => {
-                      router.push(`/tenant`);
+                      router.push(`/backPanelTenant`);
                     }}
                   >
                     <AiOutlineRollback />
@@ -358,7 +371,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
               statusCode={404}
               msg={"Not Found"}
               statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman tenant."
-              backToHome="/tenant"
+              backToHome="/backPanelTenant"
             />
           )}
         </>

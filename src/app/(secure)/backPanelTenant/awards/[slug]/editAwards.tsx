@@ -118,6 +118,9 @@ const EditAwards: React.FC<editProps> = ({ rowData, idTenant, onSubmit }) => {
     } else {
       setAvatar(file);
       setPreviewAvatar(URL.createObjectURL(file));
+      const linkTemporary: string = URL.createObjectURL(file);
+      if (isEditModalOpen && rowData) initialAvatar(linkTemporary);
+      setPreviewAvatar(linkTemporary);
       setIsLoading(true);
     }
   };
@@ -139,10 +142,16 @@ const EditAwards: React.FC<editProps> = ({ rowData, idTenant, onSubmit }) => {
     }
   };
 
-  const initialAvatar = () => {
+  type linkTemporary = undefined | string;
+
+  const initialAvatar = (linkTemporary: linkTemporary = undefined) => {
     if (isEditModalOpen && rowData && rowData.length !== 0) {
       if (rowData?.image_id !== null) {
         if (idImageAvatarOld !== rowData.image_id) {
+          if (linkTemporary !== undefined) {
+            setIdImageAvatarOld(null);
+            setPreviewAvatar(linkTemporary);
+          }
           setIdImageAvatarOld(rowData?.image_id);
           setPreviewAvatar(rowData?.image_url);
         }
@@ -175,7 +184,7 @@ const EditAwards: React.FC<editProps> = ({ rowData, idTenant, onSubmit }) => {
       }
     }
     uploadAvatar();
-    initialAvatar();
+    initialAvatar(undefined);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
   }, [avatar, isEditModalOpen]);
 

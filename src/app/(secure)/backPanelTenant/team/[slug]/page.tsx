@@ -34,7 +34,7 @@ import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
-import SearchModal from "@/app/(secure)/tenant/team/[slug]/SearchModal";
+import SearchModal from "@/app/(secure)/backPanelTenant/team/[slug]/SearchModal";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import ModalTeam from "./modal-team";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
@@ -237,7 +237,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                     key="kembali"
                     size="sm"
                     onClick={() => {
-                      router.push("/tenant");
+                      router.push("/backPanelTenant");
                     }}
                   >
                     <AiOutlineRollback />
@@ -335,7 +335,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
               statusCode={404}
               msg={"Not Found"}
               statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman tenant."
-              backToHome="/tenant"
+              backToHome="/backPanelTenant"
             />
           )}
         </>

@@ -230,7 +230,7 @@ const ModalTeamNonLogin = ({
 
             if (response.status === 200) {
               handleShowMessage("Data berhasil diubah.", false);
-              onSubmit();
+              // onSubmit();
             }
           });
         // .catch((error) => {
@@ -243,7 +243,7 @@ const ModalTeamNonLogin = ({
           .then((response) => {
             // console.log(response);
             if (response.status === 201) {
-              onSubmit();
+              // onSubmit();
               handleShowMessage("Data berhasil disimpan.", false);
             }
           });
@@ -264,7 +264,7 @@ const ModalTeamNonLogin = ({
     }
   };
 
-  console.log(isModalNotifTeam);
+  // console.log(isModalNotifTeam);
 
   const resetAll = () => {
     onClose(); // Tutup modal

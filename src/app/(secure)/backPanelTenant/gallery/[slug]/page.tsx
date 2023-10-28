@@ -201,7 +201,9 @@ function PageGallery({ params }: { params: { slug: string } }) {
                 pb="2"
                 direction={["column", "row"]}
               >
-                <Heading fontSize={"2xl"}>Gallery TENANT : {namaTenant}</Heading>
+                <Heading fontSize={"2xl"}>
+                  Gallery TENANT : {namaTenant}
+                </Heading>
                 <HStack>
                   <Button
                     bgColor="grey.400"
@@ -212,7 +214,7 @@ function PageGallery({ params }: { params: { slug: string } }) {
                     key="kembali"
                     size="sm"
                     onClick={() => {
-                      router.push("/tenant");
+                      router.push("/backPanelTenant");
                     }}
                   >
                     <AiOutlineRollback />
@@ -241,7 +243,7 @@ function PageGallery({ params }: { params: { slug: string } }) {
               statusCode={404}
               msg={"Not Found"}
               statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman tenant."
-              backToHome="/tenant"
+              backToHome="/backPanelTenant"
             />
           )}
         </>

@@ -289,7 +289,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
                     key="kembali"
                     size="sm"
                     onClick={() => {
-                      router.push("/tenant");
+                      router.push("/backPanelTenant");
                     }}
                   >
                     <AiOutlineRollback />
@@ -324,7 +324,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
               statusCode={404}
               msg={"Not Found"}
               statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman tenant."
-              backToHome="/tenant"
+              backToHome="/backPanelTenant"
             />
           )}
         </>

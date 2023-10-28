@@ -238,7 +238,9 @@ function PageTenant() {
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
-    getTampil();
+    if (getUser?.role !== "Tenant") {
+      getTampil();
+    } 
     // Clear the timeout when the component is unmounted
   }, []);
   //handle edit data
@@ -304,29 +306,29 @@ function PageTenant() {
             </Link>
 
             <MenuItem
-              onClick={() => router.push(`/tenant/catalog/${rowData.id}`)}
+              onClick={() => router.push(`/backPanelTenant/catalog/${rowData.id}`)}
             >
               <BiBookBookmark />
               &nbsp; Catalog Tenant
             </MenuItem>
-            <MenuItem onClick={() => router.push(`/tenant/team/${rowData.id}`)}>
+            <MenuItem onClick={() => router.push(`/backPanelTenant/team/${rowData.id}`)}>
               <SiMicrosoftteams />
               &nbsp; Team Tenant
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/tenant/program/${rowData.id}`)}
+              onClick={() => router.push(`/backPanelTenant/program/${rowData.id}`)}
             >
               <LiaClipboardListSolid />
               &nbsp; Program Tenant
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/tenant/awards/${rowData.id}`)}
+              onClick={() => router.push(`/backPanelTenant/awards/${rowData.id}`)}
             >
               <GrTrophy />
               &nbsp; Awards Tenant
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/tenant/gallery/${rowData.id}`)}
+              onClick={() => router.push(`/backPanelTenant/gallery/${rowData.id}`)}
             >
               <BsCalendar2Event />
               &nbsp; Gallery Events Tenant

@@ -17,19 +17,23 @@ import {
   Flex,
   Text,
   Box,
-  useDisclosure,
   Textarea,
-  Select,
   IconButton,
-  AvatarBadge,
-  Avatar,
-  Center,
+  Stack,
+  HStack,
+  Image,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { CheckIcon, CloseIcon, SmallCloseIcon } from "@chakra-ui/icons";
+import {
+  CheckIcon,
+  CloseIcon,
+  DeleteIcon,
+  SmallCloseIcon,
+} from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
+import { AiOutlineCamera } from "react-icons/ai";
 
 interface ModalProps {
   isOpen: boolean;
@@ -85,7 +89,6 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    // console.log(data?.url);
     setIsLoading(true);
     const dataBaru: {
       title: string;
@@ -135,7 +138,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
       onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
-      setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+      setPreviewAvatar(undefined); // reset preview
       setIdImageAvatarOld(null); // kosongkan idimage
       setIdImageAvatar(null); // kosongkan idimage
       setBtnDeleteAvatar(false); // hilangkan btndelete image
@@ -155,12 +158,12 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
 
   const [isHovered, setIsHovered] = useState(false);
   const [avatar, setAvatar] = useState<File>();
-  const [previewAvatar, setPreviewAvatar] = useState<string>(
-    "/img/tenant-logo-default.jpg",
+  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
+    undefined,
   );
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
-  const [btnDeleteAvatar, setBtnDeleteAvatar] = useState<Boolean>(false);
+  const [btnDeleteAvatar, setBtnDeleteAvatar] = useState<boolean>(false);
   const inputFile = useRef<HTMLInputElement>(null);
   // jika button edit avatar klik, brarti input file juga diklik
   const onButtonEditAvatar = () => {
@@ -176,7 +179,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
     } else {
       setIdImageAvatar(`delete=${idImageAvatarOld}`);
     }
-    setPreviewAvatar("/img/avatar-default.jpg");
+    setPreviewAvatar(undefined);
     setIdImageAvatarOld(null);
     setBtnDeleteAvatar(false);
   };
@@ -208,6 +211,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
       }
     }
     uploadAvatar();
+    initialAvatar(undefined);
   }, [avatar, isOpen]);
 
   const handleMouseEnter = () => {
@@ -218,20 +222,26 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
     setIsHovered(false);
   };
 
-  // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  if (isOpen && isEdit && formData) {
-    if (formData?.image_id !== null) {
-      if (idImageAvatarOld !== formData.image_id) {
-        setIdImageAvatarOld(formData.image_id);
-        setPreviewAvatar(formData.image_url);
-        setBtnDeleteAvatar(true);
+  type linkTemporary = undefined | string;
+
+  const initialAvatar = (linkTemporary: linkTemporary = undefined) => {
+    if (isOpen && isEdit && formData) {
+      if (formData?.image_id !== null) {
+        if (idImageAvatarOld !== formData.image_id) {
+          if (linkTemporary !== undefined) {
+            setIdImageAvatarOld(null);
+            setPreviewAvatar(linkTemporary);
+          }
+          setIdImageAvatarOld(formData.image_id);
+          setPreviewAvatar(formData.image_url);
+          setBtnDeleteAvatar(true);
+        }
       }
     }
-  }
-
+  };
   // buat type untuk batasi input biar tidak ugal-ugalan di jalan
   // fungsi ketika input file avatar change
-  const onFileChange = (e: any) => {
+  const onAvatarChange = (e: any) => {
     // prepare supported file type
     const SUPPORT_FILE_TYPE = [
       "image/jpeg",
@@ -247,23 +257,20 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
     const UPLOAD_FILE_SIZE = file?.size;
-    // jika file type tidak disupport
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
       file.value = null;
-    }
-    // jika file size lebih dari yg sudah ditentukan
-    else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
+    } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
       handleShowMessage(
         "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
         true,
       );
       file.value = null;
-    }
-    // lolos tilang pak solipi dek
-    else {
+    } else {
       setAvatar(file);
-      setPreviewAvatar(URL.createObjectURL(file));
+      const linkTemporary: string = URL.createObjectURL(file);
+      if (isOpen && isEdit && formData) initialAvatar(linkTemporary);
+      setPreviewAvatar(linkTemporary);
       setIsLoading(true);
     }
   };
@@ -275,8 +282,12 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
+          setPreviewAvatar(undefined); // reset preview
+          setIdImageAvatarOld(null); // kosongkan idimage
+          setIdImageAvatar(null); // kosongkan idimage
+          setBtnDeleteAvatar(false); // hilangkan btndelete
         }}
-        size="xl"
+        size="4xl"
       >
         <ModalOverlay />
         <ModalContent>
@@ -285,137 +296,166 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">
-                <Hide>
-                  <FormControl isInvalid={!!errors.id} mb="3">
-                    <Input
-                      type="text"
-                      {...register("id")}
-                      defaultValue={formData?.id}
-                      // className={`form-control ${errors.name ? "is-invalid"}`}
-                    />
-                    <FormErrorMessage>
-                      {errors.id && errors.id.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </Hide>
-
-                <FormControl mb="3">
-                  <Flex
-                    flexDirection={["column", "row"]}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                  >
-                    <Box flex={["1", "30%"]} marginRight={["0", "2"]}>
-                      <FormLabel>Logo Catalog</FormLabel>
-                      <Center>
-                        {previewAvatar ? (
-                          <Avatar size="xl" src={previewAvatar}>
-                            <AvatarBadge
-                              as={IconButton}
-                              size="sm"
-                              rounded="full"
-                              top="-10px"
-                              colorScheme="red"
-                              aria-label="remove Image"
-                              icon={<SmallCloseIcon />}
-                              onClick={onButtonDeleteAvatar}
-                              isDisabled={isLoading}
-                            />
-                          </Avatar>
-                        ) : (
-                          <Avatar size="xl" />
-                        )}
-                      </Center>
-                    </Box>
-                    <Box flex={["1", "20%"]} textAlign={"center"}>
-                      <Text as="i" color={"teal.300"}>
-                        <Text as="b">Note:</Text> Ukuran 250x250 px
-                      </Text>
-                    </Box>
-                    <Box flex={["1", "45%"]}>
+                <Stack direction={["column", "row"]} spacing={[0, 8]}>
+                  <Box>
+                    <FormControl isInvalid={!!errors.image} mb="3">
                       <Input
                         ref={inputFile}
                         style={{ display: "none" }}
                         type="file"
-                        onChange={(e) => onFileChange(e.target.files)}
+                        onChange={(e) => onAvatarChange(e.target.files)}
                       />
-                      <Button
-                        fontWeight={"12"}
-                        onClick={() => onButtonEditAvatar()}
-                        w="full"
-                        isDisabled={isLoading}
+                      <Box textAlign={"center"}>Gambar Catalog</Box>
+                      <Flex
+                        justify={"center"}
+                        //   mt={{ base: "-50px", sm: "-100", lg: "-100" }}
                       >
-                        {" "}
-                        Ubah logo
-                      </Button>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                        <Box
+                          mt={1}
+                          position="relative"
+                          onMouseEnter={handleMouseEnter}
+                          onMouseLeave={handleMouseLeave}
+                          mb="3"
+                          cursor={"pointer"}
+                          boxShadow="md"
+                          borderColor="gray.300"
+                          borderWidth={"2px"}
+                          rounded={"md"}
+                        >
+                          <Image
+                            src={
+                              previewAvatar || "/img/tenant-logo-default.png"
+                            }
+                            w={{ base: "200px", sm: "300px", lg: "300px" }}
+                            h={"auto"}
+                            minH="100px"
+                            fit="cover"
+                            alt="Preview Gambar Events"
+                          />
+                          <Stack
+                            position="absolute"
+                            bottom="0"
+                            right="0"
+                            padding="2"
+                            spacing="2"
+                            direction="column"
+                            background="rgba(0, 0, 0, 0.7)"
+                            opacity={isHovered ? 1 : 0} // Mengatur opacity berdasarkan isHovered
+                            transition="opacity 0.2s ease-in-out" // Efek transisi
+                            // h={previewBanner ? "100%" : "200px"}
+                            h="100%"
+                            minH="100px"
+                            w={"100%"}
+                            justifyContent={"center"}
+                            align={"center"}
+                            rounded={"md"}
+                          >
+                            <HStack spacing="1">
+                              {!isLoading && (
+                                <IconButton
+                                  onClick={onButtonEditAvatar}
+                                  aria-label="Edit"
+                                  title="Ubah"
+                                  icon={<AiOutlineCamera size="20px" />}
+                                  colorScheme="teal"
+                                />
+                              )}
+                              {!isLoading && btnDeleteAvatar && (
+                                <IconButton
+                                  onClick={onButtonDeleteAvatar}
+                                  aria-label="Delete"
+                                  title="Hapus"
+                                  icon={<DeleteIcon />}
+                                  colorScheme="red"
+                                />
+                              )}
+                            </HStack>
+                          </Stack>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+                  </Box>
+                  <Box w="full">
+                    <Hide>
+                      <FormControl isInvalid={!!errors.id} mb="3">
+                        <Input
+                          type="text"
+                          {...register("id")}
+                          defaultValue={formData?.id}
+                          // className={`form-control ${errors.name ? "is-invalid"}`}
+                        />
+                        <FormErrorMessage>
+                          {errors.id && errors.id.message}
+                        </FormErrorMessage>
+                      </FormControl>
+                    </Hide>
 
-                <FormControl isInvalid={!!errors.title} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>
-                        Judul&nbsp;
-                        <Text as={"span"} color={"red"}>
-                          *
-                        </Text>
-                      </FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...fields.title}
-                        defaultValue={formData?.title}
-                        // className={`form-control ${errors.name ? "is-invalid"}`}
-                      />
-                      <FormErrorMessage>
-                        {errors.title && errors.title.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                    <FormControl isInvalid={!!errors.title} mb="3">
+                      <Flex flexDirection={["column", "row"]}>
+                        <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                          <FormLabel>
+                            Judul&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
+                        </Box>
+                        <Box flex={["1", "80%"]}>
+                          <Input
+                            type="text"
+                            {...fields.title}
+                            defaultValue={formData?.title}
+                            // className={`form-control ${errors.name ? "is-invalid"}`}
+                          />
+                          <FormErrorMessage>
+                            {errors.title && errors.title.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
 
-                <FormControl isInvalid={!!errors.description} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>
-                        Deskripsi&nbsp;
-                        <Text as={"span"} color={"red"}>
-                          *
-                        </Text>
-                      </FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Textarea
-                        {...fields.description}
-                        defaultValue={formData?.description}
-                      />
-                      <FormErrorMessage>
-                        {errors.description && errors.description.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                    <FormControl isInvalid={!!errors.description} mb="3">
+                      <Flex flexDirection={["column", "row"]}>
+                        <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                          <FormLabel>
+                            Deskripsi&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
+                        </Box>
+                        <Box flex={["1", "80%"]}>
+                          <Textarea
+                            {...fields.description}
+                            defaultValue={formData?.description}
+                          />
+                          <FormErrorMessage>
+                            {errors.description && errors.description.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
 
-                <FormControl isInvalid={!!errors.url} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>URL</FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Input
-                        type="text"
-                        {...fields.url}
-                        defaultValue={formData?.url}
-                        // className={`form-control ${errors.name ? "is-invalid"}`}
-                      />
-                      <FormErrorMessage>
-                        {errors.url && errors.url.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                    <FormControl isInvalid={!!errors.url} mb="3">
+                      <Flex flexDirection={["column", "row"]}>
+                        <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
+                          <FormLabel>URL</FormLabel>
+                        </Box>
+                        <Box flex={["1", "80%"]}>
+                          <Input
+                            type="text"
+                            {...fields.url}
+                            defaultValue={formData?.url}
+                            // className={`form-control ${errors.name ? "is-invalid"}`}
+                          />
+                          <FormErrorMessage>
+                            {errors.url && errors.url.message}
+                          </FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+                  </Box>
+                </Stack>
               </div>
             </ModalBody>
             <ModalFooter>
@@ -436,7 +476,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                   onClose();
                   reset();
                   setIsLoading(false);
-                  setPreviewAvatar("/img/tenant-logo-default.jpg"); // reset preview
+                  setPreviewAvatar(undefined); // reset preview
                   setIdImageAvatarOld(null); // kosongkan idimage
                   setIdImageAvatar(null); // kosongkan idimage
                   setBtnDeleteAvatar(false); // hilangkan btndelete image

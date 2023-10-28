@@ -3,37 +3,22 @@
 import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
 import {
-  useSearchParams,
-  useRouter,
-  useParams,
-  notFound,
-} from "next/navigation";
-import {
   Button,
   Center,
-  Spinner,
-  Text,
-  HStack,
-  Heading,
   Avatar,
-  Flex,
   Checkbox,
-  Tabs,
-  TabPanel,
-  TabPanels,
-  TabList,
 } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
-import { AiOutlineRollback } from "react-icons/ai";
+// import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
-import SearchModal from "@/app/(secure)/tenant/team/[slug]/SearchModal";
+// import SearchModal from "@/app/(secure)/backPanelTenant/team/[slug]/SearchModal";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import ModalTeam from "./modal-team";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import { useAuth } from "@/app/components/utils/AuthContext";
-import NotFound from "@/app/components/template/NotFound";
+// import NotFound from "@/app/components/template/NotFound";
 
 interface DataItem {
   // id_tenant: string;

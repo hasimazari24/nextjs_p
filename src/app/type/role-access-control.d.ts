@@ -40,7 +40,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
   [UserRoles.SuperAdmin]: {
     link_menu: [
       { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
+      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
       { name: "Data User", icon: BsPeople, href: "/user" },
       { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
       { name: "Data Asset", icon: ImFileText2, href: "/assets" },
@@ -55,7 +55,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
   [UserRoles.Mentor]: {
     link_menu: [
       { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
+      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
       { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
       { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
     ],
@@ -97,7 +97,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
   [UserRoles.Tenant]: {
     link_menu: [
       { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
+      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
       { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
       { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
       { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
@@ -140,7 +140,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
   [UserRoles.Tenant_team]: {
     link_menu: [
       { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
+      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
       { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
       { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
       { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
@@ -183,7 +183,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
   [UserRoles.Manajemen]: {
     link_menu: [
       { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
+      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
       { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
       { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
       { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
