@@ -132,7 +132,7 @@ function HeadingPage() {
                   <path
                     d="M62.5,71.5Q25,93,25,50Q25,7,62.5,28.5Q100,50,62.5,71.5Z"
                     stroke="none"
-                    stroke-width="0"
+                    strokeWidth="0"
                     fill="url(#fill)"
                   ></path>
                 </svg>

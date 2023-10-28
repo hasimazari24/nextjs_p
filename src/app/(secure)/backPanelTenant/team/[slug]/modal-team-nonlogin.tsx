@@ -194,7 +194,7 @@ const ModalTeamNonLogin = ({
     }
     uploadAvatar();
     initialAvatar(undefined);
-    console.log("isModalNotifTeam changed:", isModalNotifTeam);
+    // console.log("isModalNotifTeam changed:", isModalNotifTeam);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
   }, [avatar, isOpen]);
 

@@ -76,11 +76,7 @@ interface UserLog {
   image_url: string;
 }
 
-const ModalSocial: React.FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  idUser,
-}) => {
+const ModalSocial: React.FC<ModalProps> = ({ isOpen, onClose, idUser }) => {
   const {
     register: registWebsite,
     handleSubmit: handleWebsite,
@@ -282,7 +278,7 @@ const ModalSocial: React.FC<ModalProps> = ({
         } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
         setIsLoadingDelete(false);
       }
-    } 
+    }
   };
 
   const getUpdatedSocial = async () => {
@@ -340,7 +336,7 @@ const ModalSocial: React.FC<ModalProps> = ({
   }, [isOpen === true]);
   // }, []);
 
-  console.log(akunWeb);
+  // console.log(akunWeb);
 
   const resetAll = () => {
     setDataDelete(null);
