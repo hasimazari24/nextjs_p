@@ -26,6 +26,9 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   Center,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -39,7 +42,7 @@ import {
 } from "react-icons/fi";
 import { AiOutlineHome } from "react-icons/ai";
 import { ImProfile } from "react-icons/im";
-import { RiLogoutBoxRLine } from "react-icons/ri";
+import { RiLogoutBoxRLine, RiArrowDropRightFill } from "react-icons/ri";
 import { IconType } from "react-icons";
 import Link from "next/link";
 // import { ImProfile } from "@react-icons/all-files/im/ImProfile";
@@ -47,11 +50,10 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../utils/AuthContext";
 import { usePathname } from "next/navigation";
-
-interface LinkItemProps {
-  name: string;
-  icon: IconType;
-}
+import Routes from "@/app/components/utils/Routes";
+import { findCurrentRoute } from "@/app/components/utils/Navigation";
+import { IRoutes } from "@/app/type/routes-navigation.d";
+import { ChevronRightIcon } from "@chakra-ui/icons";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
@@ -76,10 +78,12 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda / 
   const namePath = pathname.split('/').filter(Boolean);
 
+  let getActiveRoute: IRoutes | undefined = findCurrentRoute(Routes);
   // useEffect(() => {
-  //     if (pathname === '/myprofile') setIsLoading(false);
-  // },[pathname, namePath]);
-
+  //   getActiveRoute = findCurrentRoute(Routes);
+  // }, [pathname]);
+console.log(pathname);
+console.log(getActiveRoute);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -119,14 +123,46 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
           // alignItems="center"
           role="group"
           display={{ base: "none", md: "flex" }}
-          alignItems="flex-start"
+          // alignItems="flex-start"
+          alignItems="center"
+          justifyContent="center"
           // spacing="1px"
           // cursor="pointer"
         >
-          <HStack alignItems="center" justify={"center"}>
-            <Link href="/">
-              <AiOutlineHome size="20px" mr="2.5" />
-            </Link>
+          {/* <HStack alignItems="center" justify={"center"}> */}
+          <Breadcrumb
+            separator={
+              <Box mt="-3px">
+                <ChevronRightIcon color="gray.500" />
+              </Box>
+            }
+          >
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">
+                <Box mt="-3px">
+                  <AiOutlineHome mr="2.5" size="20px" title="Halaman Public" />
+                </Box>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+
+            <BreadcrumbItem>
+              <Text>Page</Text>
+            </BreadcrumbItem>
+            {getActiveRoute?.layout && (
+              <BreadcrumbItem>
+                <BreadcrumbLink isCurrentPage>
+                  <Link href={getActiveRoute?.href}>
+                    {getActiveRoute?.layout}
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
+
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href="#">{getActiveRoute?.name}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+          {/* <Link href="/"></Link>
             <Text>pages</Text>
             <Text>/</Text>
             <Link href={`/${namePath[0]}`}>
@@ -140,15 +176,15 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                 <Text>/</Text>
                 <Text>{`${namePath[1]}`}</Text>
               </>
-            ) : null}
+            ) : null} */}
 
-            {/* {namePath.map((name) => (
+          {/* {namePath.map((name) => (
               <>
                 <Text>/</Text>
                 <Text>{`${name}`}</Text>
               </>
             ))} */}
-          </HStack>
+          {/* </HStack> */}
         </Flex>
         {/* <Text fontSize="xs" color="gray.600">
             Halaman Daftar Tenant

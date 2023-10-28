@@ -9,12 +9,8 @@ import {
 import { MdOutlineQuiz } from "react-icons/md";
 import { ImFileText2 } from "react-icons/im";
 import { SiGoogleclassroom } from "react-icons/si";
-
-export interface LinkItemProps {
-  name: string;
-  icon: IconType;
-  href: string;
-}
+import IRoutes from "@/app/type/routes-navigation.d";
+import Routes from "@/app/components/utils/Routes";
 
 export interface FeaturesItem {
     menu : string;
@@ -23,7 +19,7 @@ export interface FeaturesItem {
 
 export interface RoleAccessItem {
   // role: string;
-  link_menu: LinkItemProps[];
+  link_menu: IRoutes[];
   features: FeaturesItem[];
 }
 
@@ -38,13 +34,16 @@ export enum UserRoles {
 // Definisikan izin berdasarkan menu
 export const permissions: Record<UserRoles, RoleAccessItem> = {
   [UserRoles.SuperAdmin]: {
-    link_menu: [
-      { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
-      { name: "Data User", icon: BsPeople, href: "/user" },
-      { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
-      { name: "Data Asset", icon: ImFileText2, href: "/assets" },
-    ],
+    link_menu:
+      // { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
+      Routes.filter(
+        (route) =>
+          route.name === "Dashboard" ||
+          route.name === "Back Panel Tenant" ||
+          route.name === "Data User" ||
+          route.name === "Data Asset" ||
+          route.name === "Data Kuesioner",
+      ),
     features: [
       {
         menu: "allmenu",

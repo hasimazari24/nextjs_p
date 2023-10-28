@@ -36,17 +36,6 @@ interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
 
-const LinkItems_admin: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-  { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
-  { name: "Data User", icon: BsPeople, href: "/user" },
-];
-
-const LinkItems_tenant: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-  { name: "Data Tenant", icon: BsBuilding, href: "/tenant" },
-];
-
 const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
