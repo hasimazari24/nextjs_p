@@ -746,5 +746,6 @@ const MyProfile: React.FC = () => {
 
 export default dynamic(() => Promise.resolve(MyProfile), {
   ssr: false,
-  suspense: true,
+  // suspense: true,
+  loading: () => <p>Memuat halaman ...</p>,
 });

@@ -3,7 +3,7 @@ import { Providers } from "./components/utils/Providers";
 import { AuthProvider } from "./components/utils/AuthContext";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Loading from "./loading";
+// import Loading from "./loading";
 
 export const metadata: Metadata = {
   title: process.env.APP_NAME,

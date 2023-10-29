@@ -4,7 +4,6 @@ import Loading from "./loading";
 
 const PageTenant = dynamic(() => import("./get-tenant"), {
   ssr: false,
-  suspense: true,
   loading: () => <Loading />, // Tampilan loading saat komponen dimuat
 });
 

@@ -19,7 +19,9 @@ const Loading = () => {
           size="xl"
           mb="3"
         />
-        <Text as="i" whiteSpace={"normal"}>Sedang memuat halaman, mohon tunggu sebentar ...</Text>
+        <Text as="i" whiteSpace={"normal"}>
+          Sedang memuat data, mohon tunggu sebentar ...
+        </Text>
       </Center>
     </Box>
   );

@@ -55,53 +55,52 @@ export default function Layout({ children }: { children: ReactNode }) {
       {loadingValidation ? (
         LoadingPage("Sedang melakukan validasi, mohon tunggu sebentar ...")
       ) : (
-        <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-          <Sidebar
-            onClose={() => onClose}
-            display={{ base: "none", md: "block" }}
-          />
-          <Drawer
-            isOpen={isOpen}
-            placement="left"
-            onClose={onClose}
-            returnFocusOnClose={false}
-            onOverlayClick={onClose}
-            size="full"
-          >
-            <DrawerContent>
-              <Sidebar onClose={onClose} />
-            </DrawerContent>
-          </Drawer>
-          {/* <SidebarWithHeader /> */}
-          {/* <Header /> */}
-          <Header onOpen={onOpen} />
-          <Box ml={{ base: 0, md: 60 }} p="4">
-            <Flex
-              w="full"
-              // alignItems=""
-              // justifyContent="center"
-              // cursor="pointer"
-              minHeight="85vh"
-              bg="white"
-              rounded="xl"
-              shadow="lg"
-              // borderWidth="1px"
+        <Suspense
+          key={susKey}
+          fallback={LoadingPage(
+            "Sedang memuat halaman, mohon tunggu sebentar ...",
+          )}
+        >
+          <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+            <Sidebar
+              onClose={() => onClose}
+              display={{ base: "none", md: "block" }}
+            />
+            <Drawer
+              isOpen={isOpen}
+              placement="left"
+              onClose={onClose}
+              returnFocusOnClose={false}
+              onOverlayClick={onClose}
+              size="full"
             >
-              <Box p="6" height="full" width="full">
-                <Suspense
-                  key={susKey}
-                  fallback={LoadingPage(
-                    "Sedang memuat halaman, mohon tunggu sebentar ...",
-                  )}
-                >
-                  {children}
-                </Suspense>
-              </Box>
-            </Flex>
+              <DrawerContent>
+                <Sidebar onClose={onClose} />
+              </DrawerContent>
+            </Drawer>
+            {/* <SidebarWithHeader /> */}
+            {/* <Header /> */}
+            <Header onOpen={onOpen} />
+            <Box ml={{ base: 0, md: 60 }} p="4">
+              <Flex
+                w="full"
+                // alignItems=""
+                // justifyContent="center"
+                // cursor="pointer"
+                minHeight="85vh"
+                bg="white"
+                rounded="xl"
+                shadow="lg"
+                // borderWidth="1px"
+              >
+                  <Box p="6" height="full" width="full">
+                    {children}
+                  </Box>
+              </Flex>
+            </Box>
           </Box>
-        </Box>
+        </Suspense>
       )}
-      {/* </Suspense> */}
     </main>
   );
 }

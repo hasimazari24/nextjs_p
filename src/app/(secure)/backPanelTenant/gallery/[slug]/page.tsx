@@ -4,7 +4,6 @@ import Loading from "../../loading";
 
 const Gallery = dynamic(() => import("./getGallery"), {
   ssr: false,
-  suspense: true,
   loading: () => <Loading />, // Tampilan loading saat komponen dimuat
 });
 

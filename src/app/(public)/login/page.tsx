@@ -69,8 +69,18 @@ const Login = () => {
   return (
     <>
       {loadingValidation ? (
-        <Center h="100%" m="10">
-          <Spinner className="spinner" size="xl" color="blue.500" />
+        <Center h="100%" m="10" flexDirection={"column"}>
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+            mb="3"
+          />
+          <Text as="i" whiteSpace={"normal"}>
+            Sedang melakukan validasi, mohon tunggu sebentar ...
+          </Text>
         </Center>
       ) : (
         <Flex

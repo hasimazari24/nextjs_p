@@ -37,22 +37,22 @@ interface SidebarProps extends BoxProps {
 }
 
 const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const pathname = usePathname();
+  // const [isLoading, setIsLoading] = useState(false);
+  // const pathname = usePathname();
 
-  useEffect(() => {
-    if (link === pathname) {
-      setIsLoading(false);
-    };
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (link === pathname) {
+  //     setIsLoading(false);
+  //   };
+  // }, [pathname]);
 
   return (
     <NextLink
       href={link}
       passHref
-      onClick={() => {
-        if (link !== pathname) setIsLoading(true);
-      }}
+      // onClick={() => {
+      //   if (link !== pathname) setIsLoading(true);
+      // }}
     >
       {/* <a> */}
       <Flex
@@ -78,10 +78,7 @@ const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
             as={icon}
           />
         )}
-        {children} &nbsp;
-        {isLoading ? (
-          <Spinner className="spinner" color="blue.500" />
-        ) : null}
+        {children}
       </Flex>
       {/* </a> */}
     </NextLink>

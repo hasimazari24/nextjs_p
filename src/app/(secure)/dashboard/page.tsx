@@ -3,12 +3,11 @@ import dynamic from "next/dynamic";
 import React, { Suspense, useState } from "react";
 // import Loading from "@/components/modal/Loading";
 // import DataComponent from "./data";
-import Loading from "@/app/loading";
+import Loading from "./loading";
 import { Button } from "@chakra-ui/react";
 
 const Data = dynamic(() => import("./data"), {
   ssr: false,
-  suspense: true,
   loading: () => <Loading />, // Tampilan loading saat komponen dimuat
 });
 

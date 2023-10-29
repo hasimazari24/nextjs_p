@@ -15,7 +15,7 @@ import {
 import { Column } from "react-table";
 import { axiosCustom } from "@/app/api/axios";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import Loading from "@/app/loading";
+import Loading from "../../loading";
 import DataTable from "@/app/components/datatable/data-table";
 import { AiOutlineRollback } from "react-icons/ai";
 import AddGallery from "./addGallery";
