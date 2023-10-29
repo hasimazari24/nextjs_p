@@ -15,28 +15,30 @@ import {
 import { Column } from "react-table";
 import { axiosCustom } from "@/app/api/axios";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import Loading from "../../loading";
+import Loading from "@/app/loading";
 import DataTable from "@/app/components/datatable/data-table";
 import { AiOutlineRollback } from "react-icons/ai";
-import AddAwards from "./addAwards";
-import EditAwards from "./editAwards";
-import DeleteAwards from "./deleteAwards";
+import AddGallery from "./addGallery";
+import EditGallery from "./editGallery";
+import DeleteGallery from "./deleteGallery";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import NotFound from "@/app/components/template/NotFound";
 
-interface AwardItem {
+interface GalleryItem {
   id: string;
-  name: string;
-  rank: string;
   image_id: string;
   image_url: string;
+  title: string;
+  description: string;
+  event_date_format: string;
+  event_date: string;
 }
 
 interface DataItem {
   id: string;
   name: string;
-  award: AwardItem;
+  gallery: GalleryItem;
 }
 
 interface UserLog {
@@ -46,62 +48,48 @@ interface UserLog {
   image_url: string;
 }
 
-const getAwards = async (paramsId: string): Promise<DataItem[]> => {
-  try {
-    // Panggil API menggunakan Axios dengan async/await
-    const response = await axiosCustom.get(`/tenant/${paramsId}/get-award`);
-    const data = await response.data.data;
-    if (data) {
-      return [data];
-    } else {
-      return []; // Mengembalikan array kosong jika data tidak tersedia
-    }
-  } catch (error: any) {
-    console.error("Gagal memuat data:", error);
-    return [];
-  }
-};
-
-function PageAwards({ params }: { params: { slug: string } }) {
+function PageGallery({ params }: { params: { slug: string } }) {
   const getParamsId = params.slug;
   if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
     return notFound();
   }
   const router = useRouter();
 
-  const [dataAwardsLoading, setDataAwardsLoading] = useState(true);
-  // const [dataAwards, setDataAwards] = useState<DataItem[]>([]);
-  const [awardItem, setAwardItem] = useState<AwardItem[]>([]);
+  const [dataGalleryLoading, setDataGalleryLoading] = useState(true);
+  // const [dataGallery, setDataGallery] = useState<DataItem[]>([]);
+  const [galleryItem, setGalleryItem] = useState<GalleryItem[]>([]);
   const [namaTenant, setNamaTenant] = useState<string | null>();
 
   const fetchData = async (): Promise<void> => {
     try {
       const response = await axiosCustom.get(
-        `/tenant/${getParamsId}/get-award`,
+        `/tenant/${getParamsId}/get-gallery`,
       );
-      const newDataAwards: DataItem[] = [await response.data.data];
-      const newAwardItem = newDataAwards.flatMap((dataItem) =>
-        Array.isArray(dataItem.award)
-          ? dataItem.award.map((award) => ({
-              id: award.id,
-              image_id: award.image_id,
-              image_url: award.image_url,
-              name: award.name,
-              rank: award.rank,
+      const newDataGallery: DataItem[] = [await response.data.data];
+      const newGalleryItem = newDataGallery.flatMap((dataItem) =>
+        Array.isArray(dataItem.gallery)
+          ? dataItem.gallery.map((gallery) => ({
+              id: gallery.id,
+              image_id: gallery.image_id,
+              image_url: gallery.image_url,
+              title: gallery.title,
+              description: gallery.description,
+              event_date_format: gallery.event_date_format,
+              event_date: gallery.event_date,
             }))
           : [],
       );
-      const namatenant = newDataAwards
+      const namatenant = newDataGallery
         .map((item) => item.name.toUpperCase())
         .toString();
       setNamaTenant(namatenant);
-      // setDataAwards(newDataAwards);
-      setAwardItem(newAwardItem);
-      setDataAwardsLoading(false);
+      // setDataGallery(newDataGallery);
+      setGalleryItem(newGalleryItem);
+      setDataGalleryLoading(false);
     } catch (error) {
       console.error("Error updating data:", error);
       setNamaTenant(null);
-      setDataAwardsLoading(false);
+      setDataGalleryLoading(false);
     }
   };
 
@@ -109,7 +97,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
     fetchData();
   }, [getParamsId]);
 
-  const filterOptions = [{ key: "name", label: "Nama Award" }];
+  const filterOptions = [{ key: "name", label: "Nama Gallery" }];
 
   const { user } = useAuth();
   let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
@@ -118,19 +106,18 @@ function PageAwards({ params }: { params: { slug: string } }) {
     getUser = user; // Setel nilai getUser jika user ada
   }
 
-  let awardsFeatures: any | null | undefined = null; // Inisialisasikan fitur pada menunya
+  let GalleryFeatures: any | null | undefined = null; // Inisialisasikan fitur pada menunya
   let allMenu: any | null = null;
   if (getUser !== null) {
     // ambil permission sesuai login role
-    awardsFeatures = permissions[getUser.role]?.features.find(
+    GalleryFeatures = permissions[getUser.role]?.features.find(
       (feature) => feature.menu === "backPanelTenant_catalog",
     );
     //ambil permision features all menu (hanya utk admin)
     allMenu = permissions[getUser.role]?.features.find(
       (feature) => feature.menu === "allmenu",
     );
-
-    if (!awardsFeatures && !allMenu) {
+    if (!GalleryFeatures && !allMenu) {
       return (
         <NotFound
           statusCode={403}
@@ -140,15 +127,15 @@ function PageAwards({ params }: { params: { slug: string } }) {
       );
     }
   }
-  let hidenCols: string[] = ["id", "image_id"];
+  let hidenCols: string[] = ["id", "event_date", "image_id"];
   if (
-    (awardsFeatures?.access.includes("tmbhAwards") &&
+    (GalleryFeatures?.access.includes("tmbhGallery") &&
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");
   }
 
-  const columns: ReadonlyArray<Column<AwardItem>> = [
+  const columns: ReadonlyArray<Column<GalleryItem>> = [
     {
       Header: "Avatar",
       accessor: "image_url",
@@ -164,27 +151,35 @@ function PageAwards({ params }: { params: { slug: string } }) {
       accessor: "image_id",
     },
     {
-      Header: "Nama Award",
-      accessor: "name",
+      Header: "Judul Event",
+      accessor: "title",
     },
     {
-      Header: "Rank",
-      accessor: "rank",
-      width: "260px",
+      Header: "Deskripsi",
+      accessor: "description",
       Cell: ({ value }) => <Text whiteSpace="normal">{value}</Text>,
+    },
+    {
+      Header: "Tanggal Event",
+      accessor: "event_date_format",
+      minWidth: 150,
+    },
+    {
+      Header: "Tgl_Event",
+      accessor: "event_date",
     },
   ];
   const renderActions = (rowData: any) => {
-    return awardsFeatures?.access.includes("editAwards") ||
+    return GalleryFeatures?.access.includes("editGallery") ||
       allMenu?.access.includes("all_access") ? (
       <HStack>
-        <EditAwards
+        <EditGallery
           idTenant={getParamsId}
           rowData={rowData}
           onSubmit={() => fetchData()}
         />
         &nbsp;
-        <DeleteAwards
+        <DeleteGallery
           idTenant={getParamsId}
           dataDelete={rowData}
           onSubmit={() => fetchData()}
@@ -196,7 +191,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
 
   return (
     <div>
-      {dataAwardsLoading ? (
+      {dataGalleryLoading ? (
         <Loading />
       ) : (
         <>
@@ -207,7 +202,9 @@ function PageAwards({ params }: { params: { slug: string } }) {
                 pb="2"
                 direction={["column", "row"]}
               >
-                <Heading fontSize={"2xl"}>AWARDS TENANT : {namaTenant}</Heading>
+                <Heading fontSize={"2xl"}>
+                  Gallery TENANT : {namaTenant}
+                </Heading>
                 <HStack>
                   <Button
                     bgColor="grey.400"
@@ -224,9 +221,9 @@ function PageAwards({ params }: { params: { slug: string } }) {
                     <AiOutlineRollback />
                     &nbsp;Data Tenant
                   </Button>
-                  {awardsFeatures?.access.includes("tmbhAwards") ||
+                  {GalleryFeatures?.access.includes("tmbhGallery") ||
                   allMenu?.access.includes("all_access") ? (
-                    <AddAwards
+                    <AddGallery
                       idTenant={getParamsId}
                       onSubmit={() => fetchData()}
                     />
@@ -234,7 +231,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
                 </HStack>
               </Flex>
               <DataTable
-                data={awardItem}
+                data={galleryItem}
                 column={columns}
                 hiddenColumns={hidenCols}
                 filterOptions={filterOptions}
@@ -256,4 +253,4 @@ function PageAwards({ params }: { params: { slug: string } }) {
   );
 }
 
-export default PageAwards;
+export default PageGallery;

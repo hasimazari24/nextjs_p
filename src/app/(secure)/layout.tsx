@@ -8,21 +8,39 @@ import {
   Flex,
   Center,
   Spinner,
+  Text,
 } from "@chakra-ui/react";
 import Sidebar from "../components/template/SideBar";
 import Header from "../components/template/Header";
 import { redirect } from "next/navigation";
 import { useAuth } from "../components/utils/AuthContext";
 import React, { Suspense, ReactNode } from "react";
-import LoadingModal from "@/app/loading";
+import Loading from "@/app/loading";
 
 // export const metadata = {
 //   title: process.env.APP_NAME,
 //   description: process.env.APP_DESCRIPTION,
 // };
 
+const LoadingPage = (text:string) => {
+  return (
+    <Center h="100%" m="10" flexDirection={"column"}>
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        emptyColor="gray.200"
+        color="blue.500"
+        size="xl"
+        mb="3"
+      />
+      <Text as="i" whiteSpace={"normal"}>
+        {text}
+      </Text>
+    </Center>
+  );
+}
 
-export default function Layout({ children }: { children: ReactNode }){
+export default function Layout({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, loadingValidation } = useAuth();
 
@@ -35,11 +53,7 @@ export default function Layout({ children }: { children: ReactNode }){
   return (
     <main>
       {loadingValidation ? (
-        <>
-          <Center h="100%" m="10">
-            <Spinner className="spinner" size="xl" color="blue.500" />
-          </Center>
-        </>
+        LoadingPage("Sedang melakukan validasi, mohon tunggu sebentar ...")
       ) : (
         <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
           <Sidebar
@@ -74,7 +88,12 @@ export default function Layout({ children }: { children: ReactNode }){
               // borderWidth="1px"
             >
               <Box p="6" height="full" width="full">
-                <Suspense key={susKey} fallback={<LoadingModal />}>
+                <Suspense
+                  key={susKey}
+                  fallback={LoadingPage(
+                    "Sedang memuat halaman, mohon tunggu sebentar ...",
+                  )}
+                >
                   {children}
                 </Suspense>
               </Box>

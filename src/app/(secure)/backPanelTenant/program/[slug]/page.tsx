@@ -125,6 +125,9 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
   //   // handleShowMessage(`Silahkan pilih tenant terlebih dahulu!`, true);
   // }
 
+  // console.log(window.location.href.indexOf(4));
+  // console.log(searchParams.values());
+
   // const getParamsId = params.program.split("program-")[1];
   const getParamsId = params.slug;
 

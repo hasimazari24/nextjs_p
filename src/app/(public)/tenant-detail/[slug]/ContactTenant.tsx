@@ -25,10 +25,10 @@ const ContactInfo = ({ icon, title, label, tags, content, size = 24}: ContactInf
   return (
     <HStack spacing={["4", "6"]} align={"top"}>
       <Box>
-        <Icon as={icon} fontSize={size} pt="1px"/>
+        <Icon as={icon} fontSize={size} pt="1px" />
       </Box>
       <VStack align="start" spacing="5px">
-        <Text fontSize="xl" fontWeight="bold">
+        <Text fontSize={["lg", "xl"]} fontWeight="bold">
           {title}
         </Text>
         <Text fontSize="md" fontWeight="regular">

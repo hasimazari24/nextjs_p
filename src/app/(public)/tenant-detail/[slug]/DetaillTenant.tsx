@@ -27,7 +27,7 @@ import { wrap } from "module";
 
 const DetailComponent = () => {
   return (
-    <Stack spacing={8} py={{ base: "4", md: "6" }}>
+    <Stack spacing={8}>
       {/* <HStack justifyContent={"center"}>
         <Box
           w={["20px", "30px"]}
@@ -49,11 +49,11 @@ const DetailComponent = () => {
           DETAIL INFORMATION
         </Text>
       </HStack> */}
-      <Stack  
+      <Stack
         // columns={{ base: 1, lg: 2 }}
         // spacing={{ base: 6, md: 12, lg: 20 }}
         flexDirection={{ base: "column", lg: "row" }}
-        spacing={{base: 10, md: 4, lg: 20}}
+        spacing={{ base: 10, md: 4, lg: 20 }}
       >
         <Box aria-label="box-kiri">
           <Stack
@@ -65,7 +65,8 @@ const DetailComponent = () => {
               <Text
                 fontWeight="bold"
                 color="gray.900"
-                fontSize={["xl", "2xl", "3xl"]}
+                fontSize={["20px", "2xl", "3xl"]}
+                // fontSize={["xl", "2xl", "3xl"]}
               >
                 Tentang
               </Text>
@@ -74,7 +75,7 @@ const DetailComponent = () => {
               <Text
                 fontWeight="regular"
                 color="gray.900"
-                fontSize={["sm", "md"]}
+                fontSize="md"
                 textAlign="justify"
               >
                 Tokopedia merupakan perusahaan teknologi Indonesia dengan misi
@@ -85,52 +86,52 @@ const DetailComponent = () => {
               </Text>
             </Box>
             <Stack
-            spacing={6}
-            alignItems="flex-start"
-            justifyContent="flex-start"
-          >
-            <ContactInfo
-              icon={MdMap}
-              title="Address"
-              content="Suite 220 9954 Gottlieb Throughway sgdfhjksdjbfkslfgjl sjhdfkjsdfksdjhf sdhfjskdfksjfd"
-              label="alamat"
-              size={24}
-            />
-            <ContactInfo
-              icon={MdSchool}
-              title="Program"
-              tags={[
-                "PPBT",
-                "SII",
-                "FIW",
-                "SOLOCORN2021",
-                "SOLOCORN 2022",
-                "SOLOTHESPIRITOJAVA",
-              ]}
-              label="program"
-              size={24}
-              content=""
-            />
-             <ContactInfo
-              icon={AiOutlineCrown}
-              title="Founder"
-              content="Alex Major"
-              label="founder"
-              size={24}
-            />
+              spacing={6}
+              alignItems="flex-start"
+              justifyContent="flex-start"
+            >
+              <ContactInfo
+                icon={MdMap}
+                title="Address"
+                content="Suite 220 9954 Gottlieb Throughway sgdfhjksdjbfkslfgjl sjhdfkjsdfksdjhf sdhfjskdfksjfd"
+                label="alamat"
+                size={24}
+              />
+              <ContactInfo
+                icon={MdSchool}
+                title="Program"
+                tags={[
+                  "PPBT",
+                  "SII",
+                  "FIW",
+                  "SOLOCORN2021",
+                  "SOLOCORN 2022",
+                  "SOLOTHESPIRITOJAVA",
+                ]}
+                label="program"
+                size={24}
+                content=""
+              />
+              <ContactInfo
+                icon={AiOutlineCrown}
+                title="Founder"
+                content="Alex Major"
+                label="founder"
+                size={24}
+              />
             </Stack>
           </Stack>
         </Box>
-        <Box aria-label="box-kanan">         
+        <Box aria-label="box-kanan">
           <Stack
-            alignItems="flex-start"
-            justifyContent="flex-start"
+            // alignItems="flex-start"
+            // justifyContent="flex-start"
             spacing={4}
           >
             <Text
               fontWeight="bold"
               color="gray.900"
-              fontSize={["xl", "2xl", "3xl"]}
+              fontSize={["20px", "2xl", "3xl"]}
             >
               Contact
             </Text>

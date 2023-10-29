@@ -1,18 +1,13 @@
-'use client';
+"use client";
 
-import {
-  Spinner,
-  Center,
-  Box,
-  Text
-} from "@chakra-ui/react";
+import { Spinner, Center, Box, Text } from "@chakra-ui/react";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const LoadingModal = () => {
+const Loading = () => {
   return (
     <Box rounded="md">
       <Center h="100%" m="10" flexDirection={"column"}>
@@ -24,10 +19,10 @@ const LoadingModal = () => {
           size="xl"
           mb="3"
         />
-        <Text as="i">Sedang memuat data, mohon tunggu sebentar ...</Text>
+        <Text as="i" whiteSpace={"normal"}>Sedang memuat data, mohon tunggu sebentar ...</Text>
       </Center>
     </Box>
   );
 };
 
-export default LoadingModal;
+export default Loading;

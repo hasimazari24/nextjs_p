@@ -6,7 +6,7 @@ import GallerySlider from "./template/GallerySlider";
 import SectionStp from "./template/SectionStp";
 import HeadingPage from "./template/HeadingPage";
 import { axiosCustom } from "../api/axios";
-import LoadingModal from "./loading";
+import Loading from "./loading";
 
 // interface Tenant {
 //   id: string;
@@ -69,7 +69,7 @@ function page() {
         <HeadingPage />
       </div>
       {loadingBeranda ? (
-        <LoadingModal />
+        <Loading />
       ) : (
         <>
           <Box

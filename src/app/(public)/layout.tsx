@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { PublicProvider } from "./utils/PublicContext";
 import { Box, Flex } from "@chakra-ui/react";
 // import { Suspense } from "react";
-// import LoadingModal from "./loading";
+// import Loading from "./loading";
 
 // export const metadata: Metadata = {
 //   title: process.env.APP_NAME,
@@ -20,22 +20,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <main>
       {/* <Box w="full"> */}
       <PublicProvider>
-      {pathname === "/login" ? (
-        <>{children}</>
-      ) : (
-        <div>
-          <Box display="flex" minH="100vh" w="full" flexDirection={"column"}>
-            <Navbar />
-            <Box flex="1">
-              {children}
+        {pathname === "/login" ? (
+          <>{children}</>
+        ) : (
+          <div>
+            <Box display="flex" minH="100vh" w="full" flexDirection={"column"}>
+              <Navbar />
+              <Box flex="1">{children}</Box>
+              <Box as="footer" w="full">
+                {/* Footer Anda di sini */}
+                <Footer />
+              </Box>
             </Box>
-            <Box as="footer" w="full">
-              {/* Footer Anda di sini */}
-              <Footer />
-            </Box>
-          </Box>
-        </div>
-      )}
+          </div>
+        )}
       </PublicProvider>
 
       {/* </Box> */}
