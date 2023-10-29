@@ -170,7 +170,7 @@ export default function TenantDetail() {
                 variant="outline"
                 aria-label="btn-email"
                 px={6}
-                size={{ base: "sm", md: "md" }}
+                size={{ base: "xs", md: "sm" }}
               >
                 Email
               </Button>
@@ -179,7 +179,7 @@ export default function TenantDetail() {
                 colorScheme="blue"
                 variant="outline"
                 aria-label="btn-contact"
-                size={{ base: "sm", md: "md" }}
+                size={{ base: "xs", md: "sm" }}
               >
                 Contact
               </Button>
@@ -211,10 +211,10 @@ export default function TenantDetail() {
             <Box rounded={"xl"} bgColor="white" pb="5">
               <TabPanels>
                 <TabPanel>
-                  <DetailComponent></DetailComponent>
+                  <DetailComponent />
                 </TabPanel>
                 <TabPanel>
-                  <AwardsTenant></AwardsTenant>
+                  <AwardsTenant />
                 </TabPanel>
                 <TabPanel>
                   <CatalogTenant />
