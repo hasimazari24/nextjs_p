@@ -106,17 +106,49 @@ export default function BasicStatistics(props: SectionStp) {
             borderColor="gray.200"
             rounded="lg"
             bgColor={"gray.50"}
-            _hover={{ boxShadow: "md" }}
+            role="group"
+            _hover={{ boxShadow: "md", bgColor: "red.400", color: "white" }}
+            display={"flex"}
+            justifyContent={"center"}
           >
-            <Icon as={HiUserGroup} boxSize={8} />
-            <Flex flexDirection={"column"}>
-              <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.pra_inkubasi === undefined
-                  ? "-"
-                  : `${level_tenant?.pra_inkubasi}`}
-              </Text>
-              <Box fontSize={"xs"}>Pra Inkubasi</Box>
-            </Flex>
+            <Box
+              display={{ base: "block", md: "flex" }}
+              justifyContent={"center"}
+              alignItems={"center"}
+              w={"full"}
+            >
+              <Icon
+                as={HiUserGroup}
+                boxSize={14}
+                color={"red.400"}
+                _groupHover={{ color: "white" }}
+                width={"25%"}
+                ml={{ base: 0, md: 5 }}
+              />
+              <Flex
+                flexDirection={{
+                  base: "row",
+                  md: "column",
+                }}
+                width={"75%"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                mx={"auto"}
+              >
+                <Text fontSize={{ base: "4xl", md: "5xl" }} fontWeight={"bold"}>
+                  {level_tenant?.pra_inkubasi === undefined
+                    ? "-"
+                    : `${level_tenant?.pra_inkubasi}`}
+                </Text>
+                &nbsp;
+                <Text
+                  fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                  fontWeight={"hairline"}
+                >
+                  Pra Inkubasi
+                </Text>
+              </Flex>
+            </Box>
           </GridItem>
           <GridItem
             w="100%"
@@ -126,17 +158,49 @@ export default function BasicStatistics(props: SectionStp) {
             borderColor="gray.200"
             rounded="lg"
             bgColor={"gray.50"}
-            _hover={{ boxShadow: "md" }}
+            role="group"
+            _hover={{ boxShadow: "md", bgColor: "red.400", color: "white" }}
+            display={"flex"}
+            justifyContent={"center"}
           >
-            <Icon as={FaBookReader} boxSize={8} />
-            <Flex flexDirection={"column"}>
-              <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.inkubasi === undefined
-                  ? "-"
-                  : `${level_tenant?.inkubasi}`}
-              </Text>
-              <Box fontSize={"xs"}>Inkubasi</Box>
-            </Flex>
+            <Box
+              display={{ base: "block", md: "flex" }}
+              justifyContent={"center"}
+              alignItems={"center"}
+              w={"full"}
+            >
+              <Icon
+                as={FaBookReader}
+                boxSize={14}
+                color={"red.400"}
+                _groupHover={{ color: "white" }}
+                width={"25%"}
+                ml={{ base: 0, md: 5 }}
+              />
+              <Flex
+                flexDirection={{
+                  base: "row",
+                  md: "column",
+                }}
+                width={"75%"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                mx={"auto"}
+              >
+                <Text fontSize={{ base: "4xl", md: "5xl" }} fontWeight={"bold"}>
+                  {level_tenant?.inkubasi === undefined
+                    ? "-"
+                    : `${level_tenant?.inkubasi}`}
+                </Text>
+                &nbsp;
+                <Text
+                  fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                  fontWeight={"hairline"}
+                >
+                  Inkubasi
+                </Text>
+              </Flex>
+            </Box>
           </GridItem>
           <GridItem
             w="100%"
@@ -146,17 +210,49 @@ export default function BasicStatistics(props: SectionStp) {
             borderColor="gray.200"
             rounded="lg"
             bgColor={"gray.50"}
-            _hover={{ boxShadow: "md" }}
+            role="group"
+            _hover={{ boxShadow: "md", bgColor: "red.400", color: "white" }}
+            display={"flex"}
+            justifyContent={"center"}
           >
-            <Icon as={FaNetworkWired} boxSize={8} />
-            <Flex flexDirection={"column"}>
-              <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.inkubasi_lanjutan === undefined
-                  ? "-"
-                  : `${level_tenant?.inkubasi_lanjutan}`}
-              </Text>
-              <Box fontSize={"xs"}>Inkubasi Lanjutan</Box>
-            </Flex>
+            <Box
+              display={{ base: "block", md: "flex" }}
+              justifyContent={"center"}
+              alignItems={"center"}
+              w={"full"}
+            >
+              <Icon
+                as={FaNetworkWired}
+                boxSize={14}
+                color={"red.400"}
+                _groupHover={{ color: "white" }}
+                width={"25%"}
+                ml={{ base: 0, md: 5 }}
+              />
+              <Flex
+                flexDirection={{
+                  base: "row",
+                  md: "column",
+                }}
+                width={"75%"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                mx={"auto"}
+              >
+                <Text fontSize={{ base: "4xl", md: "5xl" }} fontWeight={"bold"}>
+                  {level_tenant?.inkubasi_lanjutan === undefined
+                    ? "-"
+                    : `${level_tenant?.inkubasi_lanjutan}`}
+                </Text>
+                &nbsp;
+                <Text
+                  fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                  fontWeight={"hairline"}
+                >
+                  Inkubasi Lanjutan
+                </Text>
+              </Flex>
+            </Box>
           </GridItem>
           <GridItem
             w="100%"
@@ -166,17 +262,48 @@ export default function BasicStatistics(props: SectionStp) {
             borderColor="gray.200"
             rounded="lg"
             bgColor={"gray.50"}
-            _hover={{ boxShadow: "md" }}
+            role="group"
+            _hover={{ boxShadow: "md", bgColor: "red.400", color: "white" }}
+            display={"flex"}
+            justifyContent={"center"}
           >
-            <Icon as={GiProgression} boxSize={8} />
-            <Flex flexDirection={"column"}>
-              <Text fontSize={"4xl"} fontWeight={"bold"}>
-                {level_tenant?.scale_up === undefined
-                  ? "-"
-                  : `${level_tenant?.scale_up}`}
-              </Text>
-              <Box fontSize={"xs"}>Scale Up</Box>
-            </Flex>
+            <Box
+              display={{ base: "block", md: "flex" }}
+              justifyContent={"center"}
+              alignItems={"center"}
+              w={"full"}
+            >
+              <Icon
+                as={GiProgression}
+                boxSize={14}
+                color={"red.400"}
+                _groupHover={{ color: "white" }}
+                width={"25%"}
+                ml={{ base: 0, md: 5 }}
+              />
+              <Flex
+                flexDirection={{
+                  base: "row",
+                  md: "column",
+                }}
+                width={"75%"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                mx={"auto"}
+              >
+                <Text fontSize={{ base: "4xl", md: "5xl" }} fontWeight={"bold"}>
+                  {level_tenant?.scale_up === undefined
+                    ? "-"
+                    : `${level_tenant?.scale_up}`}
+                </Text>
+                <Text
+                  fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                  fontWeight={"hairline"}
+                >
+                  Scale Up
+                </Text>
+              </Flex>
+            </Box>
           </GridItem>
         </Grid>
       </Container>
