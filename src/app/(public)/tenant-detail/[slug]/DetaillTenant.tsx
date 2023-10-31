@@ -1,146 +1,253 @@
-import * as React from "react";
-import {
-  MdMailOutline,
-  MdOutlineMap,
-  MdOutlineContacts,
-  MdSchool,
-  MdMap,
-} from "react-icons/md";
-import {
-  Box,
-  Text,
-  Flex,
-  HStack,
-  Stack,
-  VStack,
-  Icon,
-  Button,
-  Spacer,
-  Tag,
-  SimpleGrid,
-} from "@chakra-ui/react";
-import ContactInfo from "./ContactTenant";
-import { FaInfo, FaMedal } from "react-icons/fa"; // Tambahkan import untuk ikon FaInfo
-import { AiOutlineCrown } from "react-icons/ai";
-import DetailSocial from "./DetailSocial";
-import { wrap } from "module";
+"use client";
 
-const DetailComponent = () => {
+import {
+  Container,
+  Stack,
+  Flex,
+  Box,
+  Heading,
+  Text,
+  Button,
+  Image,
+  Icon,
+  IconButton,
+  createIcon,
+  Center,
+  VStack,
+  Avatar,
+  TabPanel,
+  IconProps,
+  useColorModeValue,
+  HStack,
+  Spacer,
+  SimpleGrid,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+} from "@chakra-ui/react";
+import AwardsTenant from "./AwardTenant";
+import DetailComponent from "./DetaillTenant";
+import DetailSocial from "./DetailSocial";
+// import TeamTenant from "../TeamTenant";
+import TeamTenant from "./TeamTenant";
+import CatalogTenant from "./CatalogTenant";
+
+import { IoMedal, IoLogoFacebook } from "react-icons/io5";
+import { FaMedal, FaInfo, FaShoppingBag, FaImages } from "react-icons/fa";
+import { useMediaQuery } from "@chakra-ui/react";
+import {
+  MdAddAlert,
+  MdEmail,
+  MdInfo,
+  MdPhone,
+  MdPictureInPicture,
+} from "react-icons/md";
+import { BsPeople, BsPeopleFill } from "react-icons/bs";
+import { IconType } from "react-icons";
+import { RiPictureInPicture2Fill } from "react-icons/ri";
+import * as TenantTypes from "@/app/type/tenant-type.d";
+import AboutTenant from "./AboutTenant";
+
+interface TabCustomProps {
+  icon: IconType;
+  title: string;
+  size?: number;
+}
+
+const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
+  // const dataTenant: any = tenant;
+  // tenant.flatMap((d) => [({
+  //   name: d.name,
+  //   motto: d.motto,
+  //   description: d.description,
+  //   address: d.address,
+  //   contact: d.contact,
+  //   email: d.email,
+  //   founder: d.founder,
+  //   level_tenant: d.level_tenant,
+  //   image_url: d.image_url,
+  //   image_banner_url: d.image_banner_url,
+  // })]);
+  // console.log(dataTenant.tenant_link);
   return (
-    <Stack spacing={8}>
-      {/* <HStack justifyContent={"center"}>
-        <Box
-          w={["20px", "30px"]}
-          h={["20px", "30px"]}
-          bg={"red.500"}
-          borderRadius={"full"}
-          display={"flex"}
-          alignItems="center"
-          justifyContent={"center"}
-        >
-          <Icon
-            as={FaInfo}
-            w={["15px", "20px"]}
-            h={["15px", "20px"]}
-            color={"white"}
-          />
-        </Box>
-        <Text fontWeight={"bold"} color={"red.500"} fontSize={["sm", "lg"]}>
-          DETAIL INFORMATION
-        </Text>
-      </HStack> */}
-      <Stack
-        // columns={{ base: 1, lg: 2 }}
-        // spacing={{ base: 6, md: 12, lg: 20 }}
-        flexDirection={{ base: "column", lg: "row" }}
-        spacing={{ base: 10, md: 4, lg: 20 }}
+    <>
+      <Box
+        position={"relative"}
+        height={"208px"}
+        width={"100%"}
+        overflow={"hidden"}
       >
-        <Box aria-label="box-kiri">
-          <Stack
-            spacing={4}
-            alignItems="flex-start"
-            justifyContent="flex-start"
-          >
-            <Box>
+        {/* Begron */}
+        <Box
+          backgroundImage={`url(${tenant.image_banner_url})`}
+          backgroundRepeat="no-repeat"
+          backgroundSize="cover"
+          backgroundPosition="center"
+          aria-label="background-cover"
+          filter="auto"
+          brightness="60%"
+          top={0}
+          left={0}
+          w={"100%"}
+          h={"100%"}
+        />
+      </Box>
+      <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
+        {/* <Stack> */}
+        <Avatar
+          boxSize={["96px", "128px"]}
+          mt={{ base: "-14", md: "-16", lg: "-16" }}
+          src={tenant.image_url || "/img/tenant-banner-default.jpg"}
+          borderWidth={"4px"}
+          borderColor={"grey.100"}
+          // mx={["30px", "80px", "140px"]}
+        />
+        <Heading
+          fontSize={["2xl", "3xl", "4xl"]}
+          fontWeight="bold"
+          my={4}
+          style={{
+            lineHeight: "1.1",
+            // textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
+          }}
+        >
+          {tenant.name}
+        </Heading>
+        {/* </Stack> */}
+        <Stack
+          // templateColumns={isDesktop ? "80% 10%" : "100%"}
+          // columns={{base: 1, lg:2}}
+          flexDirection={{ base: "column", lg: "row" }}
+          spacing={{ base: 4, md: 4, lg: 16 }}
+        >
+          <Box w={"full"}>
+            <Stack
+              spacing={4}
+              alignItems={"flex-start"}
+              justifyContent={"flex-start"}
+              aria-label="area-kiri"
+            >
               <Text
-                fontWeight="bold"
-                color="gray.900"
-                fontSize={["20px", "2xl", "3xl"]}
-                // fontSize={["xl", "2xl", "3xl"]}
-              >
-                Tentang
-              </Text>
-            </Box>
-            <Box>
-              <Text
+                fontSize={["sm", "md", "lg"]}
                 fontWeight="regular"
                 color="gray.900"
-                fontSize="md"
-                textAlign="justify"
+                textAlign={"justify"}
+                aria-label="motto"
+                // style={{
+                //   lineHeight: "1.2",
+                // }}
               >
-                Tokopedia merupakan perusahaan teknologi Indonesia dengan misi
-                pemerataan ekonomi secara digital di Indonesia. Tokopedia juga
-                salah satu platform dengan basis open marketplace yang
-                memudahkan Anda para pelaku bisnis untuk memulai bisnis online
-                Anda di manapun dan kapanpun.
+                {tenant.motto}
               </Text>
-            </Box>
-            <Stack
-              spacing={6}
-              alignItems="flex-start"
-              justifyContent="flex-start"
-            >
-              <ContactInfo
-                icon={MdMap}
-                title="Address"
-                content="Suite 220 9954 Gottlieb Throughway sgdfhjksdjbfkslfgjl sjhdfkjsdfksdjhf sdhfjskdfksjfd"
-                label="alamat"
-                size={24}
-              />
-              <ContactInfo
-                icon={MdSchool}
-                title="Program"
-                tags={[
-                  "PPBT",
-                  "SII",
-                  "FIW",
-                  "SOLOCORN2021",
-                  "SOLOCORN 2022",
-                  "SOLOTHESPIRITOJAVA",
-                ]}
-                label="program"
-                size={24}
-                content=""
-              />
-              <ContactInfo
-                icon={AiOutlineCrown}
-                title="Founder"
-                content="Alex Major"
-                label="founder"
-                size={24}
-              />
+              <Text
+                fontSize={{ base: "md", md: "lg" }}
+                fontWeight="bold"
+                color="black"
+              >
+                Level Tenant :{" "}
+                <Text as="b" color="red.500">
+                  {tenant.level_tenant}
+                </Text>
+              </Text>
             </Stack>
-          </Stack>
-        </Box>
-        <Box aria-label="box-kanan">
-          <Stack
-            // alignItems="flex-start"
-            // justifyContent="flex-start"
-            spacing={4}
-          >
-            <Text
-              fontWeight="bold"
-              color="gray.900"
-              fontSize={["20px", "2xl", "3xl"]}
+          </Box>
+          <Box>
+            <Stack
+              flexDirection={{ base: "row", lg: "column" }}
+              justifyContent={"flex-start"}
+              aria-label="area-kanan"
             >
-              Contact
-            </Text>
-            <DetailSocial></DetailSocial>
-          </Stack>
+              <Button
+                leftIcon={<MdEmail />}
+                colorScheme="blue"
+                variant="outline"
+                aria-label="btn-email"
+                px={6}
+                onClick={() =>
+                  (window.location.href = `mailto:${tenant.email}`)
+                }
+                size={{ base: "xs", md: "sm" }}
+              >
+                E-mail
+              </Button>
+              <Button
+                leftIcon={<MdPhone />}
+                colorScheme="blue"
+                variant="outline"
+                aria-label="btn-contact"
+                size={{ base: "xs", md: "sm" }}
+                onClick={() =>
+                  (window.location.href = `tel:${tenant.contact}`)
+                }
+              >
+                Telp.
+              </Button>
+              <Spacer />
+            </Stack>
+          </Box>
+        </Stack>
+      </Container>
+
+      <Tabs isLazy={false} isFitted>
+        <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }} pt="3">
+          <TabList justifyContent={"left"} display="flex" flexWrap="wrap">
+            <TabCustom title="Tentang" icon={FaInfo} />
+            <TabCustom title="Prestasi" icon={FaMedal} />
+            <TabCustom title="Produk" icon={FaShoppingBag} />
+            <TabCustom title="Team" icon={BsPeopleFill} />
+            <TabCustom title="Galeri" icon={FaImages} />
+          </TabList>
+        </Container>
+        <Box
+          position={"relative"}
+          height={"100%"}
+          width={"100%"}
+          overflow={"hidden"}
+          bgColor={"gray.50"}
+          py={6}
+        >
+          <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }}>
+            <Box rounded={"xl"} bgColor="white" pb="5">
+              <TabPanels>
+                <TabPanel>
+                  <AboutTenant tenant={tenant} />
+                </TabPanel>
+                <TabPanel>
+                  <AwardsTenant />
+                </TabPanel>
+                <TabPanel>
+                  <CatalogTenant />
+                </TabPanel>
+                <TabPanel>
+                  <TeamTenant />
+                </TabPanel>
+                <TabPanel>
+                  <p>Galeri</p>
+                </TabPanel>
+              </TabPanels>
+            </Box>
+          </Container>
         </Box>
-      </Stack>
-    </Stack>
+      </Tabs>
+    </>
   );
 };
 
-export default DetailComponent;
+const TabCustom = ({ icon, title, size = 5 }: TabCustomProps) => {
+  return (
+    <Tab padding="10px 15px 10px 0px">
+      <IconButton
+        as={icon}
+        title={title}
+        boxSize={size}
+        aria-label={title}
+        background={"none"}
+        _hover={{ background: "none" }}
+      />{" "}
+      {title}
+    </Tab>
+  );
+};
+
+export default TenantDetail;

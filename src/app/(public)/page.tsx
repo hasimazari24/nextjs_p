@@ -7,6 +7,7 @@ import SectionStp from "./template/SectionStp";
 import HeadingPage from "./template/HeadingPage";
 import { axiosCustom } from "../api/axios";
 import Loading from "./loading";
+import dynamic from "next/dynamic";
 
 // interface Tenant {
 //   id: string;
@@ -90,4 +91,8 @@ function page() {
   );
 }
 
-export default page;
+export default dynamic(() => Promise.resolve(page), {
+  ssr: false,
+  // suspense: true,
+  loading: () => <Loading />,
+});

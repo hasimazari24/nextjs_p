@@ -3,7 +3,7 @@ import { VStack, Stack, HStack, Text, Icon, Tag, useBreakpointValue, Flex, Box }
 import { ReactElement } from "react";
 import { MdMailOutline, MdOutlineMap, MdOutlineContacts } from "react-icons/md";
 import { IconType } from "react-icons";
-
+import {tenant_program} from "@/app/type/tenant-type.d";
 
 interface ContactInfoProps {
   icon: IconType;
@@ -11,7 +11,7 @@ interface ContactInfoProps {
   content: string;
   label: string;
   size?: number;
-  tags?: string[];
+  tags?: tenant_program[];
 }
 
 const ContactInfo = ({ icon, title, label, tags, content, size = 24}: ContactInfoProps) => {
@@ -27,7 +27,7 @@ const ContactInfo = ({ icon, title, label, tags, content, size = 24}: ContactInf
       <Box>
         <Icon as={icon} fontSize={size} pt="1px" />
       </Box>
-      <VStack align="start" spacing="5px">
+      <VStack align="start" spacing="4px">
         <Text fontSize={["lg", "xl"]} fontWeight="bold">
           {title}
         </Text>
@@ -43,13 +43,17 @@ const ContactInfo = ({ icon, title, label, tags, content, size = 24}: ContactInf
                 colorScheme="red"
                 variant="outline"
                 size="sm"
-                style={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
+                title={tag.program}
               >
-                {tag}
+                <Text
+                  textOverflow="ellipsis"
+                  whiteSpace={"nowrap"}
+                  cursor={"pointer"}
+                  overflow="hidden"
+                  maxW={{ base: "120px", md: "200px", lg: "250px" }}
+                >
+                  {tag.program}
+                </Text>
               </Tag>
             ))}
           </Stack>

@@ -19,7 +19,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main>
       {/* <Box w="full"> */}
-      <PublicProvider>
         {pathname === "/login" ? (
           <>{children}</>
         ) : (
@@ -34,7 +33,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </Box>
           </div>
         )}
-      </PublicProvider>
 
       {/* </Box> */}
     </main>

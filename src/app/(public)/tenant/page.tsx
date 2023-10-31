@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Stack,
@@ -20,11 +20,15 @@ import {
   Wrap,
   WrapItem,
   SimpleGrid,
-  Spinner
+  Spinner,
+  Skeleton
 } from "@chakra-ui/react";
-import { usePublic } from "../utils/PublicContext";
+// import { usePublic } from "../utils/PublicContext";
 import { useRouter } from "next/navigation";
 import NextLink from 'next/link';
+import { axiosCustom } from "@/app/api/axios";
+import dynamic from "next/dynamic";
+import Loading from "../loading";
 
 interface Beranda {
   id: string;
@@ -35,8 +39,8 @@ interface Beranda {
   image_banner_url: string;
 }
 
-function page() {
-  const { beranda, loadingBeranda } = usePublic();
+function Tenant() {
+  // const { beranda, loadingBeranda } = usePublic();
   // console.log(beranda);
   const router = useRouter();
 
@@ -49,6 +53,36 @@ function page() {
   const handleMouseLeave = (index: number) => {
     setIsHovered((prevState) => ({ ...prevState, [index]: false }));
   };
+
+  const [beranda, setBeranda] = useState<any[] | null>([]);
+  const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [status, setstatus] = useState<
+    "success" | "info" | "warning" | "error"
+  >("error");
+
+  const getTenant = async () => {
+    setLoadingBeranda(true);
+    try {
+      await axiosCustom.get("/public/tenant").then((response) => {
+        setBeranda(response.data.data);
+        setLoadingBeranda(false);
+      });
+    } catch (error: any) {
+      console.log(error);
+      if (error?.response) {
+        setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
+      } else setMsg(`Terjadi Kesalahan: ${error.message}`);
+      setstatus("error");
+      setIsOpen(true);
+      setLoadingBeranda(false);
+    }
+  };
+
+  useEffect(() => {
+    getTenant();
+  }, []);
 
   return (
     <div>
@@ -66,14 +100,29 @@ function page() {
               fontSize={{ base: "xl", sm: "2xl", lg: "3xl" }}
               textAlign={"center"}
             >
-              Portofolio
+              Tenant Solo Technopark
             </Heading>
           </Stack>
 
           {loadingBeranda ? (
-            <Center h="100%" m="10">
-              <Spinner className="spinner" size="xl" color="blue.500" />
-            </Center>
+            <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing={"15px"}>
+              {[1, 2, 3, 4, 5].map((index) => (
+                <Skeleton
+                  key={index}
+                  minW={{ base: "150px", md: "180px" }}
+                  w={"full"}
+                  rounded="xl"
+                  borderWidth={"1px"}
+                  shadow="md"
+                  height={{
+                    base: "80px",
+                    sm: "80px",
+                    md: "100px",
+                    lg: "100px",
+                  }}
+                />
+              ))}
+            </SimpleGrid>
           ) : (
             <>
               {beranda && beranda.length > 0 ? (
@@ -178,4 +227,8 @@ function page() {
   );
 }
 
-export default page;
+export default dynamic(() => Promise.resolve(Tenant), {
+  ssr: false,
+  // suspense: true,
+  loading: () => <Loading />,
+});
