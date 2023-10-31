@@ -17,7 +17,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler } from "react-hook-form";
+import NextLink from "next/link";
 import axios, { axiosCustom } from "@/app/api/axios";
 
 interface ModalProps {
@@ -30,20 +31,22 @@ interface FormData {
 }
 
 const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [paramSearch, setParamSearch] = useState<string|null>(null);
+  const [paramSearch, setParamSearch] = useState<string | null>(null);
 
-  
-  
-  
   const handleSearch: SubmitHandler<any> = async (data) => {
     // Menyimpan querry pencarian ke dalam param
-  // setParamSearch(data.searchQuery);
+    // setParamSearch(data.searchQuery);
     // Validasi input kosong
     if (data && data.param === "") {
       return;
@@ -71,7 +74,6 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       }, 1000); // Contoh waktu tunda 1 detik
     }
     // cek isi
-    
   };
 
   return (
@@ -121,43 +123,63 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             </Center>
           ) : (
             <Stack w="full" direction={"column"}>
-              {searchResults && searchResults.length > 0 ? (
-                searchResults.map((result, index) => (
-                  <SlideFade in={searchResults.length > 0} offsetY="20px" key={index}>
-                    <Box
-                      rounded="md"
-                      _hover={{
-                        bg: "red.400",
-                        "& .textResult": {
-                          color: "#ffff",
-                        },
-                        "& .textH": {
-                          color: "grey.100",
-                        },
-                      }}
-                      p="3"
-                      boxShadow={"md"}
-                      mt="3"
-                      cursor="pointer"
-                      bg="gray.50"
+              {searchResults && searchResults.length > 0
+                ? searchResults.map((result, index) => (
+                    <SlideFade
+                      in={searchResults.length > 0}
+                      offsetY="20px"
+                      key={index}
                     >
-                      <Text fontSize="12px" color="gray.500" className="textH">
-                        TENANT
-                      </Text>
-                      <Text fontSize="18px" color="gray.800" className="textResult">
-                        {result?.name}
-                      </Text>
-                    </Box>
-                  </SlideFade>
-                ))
-              ) : (
-                //text disembunyikan saat tab baru dibuka dan dikukut
-                isSearchOpen && (
-                <Center p="3">
-                  <p>Hasil pencarian tidak ditemukan</p>
-                </Center>
-                )
-              )}
+                      <NextLink
+                        href={`/tenant-detail/${result?.slug}`}
+                        onClick={() => {
+                          onClose();
+                          setSearchResults([]);
+                          reset(); // Menggunakan reset untuk mengosongkan input
+                          setIsSearchOpen(false); //set ke False saat modal ditutup
+                        }}
+                      >
+                        <Box
+                          rounded="md"
+                          _hover={{
+                            bg: "red.400",
+                            "& .textResult": {
+                              color: "#ffff",
+                            },
+                            "& .textH": {
+                              color: "grey.100",
+                            },
+                          }}
+                          p="3"
+                          boxShadow={"md"}
+                          mt="3"
+                          cursor="pointer"
+                          bg="gray.50"
+                        >
+                          <Text
+                            fontSize="12px"
+                            color="gray.500"
+                            className="textH"
+                          >
+                            TENANT
+                          </Text>
+                          <Text
+                            fontSize="18px"
+                            color="gray.800"
+                            className="textResult"
+                          >
+                            {result?.name}
+                          </Text>
+                        </Box>
+                      </NextLink>
+                    </SlideFade>
+                  ))
+                : //text disembunyikan saat tab baru dibuka dan dikukut
+                  isSearchOpen && (
+                    <Center p="3">
+                      <p>Hasil pencarian tidak ditemukan</p>
+                    </Center>
+                  )}
             </Stack>
           )}
         </ModalBody>
