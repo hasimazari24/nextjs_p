@@ -11,7 +11,7 @@ import {
   Button,
   Spacer,
   Tag,
-  SimpleGrid,
+  Grid,
   Center,
   Image,
   Heading,
@@ -19,21 +19,26 @@ import {
 } from "@chakra-ui/react";
 import ContactInfo from "./ContactTenant";
 import { motion } from "framer-motion";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaYoutube,
-  FaLinkedin,
-  FaGlobe,
-} from "react-icons/fa"; //
+import * as TenantTypes from "@/app/type/tenant-type.d";
+import CardGallery from "./GalleryCards";
 
-const AwardTenant = () => {
-  const MotionSimpleGrid = motion(SimpleGrid);
-  const MotionBox = motion(Box);
+const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
+  // const MotionSimpleGrid = motion(SimpleGrid);
+  // const MotionBox = motion(Box);
+  const award: TenantTypes.tenant_award[] = Array.isArray(
+    tenant.tenant_award,
+  )
+    ? tenant.tenant_award.map((d) => ({
+        id: d.id,
+        image_id: d.image_id,
+        image_url: d.image_ul,
+        name: d.name,
+        rank: d.rank
+      }))
+    : [];
 
   return (
-    <>
+    <Box w="full">
       <Stack spacing={4}>
         <Text
           fontWeight="bold"
@@ -43,64 +48,72 @@ const AwardTenant = () => {
         >
           Prestasi
         </Text>
-        <Stack
-          spacing={8}
-          flexDirection={"row"}
-          flexWrap={"wrap"}
-          alignItems={"space-between"}
-          justifyContent={"space-between"}
-        >
-          <Box
-            w="250px"
-            h="full"
-            role={"group"}
-            p={8}
-            boxShadow={"lg"}
-            rounded={"2xl"}
-            bgColor={"gray.50"}
+        {award && award.length > 0 ? (
+          <Grid
+            templateColumns={{
+              base: "1fr 1fr",
+              md: "1fr 1fr 1fr",
+              xl: "1fr 1fr 1fr 1fr",
+            }}
+            // templateColumns={["1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
+            // flexWrap={"wrap"}
+            gap={8}
           >
-            <Center>
-              <Stack direction={"column"} alignItems={"center"} spacing={1}>
+            {award.map((data, index) => (
+              <Stack
+                key={index}
+                maxW={"xl"}
+                p={4}
+                boxShadow={"lg"}
+                // rounded={"2xl"}
+                bgColor={"gray.50"}
+                spacing="2"
+                rounded="xl"
+                align="center"
+                // flexDirection={"column"}
+                // justifyContent={'flex-start'}
+              >
                 <Image
-                  rounded={"3xl"}
-                  height={"200px"}
-                  width={"200px"}
-                  objectFit={"cover"}
-                  src="/img/avatar-default.jpg"
-                  alt="#"
-                  boxShadow={"xl"}
-                  mb={6}
+                  // boxSize={[20,40]}
+                  height="auto"
+                  maxW={{ base: "80px", sm: "140px", xl: "200px" }}
+                  // w={"xl"}
+                  src={data.image_url || "/img/avatar-default.jpg"}
+                  rounded={{ base: "md", lg: "xl" }}
+                  boxShadow="xl"
+                  mb={[2, 4]}
                 />
                 <Text
                   as="b"
-                  fontWeight={"bold"}
-                  fontSize={["lg", "xl", "2xl"]}
-                  whiteSpace="nowrap" // Convert string dadi tipe WhiteSpace
+                  fontSize={["sm", "lg", "xl"]}
                   textOverflow="ellipsis"
-                  maxW="190px"
+                  align="center"
                   cursor={"pointer"}
-                  title="jan lupaa tambahi nyuk"
+                  overflow="hidden"
+                  title={data.rank}
+                  noOfLines={{ base: 2, sm: 1 }}
                 >
-                  Juara 1
+                  {data.rank}
                 </Text>
                 <Text
-                  align="center"
-                  fontSize={"md"} // Convert string dadi tipe WhiteSpace
+                  textAlign="center"
+                  fontSize={["sm", "md"]}
                   textOverflow="ellipsis"
-                  overflow={"hidden"}
-                  maxW="190px"
+                  align="center"
                   cursor={"pointer"}
-                  title="jan lupaa tambahi nyuk"
+                  overflow="hidden"
                   noOfLines={2}
                 >
-                  Best Performance Tenant Award 2023 sdyfghjsadhfksadhfkj sdfkjshdkfjhsd jdfjasgdksa
+                  {data.name}
                 </Text>
               </Stack>
-            </Center>
-          </Box>
-        </Stack>
+            ))}
+          </Grid>
+        ) : (
+          <p>belum ada </p>
+        )}
       </Stack>
-    </>
+    </Box>
   );
 };
 

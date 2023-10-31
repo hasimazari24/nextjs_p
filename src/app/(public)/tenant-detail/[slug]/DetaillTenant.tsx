@@ -49,6 +49,7 @@ import * as TenantTypes from "@/app/type/tenant-type.d";
 import AboutTenant from "./AboutTenant";
 import NextLink from "next/link";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import GalleryTenant from "./GalleryTenant";
 
 interface TabCustomProps {
   icon: IconType;
@@ -254,7 +255,7 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   <AboutTenant tenant={tenant} />
                 </TabPanel>
                 <TabPanel>
-                  <AwardsTenant />
+                  <AwardsTenant tenant={tenant} />
                 </TabPanel>
                 <TabPanel>
                   <CatalogTenant />
@@ -263,7 +264,7 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   <TeamTenant />
                 </TabPanel>
                 <TabPanel>
-                  <p>Galeri</p>
+                  <GalleryTenant />
                 </TabPanel>
               </TabPanels>
             </Box>
