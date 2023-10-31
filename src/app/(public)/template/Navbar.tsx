@@ -16,7 +16,7 @@ import {
   useBreakpointValue,
   useDisclosure,
   Img,
-  Container
+  Container,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -300,6 +300,6 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Tenant",
-    href: "/portofolio",
+    href: "/tenant",
   },
 ];

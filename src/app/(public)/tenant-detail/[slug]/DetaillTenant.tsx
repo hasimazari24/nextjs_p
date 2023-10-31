@@ -25,6 +25,14 @@ import {
   TabList,
   Tab,
   TabPanels,
+  PopoverTrigger,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
 } from "@chakra-ui/react";
 import AwardsTenant from "./AwardTenant";
 // import TeamTenant from "../TeamTenant";
@@ -33,15 +41,14 @@ import CatalogTenant from "./CatalogTenant";
 
 import { IoMedal, IoLogoFacebook } from "react-icons/io5";
 import { FaMedal, FaInfo, FaShoppingBag, FaImages } from "react-icons/fa";
-import {
-  MdEmail,
-  MdPhone,
-} from "react-icons/md";
+import { MdEmail, MdPhone } from "react-icons/md";
 import { BsPeople, BsPeopleFill } from "react-icons/bs";
 import { IconType } from "react-icons";
 import { RiPictureInPicture2Fill } from "react-icons/ri";
 import * as TenantTypes from "@/app/type/tenant-type.d";
 import AboutTenant from "./AboutTenant";
+import NextLink from "next/link";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 interface TabCustomProps {
   icon: IconType;
@@ -95,6 +102,7 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
           src={tenant.image_url || "/img/tenant-banner-default.jpg"}
           borderWidth={"4px"}
           borderColor={"grey.100"}
+          bgColor={"white"}
           // mx={["30px", "80px", "140px"]}
         />
         <Heading
@@ -152,31 +160,69 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
               justifyContent={"flex-start"}
               aria-label="area-kanan"
             >
-              <Button
-                leftIcon={<MdEmail />}
-                colorScheme="blue"
-                variant="outline"
-                aria-label="btn-email"
-                px={6}
-                onClick={() =>
-                  (window.location.href = `mailto:${tenant.email}`)
-                }
-                size={{ base: "xs", md: "sm" }}
-              >
-                E-mail
-              </Button>
-              <Button
-                leftIcon={<MdPhone />}
-                colorScheme="blue"
-                variant="outline"
-                aria-label="btn-contact"
-                size={{ base: "xs", md: "sm" }}
-                onClick={() =>
-                  (window.location.href = `tel:${tenant.contact}`)
-                }
-              >
-                Telp.
-              </Button>
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    leftIcon={<MdEmail />}
+                    colorScheme="blue"
+                    variant="outline"
+                    aria-label="btn-email"
+                    px={6}
+                    size={{ base: "xs", md: "sm" }}
+                  >
+                    E-mail
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent w={"auto"} maxW={"sm"}>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader>E-mail</PopoverHeader>
+                  <PopoverBody>
+                    <Text
+                      href={`mailto:${tenant.email}`}
+                      as={NextLink}
+                      color={"blue.400"}
+                      _hover={{
+                        textDecoration: "underline",
+                      }}
+                    >
+                      {tenant.email}
+                      <ExternalLinkIcon mx="3px" />
+                    </Text>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    leftIcon={<MdPhone />}
+                    colorScheme="blue"
+                    variant="outline"
+                    aria-label="btn-contact"
+                    size={{ base: "xs", md: "sm" }}
+                  >
+                    Telp.
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent w={"auto"} maxW={"sm"}>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader>Telepon</PopoverHeader>
+                  <PopoverBody>
+                    <Text
+                      href={`tel:${tenant.contact}`}
+                      as={NextLink}
+                      color={"blue.400"}
+                      _hover={{
+                        textDecoration: "underline",
+                      }}
+                    >
+                      {tenant.contact}
+                      <ExternalLinkIcon mx="3px" />
+                    </Text>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
               <Spacer />
             </Stack>
           </Box>
@@ -188,7 +234,7 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
           <TabList justifyContent={"left"} display="flex" flexWrap="wrap">
             <TabCustom title="Tentang" icon={FaInfo} />
             <TabCustom title="Prestasi" icon={FaMedal} />
-            <TabCustom title="Produk" icon={FaShoppingBag} />
+            <TabCustom title="Katalog" icon={FaShoppingBag} />
             <TabCustom title="Team" icon={BsPeopleFill} />
             <TabCustom title="Galeri" icon={FaImages} />
           </TabList>
