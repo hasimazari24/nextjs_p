@@ -27,21 +27,15 @@ import {
   TabPanels,
 } from "@chakra-ui/react";
 import AwardsTenant from "./AwardTenant";
-import DetailComponent from "./DetaillTenant";
-import DetailSocial from "./DetailSocial";
 // import TeamTenant from "../TeamTenant";
 import TeamTenant from "./TeamTenant";
 import CatalogTenant from "./CatalogTenant";
 
 import { IoMedal, IoLogoFacebook } from "react-icons/io5";
 import { FaMedal, FaInfo, FaShoppingBag, FaImages } from "react-icons/fa";
-import { useMediaQuery } from "@chakra-ui/react";
 import {
-  MdAddAlert,
   MdEmail,
-  MdInfo,
   MdPhone,
-  MdPictureInPicture,
 } from "react-icons/md";
 import { BsPeople, BsPeopleFill } from "react-icons/bs";
 import { IconType } from "react-icons";

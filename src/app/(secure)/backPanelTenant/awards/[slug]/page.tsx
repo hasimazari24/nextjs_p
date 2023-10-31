@@ -46,21 +46,21 @@ interface UserLog {
   image_url: string;
 }
 
-const getAwards = async (paramsId: string): Promise<DataItem[]> => {
-  try {
-    // Panggil API menggunakan Axios dengan async/await
-    const response = await axiosCustom.get(`/tenant/${paramsId}/get-award`);
-    const data = await response.data.data;
-    if (data) {
-      return [data];
-    } else {
-      return []; // Mengembalikan array kosong jika data tidak tersedia
-    }
-  } catch (error: any) {
-    console.error("Gagal memuat data:", error);
-    return [];
-  }
-};
+// const getAwards = async (paramsId: string): Promise<DataItem[]> => {
+//   try {
+//     // Panggil API menggunakan Axios dengan async/await
+//     const response = await axiosCustom.get(`/tenant/${paramsId}/get-award`);
+//     const data = await response.data.data;
+//     if (data) {
+//       return [data];
+//     } else {
+//       return []; // Mengembalikan array kosong jika data tidak tersedia
+//     }
+//   } catch (error: any) {
+//     console.error("Gagal memuat data:", error);
+//     return [];
+//   }
+// };
 
 function PageAwards({ params }: { params: { slug: string } }) {
   const getParamsId = params.slug;
