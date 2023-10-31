@@ -62,7 +62,13 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
   } = useForm<GalleryItem>();
 
   const fields = {
-    title: register("title", { required: "Judul Events harus diisi!" }),
+    title: register("title", {
+      required: "Judul Events harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
     description: register("description", {
       required: "Deskripsi Event harus diisi!",
     }),

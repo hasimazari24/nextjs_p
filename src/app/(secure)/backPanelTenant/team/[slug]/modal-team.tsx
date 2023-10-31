@@ -68,7 +68,13 @@ const ModalTeam: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const fields = {
-    position: register("position", { required: "Posisi harus diisi!" }),
+    position: register("position", {
+      required: "Posisi harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
   };
 
   const [isLoading, setIsLoading] = useState(false);

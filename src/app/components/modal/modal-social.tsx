@@ -565,6 +565,10 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 <Input
                                   {...registWebsite("url", {
                                     required: "URL Website harus diisi!",
+                                    maxLength: {
+                                      value: 300,
+                                      message: "Maksimal 300 karakter.",
+                                    },
                                   })}
                                   onFocus={() => !isEditingWebsite}
                                   minW={"full"}
@@ -731,6 +735,10 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 <Input
                                   {...registFacebook("url", {
                                     required: "URL Facebook harus diisi!",
+                                    maxLength: {
+                                      value: 300,
+                                      message: "Maksimal 300 karakter.",
+                                    },
                                   })}
                                   onFocus={() => !isEditingFacebook}
                                   minW={"full"}
@@ -905,6 +913,10 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 <Input
                                   {...registInstagram("url", {
                                     required: "URL Instagram harus diisi!",
+                                    maxLength: {
+                                      value: 300,
+                                      message: "Maksimal 300 karakter.",
+                                    },
                                   })}
                                   onFocus={() => !isEditingInstagram}
                                   minW={"full"}
@@ -1082,6 +1094,10 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 <Input
                                   {...registTwitter("url", {
                                     required: "URL Twitter harus diisi!",
+                                    maxLength: {
+                                      value: 300,
+                                      message: "Maksimal 300 karakter.",
+                                    },
                                   })}
                                   onFocus={() => !isEditingTwitter}
                                   minW={"full"}
@@ -1257,6 +1273,10 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 <Input
                                   {...registYouTube("url", {
                                     required: "URL YouTube harus diisi!",
+                                    maxLength: {
+                                      value: 300,
+                                      message: "Maksimal 300 karakter.",
+                                    },
                                   })}
                                   onFocus={() => !isEditingYouTube}
                                   minW={"full"}
@@ -1432,6 +1452,10 @@ const ModalSocial: React.FC<ModalProps> = ({
                                 <Input
                                   {...registLinkedIn("url", {
                                     required: "URL LinkedIn harus diisi!",
+                                    maxLength: {
+                                      value: 300,
+                                      message: "Maksimal 300 karakter.",
+                                    },
                                   })}
                                   onFocus={() => !isEditingLinkedIn}
                                   minW={"full"}

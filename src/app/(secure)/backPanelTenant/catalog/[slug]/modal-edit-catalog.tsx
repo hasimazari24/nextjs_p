@@ -71,11 +71,22 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const fields = {
-    title: register("title", { required: "Judul harus diisi!" }),
+    title: register("title", {
+      required: "Judul harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
     description: register("description", {
       required: "Deskripsi harus diisi!",
     }),
-    url: register("url"),
+    url: register("url", {
+      maxLength: {
+        value: 300,
+        message: "Maksimal 300 karakter.",
+      },
+    }),
   };
 
   const [isLoading, setIsLoading] = useState(false);

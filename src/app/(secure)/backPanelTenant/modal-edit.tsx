@@ -79,13 +79,37 @@ const ModalEdit: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const fields = {
-    name: register("name", { required: "Nama harus diisi!" }),
+    name: register("name", {
+      required: "Nama harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
     description: register("description", {
       required: "Deskripsi harus diisi!",
     }),
-    motto: register("motto", { required: "Motto harus diisi!" }),
-    address: register("address", { required: "Alamat harus diisi!" }),
-    contact: register("contact", { required: "Kontak harus diisi!" }),
+    motto: register("motto", {
+      required: "Motto harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
+    address: register("address", {
+      required: "Alamat harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
+    contact: register("contact", {
+      required: "Kontak harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
     email: register("email", {
       required: "E-mail harus diisi",
       pattern: {
@@ -93,8 +117,18 @@ const ModalEdit: React.FC<ModalProps> = ({
           /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         message: "E-mail tidak valid",
       },
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
     }),
-    founder: register("founder", { required: "Founder harus diisi!" }),
+    founder: register("founder", {
+      required: "Founder harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
     level_tenant: register("level_tenant", {
       required: "Pilih salah satu level tenant!",
     }),

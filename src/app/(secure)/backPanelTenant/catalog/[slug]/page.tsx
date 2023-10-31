@@ -79,7 +79,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       );
     }
   }
-  let hidenCols: string[] = ["id"];
+  let hidenCols: string[] = ["id", "image_id"];
   if (
     (catalogFeatures?.access.includes("tmbhCatalog") &&
       allMenu?.access.includes("all_access")) === false

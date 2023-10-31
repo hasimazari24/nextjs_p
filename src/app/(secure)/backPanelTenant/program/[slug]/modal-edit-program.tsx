@@ -62,6 +62,10 @@ const ModalEditProgram: React.FC<ModalProps> = ({
   const fields = {
     program: register("program", {
       required: "Program harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
     }),
   };
 

@@ -75,15 +75,15 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   //split membagi string ke array setiap ada /
-  // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda / 
-  const namePath = pathname.split('/').filter(Boolean);
+  // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda /
+  const namePath = pathname.split("/").filter(Boolean);
 
   let getActiveRoute: IRoutes | undefined = findCurrentRoute(Routes);
   // useEffect(() => {
   //   getActiveRoute = findCurrentRoute(Routes);
   // }, [pathname]);
-console.log(pathname);
-console.log(getActiveRoute);
+  // console.log(pathname);
+  // console.log(getActiveRoute);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -227,7 +227,7 @@ console.log(getActiveRoute);
                     ml="2"
                   >
                     <Text fontSize="sm">
-                      {getUser ? getUser.fullname : null}
+                      {getUser ? `${getUser.fullname.substring(0, 25)}` : null}
                     </Text>
                     <Text fontSize="xs" color="gray.600">
                       {getUser ? getUser.role : null}
@@ -250,7 +250,7 @@ console.log(getActiveRoute);
                           size={"2xl"}
                           src={getUser ? getUser.image_url : null}
                         />
-                        <Text fontSize="sm">
+                        <Text fontSize="sm" textAlign={"center"}>
                           {getUser ? getUser.fullname : null}
                         </Text>
                         <Text fontSize="sm" color="gray.600" mt="-1.5">

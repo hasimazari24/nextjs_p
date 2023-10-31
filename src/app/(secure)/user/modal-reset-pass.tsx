@@ -56,6 +56,10 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
         value: 4,
         message: "Password minimal 4 karakter",
       },
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
     }),
   };
 

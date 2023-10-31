@@ -104,6 +104,10 @@ function PageUser() {
     {
       Header: "Nama Lengkap",
       accessor: "fullname",
+      width: "400px",
+      minWidth: 220,
+      maxWidth: 400,
+      Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
     },
     {
       Header: "Username",

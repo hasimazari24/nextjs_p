@@ -54,9 +54,19 @@ const AddAwards: React.FC<editProps> = ({ idTenant, onSubmit }) => {
   } = useForm<AwardItem>();
 
   const fields = {
-    name: register("name", { required: "Nama penghargaan harus diisi!" }),
+    name: register("name", {
+      required: "Nama penghargaan harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
     rank: register("rank", {
       required: "Ranking award harus diisi berupa juara berapa!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
     }),
   };
 

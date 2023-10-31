@@ -64,8 +64,20 @@ const ModalTeamNonLogin = ({
   } = useForm<FormValues>();
 
   const fields = {
-    position: register("position", { required: "Posisi harus diisi!" }),
-    fullname: register("fullname", { required: "Nama Lengkap harus diisi!" }),
+    position: register("position", {
+      required: "Posisi harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
+    fullname: register("fullname", {
+      required: "Nama Lengkap harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
   };
 
   const [isLoading, setIsLoading] = useState(false);

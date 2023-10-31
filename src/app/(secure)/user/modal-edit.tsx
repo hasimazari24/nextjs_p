@@ -80,9 +80,19 @@ const ModalEdit: React.FC<ModalProps> = ({
   } = useForm<FormValues>();
 
   const fields = {
-    username: register("username", { required: "Username harus diisi!" }),
+    username: register("username", {
+      required: "Username harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
+    }),
     fullname: register("fullname", {
       required: "Nama Lengkap harus diisi!",
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
+      },
     }),
     role: register("role", { required: "Hak akses harus dipilih!" }),
     email: register("email", {
@@ -91,6 +101,10 @@ const ModalEdit: React.FC<ModalProps> = ({
         value:
           /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         message: "E-mail tidak valid",
+      },
+      maxLength: {
+        value: 255,
+        message: "Maksimal 255 karakter.",
       },
     }),
   };
@@ -449,6 +463,10 @@ const ModalEdit: React.FC<ModalProps> = ({
                               minLength: {
                                 value: 4,
                                 message: "Password minimal 4 karakter",
+                              },
+                              maxLength: {
+                                value: 255,
+                                message: "Maksimal 255 karakter.",
                               },
                             })}
                           />
