@@ -17,21 +17,20 @@ import {
   Heading,
   IconButton,
 } from "@chakra-ui/react";
-import ContactInfo from "./ContactTenant";
+// import ContactInfo from "./ContactTenant";
 import { motion } from "framer-motion";
 import * as TenantTypes from "@/app/type/tenant-type.d";
-import CardGallery from "./GalleryCards";
 
 const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
   // const MotionSimpleGrid = motion(SimpleGrid);
   // const MotionBox = motion(Box);
   const award: TenantTypes.tenant_award[] = Array.isArray(
-    tenant.tenant_award,
+    tenant?.tenant_award,
   )
     ? tenant.tenant_award.map((d) => ({
         id: d.id,
         image_id: d.image_id,
-        image_url: d.image_ul,
+        image_url: d.image_url,
         name: d.name,
         rank: d.rank
       }))
@@ -68,18 +67,19 @@ const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 // rounded={"2xl"}
                 bgColor={"gray.50"}
                 spacing="2"
-                rounded="xl"
+                rounded="2xl"
                 align="center"
                 // flexDirection={"column"}
                 // justifyContent={'flex-start'}
               >
                 <Image
                   // boxSize={[20,40]}
-                  height="auto"
+                  h={{ base: "80px", sm: "140px", xl: "200px" }}
                   maxW={{ base: "80px", sm: "140px", xl: "200px" }}
                   // w={"xl"}
-                  src={data.image_url || "/img/avatar-default.jpg"}
-                  rounded={{ base: "md", lg: "xl" }}
+                  objectFit={"cover"}
+                  src={data.image_url || "/img/tenant-logo-default.png"}
+                  rounded={{ base: "xl", lg: "3xl" }}
                   boxShadow="xl"
                   mb={[2, 4]}
                 />
@@ -103,6 +103,7 @@ const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   cursor={"pointer"}
                   overflow="hidden"
                   noOfLines={2}
+                  title={data.name}
                 >
                   {data.name}
                 </Text>
