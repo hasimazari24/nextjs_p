@@ -63,7 +63,7 @@ interface userLinks {
 
 const MyProfile: React.FC = () => {
   const {
-    reset: resetProfile,
+    // reset: resetProfile,
     handleSubmit: handleProfile,
     register: registerProfile,
     formState: { errors: errProfile },
@@ -191,6 +191,7 @@ const MyProfile: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
+  const [isLoadingEditPass, setIsLoadingEditPass] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -277,7 +278,7 @@ const MyProfile: React.FC = () => {
   };
 
   const onSubmitPassword: SubmitHandler<pwd> = async (data) => {
-    setIsLoadingEdit(true);
+    setIsLoadingEditPass(true);
     try {
       await axiosCustom
         .patch("/user/update-password", data)
@@ -286,7 +287,7 @@ const MyProfile: React.FC = () => {
           // console.log(response);
           if (response.status === 200) {
             const timer = setTimeout(() => {
-              setIsLoadingEdit(false);
+              setIsLoadingEditPass(false);
               resetPwd();
             }, 1000);
             handleShowMessage(response.data.message, false);
@@ -302,7 +303,7 @@ const MyProfile: React.FC = () => {
           true,
         );
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-      setIsLoadingEdit(false);
+      setIsLoadingEditPass(false);
     }
   };
 
@@ -567,7 +568,7 @@ const MyProfile: React.FC = () => {
                           leftIcon={<CheckIcon />}
                           colorScheme="green"
                           type="submit"
-                          isLoading={isLoadingEdit}
+                          isLoading={isLoadingEditPass}
                           size="md"
                         >
                           Simpan Password
@@ -678,21 +679,19 @@ const MyProfile: React.FC = () => {
                       } else if (link.title === "LinkedIn") {
                         return (
                           <Link href={link.url} key={link.id} target="_blank">
-                            <Link href="impuls.id">
-                              <HStack alignItems={"center"} pr="3">
-                                <IconButton
-                                  color="blue.500"
-                                  aria-label="web"
-                                  icon={<FaLinkedin size="sm" />}
-                                  size="sm"
-                                  title={link.url}
-                                  _hover={{
-                                    color: "blue.800",
-                                  }}
-                                  backgroundColor="rgba(0, 0, 0, 0)"
-                                />
-                              </HStack>
-                            </Link>
+                            <HStack alignItems={"center"} pr="3">
+                              <IconButton
+                                color="blue.500"
+                                aria-label="web"
+                                icon={<FaLinkedin size="sm" />}
+                                size="sm"
+                                title={link.url}
+                                _hover={{
+                                  color: "blue.800",
+                                }}
+                                backgroundColor="rgba(0, 0, 0, 0)"
+                              />
+                            </HStack>
                           </Link>
                         );
                       }
