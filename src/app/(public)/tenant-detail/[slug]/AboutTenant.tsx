@@ -182,6 +182,7 @@ const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 >
                   {socmed.map((d) => (
                     <SocialInfo
+                      key={d.id}
                       icon={getIconByTitle(d.title)}
                       title={d.title}
                       content={d.url}

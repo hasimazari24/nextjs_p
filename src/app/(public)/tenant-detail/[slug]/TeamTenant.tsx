@@ -179,7 +179,7 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
               <HStack spacing={{ base:2, lg:3 }} pt="4px" minW="150px" w="full" justifyContent={"center"}>
                 {data.user_link && data.user_link.length > 0 ? (
                   data.user_link.map((d) => (
-                    <Link href={d.url} target="_blank">
+                    <Link href={d.url} key={d.id} target="_blank">
                       <Icon
                         as={getIconByTitle(d.title)}
                         color="black"

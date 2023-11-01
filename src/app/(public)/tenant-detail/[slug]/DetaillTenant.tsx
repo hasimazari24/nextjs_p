@@ -230,7 +230,7 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
         </Stack>
       </Container>
 
-      <Tabs isLazy={false} isFitted>
+      <Tabs isFitted>
         <Container maxW={"8xl"} px={{ base: 6, md: 20, "2xl": 55 }} pt="3">
           <TabList justifyContent={"left"} display="flex" flexWrap="wrap">
             <TabCustom title="Tentang" icon={FaInfo} />
@@ -278,14 +278,15 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
 const TabCustom = ({ icon, title, size = 5 }: TabCustomProps) => {
   return (
     <Tab padding="10px 15px 10px 0px">
-      <IconButton
+      <Icon
         as={icon}
         title={title}
         boxSize={size}
         aria-label={title}
         background={"none"}
         _hover={{ background: "none" }}
-      />{" "}
+      />
+      &nbsp;
       {title}
     </Tab>
   );
