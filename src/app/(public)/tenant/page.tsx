@@ -161,7 +161,7 @@ function Tenant() {
                         bg={
                           isHovered[index]
                             ? "white"
-                            : `url(${p.image_banner_url}) center/cover no-repeat`
+                            : `url(${p.image_banner_url || "/img/tenant-banner-default.jpg"}) center/cover no-repeat`
                         }
                       ></Box>
                       <Center
@@ -173,7 +173,7 @@ function Tenant() {
                       >
                         <Image
                           className="module-inside"
-                          src={p.image_url}
+                          src={p.image_url || "/img/tenant-logo-default.png"}
                           alt="Slide"
                           height={{
                             base: "40px",
@@ -182,7 +182,7 @@ function Tenant() {
                             lg: "60px",
                           }}
                           fit={"cover"}
-                          shadow="md"
+                          // shadow="md"
                         />
                       </Center>
                     </Box>
