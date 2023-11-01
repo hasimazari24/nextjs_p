@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useColorModeValue, Box } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import GallerySlider from "./template/GallerySlider";
 import SectionStp from "./template/SectionStp";
 import HeadingPage from "./template/HeadingPage";
@@ -73,10 +73,7 @@ function page() {
         <Loading />
       ) : (
         <>
-          <Box
-            bg={useColorModeValue("gray.200", "gray.400")}
-            id="GallerySliderTenant"
-          >
+          <Box bg={"gray.200"} id="GallerySliderTenant">
             <GallerySlider beranda={beranda?.tenant} />
           </Box>
           <div>

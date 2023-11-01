@@ -51,7 +51,7 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     if (data && data.param === "") {
       return;
     } else {
-      console.log(data);
+      // console.log(data);
       // Simulasi pemanggilan API dengan timeout
       setIsLoading(true);
 
@@ -66,7 +66,7 @@ const FullScreenModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           setIsLoading(false);
           setIsSearchOpen(true); //set ke True saat pencarian dimulai//
         } catch (error) {
-          console.error("Error fetching data from Api", error);
+          // console.error("Error fetching data from Api", error);
           setIsLoading(false);
           setIsSearchOpen(true);
           setSearchResults([]);
