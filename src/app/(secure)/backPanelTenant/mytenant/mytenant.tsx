@@ -33,6 +33,7 @@ import ModalSocial from "../../../components/modal/modal-social";
 import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
 import { SiMicrosoftteams } from "react-icons/si";
 import { BsCalendar2Event } from "react-icons/bs";
+import Loading from "../../loading";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { BiLinkExternal, BiBookBookmark } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
@@ -160,9 +161,7 @@ export default function MyTenant() {
   return (
     <>
       {isLoading ? (
-        <Center h="100%" m="10">
-          <Spinner className="spinner" size="xl" color="blue.500" />
-        </Center>
+        <Loading />
       ) : (
         <>
           <Flex

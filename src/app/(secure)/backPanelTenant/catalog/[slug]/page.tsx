@@ -28,6 +28,7 @@ import {
 } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
+import Loading from "../../loading";                    
 import ModalEditCatalog from "./modal-edit-catalog";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
@@ -323,9 +324,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
   return (
     <div>
       {loadingCatalog ? (
-        <Center h="100%" m="10">
-          <Spinner className="spinner" size="xl" color="blue.500" />
-        </Center>
+        <Loading/>
       ) : (
         <>
           {namaTenant ? (

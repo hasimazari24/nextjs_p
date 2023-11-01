@@ -31,6 +31,7 @@ import {
   PopoverArrow,
 } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
+import Loading from "../../loading";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
@@ -211,9 +212,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
   return (
     <div>
       {loadingTeam ? (
-        <Center h="100%" m="10">
-          <Spinner className="spinner" size="xl" color="blue.500" />
-        </Center>
+        <Loading />
       ) : (
         <>
           {namaTenant ? (
