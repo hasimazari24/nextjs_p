@@ -39,7 +39,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
       Routes.filter(
         (route) =>
           route.name === "Dashboard" ||
-          route.name === "Back Panel Tenant" ||
+          route.name === "Data Tenant" ||
           route.name === "Data User" ||
           route.name === "Data Asset" ||
           route.name === "Data Kuesioner",
@@ -52,12 +52,13 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
     ],
   },
   [UserRoles.Mentor]: {
-    link_menu: [
-      { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
-      { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
-      { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
-    ],
+    link_menu: Routes.filter(
+      (route) =>
+        route.name === "Dashboard" ||
+        route.name === "Data Tenant" ||
+        route.name === "Data Kelas" ||
+        route.name === "Data Penilaian",
+    ),
     features: [
       {
         menu: "backPanelTenant",
@@ -94,13 +95,14 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
     ],
   },
   [UserRoles.Tenant]: {
-    link_menu: [
-      { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
-      { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
-      { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
-      { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
-    ],
+    link_menu: Routes.filter(
+      (route) =>
+        route.name === "Dashboard" ||
+        route.name === "Data Tenant" ||
+        route.name === "Data Kelas" ||
+        route.name === "Data Penilaian" ||
+        route.name === "Data Kuesioner",
+    ),
     features: [
       {
         menu: "backPanelTenant",
@@ -180,13 +182,14 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
     ],
   },
   [UserRoles.Manajemen]: {
-    link_menu: [
-      { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
-      { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
-      { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
-      { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
-      { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
-    ],
+    link_menu: Routes.filter(
+      (route) =>
+        route.name === "Dashboard" ||
+        route.name === "Data Tenant" ||
+        route.name === "Data Kelas" ||
+        route.name === "Data Penilaian" ||
+        route.name === "Data Kuesioner",
+    ),
     features: [
       {
         menu: "backPanelTenant",
