@@ -2,10 +2,10 @@
 
 import { Spinner, Center, Box, Text } from "@chakra-ui/react";
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-}
+// interface Props {
+//   isOpen: boolean;
+//   onClose: () => void;
+// }
 
 const Loading = () => {
   return (

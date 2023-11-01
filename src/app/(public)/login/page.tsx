@@ -14,7 +14,6 @@ import {
   Center,
   Spinner,
   Box,
-  useColorModeValue,
   Container,
   SimpleGrid,
   VStack,
@@ -94,7 +93,7 @@ const Login = () => {
             spacing={4}
             // w={"full"}
             maxW={"4xl"}
-            bg={useColorModeValue("white", "gray.700")}
+            bg={"white"}
             rounded={"xl"}
             boxShadow={"lg"}
             p={6}
@@ -129,7 +128,7 @@ const Login = () => {
               <Box
                 rounded={"lg"}
                 w={{ base: "auto", md: "300px", lg: "350px" }}
-                bg={useColorModeValue("white", "gray.700")}
+                bg={"white"}
                 boxShadow={"lg"}
                 p={8}
               >

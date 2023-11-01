@@ -1,4 +1,4 @@
-"use client"
+"use client";
 /* eslint-disable react/jsx-key */
 /* eslint react/forbid-prop-types: 0 */
 /* eslint-disable react/jsx-key */
@@ -9,13 +9,15 @@ import {
   HStack,
   Button,
   Checkbox,
-  TableContainer,Stack,
+  TableContainer,
+  Stack,
   Flex,
   Text,
   Wrap,
   WrapItem,
   InputLeftElement,
-  InputGroup,Input,
+  InputGroup,
+  Input,
 } from "@chakra-ui/react";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import React, { ReactNode, useState } from "react";
@@ -132,7 +134,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
     //       },
     //       ...columns,
     //     ]);
-    //   } 
+    //   }
     // }
   );
 
@@ -155,14 +157,17 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
             direction={{ base: "column", md: "row", lg: "row" }}
             alignItems={"center"}
           >
-            {props.filterOptions.map((option) => {
+            {props.filterOptions.map((option, index) => {
               if (Array.isArray(option.values)) {
                 return (
                   <Select
+                    key={index}
                     onChange={(e) => setFilter(option.key, e.target.value)}
                     mb="2"
                   >
-                    <option value="">Semua {option.label}</option>
+                    <option key={"optionAll"} value="">
+                      Semua {option.label}
+                    </option>
                     {option.values.map((value, index) => (
                       <option key={index} value={value}>
                         {value}
@@ -173,29 +178,33 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
               }
               if (option.type) {
                 return (
-                  <>
-                    <HStack mb="2" alignItems={"center"} pr="3">
-                      <Text
-                        whiteSpace={{
-                          base: "nowrap",
-                          md: "normal",
-                          lg: "nowrap",
-                        }}
-                      >
-                        {option.label}
-                      </Text>
-                      <Checkbox
-                        onChange={(e) =>
-                          setFilter(option.key, e.target.checked ? true : null)
-                        }
-                        size="lg"
-                      />
-                    </HStack>
-                  </>
+                  <HStack
+                    key={option.label}
+                    mb="2"
+                    alignItems={"center"}
+                    pr="3"
+                  >
+                    <Text
+                      whiteSpace={{
+                        base: "nowrap",
+                        md: "normal",
+                        lg: "nowrap",
+                      }}
+                    >
+                      {option.label}
+                    </Text>{" "}
+                    <Checkbox
+                      key={option.label}
+                      onChange={(e) =>
+                        setFilter(option.key, e.target.checked ? true : null)
+                      }
+                      size="lg"
+                    />
+                  </HStack>
                 );
               } else
                 return (
-                  <InputGroup>
+                  <InputGroup key={option.key}>
                     <InputLeftElement pointerEvents="none">
                       <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
                     </InputLeftElement>
@@ -302,6 +311,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                     );
                   })}
                   <Th
+                    key={"theadAction"}
                     width="100px"
                     fontSize="sm"
                     id="action"
@@ -356,7 +366,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       );
                     })}
                     {/* <Td>{props.children(props.data[i])}</Td> */}
-                    <Td>{props.children(row.values)}</Td>
+                    <Td key={i}>{props.children(row.values)}</Td>
                   </Tr>
                 ) : (
                   //jika tidak ada row values id, maka ...
@@ -375,7 +385,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
           </Tbody>
         </Table>
       </TableContainer>
-     
+
       <Flex justify="flex-end" alignItems="center">
         <Box mt="4" display="flex">
           {/* Berpindah halaman */}
@@ -416,4 +426,3 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
 }
 
 export default DataTable;
-

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   VStack,
@@ -11,7 +11,6 @@ import {
   Spinner,
   HStack,
   Text,
-  useColorModeValue,
   Image,
   Avatar,
   Td,
@@ -30,12 +29,11 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import ModalSocial from "../../../components/modal/modal-social";
-import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
+import { GrMoreVertical, GrTrophy } from "react-icons/gr";
 import { SiMicrosoftteams } from "react-icons/si";
 import { BsCalendar2Event } from "react-icons/bs";
-import Loading from "../../loading";
 import { LiaClipboardListSolid } from "react-icons/lia";
-import { BiLinkExternal, BiBookBookmark } from "react-icons/bi";
+import { BiLinkExternal } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
 import {
@@ -48,21 +46,15 @@ import {
 } from "react-icons/fa";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import ModalEdit from "../modal-edit";
-import {
-  AddIcon,
-  DeleteIcon,
-  EditIcon,
-  ViewIcon,
-  HamburgerIcon,
-} from "@chakra-ui/icons";
+import { EditIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import { useAuth } from "@/app/components/utils/AuthContext";
-// import SplitWithImage from '@/app/(public)/portofolio-detail/page';
+import Loading from "../loading";
 
-interface MyTenantProps {
-  is_admin: boolean;
-}
+// interface MyTenantProps {
+//   is_admin: boolean;
+// }
 
 interface tenantLinks {
   id: string;
@@ -134,7 +126,7 @@ export default function MyTenant() {
     getUser = user; // Setel nilai getUser jika user ada
   }
 
-  let myTenant: any | null | undefined = null; 
+  let myTenant: any | null | undefined = null;
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
@@ -309,11 +301,7 @@ export default function MyTenant() {
                 <Stack spacing={{ base: 4, md: 6 }}>
                   <Box as={"header"}>
                     <Heading fontSize="2xl">{dataMyTenant?.name}</Heading>
-                    <Text
-                      color={useColorModeValue("gray.900", "gray.400")}
-                      fontWeight={300}
-                      fontSize={"x5"}
-                    >
+                    <Text color={"gray.900"} fontWeight={300} fontSize={"x5"}>
                       Level Tenant : <b>{dataMyTenant?.level_tenant}</b>
                     </Text>
                   </Box>
@@ -321,16 +309,12 @@ export default function MyTenant() {
                   <Stack
                     spacing={{ base: 4, sm: 6 }}
                     direction={"column"}
-                    divider={
-                      <StackDivider
-                        borderColor={useColorModeValue("gray.200", "gray.600")}
-                      />
-                    }
+                    divider={<StackDivider borderColor={"gray.600"} />}
                   >
                     <Box>
                       <Text>Deskripsi :</Text>
                       <Text
-                        color={useColorModeValue("gray.500", "gray.400")}
+                        color={"gray.500"}
                         fontSize={"xl"}
                         // fontWeight={"300"}
                       >
@@ -340,7 +324,7 @@ export default function MyTenant() {
                     <Box>
                       <Text>Motto :</Text>
                       <Text
-                        color={useColorModeValue("gray.500", "gray.400")}
+                        color={"gray.500"}
                         fontSize={"xl"}
                         // fontWeight={"300"}
                       >
@@ -350,7 +334,7 @@ export default function MyTenant() {
                     <Box>
                       <Text
                         fontSize={{ base: "16px", lg: "18px" }}
-                        color={useColorModeValue("yellow.500", "yellow.300")}
+                        color={"yellow.500"}
                         fontWeight={"500"}
                         textTransform={"uppercase"}
                         mb={"4"}
@@ -425,8 +409,8 @@ export default function MyTenant() {
               <Divider
                 pt="4"
                 mb="4"
-                color={useColorModeValue("gray.200", "gray.600")}
-                borderColor={useColorModeValue("gray.200", "gray.600")}
+                color={"gray.600"}
+                borderColor={"gray.600"}
               />
 
               <Stack spacing={{ base: 4, md: 6 }} pb="3">
@@ -438,7 +422,7 @@ export default function MyTenant() {
                   >
                     <Text
                       fontSize={{ base: "16px", lg: "18px" }}
-                      color={useColorModeValue("yellow.500", "yellow.300")}
+                      color={"yellow.500"}
                       fontWeight={"500"}
                       textTransform={"uppercase"}
                       mb={"2"}
@@ -468,7 +452,7 @@ export default function MyTenant() {
                       dataTenantLinks.map((link) => {
                         if (link.title === "Website") {
                           return (
-                            <Link href={link.url} target="_blank">
+                            <Link href={link.url} key={link.id} target="_blank">
                               <HStack alignItems={"center"} pr="4">
                                 <IconButton
                                   color="blue.300"

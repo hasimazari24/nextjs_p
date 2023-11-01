@@ -4,7 +4,6 @@ import {
   useDisclosure,
   Drawer,
   DrawerContent,
-  useColorModeValue,
   Flex,
   Center,
   Spinner,
@@ -22,7 +21,7 @@ import Loading from "@/app/loading";
 //   description: process.env.APP_DESCRIPTION,
 // };
 
-const LoadingPage = (text:string) => {
+const LoadingPage = (text: string) => {
   return (
     <Center h="100%" m="10" flexDirection={"column"}>
       <Spinner
@@ -38,7 +37,7 @@ const LoadingPage = (text:string) => {
       </Text>
     </Center>
   );
-}
+};
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,7 +60,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             "Sedang memuat halaman, mohon tunggu sebentar ...",
           )}
         >
-          <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+          <Box minH="100vh" bg={"gray.100"}>
             <Sidebar
               onClose={() => onClose}
               display={{ base: "none", md: "block" }}
@@ -93,9 +92,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                 shadow="lg"
                 // borderWidth="1px"
               >
-                  <Box p="6" height="full" width="full">
-                    {children}
-                  </Box>
+                <Box p="6" height="full" width="full">
+                  {children}
+                </Box>
               </Flex>
             </Box>
           </Box>

@@ -155,10 +155,13 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
             </BreadcrumbItem>
             {getActiveRoute?.layout && (
               <BreadcrumbItem>
-                <BreadcrumbLink isCurrentPage>
+                {/* <BreadcrumbLink isCurrentPage>
                   <Link href={getActiveRoute?.href}>
                     {getActiveRoute?.layout}
                   </Link>
+                </BreadcrumbLink> */}
+                <BreadcrumbLink isCurrentPage href={getActiveRoute?.href}>
+                  {getActiveRoute?.layout}
                 </BreadcrumbLink>
               </BreadcrumbItem>
             )}
