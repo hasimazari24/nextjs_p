@@ -25,7 +25,7 @@ export interface tenant_catalog {
 export interface tenant_award {
   id: string;
   image_id: string | null;
-  image_url: string | null;
+  image_url: string;
   name: string;
   rank: string;
 }

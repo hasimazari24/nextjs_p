@@ -1,165 +1,166 @@
 import * as React from "react";
 import {
-  MdMailOutline,
-  MdOutlineMap,
-  MdOutlineContacts,
-  MdSchool,
-  MdMap,
-} from "react-icons/md";
-import {
   Box,
   Text,
-  Flex,
-  HStack,
   Stack,
-  VStack,
-  Icon,
   Button,
-  Spacer,
-  Tag,
   SimpleGrid,
-  Center,
   Image,
-  Heading,
-  IconButton,
 } from "@chakra-ui/react";
-import ContactInfo from "./ContactTenant";
 import { motion } from "framer-motion";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaYoutube,
-  FaLinkedin,
-  FaGlobe,
-} from "react-icons/fa"; // Tambahkan import untuk ikon FaInfo
-import { AiOutlineCrown } from "react-icons/ai";
-import DetailSocial from "./DetailSocial";
-import { BsStackOverflow } from "react-icons/bs";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import * as TenantTypes from "@/app/type/tenant-type.d";
 
-const CatalogTenant = () => {
-  const MotionSimpleGrid = motion(SimpleGrid);
-  const MotionBox = motion(Box);
-
+const CatalogTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
+  // const MotionSimpleGrid = motion(SimpleGrid);
+  // const MotionBox = motion(Box);
+  const catalog: TenantTypes.tenant_catalog[] = Array.isArray(tenant?.tenant_catalog)
+    ? tenant.tenant_catalog.map((d) => ({
+        id: d.id,
+        image_id: d.image_id,
+        image_url: d.image_url,
+        title: d.title,
+        description: d.description,
+        url: d.url,
+      }))
+    : [];
   return (
     <>
-      {/* sub heading */}
-      <Box w={"full"} mb={3}>
+      <Stack spacing={4}>
         <Text
           fontWeight="bold"
           color="gray.900"
           fontSize={["20px", "2xl", "3xl"]}
+          // fontSize={["xl", "2xl", "3xl"]}
         >
           Katalog
         </Text>
-      </Box>
-      {/* looping container */}
-      <Box
-        p={8}
-        display={{ md: "flex" }}
-        bgColor={"gray.50"}
-        boxShadow={"lg"}
-        rounded={"2xl"}
-        h={{ md: "320px" }}
-        mb={6}
-      >
-        <Box flexShrink={0} display={"flex"}>
-          <Image
-            rounded={"3xl"}
-            height={"250px"}
-            width={"250px"}
-            objectFit={"cover"}
-            src="/img/avatar-default.jpg"
-            alt="#" // kasih nama title katalog
-            boxShadow={"xl"}
-            display={"block"}
-            margin={"auto"}
-          />
-        </Box>
-        <Box mt={{ base: 4, md: 0 }} ml={{ md: 6 }}>
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Text
-              as="b"
-              fontWeight={"bold"}
-              fontSize={["lg", "xl"]}
-              whiteSpace="nowrap"
-              textOverflow="ellipsis"
-              cursor={"pointer"}
-              overflow="hidden"
-              title="jan lupaa tambahin ya nyuk"
+        {catalog && catalog.length > 0 ? (
+          catalog.map((data, index) => (
+            <Box
+              boxShadow={"lg"}
+              rounded={"2xl"}
+              w="full"
+              h={{ base: "auto", lg: "320px" }}
+              role={"group"}
+              p={8}
+              bgColor={"gray.50"}
+              key={index}
             >
-              Barang ini berharga tidak ada harganya mahal yaaaaa
-            </Text>
-            <NextLink href={"#"} target="_blank">
-              <Button
-                colorScheme="blue"
-                variant="outline"
-                aria-label="btn-more"
-                px={6}
-                rounded={"xl"}
-                size={{ base: "xs", md: "sm" }}
+              <Stack
+                spacing={{ base: 4, md: 6, lg: 8 }}
+                direction={{ base: "column", md: "row" }}
+                // flexWrap={"wrap"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
               >
-                <ExternalLinkIcon mx="2px" />
-                Selengkapnya
-              </Button>
-            </NextLink>
-          </Box>
-          <Text
-            mt={2}
-            fontSize={"md"}
-            align={"justify"}
-            lineHeight={"25px"}
-            h="215px"
-            overflowY="auto"
-            pr="3"
-            css={{
-              // For Chrome
-              "&::-webkit-scrollbar": {
-                width: "4px",
-              },
-              "&::-webkit-scrollbar-track": {
-                background: "#E2E8F0",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                background: "#A0AEC0",
-                borderRadius: "4px",
-              },
-              // For Firefox
-              scrollbarColor: "#A0AEC0",
-              scrollbarWidth: "thin",
-            }}
-          >
-            Getting a new business off the ground is a lot of hard work. Here
-            are five ideas you can use to find your first customers. Contrary to
-            popular belief, Lorem Ipsum is not simply random text. It has roots
-            in a piece of classical Latin literature from 45 BC, making it over
-            2000 years old. Richard McClintock, a Latin professor at
-            Hampden-Sydney College in Virginia, looked up one of the more
-            obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-            going through the cites of the word in classical literature,
-            discovered the undoubtable source. Lorem Ipsum comes from sections
-            1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes
-            of Good and Evil) by Cicero, written in 45 BC. This book is a
-            treatise on the theory of ethics, very popular during the
-            Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit
-            amet..", Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Impedit natus nesciunt fugit ad, deleniti aliquam nobis distinctio
-            neque eligendi magni tenetur nam nostrum totam Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Asperiores numquam labore illum
-            quibusdam nihil. Ex sunt ut recusandae doloribus magnam nisi iure
-            vitae blanditiis delectus. praesentium!
-          </Text>
-        </Box>
-      </Box>
-      {/* cheat untuk mengurangi margin bottom, wkekek. jangan dihapus gaes */}
-      <Box mb={-6} display={"block"} />
+                <Image
+                  rounded={"3xl"}
+                  height={{
+                    base: "180px",
+                    sm: "250px",
+                    md: "185px",
+                    lg: "250px",
+                  }}
+                  width={{
+                    base: "180px",
+                    sm: "250px",
+                    md: "185px",
+                    lg: "250px",
+                  }}
+                  objectFit={"cover"}
+                  src={data.image_url || "/img/avatar-default.jpg"}
+                  alt="#"
+                  boxShadow={"xl"}
+                  mb={3}
+                />
+                <Box w="full">
+                  <Stack
+                    justify={"space-between"}
+                    alignItems={"flex-start"}
+                    mb={3}
+                    // display={"flex"}
+                    flexDirection={{ base: "column", md: "row" }}
+                    flexWrap={"wrap"}
+                    spacing={{ base: 2, md: 1 }}
+                  >
+                    <Text
+                      as="b"
+                      fontWeight={"bold"}
+                      fontSize={["lg", "xl"]}
+                      textOverflow="ellipsis"
+                      // maxW={{
+                      //   base: "auto",
+                      //   sm: "340px",
+                      //   md: "408px",
+                      //   lg: "544px",
+                      // }}
+                      // w="auto"
+                      // whiteSpace="nowrap"
+                      flex="1"
+                      cursor={"pointer"}
+                      overflow="hidden"
+                      title={data.title}
+                      noOfLines={{ base: 2, sm: 1 }}
+                    >
+                      {data.title}
+                    </Text>
+                    {data.url && (
+                      <NextLink href={data.url} target="_blank">
+                        <Button
+                          colorScheme="blue"
+                          variant="outline"
+                          aria-label="btn-more"
+                          px={6}
+                          rounded={"xl"}
+                          size={{ base: "xs", md: "sm" }}
+                        >
+                          <ExternalLinkIcon mx="2px" />
+                          Selengkapnya
+                        </Button>
+                      </NextLink>
+                    )}
+                  </Stack>
+                  <Stack
+                    w="auto"
+                    spacing={1}
+                    h={{ base: "75px", sm: "100px", md: "120px", lg: "200px" }}
+                  >
+                    <Text
+                      fontSize={["sm", "md", "lg"]}
+                      align={"justify"}
+                      lineHeight={"25px"}
+                      overflowY="auto"
+                      css={{
+                        // For Chrome
+                        "&::-webkit-scrollbar": {
+                          width: "4px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          background: "#E2E8F0",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: "#A0AEC0",
+                          borderRadius: "4px",
+                        },
+                        // For Firefox
+                        scrollbarColor: "#A0AEC0",
+                        scrollbarWidth: "thin",
+                      }}
+                      pr="3"
+                    >
+                      {data.description}
+                    </Text>
+                  </Stack>
+                </Box>
+              </Stack>
+            </Box>
+          ))
+        ) : (
+          <p>kosong yaaa</p>
+        )}
+      </Stack>
     </>
   );
 };

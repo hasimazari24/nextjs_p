@@ -258,13 +258,13 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   <AwardsTenant tenant={tenant} />
                 </TabPanel>
                 <TabPanel>
-                  <CatalogTenant />
+                  <CatalogTenant tenant={tenant} />
                 </TabPanel>
                 <TabPanel>
-                  <TeamTenant />
+                  <TeamTenant tenant={tenant} />
                 </TabPanel>
                 <TabPanel>
-                  <GalleryTenant />
+                  <GalleryTenant tenant={tenant} />
                 </TabPanel>
               </TabPanels>
             </Box>

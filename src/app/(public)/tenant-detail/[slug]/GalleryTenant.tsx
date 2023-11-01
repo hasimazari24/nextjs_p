@@ -1,68 +1,50 @@
 import * as React from "react";
 import { Box, Text,Stack, Grid } from "@chakra-ui/react";
 import CardGallery from "./GalleryCards";
+import * as TenantTypes from "@/app/type/tenant-type.d";
 
-const DataGallery = [
-     {
-        imgUrl :'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, maxime',
-         description :'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut at tempora et quia explicabo voluptatum corrupti cum, perferendis laboriosam voluptate.',
-    },
-    {
-        imgUrl :'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, maxime',
-         description :'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut at tempora et quia explicabo voluptatum corrupti cum, perferendis laboriosam voluptate.',
-    },
-    {
-        imgUrl :'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, maxime',
-         description :'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut at tempora et quia explicabo voluptatum corrupti cum, perferendis laboriosam voluptate.',
-    },
-    {
-        imgUrl :'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, maxime',
-         description :'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut at tempora et quia explicabo voluptatum corrupti cum, perferendis laboriosam voluptate.',
-    },
-    {
-        imgUrl :'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, maxime',
-         description :'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut at tempora et quia explicabo voluptatum corrupti cum, perferendis laboriosam voluptate.',
-    },
-    {
-        imgUrl :'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, maxime',
-         description :'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut at tempora et quia explicabo voluptatum corrupti cum, perferendis laboriosam voluptate.',
-    },
-    {
-        imgUrl :'https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        title: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus, maxime',
-         description :'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ut at tempora et quia explicabo voluptatum corrupti cum, perferendis laboriosam voluptate.',
-    },
-];
+const GalleryTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
+   const gallery: TenantTypes.tenant_gallery[] = Array.isArray(
+     tenant?.tenant_gallery,
+   )
+     ? tenant.tenant_gallery.map((d) => ({
+         id: d.id,
+         image_id: d.image_id,
+         image_url: d.image_url,
+         description: d.description,
+         title: d.title,
+         event_date_format: d.event_date_format,
+         event_date: d.event_date,
+       }))
+     : [];
 
-
-const GalleryTenant = () => {
   return (
     <Box w="full">
-      <Stack spacing="8" py={{ base: "4", md: "6" }}>
+      <Stack spacing="4">
         <Text
           fontWeight="bold"
           color="gray.900"
-          fontSize={["xl", "2xl", "3xl"]}
+          fontSize={["20px", "2xl", "3xl"]}
+          // fontSize={["xl", "2xl", "3xl"]}
         >
           Galeri
         </Text>
         <Grid
-          templateColumns={["1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
-          flexWrap={"wrap"}
+          templateColumns={{
+            base: "1fr 1fr",
+            md: "1fr 1fr 1fr",
+            xl: "1fr 1fr 1fr 1fr",
+          }}
           gap={8}
         >
-          {DataGallery.map((gallery, index) => (
+          {gallery.map((d, index) => (
             <CardGallery
               key={index}
-              image={gallery.imgUrl}
-              judul={gallery.title}
-              deskripsi={gallery.description}
+              image={d.image_url || "/img/tenant-banner-default.jpg"}
+              judul={d.title}
+              tgl={d.event_date}
+              tgl_format={d.event_date_format}
+              deskripsi={d.description}
             />
           ))}
         </Grid>

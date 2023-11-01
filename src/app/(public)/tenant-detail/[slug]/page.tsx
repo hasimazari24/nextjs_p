@@ -54,6 +54,5 @@ function page({ params }: { params: { slug: string } }) {
 
 export default dynamic(() => Promise.resolve(page), {
   ssr: false,
-  // suspense: true,
   loading: () => <Loading />,
 });

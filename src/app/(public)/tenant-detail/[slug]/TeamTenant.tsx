@@ -16,23 +16,59 @@ import {
   Image,
   Heading,
   IconButton,
+  Grid,
 } from "@chakra-ui/react";
-import ContactInfo from "./ContactTenant";
 import { motion } from "framer-motion";
 import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaYoutube,
-  FaLinkedin,
-  FaGlobe,
-} from "react-icons/fa";//
+  AiFillTwitterCircle,
+  AiOutlineFacebook,
+  AiOutlineCrown,
+  AiOutlineGlobal,
+} from "react-icons/ai";
+import {
+  IoLogoFacebook,
+  IoLogoInstagram,
+  IoLogoLinkedin,
+  IoLogoYoutube,
+} from "react-icons/io5";
+import * as TenantTypes from "@/app/type/tenant-type.d";
+import Link from "next/link";
 
-const TeamTenant = () => {
-    const MotionSimpleGrid = motion(SimpleGrid);
-    const MotionBox = motion(Box);
+const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
+  // const MotionSimpleGrid = motion(SimpleGrid);
+  // const MotionBox = motion(Box);
 
-    const name: string = "Muhammad Alexandre Potter Azari";
+  const userTenant: TenantTypes.user_tenant[] = Array.isArray(
+    tenant?.user_tenant,
+  )
+    ? tenant.user_tenant.map((d) => ({
+        id: d.id,
+        image_id: d.image_id,
+        image_url: d.image_url,
+        fullname: d.fullname,
+        position: d.position,
+        user_link : d.user_link
+      }))
+    : [];
+
+    // console.log(socmed);
+
+    const getIconByTitle = (title: string) => {
+      switch (title) {
+        case "Website":
+          return AiOutlineGlobal;
+        case "Instagram":
+          return IoLogoInstagram;
+        case "Facebook":
+          return IoLogoFacebook;
+        case "Twitter":
+          return AiFillTwitterCircle;
+        case "YouTube":
+          return IoLogoYoutube;
+        case "LinkedIn":
+          return IoLogoLinkedin;
+      }
+    };
 
   return (
     <>
@@ -45,89 +81,163 @@ const TeamTenant = () => {
         >
           Team
         </Text>
-        <Stack
-          spacing={8}
-          flexDirection={"row"}
-          flexWrap={"wrap"}
-          alignItems={"space-between"}
-          justifyContent={"space-between"}
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            sm: "1fr 1fr",
+            md: "1fr 1fr 1fr",
+          }}
+          // templateColumns={["1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
+          // flexWrap={"wrap"}
+          alignItems={"center"}
+          justifyItems={"center"}
+          gap={8}
         >
-          <Box
-            w="340px"
-            h="432px"
-            role={"group"}
-            p={8}
-            boxShadow={"lg"}
-            rounded={"2xl"}
-            bgColor={"gray.50"}
-          >
-            <Center>
-              <Stack direction={"column"} alignItems={"center"} spacing={1}>
-                <Image
-                  rounded={"3xl"}
-                  height={"250px"}
-                  width={"250px"}
-                  objectFit={"cover"}
-                  src="/img/avatar-default.jpg"
-                  alt="#"
-                  boxShadow={"xl"}
-                  mb={6}
+          {userTenant.map((data, index) => (
+            <Stack
+              // direction={"column"}
+              alignItems={"center"}
+              spacing={1}
+              w="full"
+              h="full"
+              p={4}
+              boxShadow={"lg"}
+              rounded={"2xl"}
+              bgColor={"gray.50"}
+              key={index}
+              // display="flex"
+            >
+              <Image
+                rounded={{ base: "xl", lg: "3xl" }}
+                // height={{
+                //   base: "118px",
+                //   sm: "126px",
+                //   md: "158px",
+                //   xl: "250px",
+                // }}
+                h={{
+                  base: "200px",
+                  // sm: "126px",
+                  sm: "140px",
+                  lg: "200px",
+                  xl: "250px",
+                }}
+                maxW={{
+                  base: "200px",
+                  // sm: "126px",
+                  sm: "140px",
+                  lg: "200px",
+                  xl: "250px",
+                }}
+                objectFit={"cover"}
+                src={data.image_url || "/img/tenant-logo-default.png"}
+                alt="#"
+                boxShadow={"xl"}
+                mb={6}
+              />
+              <Text
+                fontSize={"md"}
+                align="center"
+                textOverflow="ellipsis"
+                // maxW={{
+                //   base: "auto",
+                //   sm: "340px",
+                //   md: "408px",
+                //   lg: "544px",
+                // }}
+                // w="auto"
+                // whiteSpace="nowrap"
+                flex="1"
+                cursor={"pointer"}
+                overflow="hidden"
+                title={data.position}
+                noOfLines={{ base: 2, sm: 1 }}
+              >
+                {data.position}
+              </Text>
+              <Text
+                as="b"
+                fontWeight={"bold"}
+                fontSize={["lg", "xl"]}
+                textOverflow="ellipsis"
+                // maxW={{
+                //   base: "auto",
+                //   sm: "340px",
+                //   md: "408px",
+                //   lg: "544px",
+                // }}
+                // w="auto"
+                // whiteSpace="nowrap"
+                flex="1"
+                cursor={"pointer"}
+                overflow="hidden"
+                title={data.fullname}
+                noOfLines={{ base: 2, sm: 1 }}
+              >
+                {data.fullname}
+              </Text>
+              <HStack spacing={3} pt="4px">
+                {data.user_link && data.user_link.length > 0 ? (
+                  data.user_link.map((d) => (
+                    <Link href={d.url} target="_blank">
+                      <Icon
+                        as={getIconByTitle(d.title)}
+                        color="black"
+                        aria-label={d.title}
+                        cursor={"pointer"}
+                        // icon={<FaInstagram />}
+                        boxSize={{ base: "25px", md: "28px" }}
+                        title={d.title}
+                        _hover={{
+                          color: "red.500",
+                        }}
+                        backgroundColor="rgba(0, 0, 0, 0)"
+                      />
+                    </Link>
+                  ))
+                ) : (
+                  <Box>&nbsp;</Box>
+                )}
+                {/* <IconButton
+                  color="blue.300"
+                  aria-label="web"
+                  size="sm"
+                  icon={<FaGlobe size="sm" />}
+                  _hover={{
+                    color: "blue.500", // Ganti dengan warna saat hover
+                  }}
+                  title={""}
+                  backgroundColor="rgba(0, 0, 0, 0)"
                 />
-                <Text fontSize={"md"}>Executive Officer</Text>
-                <Text
-                  as="b"
-                  fontWeight={"bold"}
-                  fontSize={["lg", "xl", "2xl"]}
-                  overflow="hidden"
-                  whiteSpace="nowrap" // Convert string dadi tipe WhiteSpace
-                  textOverflow="ellipsis"
-                  maxW="300px"
-                  cursor={"pointer"}
-                  title="Muhammad Alexandre Potter Azari"
-                >
-                  Muhammad Alexandre Potter Azari
-                </Text>
-                <HStack spacing={3} pt="2px">
-                  <IconButton
-                    color="blue.300"
-                    aria-label="web"
-                    size="sm"
-                    icon={<FaGlobe size="sm" />}
-                    _hover={{
-                      color: "blue.500", // Ganti dengan warna saat hover
-                    }}
-                    title={""}
-                    backgroundColor="rgba(0, 0, 0, 0)"
-                  />
 
-                  <IconButton
-                    color="blue.600"
-                    aria-label="web"
-                    icon={<FaFacebook size="sm" />}
-                    size="sm"
-                    title={""}
-                    _hover={{
-                      color: "blue.900", // Ganti dengan warna saat hover
-                    }}
-                    backgroundColor="rgba(0, 0, 0, 0)"
-                  />
+                <IconButton
+                  color="blue.600"
+                  aria-label="web"
+                  icon={<FaFacebook size="sm" />}
+                  size="sm"
+                  title={""}
+                  _hover={{
+                    color: "blue.900", // Ganti dengan warna saat hover
+                  }}
+                  backgroundColor="rgba(0, 0, 0, 0)"
+                />
 
-                  <IconButton
-                    color="pink.500"
-                    aria-label="web"
-                    icon={<FaInstagram size="sm" />}
-                    size="sm"
-                    title={""}
-                    _hover={{
-                      color: "pink.700",
-                    }}
-                    backgroundColor="rgba(0, 0, 0, 0)"
-                  />
-                </HStack>
-              </Stack>
-            </Center>
-          </Box>
-        </Stack>
+                <Icon
+                  as={FaInstagram}
+                  color="pink.500"
+                  aria-label="web"
+                  // icon={<FaInstagram />}
+                  boxSize={{ base: "xs", md: "28px" }}
+                  title={""}
+                  _hover={{
+                    color: "pink.700",
+                  }}
+                  backgroundColor="rgba(0, 0, 0, 0)"
+                /> */}
+              </HStack>
+            </Stack>
+          ))}
+        </Grid>
       </Stack>
     </>
   );
