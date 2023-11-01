@@ -319,9 +319,7 @@ const MyProfile: React.FC = () => {
   return (
     <div>
       {isLoading ? (
-        <Center h="100%" m="10">
-          <Spinner className="spinner" size="xl" color="blue.500" />
-        </Center>
+        <Loading />
       ) : (
         <>
           <Container maxW={"7xl"} pl="0" pr="0">
@@ -744,8 +742,28 @@ const MyProfile: React.FC = () => {
   );
 };
 
+const Loading = () => {
+  return (
+    <Box rounded="md">
+      <Center h="100%" m="10" flexDirection={"column"}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          mb="3"
+        />
+        <Text as="i" whiteSpace={"normal"}>
+          Sedang memuat data, mohon tunggu sebentar ...
+        </Text>
+      </Center>
+    </Box>
+  );
+};
+
 export default dynamic(() => Promise.resolve(MyProfile), {
   ssr: false,
   // suspense: true,
-  loading: () => <p>Memuat halaman ...</p>,
+  loading: () => <Loading />,
 });

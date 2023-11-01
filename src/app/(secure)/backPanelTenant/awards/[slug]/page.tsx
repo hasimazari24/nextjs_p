@@ -123,7 +123,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
   if (getUser !== null) {
     // ambil permission sesuai login role
     awardsFeatures = permissions[getUser.role]?.features.find(
-      (feature) => feature.menu === "backPanelTenant_catalog",
+      (feature) => feature.menu === "backPanelTenant_awards",
     );
     //ambil permision features all menu (hanya utk admin)
     allMenu = permissions[getUser.role]?.features.find(

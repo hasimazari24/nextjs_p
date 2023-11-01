@@ -136,6 +136,10 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         menu: "backPanelTenant_awards",
         access: ["editAwards", "hapusAwards", "tmbhAwards"],
       },
+      {
+        menu: "backPanelTenant_gallery",
+        access: ["editGallery", "hapusGallery", "tmbhGallery"],
+      },
     ],
   },
   [UserRoles.Tenant_team]: {

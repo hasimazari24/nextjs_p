@@ -139,7 +139,12 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
           >
             <BreadcrumbItem>
               <BreadcrumbLink href="/">
-                <Box mt="-3px">
+                <Box
+                  mt="-3px"
+                  _hover={{
+                    color: "red.500",
+                  }}
+                >
                   <AiOutlineHome mr="2.5" size="20px" title="Halaman Public" />
                 </Box>
               </BreadcrumbLink>
