@@ -111,7 +111,7 @@ function PageGallery({ params }: { params: { slug: string } }) {
   if (getUser !== null) {
     // ambil permission sesuai login role
     GalleryFeatures = permissions[getUser.role]?.features.find(
-      (feature) => feature.menu === "backPanelTenant_catalog",
+      (feature) => feature.menu === "backPanelTenant_gallery",
     );
     //ambil permision features all menu (hanya utk admin)
     allMenu = permissions[getUser.role]?.features.find(
@@ -157,7 +157,14 @@ function PageGallery({ params }: { params: { slug: string } }) {
     {
       Header: "Deskripsi",
       accessor: "description",
-      Cell: ({ value }) => <Text whiteSpace="normal">{value}</Text>,
+      Cell: ({ value }) => (
+        <Text textOverflow={"ellipsis"} overflow={"hidden"} flex="1" noOfLines={2} whiteSpace="normal">
+          {value}
+        </Text>
+      ),
+      width: "450px",
+      minWidth: 260,
+      maxWidth: 450,
     },
     {
       Header: "Tanggal Event",

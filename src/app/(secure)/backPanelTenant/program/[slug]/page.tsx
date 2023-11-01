@@ -52,7 +52,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
   if (getUser !== null) {
     // ambil permission sesuai login role
     programFeatures = permissions[getUser.role]?.features.find(
-      (feature) => feature.menu === "backPanelTenant_catalog",
+      (feature) => feature.menu === "backPanelTenant_program",
     );
     //ambil permision features all menu (hanya utk admin)
     allMenu = permissions[getUser.role]?.features.find(
@@ -99,7 +99,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
   const [textConfirm, setTextConfirm] = useState(" ");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
-  const filterOptions = [{ key: "program", label: "Judul" }];
+  const filterOptions = [{ key: "program", label: "Nama Program" }];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
     {
@@ -107,8 +107,22 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
       accessor: "id",
     },
     {
-      Header: "program",
+      Header: "Nama Program",
       accessor: "program",
+      Cell: ({ value }) => (
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+        >
+          {value}
+        </Text>
+      ),
+      // width: "450px",
+      // minWidth: 260,
+      // maxWidth: 550,
     },
   ];
 
