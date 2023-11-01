@@ -48,6 +48,24 @@ interface UserLog {
   image_url: string;
 }
 
+const Loading = () => {
+  return (
+      <Center h="100%" m="10" flexDirection={"column"}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          mb="3"
+        />
+        <Text as="i" whiteSpace={"normal"}>
+          Sedang memuat data, mohon tunggu sebentar ...
+        </Text>
+      </Center>
+  );
+};
+
 function PageUser() {
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -292,9 +310,7 @@ function PageUser() {
   return (
     <div>
       {isLoading ? (
-        <Center h="100%" m="10">
-          <Spinner className="spinner" size="xl" color="blue.500" />
-        </Center>
+        <Loading />
       ) : (
         <>
           <Flex
@@ -385,5 +401,6 @@ function PageUser() {
 
 export default dynamic(() => Promise.resolve(PageUser), {
   ssr: false,
-  suspense: true,
+  // suspense: true,
+  loading: () => <Loading />,
 });

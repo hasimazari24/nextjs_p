@@ -135,7 +135,20 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       Header: "description",
       accessor: "description",
       // dibikin kayak gni biar auto wrap ketika textnya kepanjangan shg tdk merusak col width
-      Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
+      Cell: ({ value }) => (
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+        >
+          {value}
+        </Text>
+      ),
+      width: "450px",
+      minWidth: 260,
+      maxWidth: 450,
     },
     {
       Header: "URL",
