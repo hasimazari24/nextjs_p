@@ -203,11 +203,10 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
       setIsLoadSave(false);
     }
   };
-  const DynamicDataComponent = dynamic(() => import("./TeamNonLogin"), {
-    ssr: false,
-    suspense : true,
-    loading: () => <p>Loading ...</p>, // Tampilan loading saat komponen dimuat
-  });
+  // const DynamicDataComponent = dynamic(() => import("./TeamNonLogin"), {
+  //   ssr: false,
+  //   loading: () => <p>Loading ...</p>, // Tampilan loading saat komponen dimuat
+  // });
 
   return (
     <div>
@@ -315,13 +314,13 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                   <TabPanel>
                     <TeamLogin
                       dataTeam={dataTeamLogin}
-                      onSubmit={()=> getTeam(0)}
+                      onSubmit={() => getTeam(0)}
                       idTenant={getParamsId}
                     />
                   </TabPanel>
                   {/* initially not mounted */}
                   <TabPanel>
-                    <DynamicDataComponent
+                    <TeamNonLogin
                       dataTeam={dataTeamNonLogin}
                       onSubmit={() => getTeam(1)}
                       idTenant={getParamsId}
@@ -373,6 +372,9 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
         onClose={() => setIsModalNotifPage(false)}
         message={message}
         isError={isError}
+        onSubmit={() => {
+          getTeam(1);
+        }}
       />
     </div>
   );

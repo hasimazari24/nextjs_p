@@ -59,7 +59,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
   if (getUser !== null) {
     // ambil permission sesuai login role
     teamFeatures = permissions[getUser.role]?.features.find(
-      (feature) => feature.menu === "backPanelTenant_team_nonlogin",
+      (feature) => feature.menu === "backPanelTenant_team",
     );
     //ambil permision features all menu (hanya utk admin)
     allMenu = permissions[getUser.role]?.features.find(
@@ -68,7 +68,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
   }
   let hidenCols: string[] = ["id"];
   if (
-    (teamFeatures?.access.includes("tmbhProgram") &&
+    (teamFeatures?.access.includes("tmbhTeam") &&
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");

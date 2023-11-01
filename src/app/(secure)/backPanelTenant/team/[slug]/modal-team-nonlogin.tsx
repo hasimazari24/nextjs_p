@@ -477,6 +477,7 @@ const ModalTeamNonLogin = ({
           onClose={() => setIsModalNotifTeam(false)}
           message={message}
           isError={isError}
+          onSubmit={() => onSubmit()}
         />
       </div>
     </>
