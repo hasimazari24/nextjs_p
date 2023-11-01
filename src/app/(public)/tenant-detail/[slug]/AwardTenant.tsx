@@ -24,15 +24,13 @@ import * as TenantTypes from "@/app/type/tenant-type.d";
 const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
   // const MotionSimpleGrid = motion(SimpleGrid);
   // const MotionBox = motion(Box);
-  const award: TenantTypes.tenant_award[] = Array.isArray(
-    tenant?.tenant_award,
-  )
+  const award: TenantTypes.tenant_award[] = Array.isArray(tenant?.tenant_award)
     ? tenant.tenant_award.map((d) => ({
         id: d.id,
         image_id: d.image_id,
         image_url: d.image_url,
         name: d.name,
-        rank: d.rank
+        rank: d.rank,
       }))
     : [];
 
@@ -88,7 +86,7 @@ const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   fontSize={["sm", "lg", "xl"]}
                   textOverflow="ellipsis"
                   align="center"
-                  cursor={"pointer"}
+                  cursor={"default"}
                   overflow="hidden"
                   title={data.rank}
                   noOfLines={{ base: 2, sm: 1 }}
@@ -100,7 +98,7 @@ const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   fontSize={["sm", "md"]}
                   textOverflow="ellipsis"
                   align="center"
-                  cursor={"pointer"}
+                  cursor={"default"}
                   overflow="hidden"
                   noOfLines={2}
                   title={data.name}

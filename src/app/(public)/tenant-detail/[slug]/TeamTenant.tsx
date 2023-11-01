@@ -47,28 +47,28 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
         image_url: d.image_url,
         fullname: d.fullname,
         position: d.position,
-        user_link : d.user_link
+        user_link: d.user_link,
       }))
     : [];
 
-    // console.log(socmed);
+  // console.log(socmed);
 
-    const getIconByTitle = (title: string) => {
-      switch (title) {
-        case "Website":
-          return AiOutlineGlobal;
-        case "Instagram":
-          return IoLogoInstagram;
-        case "Facebook":
-          return IoLogoFacebook;
-        case "Twitter":
-          return AiFillTwitterCircle;
-        case "YouTube":
-          return IoLogoYoutube;
-        case "LinkedIn":
-          return IoLogoLinkedin;
-      }
-    };
+  const getIconByTitle = (title: string) => {
+    switch (title) {
+      case "Website":
+        return AiOutlineGlobal;
+      case "Instagram":
+        return IoLogoInstagram;
+      case "Facebook":
+        return IoLogoFacebook;
+      case "Twitter":
+        return AiFillTwitterCircle;
+      case "YouTube":
+        return IoLogoYoutube;
+      case "LinkedIn":
+        return IoLogoLinkedin;
+    }
+  };
 
   return (
     <>
@@ -148,7 +148,7 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 // w="auto"
                 // whiteSpace="nowrap"
                 flex="1"
-                cursor={"pointer"}
+                cursor={"default"}
                 overflow="hidden"
                 title={data.position}
                 noOfLines={{ base: 2, sm: 1 }}
@@ -169,7 +169,7 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 // w="auto"
                 // whiteSpace="nowrap"
                 flex="1"
-                cursor={"pointer"}
+                cursor={"default"}
                 overflow="hidden"
                 title={data.fullname}
                 noOfLines={{ base: 2, sm: 1 }}
@@ -198,42 +198,6 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 ) : (
                   <Box>&nbsp;</Box>
                 )}
-                {/* <IconButton
-                  color="blue.300"
-                  aria-label="web"
-                  size="sm"
-                  icon={<FaGlobe size="sm" />}
-                  _hover={{
-                    color: "blue.500", // Ganti dengan warna saat hover
-                  }}
-                  title={""}
-                  backgroundColor="rgba(0, 0, 0, 0)"
-                />
-
-                <IconButton
-                  color="blue.600"
-                  aria-label="web"
-                  icon={<FaFacebook size="sm" />}
-                  size="sm"
-                  title={""}
-                  _hover={{
-                    color: "blue.900", // Ganti dengan warna saat hover
-                  }}
-                  backgroundColor="rgba(0, 0, 0, 0)"
-                />
-
-                <Icon
-                  as={FaInstagram}
-                  color="pink.500"
-                  aria-label="web"
-                  // icon={<FaInstagram />}
-                  boxSize={{ base: "xs", md: "28px" }}
-                  title={""}
-                  _hover={{
-                    color: "pink.700",
-                  }}
-                  backgroundColor="rgba(0, 0, 0, 0)"
-                /> */}
               </HStack>
             </Stack>
           ))}

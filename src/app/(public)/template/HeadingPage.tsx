@@ -100,7 +100,7 @@ function HeadingPage() {
                 position={"absolute"}
                 w={{ base: 38, md: 39, lg: 41 }}
                 top={{ base: 550, md: 405, lg: 500 }}
-                left={{ base: 235, md: 740, lg: 1000 }}
+                left={{ base: 235, md: 620, lg: 920 }}
                 opacity={0.2}
                 zIndex={1}
               >
@@ -114,7 +114,7 @@ function HeadingPage() {
                 position={"absolute"}
                 w={{ base: 180, md: 245, lg: 305 }}
                 top={{ base: 220, md: 175, lg: 35 }}
-                left={{ base: 0, md: -35, lg: 730 }}
+                left={{ base: 0, md: -35, lg: 670 }}
                 opacity={0.1}
                 zIndex={0}
               >

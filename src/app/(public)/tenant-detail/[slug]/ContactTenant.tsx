@@ -1,9 +1,19 @@
 import * as React from "react";
-import { VStack, Stack, HStack, Text, Icon, Tag, useBreakpointValue, Flex, Box } from "@chakra-ui/react";
+import {
+  VStack,
+  Stack,
+  HStack,
+  Text,
+  Icon,
+  Tag,
+  useBreakpointValue,
+  Flex,
+  Box,
+} from "@chakra-ui/react";
 import { ReactElement } from "react";
 import { MdMailOutline, MdOutlineMap, MdOutlineContacts } from "react-icons/md";
 import { IconType } from "react-icons";
-import {tenant_program} from "@/app/type/tenant-type.d";
+import { tenant_program } from "@/app/type/tenant-type.d";
 
 interface ContactInfoProps {
   icon: IconType;
@@ -14,12 +24,19 @@ interface ContactInfoProps {
   tags?: tenant_program[];
 }
 
-const ContactInfo = ({ icon, title, label, tags, content, size = 24}: ContactInfoProps) => {
-  // const isMobile = useBreakpointValue({ base: true, md: false }); 
-  // const iconSize = isMobile ? 28 : 24; 
+const ContactInfo = ({
+  icon,
+  title,
+  label,
+  tags,
+  content,
+  size = 24,
+}: ContactInfoProps) => {
+  // const isMobile = useBreakpointValue({ base: true, md: false });
+  // const iconSize = isMobile ? 28 : 24;
 
   // const iconContainerStyle = {
-  //   width: `${iconSize}px`, 
+  //   width: `${iconSize}px`,
   // };
 
   return (
@@ -48,7 +65,7 @@ const ContactInfo = ({ icon, title, label, tags, content, size = 24}: ContactInf
                 <Text
                   textOverflow="ellipsis"
                   whiteSpace={"nowrap"}
-                  cursor={"pointer"}
+                  cursor={"default"}
                   overflow="hidden"
                   maxW={{ base: "120px", md: "200px", lg: "250px" }}
                 >

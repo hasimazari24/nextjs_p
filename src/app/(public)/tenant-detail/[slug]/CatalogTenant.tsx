@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  Box,
-  Text,
-  Stack,
-  Button,
-  SimpleGrid,
-  Image,
-} from "@chakra-ui/react";
+import { Box, Text, Stack, Button, SimpleGrid, Image } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
@@ -15,7 +8,9 @@ import * as TenantTypes from "@/app/type/tenant-type.d";
 const CatalogTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
   // const MotionSimpleGrid = motion(SimpleGrid);
   // const MotionBox = motion(Box);
-  const catalog: TenantTypes.tenant_catalog[] = Array.isArray(tenant?.tenant_catalog)
+  const catalog: TenantTypes.tenant_catalog[] = Array.isArray(
+    tenant?.tenant_catalog,
+  )
     ? tenant.tenant_catalog.map((d) => ({
         id: d.id,
         image_id: d.image_id,
@@ -99,7 +94,7 @@ const CatalogTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                       // w="auto"
                       // whiteSpace="nowrap"
                       flex="1"
-                      cursor={"pointer"}
+                      cursor={"default"}
                       overflow="hidden"
                       title={data.title}
                       noOfLines={{ base: 2, sm: 1 }}
