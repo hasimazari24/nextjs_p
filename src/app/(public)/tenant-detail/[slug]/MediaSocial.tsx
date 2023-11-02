@@ -27,7 +27,12 @@ const SocialInfo = ({icon, title, href, content, label, size = 24}: SocialInfoPr
     };
 
     return (
-      <HStack spacing={["4", "6"]} align={"center"}>
+      <HStack
+        spacing={["4", "6"]}
+        align={"center"}
+        w={{ base: "auto", sm: "230px", md: "220px" }}
+        // w="full"
+      >
         <Icon as={icon} fontSize={size} pt={"1px"} color={"black"} />
         <VStack
           align={"start"}
@@ -35,7 +40,7 @@ const SocialInfo = ({icon, title, href, content, label, size = 24}: SocialInfoPr
           color={"black"}
           overflow={"hidden"}
           //   alignSelf={"stretch"}
-          w={{ base: "auto", sm: "230px", md: "auto" }}
+          // w={{ base: "auto", sm: "230px", md: "full" }}
         >
           <Text fontSize={["lg", "xl"]} fontWeight={"bold"}>
             {title}
@@ -49,7 +54,7 @@ const SocialInfo = ({icon, title, href, content, label, size = 24}: SocialInfoPr
                 textOverflow="ellipsis"
                 fontSize={"md"}
                 fontWeight={"reguler"}
-                maxW={{ base: "200px", md: "150px" }}
+                maxW={{ base: "200px", sm: "160px", md:"140px" }}
                 // style={contentStyles}
               >
                 {content}
