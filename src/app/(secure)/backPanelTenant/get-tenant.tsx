@@ -149,6 +149,16 @@ function PageTenant() {
       Header: "Name",
       accessor: "name",
       Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
+      // Cell: ({ value, row }) => (
+      //   <div
+      //     style={{
+      //       whiteSpace: "normal",
+      //       color: row.values["level_tenant"] === "Inkubasi" ? "blue" : "black",
+      //     }}
+      //   >
+      //     {value}
+      //   </div>
+      // ),
     },
     {
       Header: "Slug",

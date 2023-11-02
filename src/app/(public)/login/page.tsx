@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "../../components/utils/AuthContext";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
@@ -42,9 +42,11 @@ const Login = () => {
 
   // const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
 
-  if (user !== null && user !== 401) {
-    router.push("/dashboard");
-  }
+  useEffect(()=>{
+    if (user !== null && user !== 401) {
+      router.push("/dashboard");
+    }
+  }, [user]);
 
   const [showPassword, setShowPassword] = useState(false);
 

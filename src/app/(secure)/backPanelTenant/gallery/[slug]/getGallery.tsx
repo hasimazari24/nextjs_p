@@ -210,7 +210,7 @@ function PageGallery({ params }: { params: { slug: string } }) {
                 direction={["column", "row"]}
               >
                 <Heading fontSize={"2xl"}>
-                  Gallery TENANT : {namaTenant}
+                  GALLERY TENANT : {namaTenant}
                 </Heading>
                 <HStack>
                   <Button
