@@ -91,7 +91,7 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
           // flexWrap={"wrap"}
           alignItems={"center"}
           justifyItems={"center"}
-          gap={{ base:8, sm:6, md:8 }}
+          gap={{ base:8, sm:6, lg:8 }}
         >
           {userTenant.map((data, index) => (
             <Stack
@@ -176,7 +176,7 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
               >
                 {data.fullname}
               </Text>
-              <HStack spacing={{ base:2, lg:3 }} pt="4px" minW="150px" w="full" justifyContent={"center"}>
+              <HStack spacing={{ base:1, lg:3 }} pt="4px" minW="120px" w="full" justifyContent={"center"}>
                 {data.user_link && data.user_link.length > 0 ? (
                   data.user_link.map((d) => (
                     <Link href={d.url} key={d.id} target="_blank">
@@ -186,7 +186,7 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                         aria-label={d.title}
                         cursor={"pointer"}
                         // icon={<FaInstagram />}
-                        boxSize={{ base: "25px", sm : "20px", lg: "25px" }}
+                        boxSize={{ base: "25px", sm:"20px", lg: "25px" }}
                         title={d.title}
                         _hover={{
                           color: "red.500",
