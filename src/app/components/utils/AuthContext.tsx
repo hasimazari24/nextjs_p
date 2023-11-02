@@ -7,16 +7,14 @@ import {
   useState,
   useEffect,
   ReactNode,
-  useMemo,
 } from "react";
 import AlertBar from "../modal/AlertBar";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { axiosCustom } from "../../api/axios";
 import { UserRoles } from "@/app/type/role-access-control";
 import { useToast } from "@chakra-ui/react";
 
 interface User {
-  // id: string;
   fullname: string;
   role: UserRoles;
   image_url: string;
@@ -29,7 +27,6 @@ interface AuthContextType {
   validation: () => void;
   loading: boolean;
   loadingValidation: boolean;
-  loadingLogOut: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,25 +35,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null | 401>(null);
   const router = useRouter();
   const toast = useToast();
-  // const pathname = usePathname();
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingValidation, setLoadingValidation] = useState<boolean>(true);
-  const [loadingLogOut, setLoadingLogOut] = useState<boolean>(false);
-
-  // const [isOpen, setIsOpen] = useState(false);
-  // const [msg, setMsg] = useState("");
-  // const [status, setstatus] = useState<
-  //   "success" | "info" | "warning" | "error"
-  // >("error");
 
   const validation = async () => {
     try {
       setLoadingValidation(true);
-      // Panggil API login di sini dengan menggunakan Axios atau metode lainnya
       const response = await axiosCustom.get("/validation");
-      // Jika login berhasil, atur informasi pengguna di sini
       const validUser: User = {
-        // id: response.data.data.id,
         fullname: response.data.data.fullname,
         role: response.data.data.role,
         image_url: response.data.data.image_url,
@@ -131,11 +117,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      setLoadingLogOut(true);
       await axiosCustom.get("/auth/logout").then((response) => {
         if (response.status === 200) {
-          setUser(null);
-          router.push("/login");
           toast({
             render: () => (
               <AlertBar
@@ -149,8 +132,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           });
         }
       });
-
-      // if (pathname === "/login") setUser(null);
     } catch (error: any) {
       toast({
         render: () => (
@@ -166,24 +147,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         position: "top-right",
       });
     }
-    setLoadingLogOut(false);
+    validation();
   };
 
   useEffect(() => {
     validation();
   }, []);
-
-  // const authContextValue: AuthContextType = useMemo(() => {
-  //   return {
-  //     user,
-  //     loading,
-  //     loadingValidation,
-  //     loadingLogOut,
-  //     login,
-  //     logout,
-  //     validation,
-  //   };
-  // }, [user]);
 
   return (
     <AuthContext.Provider
@@ -191,7 +160,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         loading,
         loadingValidation,
-        loadingLogOut,
         login,
         logout,
         validation,

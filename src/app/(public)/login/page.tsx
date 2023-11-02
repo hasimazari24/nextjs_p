@@ -2,7 +2,6 @@
 
 import {
   Button,
-  Checkbox,
   Flex,
   Text,
   FormControl,
@@ -10,26 +9,20 @@ import {
   Heading,
   Input,
   Stack,
-  Image,
   Center,
   Spinner,
   Box,
-  Container,
-  SimpleGrid,
-  VStack,
   Img,
   InputRightElement,
   InputGroup,
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { useAuth } from "../../components/utils/AuthContext";
-
 import { useEffect, useState } from "react";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import dynamic from "next/dynamic";
 
 interface Formlogin {
   usernameoremail: string;
@@ -40,9 +33,7 @@ const Login = () => {
   const { user, login, loading, loadingValidation } = useAuth();
   const router = useRouter();
 
-  // const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
-
-  useEffect(()=>{
+  useEffect(() => {
     if (user !== null && user !== 401) {
       router.push("/dashboard");
     }
@@ -51,7 +42,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // get functions to build form with useForm() hook
-  const { register, handleSubmit, formState, reset } = useForm<Formlogin>();
+  const { register, handleSubmit, formState } = useForm<Formlogin>();
   const { errors } = formState;
 
   const fields = {
@@ -211,7 +202,3 @@ const Login = () => {
 };
 
 export default Login;
-// export default dynamic(() => Promise.resolve(Login), {
-//   ssr: false,
-//   suspense: true,
-// });

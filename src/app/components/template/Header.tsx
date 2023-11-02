@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Icon,
   IconButton,
   Avatar,
   Box,
@@ -10,18 +9,12 @@ import {
   VStack,
   useColorModeValue,
   Text,
-  useDisclosure,
-  Spinner,
   FlexProps,
-  Menu,
-  MenuButton,
   Button,
   Divider,
-  Img,
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverHeader,
   PopoverBody,
   PopoverArrow,
   PopoverCloseButton,
@@ -30,24 +23,12 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
 } from "@chakra-ui/react";
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-  FiBell,
-  FiChevronDown,
-} from "react-icons/fi";
+import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { AiOutlineHome } from "react-icons/ai";
 import { ImProfile } from "react-icons/im";
-import { RiLogoutBoxRLine, RiArrowDropRightFill } from "react-icons/ri";
-import { IconType } from "react-icons";
+import { RiLogoutBoxRLine } from "react-icons/ri";
 import Link from "next/link";
-// import { ImProfile } from "@react-icons/all-files/im/ImProfile";
-// import { RiLogoutBoxRLine } from "@react-icons/all-files/ri/RiLogoutBoxRLine";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../utils/AuthContext";
 import { usePathname } from "next/navigation";
 import Routes from "@/app/components/utils/Routes";
@@ -70,13 +51,14 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
     setIsOpen(false);
   };
 
-  const { user, logout, loadingLogOut } = useAuth();
+  // const { user, logout, loadingLogOut } = useAuth();
+  const { user, logout } = useAuth();
   const getUser: any = user;
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   //split membagi string ke array setiap ada /
   // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda /
-  const namePath = pathname.split("/").filter(Boolean);
+  // const namePath = pathname.split("/").filter(Boolean);
 
   let getActiveRoute: IRoutes | undefined = findCurrentRoute(Routes);
   // useEffect(() => {
@@ -226,7 +208,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                 <HStack cursor={"pointer"} onClick={toggleDropdown}>
                   <Avatar
                     size={"sm"}
-                    src={getUser ? getUser.image_url : null}
+                    src={getUser ? getUser?.image_url : null}
                   />
                   <VStack
                     display={{ base: "none", md: "flex" }}
@@ -235,10 +217,10 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                     ml="2"
                   >
                     <Text fontSize="sm">
-                      {getUser ? `${getUser.fullname.substring(0, 25)}` : null}
+                      {getUser ? `${getUser?.fullname.substring(0, 25)}` : null}
                     </Text>
                     <Text fontSize="xs" color="gray.600">
-                      {getUser ? getUser.role : null}
+                      {getUser ? getUser?.role : null}
                     </Text>
                   </VStack>
 
@@ -256,13 +238,13 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                       <VStack>
                         <Avatar
                           size={"2xl"}
-                          src={getUser ? getUser.image_url : null}
+                          src={getUser ? getUser?.image_url : null}
                         />
                         <Text fontSize="sm" textAlign={"center"}>
-                          {getUser ? getUser.fullname : null}
+                          {getUser ? getUser?.fullname : null}
                         </Text>
                         <Text fontSize="sm" color="gray.600" mt="-1.5">
-                          {getUser ? getUser.role : null}
+                          {getUser ? getUser?.role : null}
                         </Text>
                       </VStack>
                     </Center>
@@ -296,7 +278,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                         size="sm"
                         fontWeight="normal"
                         onClick={logout}
-                        isLoading={loadingLogOut}
+                        // isLoading={loadingLogOut}
                       >
                         Log Out&nbsp;
                         <RiLogoutBoxRLine />

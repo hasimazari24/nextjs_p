@@ -14,7 +14,7 @@ import Header from "../components/template/Header";
 import { redirect } from "next/navigation";
 import { useAuth } from "../components/utils/AuthContext";
 import React, { Suspense, ReactNode } from "react";
-import Loading from "@/app/loading";
+// import Loading from "@/app/loading";
 
 // export const metadata = {
 //   title: process.env.APP_NAME,
@@ -102,4 +102,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       )}
     </main>
   );
+  // }
+  // }, [user, loadingValidation]);
 }
