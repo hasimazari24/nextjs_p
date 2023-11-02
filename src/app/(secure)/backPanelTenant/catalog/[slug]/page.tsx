@@ -183,17 +183,6 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
   // const getParamsId = params.catalog.split("catalog-")[1];
   const getParamsId = params.slug;
 
-  if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
-    return (
-      <NotFound
-        statusCode={404}
-        msg={"Not Found"}
-        statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali halaman sebelumnya."
-        backToHome="/backPanelTenant"
-      />
-    );
-  }
-
   const getCatalog = async () => {
     try {
       setLoadingCatalog(true);
