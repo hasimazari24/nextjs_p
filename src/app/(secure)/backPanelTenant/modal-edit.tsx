@@ -695,7 +695,12 @@ const ModalEdit: React.FC<ModalProps> = ({
                           minWidth={["100%", "100px"]}
                           marginRight={["0", "2"]}
                         >
-                          <FormLabel marginRight="2">Nama</FormLabel>
+                          <FormLabel marginRight="2">
+                            Nama&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
                         </Box>
 
                         <Box width="full">
