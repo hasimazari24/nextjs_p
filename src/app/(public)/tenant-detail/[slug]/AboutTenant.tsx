@@ -177,8 +177,10 @@ const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   spacing={4}
                   flexWrap={"wrap"}
                   direction={{ base: "row", lg: "column" }}
-                  alignItems={{ base: "flex-start", md: "space-between" }}
-                  justifyContent={{ base: "flex-start", md: "space-between" }}
+                  // alignItems={{ base: "flex-start", md: "space-between" }}
+                  justifyContent={{ base: "flex-start", sm: "space-between" }}
+                  // w={{ base: "auto", sm: "230px", md: "230px" }}
+                  w="full"
                 >
                   {socmed.map((d) => (
                     <SocialInfo
