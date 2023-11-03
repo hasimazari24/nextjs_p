@@ -117,29 +117,27 @@ function GetAssets() {
     {
       id: "selection",
       Header: ({ getToggleAllPageRowsSelectedProps }) => {
-        const { checked, ...props } = getToggleAllPageRowsSelectedProps();
+        const { checked, indeterminate, ...props } = getToggleAllPageRowsSelectedProps();
         return (
-          <Box>
-            <Checkbox
-              {...props}
-              isChecked={checked}
-              boxShadow={"md"}
-              borderWidth={1}
-            />
-          </Box>
+          <Checkbox
+            {...props}
+            isChecked={checked}
+            boxShadow={"md"}
+            borderWidth={1}
+            // isIndeterminate={false}
+          />
         );
       },
       Cell: ({ row }: any) => {
-        const { checked, ...props } = row.getToggleRowSelectedProps();
+        const { checked, indeterminate, ...props } = row.getToggleRowSelectedProps();
         return (
-          <Box>
-            <Checkbox
-              {...props}
-              isChecked={checked}
-              boxShadow={"md"}
-              borderWidth={1}
-            />
-          </Box>
+          <Checkbox
+            {...props}
+            boxShadow={"md"}
+            isChecked={checked}
+            borderWidth={1}
+            // isIndeterminate={false}
+          />
         );
       },
       disableFilters: true,

@@ -276,16 +276,14 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                             alignItems="center"
                             // spacing="2"
                           >
-                            <Text
+                            {/* <Text
                               whiteSpace={{
                                 base: "nowrap",
                                 md: "normal",
                                 lg: "normal",
                               }}
-                            >
-                              {column.render("Header")}
-                            </Text>
-                            {/* <Box></Box> */}
+                            > */}
+                            <Box>{column.render("Header")}</Box>
                             {column.isSorted ? (
                               <>
                                 {column.isSortedDesc ? (
