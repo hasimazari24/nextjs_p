@@ -25,7 +25,12 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import {
+  useForm,
+  SubmitHandler,
+  Controller,
+  useController,
+} from "react-hook-form";
 import {
   AddIcon,
   CheckIcon,
@@ -38,6 +43,9 @@ import { axiosCustom } from "@/app/api/axios";
 import { FaUser } from "react-icons/fa";
 import { AiOutlineCamera } from "react-icons/ai";
 import { LiaImageSolid } from "react-icons/lia";
+import initRichTextProps from "@/app/type/inital-rich-text";
+import { Editor } from "@tinymce/tinymce-react";
+// import "tinymce/"
 
 type GalleryItem = {
   id: string;
@@ -59,6 +67,10 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
     handleSubmit,
     reset,
     formState: { errors },
+    // setValue,
+    // watch,
+    control,
+    clearErrors,
   } = useForm<GalleryItem>();
 
   const fields = {
@@ -69,11 +81,45 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
         message: "Maksimal 255 karakter.",
       },
     }),
-    description: register("description", {
-      required: "Deskripsi Event harus diisi!",
-    }),
+    // description: register("description", {
+    //   required: "Deskripsi Event harus diisi !!!!!",
+    // }),
     event_date: register("event_date"),
   };
+
+  //ini diperlukan utk mengatur tinyMCE
+  const {
+    field: { onChange, ref, ...field },
+  } = useController({
+    control,
+    name: "description",
+    rules: { required: "Deskripsi Event harus diisi!" },
+  });
+
+  // const { field, formState } = useController({
+  //   name: "description",
+  //   control,
+  //   defaultValue: "",
+  //   rules: {
+  //     validate: (value) => {
+  //       const content = value;
+
+  //       if (!content && textFieldRef && textFieldRef.current) {
+  //         return "Text in this field is required.";
+  //       }
+
+  //       return true;
+  //     },
+  //   },
+  // });
+  // const textFieldRef = useRef(null);
+  // const { onChange, ...newField } = field;
+
+  // const onDescStateChange = (desc: string) => {
+  //   setValue("description", desc);
+  // };
+
+  // let descriptionContent = watch("description");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -98,6 +144,11 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
   const onButtonEditAvatar = () => {
     inputFile.current?.click();
   };
+
+  // useEffect(() => {
+  //   clearErrors("description");
+  //   reset({ description: "" });
+  // }, [isModalOpen]);
 
   // fungsi ketika input file avatar change
   const onAvatarChange = (e: any) => {
@@ -237,10 +288,16 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
   const resetAll = () => {
     setModalOpen(false);
     reset(); // Reset formulir
+    reset({ description: "" });
     setIsLoading(false);
     setPreviewAvatar(undefined); // reset preview
     setIdImageAvatar(null); // kosongkan idimage
     setBtnDeleteAvatar(false);
+  };
+
+  const handleModal = () => {
+    setModalOpen(true);
+    clearErrors("description");
   };
 
   return (
@@ -249,7 +306,7 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
         colorScheme="green"
         key="tambahData"
         size="sm"
-        onClick={() => setModalOpen(true)}
+        onClick={() => handleModal()}
       >
         <AddIcon />
         &nbsp;Tambah Baru
@@ -260,7 +317,7 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
         onClose={() => {
           resetAll();
         }}
-        size="4xl"
+        size="5xl"
       >
         <ModalOverlay />
         <ModalContent>
@@ -408,10 +465,77 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
                           </FormLabel>
                         </Box>
                         <Box flex={["1", "70%"]}>
-                          <Textarea
+                          {/* <Textarea
+                            id="descriptionText"
                             {...fields.description}
                             // className={`form-control ${errors.name ? "is-invalid"}`}
+                          /> */}
+                          {/* <div ref={...fields.description}> */}
+
+                          {/* <Controller
+                            name="description"
+                            control={control}
+                            // rules={{ required: "Deskripsi Event harus diisi!" }}
+                            // defaultValue=""
+                            // {...fields.description}
+                            render={({
+                              field: { onChange, ...field },
+                              // fieldState: {
+                              //   invalid,
+                              //   isTouched,
+                              //   isDirty,
+                              //   error,
+                              // },
+                              // formState,
+                            }) => (
+                              // <FormControl
+                              //   isInvalid={invalid && (!isDirty || !error)}
+                              //   mb="3"
+                              // >
+                              <Editor
+                                {...field}
+                                apiKey="4spy3n17ow5pmzr63z6ijcocaticpe0vurmdxweowxamj1g4"
+                                init={{
+                                  ...initRichTextProps,
+                                  toolbar_mode: "sliding",
+                                  height: 300,
+                                }}
+                                // value={value}
+                                onEditorChange={onChange}
+                              />
+                              //   <FormErrorMessage>
+                              //     {/* {errors.description &&
+                              //       errors.description.message} */}
+                          {/* {error?.message}
+                              </FormErrorMessage>
+                              </FormControl>
+                            )} 
+                          /> */}
+                          {/* <div ref={textFieldRef}> */}
+                          <Editor
+                            // selector="descriptionText"
+                            // id="Editor"
+                            // onInit={...fields.description}
+                            // tinymceScriptSrc="/tinymce/tinymce.min.js"
+                            {...field}
+                            apiKey={process.env.API_TINYMCE}
+                            // {...register("description")}
+                            // value={descriptionContent}
+                            // onChange={()=>onChange}
+                            initialValue=""
+                            init={{
+                              ...initRichTextProps,
+                              toolbar_mode: "sliding",
+                              height: 300,
+                            }}
+                            // {...register("description", { required: "sjdgfsjdhfj" })}
+                            // {...newField}
+                            onEditorChange={onChange}
                           />
+                          {/* </div> */}
+
+                          {/* </div> */}
+
                           <FormErrorMessage>
                             {errors.description && errors.description.message}
                           </FormErrorMessage>
@@ -438,6 +562,7 @@ const AddGallery = ({ idTenant, onSubmit }: editProps) => {
                 colorScheme="red"
                 onClick={() => {
                   resetAll();
+                  clearErrors("description");
                 }}
                 size="sm"
               >

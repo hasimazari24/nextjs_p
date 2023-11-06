@@ -24,7 +24,12 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import {
+  useForm,
+  SubmitHandler,
+  useController,
+  Controller,
+} from "react-hook-form";
 import {
   CheckIcon,
   CloseIcon,
@@ -35,6 +40,8 @@ import {
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import { AiOutlineCamera } from "react-icons/ai";
+import initRichTextProps from "@/app/type/inital-rich-text";
+import { Editor } from "@tinymce/tinymce-react";
 
 type GalleryItem = {
   id: string;
@@ -59,6 +66,10 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     handleSubmit,
     reset,
     formState: { errors },
+    control,
+    clearErrors,
+    watch,
+    setFocus,
   } = useForm<GalleryItem>();
 
   const fields = {
@@ -69,11 +80,22 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
         message: "Maksimal 255 karakter.",
       },
     }),
-    description: register("description", {
-      required: "Deskripsi Event harus diisi!",
-    }),
+    // description: register("description", {
+    //   required: "Deskripsi Event harus diisi!",
+    // }),
     event_date: register("event_date"),
   };
+
+  //ini diperlukan utk mengatur tinyMCE
+  const {
+    field: { onChange, ref, ...field },
+  } = useController({
+    control,
+    name: "description",
+    rules: { required: "Deskripsi Event harus diisi!" },
+  });
+
+  let descriptionContent = watch("description");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
@@ -260,11 +282,17 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
 
   const resetAll = () => {
     reset(); // Reset formulir
+    reset({ description: "" });
     setIsLoading(false);
     setPreviewAvatar(null); // reset preview
     setIdImageAvatarOld(null); // kosongkan idimage
     setIdImageAvatar(null); // kosongkan idimage
     // setDataEdited([]);
+  };
+
+  const handleModal = () => {
+    clearErrors("description");
+    setIsEditModalOpen(true);
   };
 
   return (
@@ -275,7 +303,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
           bg: "blue.200",
         }}
         title="Edit Data"
-        onClick={() => setIsEditModalOpen(true)}
+        onClick={() => handleModal()}
         key="editData"
         size="sm"
       >
@@ -450,11 +478,48 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                           </FormLabel>
                         </Box>
                         <Box flex={["1", "70%"]}>
-                          <Textarea
+                          {/* <Textarea
                             {...fields.description}
                             defaultValue={rowData?.description}
                             // className={`form-control ${errors.name ? "is-invalid"}`}
+                          /> */}
+                          <Editor
+                            {...field}
+                            apiKey={process.env.API_TINYMCE}
+                            initialValue={rowData?.description}
+                            // value={descriptionContent}
+                            init={{
+                              ...initRichTextProps,
+                              toolbar_mode: "sliding",
+                              height: 250,
+                            }}
+                            onEditorChange={onChange}
                           />
+                          {/* <Controller
+                            name="description"
+                            control={control}
+                            rules={{
+                              required: "sjhdfgjhsdbfsdb",
+                            }}
+                            defaultValue={rowData?.description}
+                            render={({
+                              field: { onChange, ref, ...field },
+                            }) => (
+                              <Editor
+                                // ref={ref}
+                                {...field}
+                                apiKey="4spy3n17ow5pmzr63z6ijcocaticpe0vurmdxweowxamj1g4"
+                                // initialValue={value}
+                                // value={descriptionContent}
+                                init={{
+                                  ...initRichTextProps,
+                                  toolbar_mode: "sliding",
+                                  height: 300,
+                                }}
+                                onEditorChange={onChange}
+                              />
+                            )}
+                          /> */}
                           <FormErrorMessage>
                             {errors.description && errors.description.message}
                           </FormErrorMessage>

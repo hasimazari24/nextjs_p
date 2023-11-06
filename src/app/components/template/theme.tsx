@@ -21,6 +21,16 @@ const customTheme = extendTheme({
         fontSize: "15px", // Atur ukuran font default di sini
         fontFamily: "sans-serif", // Atur font default di sini
       },
+      ".tox.tox-tinymce-aux": {
+        zIndex: 1401,
+        position: "fixed!important",
+      },
+      // ".tox .tox-tbtn .tox-icon svg": {
+      //   height: "20px",
+      //   width: "20px",
+      //   ViewBox : "0 0 28 28",
+      //   // viewBox: "0 0 28 28",
+      // },
     },
   },
 
