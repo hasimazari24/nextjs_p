@@ -158,9 +158,14 @@ function PageGallery({ params }: { params: { slug: string } }) {
       Header: "Deskripsi",
       accessor: "description",
       Cell: ({ value }) => (
-        <Text textOverflow={"ellipsis"} overflow={"hidden"} flex="1" noOfLines={2} whiteSpace="normal">
-          {value}
-        </Text>
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+          dangerouslySetInnerHTML={{ __html: value }}
+        />
       ),
       width: "450px",
       minWidth: 260,
