@@ -9,16 +9,16 @@ import {
 import { MdOutlineQuiz } from "react-icons/md";
 import { ImFileText2 } from "react-icons/im";
 import { SiGoogleclassroom } from "react-icons/si";
-import {IRoutes} from "@/app/type/routes-navigation.d";
+import { IRoutes } from "@/app/type/routes-navigation.d";
 
 const Routes: IRoutes[] = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
   { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
+  { name: "Data Kelas", icon: SiGoogleclassroom, href: "/kelas" },
+  { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
   { name: "Data User", icon: BsPeople, href: "/user" },
   { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
   { name: "Data Asset", icon: ImFileText2, href: "/assets" },
-  { name: "Data Kelas", icon: SiGoogleclassroom, href: "#" },
-  { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
   { name: "My Profile", href: "/myprofile" },
   {
     name: "Program",
@@ -53,4 +53,4 @@ const Routes: IRoutes[] = [
   //   { name: "Program", href: "/backPanelTenant", layout:"Data Tenant" },
 ];
 
-export default Routes
+export default Routes;
