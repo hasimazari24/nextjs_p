@@ -90,9 +90,8 @@ const CardGallery = ({
           // flex="1"
           noOfLines={2}
           // title={data.name}
-        >
-          {deskripsi}
-        </Text>
+          dangerouslySetInnerHTML={{ __html: deskripsi }}
+        />
       </Stack>
       <Drawer
         isOpen={isDrawerOpen}
@@ -126,9 +125,11 @@ const CardGallery = ({
                   {tgl_format}
                 </Text>
               </HStack>
-              <Text color={"gray.700"} textAlign={"justify"}>
-                {deskripsi}
-              </Text>
+              <Text
+                // color={"gray.700"}
+                // textAlign={"justify"}
+                dangerouslySetInnerHTML={{ __html: deskripsi }}
+              />
             </Stack>
           </DrawerBody>
         </DrawerContent>
