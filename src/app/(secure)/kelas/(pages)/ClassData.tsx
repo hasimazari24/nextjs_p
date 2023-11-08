@@ -44,7 +44,7 @@ import {
 } from "react-icons/io5";
 import * as TenantTypes from "@/app/type/tenant-type.d";
 import Link from "next/link";
-import { Kelas } from "@/app/type/class-type";
+import { Kelas, Mentor } from "@/app/type/class-type";
 import { MdOutlinePeople } from "react-icons/md";
 import {
   HiChevronLeft,
@@ -67,12 +67,26 @@ import { useRouter } from "next/navigation";
 
 interface ClassProps {
   rowData: Kelas[];
+  onSubmit: () => void;
 }
 
-const ClassData = ({ rowData }: ClassProps) => {
+const ClassData = ({ rowData, onSubmit }: ClassProps) => {
   // const MotionSimpleGrid = motion(SimpleGrid);
   // const MotionBox = motion(Box);
   //set query/keyword pencarian
+
+  // const dataMentor = rowData.flatMap((d) =>
+  //   Array.isArray(d.mentor)
+  //     ? d.mentor.map((data) => ({
+  //         id: data.id,
+  //         image_id: data.image_id,
+  //         image_url: data.image_url,
+  //         fullname: data.fullname,
+  //         role: data.role,
+  //       }))
+  //     : [],
+  // );
+
   const router = useRouter();
   const [queryName, setQueryName] = useState("");
   const [queryMentor, setQueryMentor] = useState("");
@@ -98,23 +112,34 @@ const ClassData = ({ rowData }: ClassProps) => {
     }
   };
 
-  //fungsi pencarian
-  const search = rowData.filter(
+  //fungsi pencarian menggabungkan dua array (rowData dan dataMentor)
+  // const search = [
+  //   ...rowData.filter((item: Kelas) =>
+  //     item["name"].toString().toLowerCase().includes(queryName.toLowerCase()),
+  //   ),
+  //   ...dataMentor.filter((i: Mentor) =>
+  //     i["fullname"]
+  //       .toString()
+  //       .toLowerCase()
+  //       .includes(queryMentor.toLowerCase()),
+  //   ),
+  // ];
+
+  const search: Kelas[] = rowData.filter(
     (item: Kelas) =>
       item["name"].toString().toLowerCase().includes(queryName.toLowerCase()) &&
-      item["mentor"]
+      item["mentor"]["fullname"]
         .toString()
         .toLowerCase()
         .includes(queryMentor.toLowerCase()),
   );
-
   //menghitung total halaman berdasarkan panjang data pada hasil pencarian.
   //Math.ceil(...) => membulatkan hasil pembagian panjang data dari pencarian dengan jumlah item per halaman.
   //Ini berguna untuk menentukan jumlah halaman secara keseluruhan.
   //lakukan perubahan totalpages pada memo ketika query dan itemperpage berubah
   const totalPages = useMemo(() => {
     return Math.ceil(search.length / itemsPerPage);
-  }, [search, currentPage]);
+  }, []);
 
   //untuk mengatur apakah tombol next, back bisa dipenyek, ini hasilnya true/false
   const canNextPage = currentPage < totalPages - 1;
@@ -126,7 +151,7 @@ const ClassData = ({ rowData }: ClassProps) => {
   const endIndex = startIndex + itemsPerPage;
   //tampilan data usai dipotong dan dilakukan pencarian
   const displayedData = search.slice(startIndex, endIndex);
-
+  console.log(displayedData);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -223,7 +248,7 @@ const ClassData = ({ rowData }: ClassProps) => {
               gap={{ base: 8, sm: 6, lg: 8 }}
               mb={2}
             >
-              {displayedData.map((data) => (
+              {displayedData.flatMap((data) => (
                 <Stack
                   // direction={"column"}
                   alignItems={"center"}
@@ -311,7 +336,7 @@ const ClassData = ({ rowData }: ClassProps) => {
                           as={MdOutlinePeople}
                           boxSize={{ base: "20px", sm: "17px", lg: "20px" }}
                         />
-                        <p>12</p>
+                        <p>{data.participant_count}</p>
                       </HStack>
                     </Box>
                     <Box
@@ -332,7 +357,7 @@ const ClassData = ({ rowData }: ClassProps) => {
                           as={HiOutlineNewspaper}
                           boxSize={{ base: "20px", sm: "17px", lg: "20px" }}
                         />
-                        <p>12</p>
+                        <p>{data.activity_count}</p>
                       </HStack>
                     </Box>
                   </HStack>
@@ -344,7 +369,7 @@ const ClassData = ({ rowData }: ClassProps) => {
                   >
                     <Avatar
                       size={"md"}
-                      src={"/img/tenant-logo-default.png"}
+                      src={data.mentor.image_url || "/img/avatar-default.jpg"}
                       backgroundColor={"white"}
                     />
                     <VStack
@@ -370,10 +395,10 @@ const ClassData = ({ rowData }: ClassProps) => {
                         title={"Mr. dsfjskndf"}
                         noOfLines={1}
                       >
-                        {data.mentor}
+                        {data.mentor.fullname}
                       </Text>
                       <Text fontSize="xs" color="gray.600">
-                        Mentor
+                        {data.mentor.role}
                       </Text>
                     </VStack>
                     <Box>
@@ -413,8 +438,11 @@ const ClassData = ({ rowData }: ClassProps) => {
                         <GrMoreVertical />
                       </MenuButton>
                       <MenuList>
-                        <MenuItem>
-                          <EditClass rowData={data} />
+                        <MenuItem style={{ width: "100%" }}>
+                          <EditClass
+                            rowData={data}
+                            onSubmit={() => onSubmit()}
+                          />
                         </MenuItem>
                         <MenuItem>
                           <DeleteIcon

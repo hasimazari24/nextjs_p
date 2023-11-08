@@ -34,6 +34,7 @@ import {
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import { FaUser } from "react-icons/fa";
+import AddMentor from "./addMentor";
 
 type AwardItem = {
   id?: string;
@@ -42,7 +43,7 @@ type AwardItem = {
 };
 
 interface editProps {
-  onSubmit?: () => void;
+  onSubmit: () => void;
   rowData: any;
 }
 
@@ -85,19 +86,29 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
       isNotifShow: true,
     });
   };
+  const [idMentor, setIdMentor] = useState<string | null>(null);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
     // console.log(dataBaru);
     if (data.id) {
+      if (!idMentor)
+        return handleShowMessage("Maaf Mentor harus dipilih!", true);
+      const dataBaru = {
+        name: `${data.name}`,
+        description: `${data.description}`,
+        id_mentor: idMentor,
+      };
       try {
         // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-        await axiosCustom.post(`/tenant/add-award`, data).then((response) => {
-          // console.log(response);
-          if (response.status === 201) {
-            handleShowMessage("Data berhasil diubah.", false);
-          }
-        });
+        await axiosCustom
+          .patch(`/course/${data.id}/update-course`, dataBaru)
+          .then((response) => {
+            // console.log(response);
+            if (response.status === 200) {
+              handleShowMessage("Data berhasil diubah.", false);
+            }
+          });
 
         //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
         // onClose(); // Tutup modal
@@ -195,6 +206,7 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
                     </Box>
                   </Flex>
                 </FormControl>
+                <AddMentor onResult={(id) => setIdMentor(id)} editedSelect={rowData.mentor} />
               </div>
             </ModalBody>
             <ModalFooter>
@@ -238,7 +250,7 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
         }
         message={stateNotif.msg}
         isError={stateNotif.isError}
-        // onSubmit={() => onSubmit()}
+        onSubmit={() => onSubmit()}
       />
     </div>
   );

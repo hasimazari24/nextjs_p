@@ -32,6 +32,7 @@ import {
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import { FaUser } from "react-icons/fa";
+import AddMentor from "./addMentor";
 
 type AwardItem = {
   id?: string;
@@ -70,28 +71,39 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [isModalNotif, setModalNotif] = useState(false);
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
+  const [idMentor, setIdMentor] = useState<string | null>(null);
+  const [stateNotif, setStateNotif] = useState({
+    msg: "",
+    isError: false,
+    isNotifShow: false,
+  });
   const handleShowMessage = (msg: string, err: boolean) => {
-    setMessage(msg);
-    setIsError(err);
-    setModalNotif(true);
+    setStateNotif({
+      msg: msg,
+      isError: err,
+      isNotifShow: true,
+    });
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    setIsLoading(true);
+    // console.log(data);
+    if (!idMentor) return handleShowMessage("Maaf Mentor harus dipilih!", true);
+    const dataBaru = {
+      name: `${data.name}`,
+      description: `${data.description}`,
+      id_mentor: idMentor,
+    };
     // console.log(dataBaru);
+    setIsLoading(true);
+    
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      await axiosCustom
-        .post(`/tenant/add-award`, data)
-        .then((response) => {
-          // console.log(response);
-          if (response.status === 201) {
-            handleShowMessage("Data berhasil disimpan.", false);
-          }
-        });
+      await axiosCustom.post(`/course/add-course`, dataBaru).then((response) => {
+        // console.log(response);
+        if (response.status === 201) {
+          handleShowMessage("Data berhasil disimpan.", false);
+        }
+      });
 
     //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       // onClose(); // Tutup modal
@@ -112,6 +124,7 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
   const resetAll = () => {
     setModalOpen(false);
     reset(); // Reset formulir
+    setIdMentor(null);
     setIsLoading(false);
   };
 
@@ -181,6 +194,7 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
                     </Box>
                   </Flex>
                 </FormControl>
+                <AddMentor onResult={(id)=>setIdMentor(id)} />
               </div>
             </ModalBody>
             <ModalFooter>
@@ -214,10 +228,16 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
         </ModalContent>
       </Modal>
       <ModalNotif
-        isOpen={isModalNotif}
-        onClose={() => setModalNotif(false)}
-        message={message}
-        isError={isError}
+        isOpen={stateNotif.isNotifShow}
+        onClose={() =>
+          setStateNotif({
+            msg: "",
+            isError: false,
+            isNotifShow: false,
+          })
+        }
+        message={stateNotif.msg}
+        isError={stateNotif.isError}
         onSubmit={() => onSubmit()}
       />
     </div>
