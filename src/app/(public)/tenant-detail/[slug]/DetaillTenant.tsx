@@ -82,7 +82,7 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
       >
         {/* Begron */}
         <Box
-          backgroundImage={`url(${tenant.image_banner_url})`}
+          backgroundImage={`url(${tenant.image_banner_url || "/img/tenant-banner-default.jpg"})`}
           backgroundRepeat="no-repeat"
           backgroundSize="cover"
           backgroundPosition="center"
@@ -100,7 +100,7 @@ const TenantDetail = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
         <Avatar
           boxSize={["96px", "128px"]}
           mt={{ base: "-14", md: "-16", lg: "-16" }}
-          src={tenant.image_url || "/img/tenant-banner-default.jpg"}
+          src={tenant.image_url || "/img/tenant-logo-default.png"}
           borderWidth={"4px"}
           borderColor={"grey.100"}
           bgColor={"white"}

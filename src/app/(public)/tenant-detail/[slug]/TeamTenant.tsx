@@ -81,127 +81,160 @@ const TeamTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
         >
           Team
         </Text>
-        <Grid
-          templateColumns={{
-            base: "1fr",
-            sm: "1fr 1fr",
-            md: "1fr 1fr 1fr",
-          }}
-          // templateColumns={["1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
-          // flexWrap={"wrap"}
-          alignItems={"center"}
-          justifyItems={"center"}
-          gap={{ base:8, sm:6, lg:8 }}
-        >
-          {userTenant.map((data, index) => (
-            <Stack
-              // direction={"column"}
-              alignItems={"center"}
-              spacing={1}
-              w="full"
-              h="full"
-              p={4}
-              boxShadow={"lg"}
-              rounded={"2xl"}
-              bgColor={"gray.50"}
-              key={index}
-              // display="flex"
+        {userTenant && userTenant.length > 0 ? (
+          <Grid
+            templateColumns={{
+              base: "1fr",
+              sm: "1fr 1fr",
+              md: "1fr 1fr 1fr",
+            }}
+            // templateColumns={["1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
+            // flexWrap={"wrap"}
+            alignItems={"center"}
+            justifyItems={"center"}
+            gap={{ base: 8, sm: 6, lg: 8 }}
+          >
+            {userTenant.map((data, index) => (
+              <Stack
+                // direction={"column"}
+                alignItems={"center"}
+                spacing={1}
+                w="full"
+                h="full"
+                p={4}
+                boxShadow={"lg"}
+                rounded={"2xl"}
+                bgColor={"gray.50"}
+                key={index}
+                // display="flex"
+              >
+                <Image
+                  rounded={{ base: "xl", lg: "3xl" }}
+                  // height={{
+                  //   base: "118px",
+                  //   sm: "126px",
+                  //   md: "158px",
+                  //   xl: "250px",
+                  // }}
+                  h={{
+                    base: "200px",
+                    // sm: "126px",
+                    sm: "140px",
+                    lg: "200px",
+                    xl: "250px",
+                  }}
+                  maxW={{
+                    base: "200px",
+                    // sm: "126px",
+                    sm: "140px",
+                    lg: "200px",
+                    xl: "250px",
+                  }}
+                  objectFit={"cover"}
+                  src={data.image_url || "/img/tenant-logo-default.png"}
+                  alt="#"
+                  boxShadow={"xl"}
+                  mb={6}
+                />
+                <Text
+                  fontSize={"md"}
+                  align="center"
+                  textOverflow="ellipsis"
+                  // maxW={{
+                  //   base: "auto",
+                  //   sm: "340px",
+                  //   md: "408px",
+                  //   lg: "544px",
+                  // }}
+                  // w="auto"
+                  // whiteSpace="nowrap"
+                  flex="1"
+                  cursor={"default"}
+                  overflow="hidden"
+                  title={data.position}
+                  noOfLines={{ base: 2, sm: 1 }}
+                >
+                  {data.position}
+                </Text>
+                <Text
+                  as="b"
+                  fontWeight={"bold"}
+                  fontSize={["lg", "xl"]}
+                  textOverflow="ellipsis"
+                  // maxW={{
+                  //   base: "auto",
+                  //   sm: "340px",
+                  //   md: "408px",
+                  //   lg: "544px",
+                  // }}
+                  // w="auto"
+                  // whiteSpace="nowrap"
+                  flex="1"
+                  cursor={"default"}
+                  overflow="hidden"
+                  title={data.fullname}
+                  noOfLines={{ base: 2, sm: 1 }}
+                >
+                  {data.fullname}
+                </Text>
+                <HStack
+                  spacing={{ base: 1, lg: 3 }}
+                  pt="4px"
+                  minW="120px"
+                  w="full"
+                  justifyContent={"center"}
+                >
+                  {data.user_link && data.user_link.length > 0 ? (
+                    data.user_link.map((d) => (
+                      <Link href={d.url} key={d.id} target="_blank">
+                        <Icon
+                          as={getIconByTitle(d.title)}
+                          color="black"
+                          aria-label={d.title}
+                          cursor={"pointer"}
+                          // icon={<FaInstagram />}
+                          boxSize={{ base: "25px", sm: "20px", lg: "25px" }}
+                          title={d.title}
+                          _hover={{
+                            color: "red.500",
+                          }}
+                          backgroundColor="rgba(0, 0, 0, 0)"
+                        />
+                      </Link>
+                    ))
+                  ) : (
+                    <Box>&nbsp;</Box>
+                  )}
+                </HStack>
+              </Stack>
+            ))}
+          </Grid>
+        ) : (
+          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+            <Image
+              src="/img/data-is-empty.png"
+              h={{ base: "200px", sm: "250px", md: "350px" }}
+              w="auto"
+              // w="auto"
+              // objectFit={"cover"}
+              mb="3"
+            />
+            <Text
+              as="b"
+              fontWeight={"bold"}
+              fontSize={{ base: "16px", md: "17px" }}
+              textAlign={"center"}
             >
-              <Image
-                rounded={{ base: "xl", lg: "3xl" }}
-                // height={{
-                //   base: "118px",
-                //   sm: "126px",
-                //   md: "158px",
-                //   xl: "250px",
-                // }}
-                h={{
-                  base: "200px",
-                  // sm: "126px",
-                  sm: "140px",
-                  lg: "200px",
-                  xl: "250px",
-                }}
-                maxW={{
-                  base: "200px",
-                  // sm: "126px",
-                  sm: "140px",
-                  lg: "200px",
-                  xl: "250px",
-                }}
-                objectFit={"cover"}
-                src={data.image_url || "/img/tenant-logo-default.png"}
-                alt="#"
-                boxShadow={"xl"}
-                mb={6}
-              />
-              <Text
-                fontSize={"md"}
-                align="center"
-                textOverflow="ellipsis"
-                // maxW={{
-                //   base: "auto",
-                //   sm: "340px",
-                //   md: "408px",
-                //   lg: "544px",
-                // }}
-                // w="auto"
-                // whiteSpace="nowrap"
-                flex="1"
-                cursor={"default"}
-                overflow="hidden"
-                title={data.position}
-                noOfLines={{ base: 2, sm: 1 }}
-              >
-                {data.position}
-              </Text>
-              <Text
-                as="b"
-                fontWeight={"bold"}
-                fontSize={["lg", "xl"]}
-                textOverflow="ellipsis"
-                // maxW={{
-                //   base: "auto",
-                //   sm: "340px",
-                //   md: "408px",
-                //   lg: "544px",
-                // }}
-                // w="auto"
-                // whiteSpace="nowrap"
-                flex="1"
-                cursor={"default"}
-                overflow="hidden"
-                title={data.fullname}
-                noOfLines={{ base: 2, sm: 1 }}
-              >
-                {data.fullname}
-              </Text>
-              <HStack spacing={{ base:1, lg:3 }} pt="4px" minW="120px" w="full" justifyContent={"center"}>
-                {data.user_link && data.user_link.length > 0 ? (
-                  data.user_link.map((d) => (
-                    <Link href={d.url} key={d.id} target="_blank">
-                      <Icon
-                        as={getIconByTitle(d.title)}
-                        color="black"
-                        aria-label={d.title}
-                        cursor={"pointer"}
-                        // icon={<FaInstagram />}
-                        boxSize={{ base: "25px", sm:"20px", lg: "25px" }}
-                        title={d.title}
-                        _hover={{
-                          color: "red.500",
-                        }}
-                        backgroundColor="rgba(0, 0, 0, 0)"
-                      />
-                    </Link>
-                  ))
-                ) : (
-                  <Box>&nbsp;</Box>
-                )}
-              </HStack>
-            </Stack>
-          ))}
-        </Grid>
+              Data Team Kosong
+            </Text>
+            <Text
+              fontSize={{ base: "15.5px", md: "16.5px" }}
+              textAlign={"center"}
+            >
+              Mungkin belum dibuat atau sudah dihapus
+            </Text>
+          </Stack>
+        )}
       </Stack>
     </>
   );

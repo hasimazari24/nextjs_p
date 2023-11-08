@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Text,Stack, Grid } from "@chakra-ui/react";
+import { Box, Text,Stack, Grid, Image } from "@chakra-ui/react";
 import CardGallery from "./GalleryCards";
 import * as TenantTypes from "@/app/type/tenant-type.d";
 
@@ -29,25 +29,52 @@ const GalleryTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
         >
           Galeri
         </Text>
-        <Grid
-          templateColumns={{
-            base: "1fr 1fr",
-            md: "1fr 1fr 1fr",
-            xl: "1fr 1fr 1fr 1fr",
-          }}
-          gap={8}
-        >
-          {gallery.map((d, index) => (
-            <CardGallery
-              key={index}
-              image={d.image_url || "/img/tenant-banner-default.jpg"}
-              judul={d.title}
-              tgl={d.event_date}
-              tgl_format={d.event_date_format}
-              deskripsi={d.description}
+        {gallery && gallery.length > 0 ? (
+          <Grid
+            templateColumns={{
+              base: "1fr 1fr",
+              md: "1fr 1fr 1fr",
+              xl: "1fr 1fr 1fr 1fr",
+            }}
+            gap={8}
+          >
+            {gallery.map((d, index) => (
+              <CardGallery
+                key={index}
+                image={d.image_url || "/img/tenant-banner-default.jpg"}
+                judul={d.title}
+                tgl={d.event_date}
+                tgl_format={d.event_date_format}
+                deskripsi={d.description}
+              />
+            ))}
+          </Grid>
+        ) : (
+          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+            <Image
+              src="/img/data-is-empty.png"
+              h={{ base: "200px", sm: "250px", md: "350px" }}
+              w="auto"
+              // w="auto"
+              // objectFit={"cover"}
+              mb="3"
             />
-          ))}
-        </Grid>
+            <Text
+              as="b"
+              fontWeight={"bold"}
+              fontSize={{ base: "16px", md: "17px" }}
+              textAlign={"center"}
+            >
+              Data Galeri Kosong
+            </Text>
+            <Text
+              fontSize={{ base: "15.5px", md: "16.5px" }}
+              textAlign={"center"}
+            >
+              Mungkin belum dibuat atau sudah dihapus
+            </Text>
+          </Stack>
+        )}
       </Stack>
     </Box>
   );

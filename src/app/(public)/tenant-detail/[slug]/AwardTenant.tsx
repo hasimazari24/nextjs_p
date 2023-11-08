@@ -109,7 +109,30 @@ const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
             ))}
           </Grid>
         ) : (
-          <p>belum ada </p>
+          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+            <Image
+              src="/img/data-is-empty.png"
+              h={{ base: "200px", sm: "250px", md: "350px" }}
+              w="auto"
+              // w="auto"
+              // objectFit={"cover"}
+              mb="3"
+            />
+            <Text
+              as="b"
+              fontWeight={"bold"}
+              fontSize={{ base: "16px", md: "17px" }}
+              textAlign={"center"}
+            >
+              Data Prestasi Kosong
+            </Text>
+            <Text
+              fontSize={{ base: "15.5px", md: "16.5px" }}
+              textAlign={"center"}
+            >
+              Mungkin belum dibuat atau sudah dihapus
+            </Text>
+          </Stack>
         )}
       </Stack>
     </Box>
