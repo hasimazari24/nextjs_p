@@ -368,7 +368,7 @@ const ClassData = ({ rowData, onSubmit }: ClassProps) => {
                     onClick={onOpen}
                   >
                     <Avatar
-                      size={"md"}
+                      size={"sm"}
                       src={data.mentor.image_url || "/img/avatar-default.jpg"}
                       backgroundColor={"white"}
                     />
