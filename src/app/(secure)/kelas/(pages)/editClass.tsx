@@ -15,25 +15,19 @@ import {
   Flex,
   Box,
   Text,
-  IconButton,
-  Center,
-  AvatarBadge,
-  Avatar,
-  Textarea,
   Hide,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useController } from "react-hook-form";
 import {
-  AddIcon,
   CheckIcon,
   CloseIcon,
   EditIcon,
-  SmallCloseIcon,
 } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
-import { FaUser } from "react-icons/fa";
+import initRichTextProps from "@/app/type/inital-rich-text";
+import { Editor } from "@tinymce/tinymce-react";
 import AddMentor from "./addMentor";
 
 type AwardItem = {
@@ -52,6 +46,7 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<AwardItem>();
 
@@ -63,14 +58,22 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
         message: "Maksimal 255 karakter.",
       },
     }),
-    description: register("description", {
-      required: "Deskripsi kelas harus diisi!",
-      maxLength: {
-        value: 255,
-        message: "Maksimal 255 karakter.",
-      },
-    }),
+    // description: register("description", {
+    //   required: "Deskripsi kelas harus diisi!",
+    //   maxLength: {
+    //     value: 255,
+    //     message: "Maksimal 255 karakter.",
+    //   },
+    // }),
   };
+
+  const {
+    field: { onChange, ref, ...field },
+  } = useController({
+    control,
+    name: "description",
+    rules: { required: "Deskripsi Kelas harus diisi!" },
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -135,10 +138,21 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
 
   return (
     <div>
-      <Box key="editData" onClick={() => setModalOpen(true)}>
-        <EditIcon boxSize={{ base: "20px", sm: "17px", lg: "20px" }} />
+      <Button
+        bgColor="blue.100"
+        _hover={{
+          bg: "blue.200",
+        }}
+        title="Edit Data"
+        color="gray.700"
+        onClick={() => setModalOpen(true)}
+        key="editData"
+        size="sm"
+        w="184px"
+      >
+        <EditIcon />
         &nbsp; Edit Kelas
-      </Box>
+      </Button>
       <Modal
         isOpen={isModalOpen}
         onClose={() => {
@@ -186,27 +200,31 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
                   </Flex>
                 </FormControl>
                 <FormControl isInvalid={!!errors.description} mb="3">
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
-                      <FormLabel>
-                        Deskripsi Kelas&nbsp;
-                        <Text as={"span"} color={"red"}>
-                          *
-                        </Text>
-                      </FormLabel>
-                    </Box>
-                    <Box flex={["1", "75%"]}>
-                      <Textarea
-                        {...fields.description}
-                        defaultValue={rowData?.description}
-                      />
-                      <FormErrorMessage>
-                        {errors.description && errors.description.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
+                  <FormLabel>
+                    Deskripsi Kelas&nbsp;
+                    <Text as={"span"} color={"red"}>
+                      *
+                    </Text>
+                  </FormLabel>
+                  <Editor
+                    {...field}
+                    apiKey={process.env.API_TINYMCE}
+                    initialValue={rowData?.description}
+                    init={{
+                      ...initRichTextProps,
+                      toolbar_mode: "sliding",
+                      height: 200,
+                    }}
+                    onEditorChange={onChange}
+                  />
+                  <FormErrorMessage>
+                    {errors.description && errors.description.message}
+                  </FormErrorMessage>
                 </FormControl>
-                <AddMentor onResult={(id) => setIdMentor(id)} editedSelect={rowData.mentor} />
+                <AddMentor
+                  onResult={(id) => setIdMentor(id)}
+                  editedSelect={rowData.mentor}
+                />
               </div>
             </ModalBody>
             <ModalFooter>
