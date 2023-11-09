@@ -1,5 +1,7 @@
 "use client";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { MdOutlinePeople } from "react-icons/md";
+import { HiOutlineNewspaper } from "react-icons/hi";
 import {
   Box,
   Button,
@@ -15,11 +17,18 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  TagLeftIcon,
+  useTab,
 } from "@chakra-ui/react";
 import React from "react";
+import TenantKelas from "./tenant-kelas";
 
-// { params }: { params: { slug: string } }
+
+// { params }: { params: { slug: string } 
+
+
 function page() {
+
   return (
     <Stack spacing={6}>
       <Flex
@@ -64,6 +73,7 @@ function page() {
             <Text fontSize={["sm", "md", "lg"]}>Dibuat 29 Okt 2023</Text>
             <HStack
               cursor={"pointer"}
+              
               // direction={{ base: "row", sm: "column", lg: "row" }}
               // onClick={onOpen}
             >
@@ -95,7 +105,7 @@ function page() {
                   title={"Mr. dsfjskndf"}
                   noOfLines={1}
                 >
-                  Mr. josdfhsdkjfn
+                  Mr. dsfjskndf
                 </Text>
                 <Text fontSize="xs" color="gray.600">
                   Mentor
@@ -128,7 +138,45 @@ function page() {
         consequatur dolorum odio libero?
       </Text>
 
-      {/* tambah tabs disini */}
+      <Tabs variant="unstyled">
+        <TabList justifyContent="center">
+          <HStack spacing={10}>
+            <Tab _selected={{ background: 'blue.500', color: 'white', rounded:'10' }} 
+            _focus={{ boxShadow: 'none',   }}
+            
+            style={{outline:'blue.500'}}
+            aria-label="tenant-kelas"
+            shadow={'2xl'}
+            
+            >
+              <HStack spacing={2} mx={10} fontSize="lg">
+                < MdOutlinePeople/>
+                <Text>Tenant</Text>
+              </HStack>
+            </Tab >
+            <Tab _selected={{ background: 'blue.500', color: 'white', rounded:'10', shadow:'' }}
+            _focus={{ boxShadow: 'none', }}
+            
+            style={{outline:'blue.500',}}
+            aria-label="sesi-kelas"
+            shadow={'2xl'}
+            >
+              <HStack spacing={2} mx={10} fontSize="lg">
+                <HiOutlineNewspaper/>
+                <Text>Sesi Kelas</Text>
+              </HStack>
+            </Tab>
+          </HStack>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <TenantKelas/>
+          </TabPanel>
+          <TabPanel>
+            <p>two!</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Stack>
   );
 }
