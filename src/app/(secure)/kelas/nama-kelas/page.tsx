@@ -23,12 +23,9 @@ import {
 import React from "react";
 import TenantKelas from "./tenant-kelas";
 
-
-// { params }: { params: { slug: string } 
-
+// { params }: { params: { slug: string }
 
 function page() {
-
   return (
     <Stack spacing={6}>
       <Flex
@@ -70,10 +67,12 @@ function page() {
               Belajar Bersamaaa Lorem ipsum dolor sit amet consectetur
               adipisicing elit.
             </Text>
-            <Text fontSize={["sm", "md", "lg"]}>Dibuat 29 Okt 2023</Text>
+            <Text fontSize={["sm", "md"]} fontWeight={"thin"} color="gray.700">
+              Dibuat 29 Okt 2023
+            </Text>
             <HStack
               cursor={"pointer"}
-              
+
               // direction={{ base: "row", sm: "column", lg: "row" }}
               // onClick={onOpen}
             >
@@ -141,28 +140,36 @@ function page() {
       <Tabs variant="unstyled">
         <TabList justifyContent="center">
           <HStack spacing={10}>
-            <Tab _selected={{ background: 'blue.500', color: 'white', rounded:'10' }} 
-            _focus={{ boxShadow: 'none',   }}
-            
-            style={{outline:'blue.500'}}
-            aria-label="tenant-kelas"
-            shadow={'2xl'}
-            
+            <Tab
+              _selected={{
+                background: "blue.500",
+                color: "white",
+                rounded: "10",
+              }}
+              _focus={{ boxShadow: "none" }}
+              style={{ outline: "blue.500" }}
+              aria-label="tenant-kelas"
+              shadow={"2xl"}
             >
               <HStack spacing={2} mx={10} fontSize="lg">
-                < MdOutlinePeople/>
+                <MdOutlinePeople />
                 <Text>Tenant</Text>
               </HStack>
-            </Tab >
-            <Tab _selected={{ background: 'blue.500', color: 'white', rounded:'10', shadow:'' }}
-            _focus={{ boxShadow: 'none', }}
-            
-            style={{outline:'blue.500',}}
-            aria-label="sesi-kelas"
-            shadow={'2xl'}
+            </Tab>
+            <Tab
+              _selected={{
+                background: "blue.500",
+                color: "white",
+                rounded: "10",
+                shadow: "",
+              }}
+              _focus={{ boxShadow: "none" }}
+              style={{ outline: "blue.500" }}
+              aria-label="sesi-kelas"
+              shadow={"2xl"}
             >
               <HStack spacing={2} mx={10} fontSize="lg">
-                <HiOutlineNewspaper/>
+                <HiOutlineNewspaper />
                 <Text>Sesi Kelas</Text>
               </HStack>
             </Tab>
@@ -170,7 +177,7 @@ function page() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <TenantKelas/>
+            <TenantKelas />
           </TabPanel>
           <TabPanel>
             <p>two!</p>
