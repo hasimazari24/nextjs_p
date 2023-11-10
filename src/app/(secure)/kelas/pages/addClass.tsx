@@ -19,11 +19,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useForm, SubmitHandler, useController } from "react-hook-form";
-import {
-  AddIcon,
-  CheckIcon,
-  CloseIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import initRichTextProps from "@/app/type/inital-rich-text";
@@ -47,6 +43,7 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
     reset,
     control,
     formState: { errors },
+    clearErrors,
   } = useForm<AwardItem>();
 
   const fields = {
@@ -99,17 +96,19 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
     };
     // console.log(dataBaru);
     setIsLoading(true);
-    
+
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      await axiosCustom.post(`/course/add-course`, dataBaru).then((response) => {
-        // console.log(response);
-        if (response.status === 201) {
-          handleShowMessage("Data berhasil disimpan.", false);
-        }
-      });
+      await axiosCustom
+        .post(`/course/add-course`, dataBaru)
+        .then((response) => {
+          // console.log(response);
+          if (response.status === 201) {
+            handleShowMessage("Data berhasil disimpan.", false);
+          }
+        });
 
-    //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       // onClose(); // Tutup modal
       resetAll();
       // Setelah data disimpan, atur pesan berhasil ke dalam state
@@ -128,6 +127,7 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
   const resetAll = () => {
     setModalOpen(false);
     reset(); // Reset formulir
+    reset({ description: "" });
     setIdMentor(null);
     setIsLoading(false);
   };
@@ -138,7 +138,11 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
         colorScheme="green"
         key="tambahData"
         size="sm"
-        onClick={() => setModalOpen(true)}
+        onClick={() => {
+          setModalOpen(true);
+          clearErrors("description");
+          reset({ description: "" });
+        }}
       >
         <AddIcon />
         &nbsp;Tambah Kelas

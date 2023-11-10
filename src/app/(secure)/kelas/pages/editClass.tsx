@@ -19,11 +19,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler, useController } from "react-hook-form";
-import {
-  CheckIcon,
-  CloseIcon,
-  EditIcon,
-} from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import initRichTextProps from "@/app/type/inital-rich-text";
@@ -48,6 +44,7 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
     reset,
     control,
     formState: { errors },
+    clearErrors,
   } = useForm<AwardItem>();
 
   const fields = {
@@ -133,6 +130,7 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
   const resetAll = () => {
     setModalOpen(false);
     reset(); // Reset formulir
+    reset({ description: "" });
     setIsLoading(false);
   };
 
@@ -145,7 +143,10 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
         }}
         title="Edit Data"
         color="gray.700"
-        onClick={() => setModalOpen(true)}
+        onClick={() => {
+          setModalOpen(true);
+          clearErrors("description");
+        }}
         key="editData"
         size="sm"
         w="184px"

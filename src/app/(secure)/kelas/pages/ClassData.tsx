@@ -25,6 +25,11 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
   Select,
   useDisclosure,
   Img,
@@ -64,6 +69,7 @@ import Pagination from "@/app/components/datatable/pagination";
 import EditClass from "./editClass";
 import ProfileMentor from "./profileMentor";
 import { useRouter } from "next/navigation";
+import DeleteClass from "./deleteClass";
 
 interface ClassProps {
   rowData: Kelas[];
@@ -151,8 +157,6 @@ const ClassData = ({ rowData, onSubmit }: ClassProps) => {
   const endIndex = startIndex + itemsPerPage;
   //tampilan data usai dipotong dan dilakukan pencarian
   const displayedData = search.slice(startIndex, endIndex);
-  console.log(displayedData);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -362,49 +366,7 @@ const ClassData = ({ rowData, onSubmit }: ClassProps) => {
                     </Box>
                   </HStack>
 
-                  <HStack
-                    cursor={"pointer"}
-                    // direction={{ base: "row", sm: "column", lg: "row" }}
-                    onClick={onOpen}
-                  >
-                    <Avatar
-                      size={"sm"}
-                      src={data.mentor.image_url || "/img/avatar-default.jpg"}
-                      backgroundColor={"white"}
-                    />
-                    <VStack
-                      display={{ base: "flex", sm: "none", lg: "flex" }}
-                      alignItems="flex-start"
-                      spacing={0}
-                      ml="2"
-                    >
-                      <Text
-                        fontSize="sm"
-                        textOverflow="ellipsis"
-                        // maxW={{
-                        //   base: "auto",
-                        //   sm: "340px",
-                        //   md: "408px",
-                        //   lg: "544px",
-                        // }}
-                        // w="auto"
-                        // whiteSpace="nowrap"
-                        flex="1"
-                        // cursor={"default"}
-                        overflow="hidden"
-                        title={"Mr. dsfjskndf"}
-                        noOfLines={1}
-                      >
-                        {data.mentor.fullname}
-                      </Text>
-                      <Text fontSize="xs" color="gray.600">
-                        {data.mentor.role}
-                      </Text>
-                    </VStack>
-                    <Box>
-                      <ExternalLinkIcon color={"blue.500"} />
-                    </Box>
-                  </HStack>
+                  <ProfileMentor mentor={data.mentor} />
 
                   <Stack spacing={2} direction={"row"} w="full">
                     <Button
@@ -445,10 +407,10 @@ const ClassData = ({ rowData, onSubmit }: ClassProps) => {
                           />
                         </MenuItem>
                         <MenuItem>
-                          <DeleteIcon
-                            boxSize={{ base: "20px", sm: "17px", lg: "20px" }}
+                          <DeleteClass
+                            dataDelete={data}
+                            onSubmit={() => onSubmit()}
                           />
-                          &nbsp; Hapus Kelas
                         </MenuItem>
                       </MenuList>
                     </Menu>
@@ -505,7 +467,6 @@ const ClassData = ({ rowData, onSubmit }: ClassProps) => {
           </Stack>
         )}
       </Stack>
-      <ProfileMentor isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
