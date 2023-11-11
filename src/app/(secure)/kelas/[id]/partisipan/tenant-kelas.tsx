@@ -21,7 +21,7 @@ import { DeleteIcon, Search2Icon, SearchIcon } from "@chakra-ui/icons";
 import { IoSearchSharp } from "react-icons/io5";
 import { BiDoorOpen, BiPlus } from "react-icons/bi";
 import { GrMoreVertical } from "react-icons/gr";
-import data from "../../dashboard/data";
+import data from "../../../dashboard/data";
 
 interface TenantKelasProps {
   logo?: string;
@@ -32,11 +32,11 @@ const TenantKelas = ({ logo, nama }: TenantKelasProps) => {
   return (
     <Stack spacing={{ base: 6, md: 8 }}>
       <Flex
-        flexDirection={{ base: "column", md: "row" }} // Arah tata letak berdasarkan layar
+        flexDirection={{ base: "column", sm: "row" }} // Arah tata letak berdasarkan layar
         justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
         // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
       >
-        <VStack spacing={0} align="flex-start">
+        <VStack spacing={0} align="flex-start" mr={2}>
           <Text fontWeight={"bold"} fontSize={["lg", "xl"]}>
             Partisipan Kelas
           </Text>

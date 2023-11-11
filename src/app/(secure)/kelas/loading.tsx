@@ -19,7 +19,7 @@ const Loading = () => {
           size="xl"
           mb="3"
         />
-        <Text as="i" whiteSpace={"normal"}>
+        <Text as="i" whiteSpace={"normal"} textAlign={"center"}>
           Sedang memuat data, mohon tunggu sebentar ...
         </Text>
       </Center>
