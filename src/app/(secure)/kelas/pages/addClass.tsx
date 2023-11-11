@@ -26,7 +26,7 @@ import initRichTextProps from "@/app/type/inital-rich-text";
 import { Editor } from "@tinymce/tinymce-react";
 import AddMentor from "./addMentor";
 
-type AwardItem = {
+type ClassItem = {
   id?: string;
   name: string;
   description: string;
@@ -34,9 +34,10 @@ type AwardItem = {
 
 interface editProps {
   onSubmit: () => void;
+  roleAccess: string;
 }
 
-const AddClass: React.FC<editProps> = ({ onSubmit }) => {
+const AddClass: React.FC<editProps> = ({ onSubmit, roleAccess }) => {
   const {
     register,
     handleSubmit,
@@ -44,7 +45,7 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
     control,
     formState: { errors },
     clearErrors,
-  } = useForm<AwardItem>();
+  } = useForm<ClassItem>();
 
   const fields = {
     name: register("name", {
@@ -88,25 +89,35 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     // console.log(data);
-    if (!idMentor) return handleShowMessage("Maaf Mentor harus dipilih!", true);
-    const dataBaru = {
+    let url = "";
+    if (!idMentor && roleAccess !== "Mentor")
+      return handleShowMessage("Maaf Mentor harus dipilih!", true);
+    const dataBaru: {
+      name: string;
+      description: string;
+      id_mentor?: string | null;
+    } = {
       name: `${data.name}`,
       description: `${data.description}`,
-      id_mentor: idMentor,
     };
+
+    if (roleAccess !== "Mentor") {
+      dataBaru.id_mentor = idMentor;
+      url = "/course/add-course";
+    } else {
+      url = "/course/add-course-by-mentor";
+    }
     // console.log(dataBaru);
     setIsLoading(true);
 
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      await axiosCustom
-        .post(`/course/add-course`, dataBaru)
-        .then((response) => {
-          // console.log(response);
-          if (response.status === 201) {
-            handleShowMessage("Data berhasil disimpan.", false);
-          }
-        });
+      await axiosCustom.post(url, dataBaru).then((response) => {
+        // console.log(response);
+        if (response.status === 201) {
+          handleShowMessage("Data berhasil disimpan.", false);
+        }
+      });
 
       //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       // onClose(); // Tutup modal
@@ -206,7 +217,9 @@ const AddClass: React.FC<editProps> = ({ onSubmit }) => {
                     {errors.description && errors.description.message}
                   </FormErrorMessage>
                 </FormControl>
-                <AddMentor onResult={(id) => setIdMentor(id)} />
+                {roleAccess !== "Mentor" && (
+                  <AddMentor onResult={(id) => setIdMentor(id)} />
+                )}
               </div>
             </ModalBody>
             <ModalFooter>

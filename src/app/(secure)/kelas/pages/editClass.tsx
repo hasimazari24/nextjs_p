@@ -35,9 +35,10 @@ type AwardItem = {
 interface editProps {
   onSubmit: () => void;
   rowData: any;
+  roleAccess:string;
 }
 
-const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
+const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
   const {
     register,
     handleSubmit,
@@ -92,17 +93,28 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
     setIsLoading(true);
     // console.log(dataBaru);
     if (data.id) {
-      if (!idMentor)
+      let url = "";
+      if (!idMentor && roleAccess !== "Mentor")
         return handleShowMessage("Maaf Mentor harus dipilih!", true);
-      const dataBaru = {
+      const dataBaru: {
+        name: string;
+        description: string;
+        id_mentor?: string | null;
+      } = {
         name: `${data.name}`,
         description: `${data.description}`,
-        id_mentor: idMentor,
       };
+
+      if (roleAccess !== "Mentor") {
+        dataBaru.id_mentor = idMentor;
+        url = `/course/${data.id}/update-course`;
+      } else {
+        url = `/course/${data.id}/update-course-by-mentor`;
+      }
       try {
         // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
         await axiosCustom
-          .patch(`/course/${data.id}/update-course`, dataBaru)
+          .patch(url, dataBaru)
           .then((response) => {
             // console.log(response);
             if (response.status === 200) {
@@ -222,10 +234,12 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData }) => {
                     {errors.description && errors.description.message}
                   </FormErrorMessage>
                 </FormControl>
-                <AddMentor
-                  onResult={(id) => setIdMentor(id)}
-                  editedSelect={rowData.mentor}
-                />
+                {roleAccess !== "Mentor" && (
+                  <AddMentor
+                    onResult={(id) => setIdMentor(id)}
+                    editedSelect={rowData.mentor}
+                  />
+                )}
               </div>
             </ModalBody>
             <ModalFooter>

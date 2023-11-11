@@ -74,9 +74,10 @@ import DeleteClass from "./deleteClass";
 interface ClassProps {
   rowData: Kelas[];
   onSubmit: () => void;
+  roleAccess: string;
 }
 
-const ClassData = ({ rowData, onSubmit }: ClassProps) => {
+const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
   // const MotionSimpleGrid = motion(SimpleGrid);
   // const MotionBox = motion(Box);
   //set query/keyword pencarian
@@ -378,42 +379,47 @@ const ClassData = ({ rowData, onSubmit }: ClassProps) => {
                       w="full"
                       size={{ base: "xs", sm: "sm" }}
                       alignContent={"center"}
-                      onClick={() => router.push(`/kelas/24df32`)}
+                      onClick={() => router.push(`/kelas/${data.id}`)}
                     >
                       <BiDoorOpen size="20px" />
                       &nbsp;Masuk
                     </Button>
-                    <Menu>
-                      <MenuButton
-                        as={Button}
-                        bgColor="teal.400"
-                        _hover={{
-                          bg: "teal.300",
-                        }}
-                        // colorScheme="aqua"
-                        title="More ..."
-                        color="white"
-                        // onClick={() => handleDetail(rowData)}
-                        key="more"
-                        size={{ base: "xs", sm: "sm" }}
-                      >
-                        <GrMoreVertical />
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem style={{ width: "100%" }}>
-                          <EditClass
-                            rowData={data}
-                            onSubmit={() => onSubmit()}
-                          />
-                        </MenuItem>
-                        <MenuItem>
-                          <DeleteClass
-                            dataDelete={data}
-                            onSubmit={() => onSubmit()}
-                          />
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
+                    {(roleAccess === "Super Admin" ||
+                      roleAccess === "Manajemen" ||
+                      roleAccess === "Mentor") && (
+                      <Menu>
+                        <MenuButton
+                          as={Button}
+                          bgColor="teal.400"
+                          _hover={{
+                            bg: "teal.300",
+                          }}
+                          // colorScheme="aqua"
+                          title="More ..."
+                          color="white"
+                          // onClick={() => handleDetail(rowData)}
+                          key="more"
+                          size={{ base: "xs", sm: "sm" }}
+                        >
+                          <GrMoreVertical />
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem style={{ width: "100%" }}>
+                            <EditClass
+                              rowData={data}
+                              onSubmit={() => onSubmit()}
+                              roleAccess={roleAccess}
+                            />
+                          </MenuItem>
+                          <MenuItem>
+                            <DeleteClass
+                              dataDelete={data}
+                              onSubmit={() => onSubmit()}
+                            />
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    )}
                   </Stack>
                 </Stack>
               ))}

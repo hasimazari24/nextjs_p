@@ -42,7 +42,7 @@ import { Kelas } from "@/app/type/class-type.d";
 import AddClass from "./addClass";
 import ClassData from "./ClassData";
 
-function ManajemenClass() {
+function ManajemenClass({ roleAccess }: { roleAccess: string }) {
   const initialState: { isLoading?: boolean; dataKelas?: Kelas[] } = {
     isLoading: true,
     dataKelas: [],
@@ -93,11 +93,15 @@ function ManajemenClass() {
           >
             <Heading fontSize={"2xl"}>DATA KELAS</Heading>
 
-            <AddClass onSubmit={() => getClass()} />
+            <AddClass onSubmit={() => getClass()} roleAccess={roleAccess} />
           </Flex>
 
           {state.dataKelas && state.dataKelas.length > 0 ? (
-            <ClassData rowData={state.dataKelas} onSubmit={() => getClass()} />
+            <ClassData
+              rowData={state.dataKelas}
+              onSubmit={() => getClass()}
+              roleAccess={roleAccess}
+            />
           ) : (
             <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
               <Image
