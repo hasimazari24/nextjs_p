@@ -97,7 +97,7 @@ function PageGallery({ params }: { params: { slug: string } }) {
     fetchData();
   }, [getParamsId]);
 
-  const filterOptions = [{ key: "name", label: "Nama Gallery" }];
+  const filterOptions = [{ key: "title", label: "Nama Events" }];
 
   const { user } = useAuth();
   let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
