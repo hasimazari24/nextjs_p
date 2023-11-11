@@ -45,7 +45,7 @@ interface MentorPofile {
 interface ModalProps {
   // isOpen: boolean;
   // onClose: () => void;
-  mentor: MentorPofile;
+  mentor: MentorPofile | null;
 }
 
 const ProfileMentor = ({ mentor }: ModalProps) => {
@@ -151,7 +151,7 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
     try {
       setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/user/${mentor.id}/profile`);
+      const response = await axiosCustom.get(`/user/${mentor?.id}/profile`);
       const timer = setTimeout(() => {
         // setIdTenant(id);
         setProfil(response.data.data); // Set isLoading to false to stop the spinner
@@ -180,7 +180,7 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
       >
         <Avatar
           size={"sm"}
-          src={mentor.image_url || "/img/avatar-default.jpg"}
+          src={mentor?.image_url || "/img/avatar-default.jpg"}
           backgroundColor={"white"}
         />
         <VStack
@@ -206,10 +206,10 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
             title={"Mr. dsfjskndf"}
             noOfLines={1}
           >
-            {mentor.fullname}
+            {mentor?.fullname}
           </Text>
           <Text fontSize="xs" color="gray.600">
-            {mentor.role}
+            {mentor?.role}
           </Text>
         </VStack>
         <Box>
