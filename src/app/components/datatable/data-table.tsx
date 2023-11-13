@@ -55,7 +55,7 @@ type DataTableProps<T extends object> = {
     values?: string[];
     type?: string;
   }[];
-  children: (rowData: any) => ReactNode; // Properti children yang menerima fungsi
+  children?: (rowData: any) => ReactNode; // Properti children yang menerima fungsi
   onSelectedRowsChange?: (selectedRows: T[]) => void;
 };
 
@@ -141,6 +141,10 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
   if (props.onSelectedRowsChange) {
     props.onSelectedRowsChange(selectedFlatRows.map((d) => d.original));
   }
+
+  console.log("pageIndex " + pageIndex);
+  console.log("pageOptions " + pageOptions);
+  console.log("gotoPage " + gotoPage);
 
   return (
     <Box>
@@ -364,7 +368,9 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       );
                     })}
                     {/* <Td>{props.children(props.data[i])}</Td> */}
-                    <Td key={i}>{props.children(row.values)}</Td>
+                    {props.children ? (
+                      <Td key={i}>{props.children(row.values)}</Td>
+                    ) : null}
                   </Tr>
                 ) : (
                   //jika tidak ada row values id, maka ...

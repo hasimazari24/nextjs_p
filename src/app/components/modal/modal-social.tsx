@@ -63,6 +63,9 @@ interface ModalProps {
   idTenant?: string;
   idUser?: string;
   onDelete: () => void;
+  //tambahkan ini krn modal social tdk hanya digunakan di tenant links tapi juga user my profile.
+  //  shg ketika diset true melalui my profile akan memiliki akses ke semua btn.
+  myProfile?: boolean;
 }
 
 interface FormValues {
@@ -86,6 +89,7 @@ const ModalSocial: React.FC<ModalProps> = ({
   idTenant,
   idUser,
   onDelete,
+  myProfile,
 }) => {
   const {
     register: registWebsite,
@@ -149,7 +153,8 @@ const ModalSocial: React.FC<ModalProps> = ({
 
   const features_access =
     features?.access.includes("all_access") ||
-    allMenu?.access.includes("all_access");
+    allMenu?.access.includes("all_access") ||
+    (myProfile !== undefined && myProfile === true);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGetData, setIsLoadingGetData] = useState(false);

@@ -9,6 +9,7 @@ export interface Mentor {
 export interface Kelas {
   id: string;
   name: string;
+  description : string;
   participant_count: number;
   activity_count: number;
   mentor : Mentor;
@@ -31,14 +32,11 @@ interface Item_Sesi {
   assigment_count: number;
   file_count: number;
   link_count: number;
+  progress_item_count: number;
+  progress_item_done_count: number;
 }
 
 interface Sesi {
-  id: string;
-  course_ends: boolean;
-  name: string;
-  description: string;
-  created_at: string;
   item_count: number;
   item: Item_Sesi;
 }
@@ -51,12 +49,6 @@ interface Item_partisipan {
 }
 
 interface Partisipan {
-  id: string;
-  course_ends: boolean;
-  name: string;
-  description: string;
-  created_at: string;
-  item_count: number;
-  mentor: Mentor;
-  partisipan: Item_partisipan;
+  participant_count: number;
+  participant: Item_partisipan;
 }
