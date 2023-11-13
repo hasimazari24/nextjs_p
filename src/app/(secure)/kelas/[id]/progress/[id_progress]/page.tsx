@@ -25,9 +25,9 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { MdArrowBackIosNew, MdTask } from "react-icons/md/";
-import File from "./File";
-import Link from "./Link";
-import Tugas from "./Tugas";
+import File from "./File/File";
+import Link from "./Link/Link";
+import Tugas from "./Tugas/Tugas";
 import { BsSendPlusFill } from "react-icons/bs";
 
 // { params }: { params: { slug: string } }

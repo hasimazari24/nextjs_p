@@ -16,6 +16,7 @@ import Loading from "../../loading";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { Column } from "react-table";
 import DataTable from "@/app/components/datatable/data-table";
+import dynamic from "next/dynamic";
 
 interface Item_Progress {
   id: string;
@@ -40,9 +41,11 @@ interface ProgressTenant {
 function Progress({
   idTenant,
   idKelas,
+  tabIndex,
 }: {
   idTenant: string;
   idKelas: string;
+  tabIndex: () => void;
 }) {
   const [dataProgress, setProgress] = useState<ProgressTenant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,18 +70,17 @@ function Progress({
       );
       const timer = setTimeout(() => {
         setProgress(response.data.data); // Set isLoading to false to stop the spinner
+        setIsLoading(false);
       }, 1000);
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     getDataProgress();
-  }, [idTenant, idKelas]);
+  }, [idTenant]);
 
   const columns: ReadonlyArray<Column<Item_Progress>> = [
     {
@@ -126,7 +128,7 @@ function Progress({
     },
   ];
 
-  let hidenCols: string[] = ["id", "assigment_answered_count"];
+  let hidenCols: string[] = ["id", "assigment_answered_count", "action"];
 
   const filterOptions = [{ key: "title", label: "Nama Sesi" }];
 
@@ -155,6 +157,7 @@ function Progress({
             aria-label="btn-kembali"
             size={"sm"}
             mb={6}
+            onClick={() => tabIndex()}
           >
             Kembali
           </Button>
@@ -171,4 +174,7 @@ function Progress({
   );
 }
 
-export default Progress;
+export default dynamic(() => Promise.resolve(Progress), {
+  ssr: false,
+  loading: () => <Loading />,
+});
