@@ -736,6 +736,7 @@ const MyProfile: React.FC = () => {
         // formData={dataLinks}
         idUser={dataTampil?.id}
         onDelete={() => getTampil()}
+        myProfile={true}
       />
     </div>
   );
