@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -30,7 +30,6 @@ import { TLinks } from "@/app/type/tenant-type.d";
 import { axiosCustom } from "@/app/api/axios";
 import Link from "next/link";
 import Loading from "../loading";
-import dynamic from "next/dynamic";
 
 interface MentorPofile {
   id: string;
@@ -155,13 +154,12 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
       const timer = setTimeout(() => {
         // setIdTenant(id);
         setProfil(response.data.data); // Set isLoading to false to stop the spinner
+        setIsLoading(false);
       }, 1000);
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -232,42 +230,44 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
             </Center>
           </ModalHeader>
           <ModalBody>
-            {isLoading ? (
-              <Loading />
-            ) : (
-              <Stack justifyContent={"center"} align={"center"} spacing={3}>
-                <Avatar
-                  size={"2xl"}
-                  src={profil?.image_url || "/img/avatar-default.jpg"}
-                  backgroundColor={"gray.50"}
-                />
-                <VStack spacing={0}>
-                  <Text
-                    as="b"
-                    fontWeight={"bold"}
-                    fontSize={{ base: "16.5px", md: "17.5px" }}
-                    textAlign="center"
-                  >
-                    {profil?.fullname}
-                  </Text>
-                  <Text
-                    fontSize={{ base: "16px", md: "17px" }}
-                    textAlign="center"
-                  >
-                    {profil?.role}
-                  </Text>
-                </VStack>
-                <HStack spacing={{ base: 1, lg: 3 }}>
-                  {profil && Array.isArray(profil.user_link)
-                    ? profil.user_link.map((d) => (
-                        <Link href={d.url} key={d.id}>
-                          {getIconByTitle(d.title)}
-                        </Link>
-                      ))
-                    : null}
-                </HStack>
-              </Stack>
-            )}
+            <Suspense fallback={<Loading />}>
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <Stack justifyContent={"center"} align={"center"} spacing={3}>
+                  <Avatar
+                    size={"2xl"}
+                    src={profil?.image_url || "/img/avatar-default.jpg"}
+                    backgroundColor={"gray.50"}
+                  />
+                  <VStack spacing={0}>
+                    <Text
+                      as="b"
+                      fontWeight={"bold"}
+                      fontSize={{ base: "16.5px", md: "17.5px" }}
+                      textAlign="center"
+                    >
+                      {profil?.fullname}
+                    </Text>
+                    <Text
+                      fontSize={{ base: "16px", md: "17px" }}
+                      textAlign="center"
+                    >
+                      {profil?.role}
+                    </Text>
+                  </VStack>
+                  <HStack spacing={{ base: 1, lg: 3 }}>
+                    {profil && Array.isArray(profil.user_link)
+                      ? profil.user_link.map((d) => (
+                          <Link href={d.url} key={d.id} target="_blank">
+                            {getIconByTitle(d.title)}
+                          </Link>
+                        ))
+                      : null}
+                  </HStack>
+                </Stack>
+              )}
+            </Suspense>
           </ModalBody>
 
           <ModalFooter justifyContent={"center"}>
@@ -295,7 +295,4 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
   );
 };
 
-export default dynamic(() => Promise.resolve(ProfileMentor), {
-  ssr: false,
-  loading: () => <Loading />,
-});
+export default ProfileMentor;
