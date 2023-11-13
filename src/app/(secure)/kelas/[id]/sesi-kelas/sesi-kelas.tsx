@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Flex,
@@ -15,55 +15,39 @@ import { BiDoorOpen } from "react-icons/bi";
 import EditSesi from "./editSesi";
 import { axiosCustom } from "@/app/api/axios";
 import Loading from "../../loading";
-
-interface Item {
-  id: string;
-  title: string;
-  description: string;
-  created_at: string;
-  assigment_count: number;
-  file_count: number;
-  link_count: number;
-}
-
-interface Sesi {
-  id: string;
-  course_ends: boolean;
-  name: string;
-  description: string;
-  created_at: string;
-  item_count: number;
-  item: Item;
-}
+import * as ClassInfo from "@/app/type/class-type.d";
 
 function SesiKelas({
-  sesi,
   idKelas,
   roleAccess,
+  classEnd,
 }: {
-  sesi?: Sesi | null;
   idKelas: string;
   roleAccess: string;
+  classEnd: boolean;
 }) {
-  const [dataSesi, setDataSesi] = useState<Sesi | null>(sesi ? sesi : null);
+  const [dataSesi, setDataSesi] = useState<ClassInfo.Sesi | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const getUpdatedSesi = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
       const response = await axiosCustom.get(`/course/${idKelas}/item`);
       const timer = setTimeout(() => {
-        // setIdTenant(id);
         setDataSesi(response.data.data); // Set isLoading to false to stop the spinner
+        setIsLoading(false);
       }, 1000);
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
-    } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    getUpdatedSesi();
+  }, []);
 
   return isLoading ? (
     <Loading />
@@ -85,8 +69,9 @@ function SesiKelas({
         </VStack>
         <HStack spacing={2} align="start">
           {/* jika butuh btn kembali, ada disinii */}
-
-          <AddSesi idKelas={idKelas} onSubmit={() => getUpdatedSesi()} />
+          {roleAccess !== "Tenant" && classEnd !== true && (
+            <AddSesi idKelas={idKelas} onSubmit={() => getUpdatedSesi()} />
+          )}
         </HStack>
       </Flex>
 
@@ -150,9 +135,12 @@ function SesiKelas({
                 Link Materi :{" "}
                 <span style={{ fontWeight: "bold" }}>{d.link_count}</span>
               </Text>
-              {roleAccess !== "Mentor" && (
+              {roleAccess === "Tenant" && (
                 <Text>
-                  Progress: <span style={{ fontWeight: "bold" }}>0 / 0</span>
+                  Progress:{" "}
+                  <span style={{ fontWeight: "bold" }}>
+                    {d.progress_item_done_count} / {d.progress_item_count}
+                  </span>
                 </Text>
               )}
             </Stack>
@@ -163,16 +151,21 @@ function SesiKelas({
               flexWrap={"wrap"}
               alignItems={"center"}
             >
-              <EditSesi onSubmit={() => getUpdatedSesi()} rowData={d} />
-              <Button
-                title="Hapus Data"
-                colorScheme="red"
-                // onClick={() => setIsDeleteModalOpen(true)}
-                key="hapusData"
-                size="sm"
-              >
-                <DeleteIcon /> &nbsp; Hapus
-              </Button>
+              {roleAccess !== "Tenant" && classEnd !== true && (
+                <>
+                  <EditSesi onSubmit={() => getUpdatedSesi()} rowData={d} />
+                  <Button
+                    title="Hapus Data"
+                    colorScheme="red"
+                    // onClick={() => setIsDeleteModalOpen(true)}
+                    key="hapusData"
+                    size="sm"
+                  >
+                    <DeleteIcon /> &nbsp; Hapus
+                  </Button>
+                </>
+              )}
+
               <Button
                 bgColor="gray.500"
                 _hover={{
@@ -184,7 +177,7 @@ function SesiKelas({
                 // onClick={() => router.push(`/kelas/24df32`)}
               >
                 <BiDoorOpen size="20px" />
-                &nbsp;Kelola Sesi
+                &nbsp; {roleAccess !== "Tenant" ? "Kelola Sesi" : "Masuk Sesi"}
               </Button>
             </HStack>
           </Stack>

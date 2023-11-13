@@ -1,5 +1,4 @@
 "use client";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdArrowBackIosNew, MdOutlinePeople } from "react-icons/md";
 import { HiOutlineNewspaper } from "react-icons/hi";
 import {
@@ -10,17 +9,14 @@ import {
   Image,
   VStack,
   Text,
-  Avatar,
   Flex,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
-  TagLeftIcon,
-  useTab,
 } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import TenantKelas from "./partisipan/tenant-kelas";
 import SesiKelas from "./sesi-kelas/sesi-kelas";
 import { useRouter, notFound } from "next/navigation";
@@ -31,7 +27,7 @@ import NotFound from "@/app/components/template/NotFound";
 import useSession from "./api/api-masuk-kelas";
 import ProfileMentor from "../pages/profileMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
-import { isJSDocNullableType } from "typescript";
+import Progress from "./progress/progress";
 
 function page({ params }: { params: { id: string } }) {
   const getParamsId = params.id;
@@ -47,173 +43,182 @@ function page({ params }: { params: { id: string } }) {
     getUser = user; // Setel nilai getUser jika user ada
   }
 
-  const session = useSession();
-
   const InitalState: {
     isLoading: boolean;
     dataClass: ClassInfo.classHeading | null;
-    dataPartisipan: ClassInfo.Partisipan | null;
-    dataSesi: ClassInfo.Sesi | null;
   } = {
     isLoading: true,
     dataClass: null,
-    dataPartisipan: null,
-    dataSesi: null,
   };
   const [state, setState] = useState(InitalState);
 
   useEffect(() => {
     const getAll = async () => {
       try {
-        const dataPartisipan = await session.getPartisipan(getParamsId);
-        const dataSesi = await session.getSesi(getParamsId);
-        const dataClass = await session.getClassHeading(getParamsId);
-
+        const response = await axiosCustom.get(`/course/${getParamsId}`);
         setState({
           isLoading: false,
-          dataClass,
-          dataPartisipan,
-          dataSesi,
+          dataClass: response.data.data,
         });
       } catch (error) {
         console.error(error);
+        setState({
+          isLoading: false,
+          dataClass: null,
+        });
       }
     };
     getAll();
-  }, []);
+  }, [getParamsId]);
 
   // console.log(sesiKelas?.item);
+  const [idTenant, setIdTenant] = useState<string>("");
+  const [partisipanIndex, setPartisipanIndex] = useState(0);
+
+  const partisipanPageChange = (index: number) => {
+    setPartisipanIndex(index);
+  };
 
   return state.isLoading ? (
     <Loading />
   ) : state.dataClass ? (
-    <Stack spacing={6}>
-      <Flex
-        flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
-        justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
-        align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
-      >
-        <HStack w="full" spacing={6} alignItems="flex-start" mr={2}>
-          <Image
-            // rounded={{ base: "xl", lg: "3xl" }}
-            // height={{
-            //   base: "118px",
-            //   sm: "126px",
-            //   md: "158px",
-            //   xl: "250px",
-            // }}
-            //   maxH={{
-            //     base: "200px",
-            //     // sm: "126px",
-            //     sm: "120px",
-            //     lg: "190px",
-            //     xl: "220px",
-            //   }}
-            // maxW={"13rem"}
-            maxW={{
-              base: "7rem",
-              // sm: "9rem",
-              md: "9rem",
-              // lg: "11rem",
-              xl: "10rem",
-            }}
-            objectFit={"cover"}
-            src={"/img/class-avatar.png"}
-            alt="#"
-            // boxShadow={"xl"}
-          />
-          <VStack spacing={2} align="flex-start">
-            <Text as="b" fontWeight={"bold"} fontSize={["17px", "xl", "2xl"]}>
-              {state.dataClass?.name}
-            </Text>
-            <Text fontSize={["sm", "md"]} fontWeight={"thin"} color="gray.700">
-              Dibuat : {state.dataClass?.created_at}
-            </Text>
-            <ProfileMentor mentor={state.dataClass?.mentor || null} />
-          </VStack>
-        </HStack>
-        <Button
-          leftIcon={<MdArrowBackIosNew />}
-          colorScheme="blue"
-          variant="outline"
-          aria-label="btn-email"
-          size={"sm"}
-          mb={6}
-          onClick={() => router.push("/kelas")}
+    <Suspense fallback={<Loading />}>
+      <Stack spacing={6}>
+        <Flex
+          flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
+          justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
+          align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
         >
-          Kembali
-        </Button>
-      </Flex>
-
-      <Box>
-        <Text
-          textAlign="justify"
-          dangerouslySetInnerHTML={{
-            __html: state.dataClass ? state.dataClass.description : "",
-          }}
-        />
-      </Box>
-
-      <Tabs variant="unstyled">
-        <TabList justifyContent="center">
-          <HStack spacing={{ base: 6, md: 10 }}>
-            <Tab
-              _selected={{
-                background: "blue.500",
-                color: "white",
-                rounded: "10",
+          <HStack w="full" spacing={6} alignItems="flex-start" mr={2}>
+            <Image
+              maxW={{
+                base: "7rem",
+                // sm: "9rem",
+                md: "9rem",
+                // lg: "11rem",
+                xl: "10rem",
               }}
-              _focus={{ boxShadow: "none" }}
-              style={{ outline: "blue.500" }}
-              aria-label="tenant-kelas"
-              shadow={{ base: "xl", md: "2xl" }}
-            >
-              <HStack
-                spacing={{ base: 1, md: 2 }}
-                px={{ base: 0, md: 6 }}
-                fontSize={{ base: "md", lg: "lg" }}
-              >
-                <MdOutlinePeople />
-                <Text>Tenant</Text>
-              </HStack>
-            </Tab>
-            <Tab
-              _selected={{
-                background: "blue.500",
-                color: "white",
-                rounded: "10",
-                shadow: "",
-              }}
-              _focus={{ boxShadow: "none" }}
-              style={{ outline: "blue.500" }}
-              aria-label="sesi-kelas"
-              shadow={{ base: "xl", md: "2xl" }}
-            >
-              <HStack
-                fontSize={{ base: "md", lg: "lg" }}
-                spacing={{ base: 1, md: 2 }}
-                px={{ base: 0, md: 6 }}
-              >
-                <HiOutlineNewspaper />
-                <Text>Sesi Kelas</Text>
-              </HStack>
-            </Tab>
-          </HStack>
-        </TabList>
-        <TabPanels>
-          <TabPanel pt={6} px={0} pb={0}>
-            <TenantKelas />
-          </TabPanel>
-          <TabPanel pt={6} px={0} pb={0}>
-            <SesiKelas
-              sesi={state?.dataSesi}
-              idKelas={getParamsId}
-              roleAccess={getUser?.role}
+              objectFit={"cover"}
+              src={
+                state?.dataClass.course_ends === false
+                  ? "/img/class-avatar.png"
+                  : "/img/class-ends-min.png"
+              }
+              alt="#"
+              // boxShadow={"xl"}
             />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </Stack>
+            <VStack spacing={2} align="flex-start">
+              <Text as="b" fontWeight={"bold"} fontSize={["17px", "xl", "2xl"]}>
+                {state.dataClass?.name}
+              </Text>
+              <Text
+                fontSize={["sm", "md"]}
+                fontWeight={"thin"}
+                color="gray.700"
+              >
+                Dibuat : {state.dataClass?.created_at}
+              </Text>
+              <ProfileMentor mentor={state.dataClass?.mentor || null} />
+            </VStack>
+          </HStack>
+          <Button
+            leftIcon={<MdArrowBackIosNew />}
+            colorScheme="blue"
+            variant="outline"
+            aria-label="btn-email"
+            size={"sm"}
+            mb={6}
+            onClick={() => router.push("/kelas")}
+          >
+            Kembali
+          </Button>
+        </Flex>
+
+        <Box>
+          <Text
+            textAlign="justify"
+            dangerouslySetInnerHTML={{
+              __html: state.dataClass ? state.dataClass.description : "",
+            }}
+          />
+        </Box>
+
+        <Tabs variant="unstyled">
+          <TabList justifyContent="center">
+            <HStack spacing={{ base: 6, md: 10 }}>
+              <Tab
+                _selected={{
+                  background: "blue.500",
+                  color: "white",
+                  rounded: "10",
+                }}
+                _focus={{ boxShadow: "none" }}
+                style={{ outline: "blue.500" }}
+                aria-label="tenant-kelas"
+                shadow={{ base: "xl", md: "2xl" }}
+              >
+                <HStack
+                  spacing={{ base: 1, md: 2 }}
+                  px={{ base: 0, md: 6 }}
+                  fontSize={{ base: "md", lg: "lg" }}
+                >
+                  <MdOutlinePeople />
+                  <Text>Partisipan</Text>
+                </HStack>
+              </Tab>
+              <Tab
+                _selected={{
+                  background: "blue.500",
+                  color: "white",
+                  rounded: "10",
+                  shadow: "",
+                }}
+                _focus={{ boxShadow: "none" }}
+                style={{ outline: "blue.500" }}
+                aria-label="sesi-kelas"
+                shadow={{ base: "xl", md: "2xl" }}
+              >
+                <HStack
+                  fontSize={{ base: "md", lg: "lg" }}
+                  spacing={{ base: 1, md: 2 }}
+                  px={{ base: 0, md: 6 }}
+                >
+                  <HiOutlineNewspaper />
+                  <Text>Sesi Kelas</Text>
+                </HStack>
+              </Tab>
+              {/* <Tab hidden={true}>Progress</Tab> */}
+            </HStack>
+          </TabList>
+          <TabPanels>
+            <TabPanel pt={6} px={0} pb={0}>
+              {partisipanIndex === 0 ? (
+                <TenantKelas
+                  idKelas={getParamsId}
+                  roleAccess={getUser?.role}
+                  classEnd={state?.dataClass.course_ends}
+                  idTenant={(id) => setIdTenant(id)}
+                  tabIndex={() => setPartisipanIndex(1)}
+                />
+              ) : (
+                <Progress
+                  idKelas={state?.dataClass.id}
+                  idTenant={idTenant}
+                  tabIndex={() => partisipanPageChange(0)}
+                />
+              )}
+            </TabPanel>
+            <TabPanel pt={6} px={0} pb={0}>
+              <SesiKelas
+                idKelas={getParamsId}
+                roleAccess={getUser?.role}
+                classEnd={state?.dataClass.course_ends}
+              />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Stack>
+    </Suspense>
   ) : (
     <NotFound
       statusCode={404}

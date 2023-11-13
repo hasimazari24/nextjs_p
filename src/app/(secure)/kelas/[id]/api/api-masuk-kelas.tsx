@@ -28,10 +28,21 @@ const getPartisipan = async (idKelas: string) => {
   }
 };
 
-const getSesi = async (idKelas: string) => {
+const getSesi = async (idKelas: string, roleAccess: string) => {
+  let Url = "";
+  switch (roleAccess) {
+    case "Super Admin":
+    case "Manajemen":
+    case "Mentor":
+      Url = `/course/${idKelas}/item`;
+      break;
+    case "Tenant":
+      Url = `/course/${idKelas}/item-tenant`;
+      break;
+  }
   try {
     // Panggil API menggunakan Axios dengan async/await
-    const response = await axiosCustom.get(`/course/${idKelas}/item`);
+    const response = await axiosCustom.get(Url);
     const dataSesi: ClassInfo.Sesi = response.data.data;
     return dataSesi;
   } catch (error: any) {
