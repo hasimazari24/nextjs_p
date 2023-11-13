@@ -95,6 +95,10 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
         access: [],
       },
       {
+        menu: "backPanelTenant_gallery",
+        access: [],
+      },
+      {
         menu: "kelas",
         access: ["tmbhKelas", "editKelas"],
       },
