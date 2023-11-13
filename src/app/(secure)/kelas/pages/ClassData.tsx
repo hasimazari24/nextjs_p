@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Text,
@@ -70,6 +70,7 @@ import EditClass from "./editClass";
 import ProfileMentor from "./profileMentor";
 import { useRouter } from "next/navigation";
 import DeleteClass from "./deleteClass";
+import { Column, useFilters, usePagination, useTable } from "react-table";
 
 interface ClassProps {
   rowData: Kelas[];
@@ -78,184 +79,185 @@ interface ClassProps {
 }
 
 const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
-  // const MotionSimpleGrid = motion(SimpleGrid);
-  // const MotionBox = motion(Box);
-  //set query/keyword pencarian
-
-  // const dataMentor = rowData.flatMap((d) =>
-  //   Array.isArray(d.mentor)
-  //     ? d.mentor.map((data) => ({
-  //         id: data.id,
-  //         image_id: data.image_id,
-  //         image_url: data.image_url,
-  //         fullname: data.fullname,
-  //         role: data.role,
-  //       }))
-  //     : [],
-  // );
-
-  const router = useRouter();
-  const [queryName, setQueryName] = useState("");
-  const [queryMentor, setQueryMentor] = useState("");
-  //set item per page, default 4
-  const [itemsPerPage, setItemPerPage] = useState<number>(4);
-  //current page utk mendapatkan page saat ini
-  const [currentPage, setCurrentPage] = useState(0);
-  //atur perubahan page
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  //utk berpindah halaman melalui paginate
-  const nextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const previousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  //fungsi pencarian menggabungkan dua array (rowData dan dataMentor)
-  // const search = [
-  //   ...rowData.filter((item: Kelas) =>
-  //     item["name"].toString().toLowerCase().includes(queryName.toLowerCase()),
-  //   ),
-  //   ...dataMentor.filter((i: Mentor) =>
-  //     i["fullname"]
-  //       .toString()
-  //       .toLowerCase()
-  //       .includes(queryMentor.toLowerCase()),
-  //   ),
-  // ];
-
-  const search: Kelas[] = rowData.filter(
-    (item: Kelas) =>
-      item["name"].toString().toLowerCase().includes(queryName.toLowerCase()) &&
-      item["mentor"]["fullname"]
-        .toString()
-        .toLowerCase()
-        .includes(queryMentor.toLowerCase()),
-  );
-  //menghitung total halaman berdasarkan panjang data pada hasil pencarian.
-  //Math.ceil(...) => membulatkan hasil pembagian panjang data dari pencarian dengan jumlah item per halaman.
-  //Ini berguna untuk menentukan jumlah halaman secara keseluruhan.
-  //lakukan perubahan totalpages pada memo ketika query dan itemperpage berubah
-  const totalPages = useMemo(() => {
-    return Math.ceil(search.length / itemsPerPage);
-  }, []);
-
-  //untuk mengatur apakah tombol next, back bisa dipenyek, ini hasilnya true/false
-  const canNextPage = currentPage < totalPages - 1;
-  const canPreviousPage = currentPage > 0;
-
-  //startIndex dan endIndex untuk memotong data sesuai dengan halaman yang sedang aktif,
-  //dan hanya menampilkan item yang sesuai dengan halaman saat ini.
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  //tampilan data usai dipotong dan dilakukan pencarian
-  const displayedData = search.slice(startIndex, endIndex);
+  const columns: ReadonlyArray<Column<Kelas>> = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "name",
+      accessor: "name",
+    },
+    {
+      Header: "description",
+      accessor: "description",
+    },
+    {
+      Header: "participant_count",
+      accessor: "participant_count",
+    },
+    {
+      Header: "activity_count",
+      accessor: "activity_count",
+    },
+    {
+      Header: "Mentor",
+      accessor: "mentor",
+      filter: (rows, id, filterValue) => {
+        return rows.filter((row) =>
+          row.values.mentor.fullname
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()),
+        );
+      },
+      // Cell: ({ cell }) => cell.value.fullname, // Display only the fullname in the table cell
+    },
+  ];
 
   return (
     <>
       <Stack mt="4" spacing={6}>
-        <Stack
-          justifyContent="space-between"
-          direction={["column", "row"]}
-          flexWrap={"wrap"}
-        >
-          <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
-            <Stack
-              direction={{ base: "column", md: "row", lg: "row" }}
-              // alignItems={"center"}
-              spacing={3}
-            >
-              <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
-                </InputLeftElement>
-                <Input
-                  pl="3rem"
-                  // key={option.key}
-                  type="text"
-                  placeholder={`Cari Nama Kelas`}
-                  // onChange={(e) => setFilter(option.key, e.target.value)}
-                  onChange={(e) => {
-                    setQueryName(e.target.value);
-                    setCurrentPage(0);
-                  }}
-                  mb="2"
-                />
-              </InputGroup>
+        <CardTable
+          data={rowData}
+          column={columns}
+          onSubmit={() => onSubmit()}
+          roleAccess={roleAccess}
+        />
+      </Stack>
+    </>
+  );
+};
 
-              <InputGroup>
-                <InputLeftElement pointerEvents="none">
-                  <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
-                </InputLeftElement>
-                <Input
-                  pl="3rem"
-                  // key={option.key}
-                  type="text"
-                  placeholder={`Cari Mentor`}
-                  onChange={(e) => {
-                    setQueryMentor(e.target.value);
-                    setCurrentPage(0);
-                  }}
-                  // onChange={(e) => setFilter(option.key, e.target.value)}
-                  mb="2"
-                />
-              </InputGroup>
-            </Stack>
-          </Flex>
-          <Flex
-            justifyContent={["center", "flex-end"]}
-            alignItems={"center"}
-            mt="-2"
+interface CardTableProps<T extends object> {
+  data: T[];
+  column: ReadonlyArray<Column<T>>;
+  onSubmit: () => void;
+  roleAccess: string;
+}
+
+function CardTable<T extends object>(props: CardTableProps<T>) {
+  const {
+    page,
+    prepareRow,
+    // getTableBodyProps,
+    // headerGroups,
+    getTableProps,
+    // setGlobalFilter,
+    setFilter,
+    canPreviousPage,
+    canNextPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    pageSize,
+    pageOptions,
+    gotoPage,
+    state: { pageIndex },
+  } = useTable(
+    {
+      data: props.data,
+      columns: props.column,
+      initialState: {
+        pageSize: 4,
+      },
+    },
+    useFilters,
+    // useGlobalFilter,
+    usePagination,
+  );
+
+  const router = useRouter();
+
+  return (
+    <Stack mt="4" spacing={6}>
+      <Stack
+        justifyContent="space-between"
+        direction={["column", "row"]}
+        flexWrap={"wrap"}
+      >
+        <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
+          <Stack
+            direction={{ base: "column", md: "row", lg: "row" }}
+            // alignItems={"center"}
+            spacing={3}
           >
-            {/* <Stack direction={["column","row"]}> */}
-            <Text>Showing</Text>
-            <Select
-              w="auto"
-              minW="20"
-              fontSize="sm"
-              onChange={(e) => {
-                setItemPerPage(Number(e.target.value));
-              }}
-              cursor="pointer"
-              pl="2"
-              pr="2"
-            >
-              <option value="4">4</option>
-              <option value="8">8</option>
-              <option value="24">24</option>
-              <option value="100">100</option>
-            </Select>
-            <Text>Data Per Page</Text>
-            {/* </Stack> */}
-          </Flex>
-        </Stack>
-        {displayedData && displayedData.length > 0 ? (
-          <>
-            <Grid
-              templateColumns={{
-                base: "1fr",
-                sm: "1fr 1fr",
-                lg: "1fr 1fr 1fr",
-                xl: "1fr 1fr 1fr 1fr",
-              }}
-              // templateColumns={["1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
-              // flexWrap={"wrap"}
-              alignItems={"center"}
-              justifyItems={"center"}
-              gap={{ base: 8, sm: 6, lg: 8 }}
-              mb={2}
-            >
-              {displayedData.flatMap((data) => (
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
+              </InputLeftElement>
+              <Input
+                pl="3rem"
+                // key={option.key}
+                type="text"
+                placeholder={`Cari Nama Kelas`}
+                // onChange={(e) => setFilter(option.key, e.target.value)}
+                onChange={(e) => setFilter("name", e.target.value)}
+                mb="2"
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
+              </InputLeftElement>
+              <Input
+                pl="3rem"
+                type="text"
+                placeholder={`Cari Mentor`}
+                onChange={(e) => {
+                  setFilter("mentor", e.target.value);
+                }}
+                mb="2"
+              />
+            </InputGroup>
+          </Stack>
+        </Flex>
+        <Flex
+          justifyContent={["center", "flex-end"]}
+          alignItems={"center"}
+          mt="-2"
+        >
+          {/* <Stack direction={["column","row"]}> */}
+          <Text>Showing</Text>
+          <Select
+            w="auto"
+            minW="20"
+            fontSize="sm"
+            onChange={(e) => {
+              setPageSize(+e.target.value);
+            }}
+            cursor="pointer"
+            pl="2"
+            pr="2"
+          >
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="24">24</option>
+            <option value="100">100</option>
+          </Select>
+          <Text>Data Per Page</Text>
+          {/* </Stack> */}
+        </Flex>
+      </Stack>
+      {page.length > 0 ? (
+        <Stack spacing={6}>
+          <Grid
+            templateColumns={{
+              base: "1fr",
+              sm: "1fr 1fr",
+              lg: "1fr 1fr 1fr",
+              xl: "1fr 1fr 1fr 1fr",
+            }}
+            {...getTableProps()}
+            alignItems={"center"}
+            justifyItems={"center"}
+            gap={{ base: 8, sm: 6, lg: 8 }}
+          >
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
                 <Stack
-                  // direction={"column"}
+                  {...row.getRowProps()}
                   alignItems={"center"}
                   spacing={3}
                   w="full"
@@ -264,28 +266,11 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
                   boxShadow={"lg"}
                   rounded={"2xl"}
                   bgColor={"gray.50"}
-                  key={data.id}
+                  key={i}
                   // display="flex"
                 >
-                  <Box
-                  // p={{ base: 4, sm: 2, lg: 4 }}
-                  >
+                  <Box>
                     <Image
-                      // rounded={{ base: "xl", lg: "3xl" }}
-                      // height={{
-                      //   base: "118px",
-                      //   sm: "126px",
-                      //   md: "158px",
-                      //   xl: "250px",
-                      // }}
-                      //   maxH={{
-                      //     base: "200px",
-                      //     // sm: "126px",
-                      //     sm: "120px",
-                      //     lg: "190px",
-                      //     xl: "220px",
-                      //   }}
-                      // maxW={"13rem"}
                       maxW={{
                         base: "13rem",
                         sm: "9rem",
@@ -299,29 +284,19 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
                       // boxShadow={"xl"}
                     />
                   </Box>
-
                   <Text
                     as="b"
                     fontWeight={"bold"}
                     fontSize={{ base: "16px", md: "17px" }}
                     textOverflow="ellipsis"
-                    // maxW={{
-                    //   base: "auto",
-                    //   sm: "340px",
-                    //   md: "408px",
-                    //   lg: "544px",
-                    // }}
-                    // w="auto"
-                    // whiteSpace="nowrap"
                     flex="1"
                     cursor={"default"}
                     overflow="hidden"
-                    title={data.name}
+                    title={row.values.name}
                     noOfLines={2}
                   >
-                    {data.name}
+                    {row.values.name}
                   </Text>
-
                   <HStack w="full" justifyContent={"center"} spacing={2}>
                     <Box
                       borderColor={"blue.500"}
@@ -341,7 +316,7 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
                           as={MdOutlinePeople}
                           boxSize={{ base: "20px", sm: "17px", lg: "20px" }}
                         />
-                        <p>{data.participant_count}</p>
+                        <p>{row.values.participant_count}</p>
                       </HStack>
                     </Box>
                     <Box
@@ -362,12 +337,12 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
                           as={HiOutlineNewspaper}
                           boxSize={{ base: "20px", sm: "17px", lg: "20px" }}
                         />
-                        <p>{data.activity_count}</p>
+                        <p>{row.values.activity_count}</p>
                       </HStack>
                     </Box>
                   </HStack>
 
-                  <ProfileMentor mentor={data.mentor} />
+                  <ProfileMentor mentor={row.values.mentor} />
 
                   <Stack spacing={2} direction={"row"} w="full">
                     <Button
@@ -379,14 +354,14 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
                       w="full"
                       size={{ base: "xs", sm: "sm" }}
                       alignContent={"center"}
-                      onClick={() => router.push(`/kelas/${data.id}`)}
+                      onClick={() => router.push(`/kelas/${row.values.id}`)}
                     >
                       <BiDoorOpen size="20px" />
                       &nbsp;Masuk
                     </Button>
-                    {(roleAccess === "Super Admin" ||
-                      roleAccess === "Manajemen" ||
-                      roleAccess === "Mentor") && (
+                    {(props.roleAccess === "Super Admin" ||
+                      props.roleAccess === "Manajemen" ||
+                      props.roleAccess === "Mentor") && (
                       <Menu>
                         <MenuButton
                           as={Button}
@@ -406,15 +381,15 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
                         <MenuList>
                           <MenuItem style={{ width: "100%" }}>
                             <EditClass
-                              rowData={data}
-                              onSubmit={() => onSubmit()}
-                              roleAccess={roleAccess}
+                              rowData={row.values}
+                              onSubmit={() => props.onSubmit()}
+                              roleAccess={props.roleAccess}
                             />
                           </MenuItem>
                           <MenuItem>
                             <DeleteClass
-                              dataDelete={data}
-                              onSubmit={() => onSubmit()}
+                              dataDelete={row.values}
+                              onSubmit={() => props.onSubmit()}
                             />
                           </MenuItem>
                         </MenuList>
@@ -422,59 +397,59 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
                     )}
                   </Stack>
                 </Stack>
-              ))}
-            </Grid>
-            <Flex justify="flex-end" alignItems="center">
-              <HStack>
-                <Pagination
-                  currentPage={currentPage}
-                  data={search}
-                  onClick={handlePageChange}
-                  totalPages={totalPages}
-                />
-                <Button
-                  disabled={!canPreviousPage}
-                  onClick={previousPage}
-                  colorScheme="blue"
-                  size="sm"
-                  leftIcon={<HiChevronLeft />}
-                >
-                  Prev
-                </Button>
-                <Button
-                  disabled={!canNextPage}
-                  onClick={nextPage}
-                  colorScheme="blue"
-                  size="sm"
-                  rightIcon={<HiChevronRight />}
-                >
-                  Next
-                </Button>
-              </HStack>
-            </Flex>
-          </>
-        ) : (
-          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
-            <Image
-              src="/img/classroom.png"
-              h={{ base: "200px", sm: "250px", md: "350px" }}
-              w="auto"
-              // w="auto"
-              // objectFit={"cover"}
-            />
-            <Text
-              as="b"
-              fontWeight={"bold"}
-              fontSize={{ base: "16px", md: "17px" }}
-              textAlign={"center"}
-            >
-              Hasil Pencarian Tidak Ditemukan
-            </Text>
-          </Stack>
-        )}
-      </Stack>
-    </>
+              );
+            })}
+          </Grid>
+          <Flex justify="flex-end" alignItems="center">
+            <HStack>
+              <Pagination
+                currentPage={pageIndex}
+                totalPages={pageOptions.length}
+                data={pageOptions}
+                onClick={gotoPage}
+              />
+              <Button
+                disabled={!canPreviousPage}
+                onClick={previousPage}
+                colorScheme="blue"
+                size="sm"
+                leftIcon={<HiChevronLeft />}
+              >
+                Prev
+              </Button>
+              <Button
+                disabled={!canNextPage}
+                onClick={nextPage}
+                colorScheme="blue"
+                size="sm"
+                rightIcon={<HiChevronRight />}
+              >
+                Next
+              </Button>
+            </HStack>
+          </Flex>
+        </Stack>
+      ) : (
+        <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+          <Image
+            src="/img/classroom.png"
+            h={{ base: "200px", sm: "250px", md: "350px" }}
+            w="auto"
+            // w="auto"
+            // objectFit={"cover"}
+          />
+          <Text
+            as="b"
+            fontWeight={"bold"}
+            fontSize={{ base: "16px", md: "17px" }}
+            textAlign={"center"}
+          >
+            Hasil Pencarian Tidak Ditemukan
+          </Text>
+        </Stack>
+      )}
+    </Stack>
   );
-};
+}
 
 export default ClassData;

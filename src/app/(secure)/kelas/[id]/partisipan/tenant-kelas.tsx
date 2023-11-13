@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect, ReactNode, Suspense } from "react";
 import {
   Avatar,
   Box,
@@ -15,190 +16,438 @@ import {
   Text,
   VStack,
   Image,
+  Select,
 } from "@chakra-ui/react";
 import { DeleteIcon, Search2Icon, SearchIcon } from "@chakra-ui/icons";
 
 import { IoSearchSharp } from "react-icons/io5";
 import { BiDoorOpen, BiPlus } from "react-icons/bi";
 import { GrMoreVertical } from "react-icons/gr";
-import data from "../../../dashboard/data";
+// import data from "../../../dashboard/data";
+import AddPartisipan from "./addPartisipan";
+import * as ClassInfo from "@/app/type/class-type.d";
+import { Column, useFilters, usePagination, useTable } from "react-table";
+import Loading from "../../loading";
+import { axiosCustom } from "@/app/api/axios";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import Pagination from "@/app/components/datatable/pagination";
+import dynamic from "next/dynamic";
 
-interface TenantKelasProps {
-  logo?: string;
-  nama?: string;
+const TenantKelas = ({
+  // partisipan,
+  idKelas,
+  roleAccess,
+  classEnd,
+  idTenant,
+  tabIndex,
+}: {
+  // partisipan: ClassInfo.Partisipan | null;
+  idKelas: string;
+  roleAccess: string;
+  classEnd: boolean;
+  idTenant: (id: string) => void;
+  tabIndex: () => void;
+}) => {
+  const [dataPartisipan, setDataPartisipan] =
+    useState<ClassInfo.Partisipan | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // if (need_updated === true)
+    getUpdatedPartisipan();
+  }, []);
+  const getUpdatedPartisipan = async () => {
+    try {
+      setIsLoading(true);
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(`/course/${idKelas}/participant`);
+      const timer = setTimeout(() => {
+        // setIdTenant(id);
+        setDataPartisipan(response.data.data); // Set isLoading to false to stop the spinner
+        setIsLoading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal memuat data:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const columns: ReadonlyArray<Column<ClassInfo.Item_partisipan>> = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "name",
+      accessor: "name",
+    },
+    {
+      Header: "image_url",
+      accessor: "image_url",
+    },
+  ];
+
+  return isLoading ? (
+    <Loading />
+  ) : (
+    <Suspense fallback={<Loading />}>
+      <Stack spacing={{ base: 4, md: 6 }}>
+        <Flex
+          flexDirection={{ base: "column", sm: "row" }} // Arah tata letak berdasarkan layar
+          justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
+          // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
+        >
+          <VStack spacing={0} align="flex-start" mr={2}>
+            <Text fontWeight={"bold"} fontSize={["lg", "xl"]}>
+              Partisipan Kelas
+            </Text>
+            <Text fontWeight="medium">
+              Total :{" "}
+              <span style={{ color: "green" }}>
+                {dataPartisipan?.participant_count} Partisipan
+              </span>
+            </Text>
+          </VStack>
+          <HStack spacing={2} align="start">
+            {roleAccess !== "Tenant" && classEnd !== true && (
+              <AddPartisipan
+                onSubmit={() => getUpdatedPartisipan()}
+                idKelas={idKelas}
+              />
+            )}
+            <Stack spacing={4}>
+              <Spacer />
+            </Stack>
+          </HStack>
+        </Flex>
+        {/* konten disinii (daftar participant) */}
+        {dataPartisipan &&
+        Array.isArray(dataPartisipan.participant) &&
+        dataPartisipan.participant.length > 0 ? (
+          <CardTable
+            data={dataPartisipan.participant}
+            column={columns}
+            roleAccess={roleAccess}
+            classEnd={classEnd}
+            idTenant={idTenant}
+            tabIndex={tabIndex}
+          />
+        ) : (
+          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+            <Image
+              src="/img/classroom.png"
+              h={{ base: "150px", sm: "170px", md: "250px" }}
+              w="auto"
+              // w="auto"
+              // objectFit={"cover"}
+            />
+            <Text
+              as="b"
+              fontWeight={"bold"}
+              fontSize={{ base: "16px", md: "17px" }}
+              textAlign={"center"}
+            >
+              Data Partisipan Kosong
+            </Text>
+            <Text
+              fontSize={{ base: "15.5px", md: "16.5px" }}
+              textAlign={"center"}
+            >
+              Mungkin belum dibuat atau sudah dihapus
+            </Text>
+          </Stack>
+        )}
+      </Stack>
+    </Suspense>
+  );
+};
+
+interface CardTableProps<T extends object> {
+  data: T[];
+  column: ReadonlyArray<Column<T>>;
+  roleAccess: string;
+  classEnd: boolean;
+  idTenant: (id: string) => void;
+  tabIndex: () => void;
 }
 
-const TenantKelas = ({ logo, nama }: TenantKelasProps) => {
+function CardTable<T extends object>(props: CardTableProps<T>) {
+  const {
+    page,
+    prepareRow,
+    getTableProps,
+    setFilter,
+    canPreviousPage,
+    canNextPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    pageSize,
+    pageOptions,
+    gotoPage,
+    state: { pageIndex },
+  } = useTable(
+    {
+      data: props.data,
+      columns: props.column,
+      initialState: {
+        pageSize: 5,
+      },
+    },
+    useFilters,
+    usePagination,
+  );
+
   return (
-    <Stack spacing={{ base: 6, md: 8 }}>
-      <Flex
-        flexDirection={{ base: "column", sm: "row" }} // Arah tata letak berdasarkan layar
-        justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
-        // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
+    <Stack spacing={4}>
+      <Stack
+        justifyContent="space-between"
+        direction={["column", "row"]}
+        flexWrap={"wrap"}
       >
-        <VStack spacing={0} align="flex-start" mr={2}>
-          <Text fontWeight={"bold"} fontSize={["lg", "xl"]}>
-            Partisipan Kelas
-          </Text>
-          <Text fontWeight="medium">Total :10 Partisipan</Text>
-        </VStack>
-        <HStack spacing={2} align="start">
-          {/* jika butuh btn kembali, ada disinii */}
-
-          {/* <Button
-            leftIcon={<MdArrowBackIosNew />}
-            colorScheme="blue"
-            variant="outline"
-            size={"sm"}
-            mb={6}
+        <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
+          <Stack
+            direction={{ base: "column", md: "row", lg: "row" }}
+            // alignItems={"center"}
+            spacing={3}
           >
-            Kembali
-          </Button> */}
-          <Button
-            leftIcon={<BiPlus />}
-            colorScheme="green"
-            variant="solid"
-            size={"sm"}
-            mb={6}
-          >
-            Tambah Partisipan
-          </Button>
-          <Stack spacing={4}>
-            <Spacer />
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
+              </InputLeftElement>
+              <Input
+                maxW={60}
+                pl="3rem"
+                // key={option.key}
+                type="text"
+                placeholder={`Cari Nama Tenant`}
+                onChange={(e) => setFilter("name", e.target.value)}
+                mb="2"
+              />
+            </InputGroup>
           </Stack>
-        </HStack>
-      </Flex>
-      {/* konten disinii (daftar participant) */}
-      <Box>
+        </Flex>
+
+        <Flex
+          justifyContent={["center", "flex-end"]}
+          alignItems={"center"}
+          mt="-2"
+        >
+          {/* <Stack direction={["column","row"]}> */}
+          <Text>Showing</Text>
+          <Select
+            w="auto"
+            minW="20"
+            fontSize="sm"
+            onChange={(e) => {
+              setPageSize(+e.target.value);
+            }}
+            cursor="pointer"
+            pl="2"
+            pr="2"
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="75">75</option>
+          </Select>
+          <Text>Data Per Page</Text>
+          {/* </Stack> */}
+        </Flex>
+      </Stack>
+      {page.length > 0 ? (
         <Stack spacing={4}>
-          <InputGroup>
-            <InputLeftElement pointerEvents="none">
-              <Button
-                // pl="1rem"
-
-                justifyContent="center"
-                leftIcon={<SearchIcon />}
-                bgColor="blue.500"
-                rounded="none"
-              ></Button>
-            </InputLeftElement>
-            <Input
-              maxW={60}
-              pl="3rem"
-              // key={option.key}
-              type="text"
-              placeholder={`Cari Nama Kelas`}
-              // onChange={(e) => setFilter(option.key, e.target.value)}
-              // onChange={(e) => {
-              // //   setQueryName(e.target.value);
-              // //   setCurrentPage(0);
-              // }}
-              mb="2"
-            />
-          </InputGroup>
-
           <Grid
             templateColumns={{
               base: "1fr",
               sm: "1fr 1fr",
-              lg: "1fr 1fr 1fr",
-              xl: "1fr 1fr 1fr 1fr",
+              md: "1fr 1fr 1fr",
+              lg: "1fr 1fr 1fr 1fr",
+              xl: "1fr 1fr 1fr 1fr 1fr",
             }}
-            // templateColumns={["1fr 1fr", "1fr 1fr 1fr", "1fr 1fr 1fr 1fr"]}
-            // flexWrap={"wrap"}
+            {...getTableProps()}
             alignItems={"center"}
             justifyItems={"center"}
             gap={{ base: 8, sm: 6, lg: 8 }}
             mb={2}
           >
-            {[1, 2, 3, 4, 5, 6].map((d, index) => (
-              <Stack
-                // direction={"column"}
-                alignItems={"center"}
-                spacing={3}
-                w="full"
-                h="full"
-                p={6}
-                boxShadow={"lg"}
-                rounded={"2xl"}
-                bgColor={"gray.50"}
-                key={index}
-                // display="flex"
-              >
-                <Box
-                // p={{ base: 4, sm: 2, lg: 4 }}
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <Stack
+                  {...row.getRowProps()}
+                  alignItems={"center"}
+                  spacing={4}
+                  maxW={{
+                    base: "13rem",
+                    // sm: "13rem",
+                    // md: "13rem",
+                    // lg:"12rem",
+                    sm: "14rem",
+                  }}
+                  w="full"
+                  h="full"
+                  // bgColor="gray.200"
+                  borderColor="blue.500"
+                  borderWidth="4px"
+                  shadow="2xl"
+                  // w="full"
+                  // h="full"
+                  p={3}
+                  boxShadow={"lg"}
+                  rounded={"2xl"}
+                  bgColor={"white"}
+                  key={i}
+                  // display="flex"
                 >
-                  <Image
-                    maxW={{
-                      base: "13rem",
-                      sm: "9rem",
-                      md: "10rem",
-                      // lg: "11rem",
-                      xl: "13rem",
-                    }}
-                    objectFit={"cover"}
-                    src={"/img/class-avatar.png"}
-                    alt="#"
-                    // boxShadow={"xl"}
-                  />
-                </Box>
+                  <Box
 
-                <Text
-                  as="b"
-                  fontWeight={"bold"}
-                  fontSize={{ base: "16px", md: "17px" }}
-                  textOverflow="ellipsis"
-                  // maxW={{
-                  //   base: "auto",
-                  //   sm: "340px",
-                  //   md: "408px",
-                  //   lg: "544px",
-                  // }}
-                  // w="auto"
-                  // whiteSpace="nowrap"
-                  flex="1"
-                  cursor={"default"}
-                  overflow="hidden"
-                  // title={data.name}
-                  noOfLines={2}
-                >
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dolorum aut dolor atque tempore laborum iste neque quasi
-                  consequatur, aliquid enim?
-                </Text>
+                  // p={{ base: 4, sm: 2, lg: 4 }}
+                  >
+                    <Image
+                      maxW={{
+                        base: "7rem",
+                        // sm: "5.5rem",
+                        sm: "6.5rem",
+                        // lg: "11rem",
+                        xl: "7.5rem",
+                      }}
+                      shadow="xl"
+                      // rounded={"full"}
+                      borderRadius={"full"}
+                      objectFit={"cover"}
+                      bgColor={"red.50"}
+                      src={
+                        row.values.image_url || "/img/tenant-logo-default.png"
+                      }
+                      alt="#"
+                      // boxShadow={"xl"}
+                    />
+                  </Box>
 
-                <Stack spacing={2} direction={"row"} w="full">
-                  <Button
-                    bgColor="teal.200"
-                    _hover={{
-                      bg: "teal.100",
-                    }}
-                    // color="white"
-                    w="full"
-                    size={"sm"}
-                    alignContent={"center"}
-                    // onClick={() => router.push(`/kelas/24df32`)}
+                  <Text
+                    as="b"
+                    fontWeight={"bold"}
+                    fontSize={{ base: "16px", md: "17px" }}
+                    textOverflow="ellipsis"
+                    // maxW={{
+                    //   base: "auto",
+                    //   sm: "340px",
+                    //   md: "408px",
+                    //   lg: "544px",
+                    // }}
+                    // w="auto"
+                    // whiteSpace="nowrap"
+                    flex="1"
+                    cursor={"default"}
+                    overflow="hidden"
+                    // title={data.name}
+                    noOfLines={2}
                   >
-                    <BiDoorOpen size="20px" />
-                    &nbsp;Progress
-                  </Button>
-                  <Button
-                    title="Hapus Data"
-                    colorScheme="red"
-                    // onClick={() => setIsDeleteModalOpen(true)}
-                    key="hapusData"
-                    size="sm"
-                  >
-                    <DeleteIcon />
-                  </Button>
+                    {row.values.name}
+                  </Text>
+                  {props.roleAccess !== "Tenant" && props.classEnd !== true && (
+                    <Stack
+                      spacing={1}
+                      direction={{ base: "row", md: "column", xl: "row" }}
+                      w="full"
+                    >
+                      <Button
+                        bgColor="gray.500"
+                        _hover={{
+                          bg: "gray.400",
+                        }}
+                        color="white"
+                        // color="white"
+                        w="full"
+                        size={"sm"}
+                        alignContent={"center"}
+                        onClick={() => {
+                          props.idTenant(row.values.id);
+                          props.tabIndex();
+                        }}
+                      >
+                        <BiDoorOpen size="20px" />
+                        &nbsp;Progress
+                      </Button>
+                      <Button
+                        title="Hapus Data"
+                        // p={5}
+                        colorScheme="red"
+                        shadow="xl"
+                        // onClick={() => setIsDeleteModalOpen(true)}
+                        key="hapusData"
+                        size={"sm"}
+                      >
+                        <DeleteIcon />
+                        &nbsp;
+                        <Box display={{ base: "none", md: "flex", xl: "none" }}>
+                          &nbsp;Hapus
+                        </Box>
+                      </Button>
+                    </Stack>
+                  )}
                 </Stack>
-              </Stack>
-            ))}
+              );
+            })}
           </Grid>
+          <Flex justify="flex-end" alignItems="center">
+            <HStack>
+              <Pagination
+                currentPage={pageIndex}
+                totalPages={pageOptions.length}
+                data={pageOptions}
+                onClick={gotoPage}
+              />
+              <Button
+                disabled={!canPreviousPage}
+                onClick={previousPage}
+                colorScheme="blue"
+                size="sm"
+                leftIcon={<HiChevronLeft />}
+              >
+                Prev
+              </Button>
+              <Button
+                disabled={!canNextPage}
+                onClick={nextPage}
+                colorScheme="blue"
+                size="sm"
+                rightIcon={<HiChevronRight />}
+              >
+                Next
+              </Button>
+            </HStack>
+          </Flex>
         </Stack>
-      </Box>
+      ) : (
+        <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+          <Image
+            src="/img/classroom.png"
+            h={{ base: "200px", sm: "250px", md: "350px" }}
+            w="auto"
+            // w="auto"
+            // objectFit={"cover"}
+          />
+          <Text
+            as="b"
+            fontWeight={"bold"}
+            fontSize={{ base: "16px", md: "17px" }}
+            textAlign={"center"}
+          >
+            Hasil Pencarian Tidak Ditemukan
+          </Text>
+        </Stack>
+      )}
     </Stack>
   );
-};
+}
 
 export default TenantKelas;
+
+// export default dynamic(() => Promise.resolve(TenantKelas), {
+//   ssr: false,
+//   // suspense: true,
+//   loading: () => <Loading />,
+// });
