@@ -20,23 +20,25 @@ import {
   Hide,
   SlideFade,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Mentor } from "@/app/type/class-type.d";
+import React, { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 
-function AddMentor({
+interface TenantResult {
+  id: string;
+  name: string;
+  level_tenant: string;
+  image_id: string;
+  image_url: string;
+}
+
+function FindTenant({
   onResult,
-  editedSelect,
+  idKelas,
 }: {
-  onResult: (idMentor: string) => void;
-  editedSelect?: Mentor;
+  onResult: (idTenant: string) => void;
+  idKelas: string;
 }) {
-  // const initialState: { isLoading?: boolean; resultMentor?: MentorResult[] } = {
-  //   isLoading: true,
-  //   resultMentor: [],
-  // };
-
-  const [stateResult, setStateResult] = useState<Mentor[] | []>([]);
+  const [stateResult, setStateResult] = useState<TenantResult[] | []>([]);
   // let result:MentorResult[] = [];
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
   const {
@@ -44,22 +46,14 @@ function AddMentor({
     onOpen: onOpenResult,
     onClose: onCloseResult,
   } = useDisclosure();
-  const [query, setQuery] = useState("");
-  const [selectedItem, setSelectedItem] = useState<Mentor | null>(null);
-  const [selectEdited, setSelectEdited] = useState<Mentor | null>(
-    editedSelect || null,
-  );
+  const [query, setQuery] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<TenantResult | null>(null);
 
-  const {
-    register: registMentorSearch,
-    handleSubmit: handleMentorSubmit,
-    reset: resetMentorSearch,
-    formState: { errors: errMentorSearch },
-  } = useForm<{ mentor: string }>();
+  const { register } = useForm<{ tenant: string }>();
 
   const fields = {
-    mentor: registMentorSearch("mentor", {
-      required: "Masukkan Kata Kunci Pencarian Mentor!",
+    tenant: register("tenant", {
+      required: "Masukkan Kata Kunci Pencarian Tenant!",
     }),
   };
 
@@ -75,11 +69,12 @@ function AddMentor({
       try {
         setIsLoadingSearch(true);
         const response = await axiosCustom.get(
-          `/user/search-user-mentor/${query}`,
+          `/tenant/${query}/course/${idKelas}`,
         );
         // setStateSearch({resultMentor: response.data.data });
         // console.log(response.data.data);
         setStateResult(response.data.data);
+        setQuery("");
       } catch (error) {
         // console.error("Error fetching data from Api", error);
         // setIsLoading(false);
@@ -99,7 +94,6 @@ function AddMentor({
 
   const handleCancel = () => {
     setSelectedItem(null);
-    setSelectEdited(null);
     reset();
   };
 
@@ -110,7 +104,8 @@ function AddMentor({
   };
 
   const [isError, setIsError] = useState<boolean | undefined>(undefined);
-
+  // console.log(query);
+  // console.log(isError);
   const prevQuery = useRef("");
 
   useEffect(() => {
@@ -129,21 +124,19 @@ function AddMentor({
       <Flex flexDirection={["column", "row"]}>
         <Box flex={["1", "25%"]} marginRight={["0", "2"]}>
           <FormLabel>
-            Pilih Mentor&nbsp;
+            Pilih Tenant&nbsp;
             <Text as={"span"} color={"red"}>
               *
             </Text>
           </FormLabel>
         </Box>
         <Box flex={["1", "75%"]}>
-          {selectedItem || selectEdited ? (
-            <SlideFade
-              in={selectedItem !== undefined || selectEdited !== undefined}
-            >
+          {selectedItem ? (
+            <SlideFade in={selectedItem !== undefined}>
               <HStack p="2" bgColor={"grey.100"}>
-                <CardMentor result={selectedItem || selectEdited || null} />
+                <CardTenant result={selectedItem || null} />
                 <Button size="sm" color="gray.500" onClick={handleCancel}>
-                  {selectEdited ? "Ganti" : "Batal"}
+                  {"Batal"}
                 </Button>
               </HStack>
             </SlideFade>
@@ -151,10 +144,13 @@ function AddMentor({
             <>
               <HStack spacing={4} pb="3">
                 <Input
-                  placeholder="Cari username atau full name Mentor ..."
+                  placeholder="Cari nama Tenant ..."
                   defaultValue={query}
                   onChange={(e) => {
                     setQuery(e.target.value);
+                    // if (query !== "" || query.trim() !== "") {
+                    //   setIsError(false);
+                    // } else setIsError(true);
                   }}
                   // onKeyDown={handleEnterPress}
                 />
@@ -193,7 +189,30 @@ function AddMentor({
                 ) : (
                   <div>
                     {stateResult && stateResult.length > 0 ? (
-                      <UnorderedList listStyleType="none" pb="2" ml="-0.5">
+                      <UnorderedList
+                        listStyleType="none"
+                        pb="2"
+                        ml="-0.5"
+                        maxH={"250px"}
+                        overflowY={"auto"}
+                        css={{
+                          // For Chrome
+                          "&::-webkit-scrollbar": {
+                            width: "4px",
+                          },
+                          "&::-webkit-scrollbar-track": {
+                            background: "#E2E8F0",
+                          },
+                          "&::-webkit-scrollbar-thumb": {
+                            background: "#A0AEC0",
+                            borderRadius: "4px",
+                          },
+                          // For Firefox
+                          scrollbarColor: "#A0AEC0",
+                          scrollbarWidth: "thin",
+                        }}
+                        pr="1"
+                      >
                         {stateResult.map((result, index) => (
                           <ListItem
                             key={result.id}
@@ -205,7 +224,7 @@ function AddMentor({
                             }}
                           >
                             <SlideFade in={stateResult.length > 0} key={index}>
-                              <CardMentor result={result} />
+                              <CardTenant result={result} />
                             </SlideFade>
                           </ListItem>
                         ))}
@@ -213,7 +232,8 @@ function AddMentor({
                     ) : (
                       <Box w="full" backgroundColor={"gray.100"} p={2}>
                         <Text textAlign={"center"} fontSize="15px">
-                          Mentor Tidak ditemukan
+                          Tenant Tidak ditemukan. Mungkin sudah ditambahkan atau
+                          coba kata kunci lainnya.
                         </Text>
                       </Box>
                     )}
@@ -228,22 +248,25 @@ function AddMentor({
   );
 }
 
-const CardMentor = ({ result }: { result: Mentor | null }) => {
+const CardTenant = ({ result }: { result: TenantResult | null }) => {
   // console.log(result);
   return (
     <>
       <HStack ml="2" w="full">
         <Avatar
           size={"sm"}
-          src={result?.image_url || "/img/avatar-default.jpg"}
+          src={result?.image_url || "/img/tenant-logo-default.png"}
         ></Avatar>
         <VStack alignItems="flex-start" spacing="1px" ml="2">
-          <Text fontSize="15px">{result?.fullname}</Text>
-          <Text fontSize="12px">{result?.role}</Text>
+          <Text fontSize="15px">{result?.name}</Text>
+          <Text fontSize="12px">
+            Level Tenant :{" "}
+            <span style={{ color: "red.500" }}>{result?.level_tenant}</span>
+          </Text>
         </VStack>
       </HStack>
     </>
   );
 };
 
-export default AddMentor;
+export default FindTenant;
