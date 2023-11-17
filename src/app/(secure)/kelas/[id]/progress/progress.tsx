@@ -17,6 +17,7 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { Column } from "react-table";
 import DataTable from "@/app/components/datatable/data-table";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 interface Item_Progress {
   id: string;
@@ -90,6 +91,15 @@ function Progress({
     {
       Header: "Judul Sesi",
       accessor: "title",
+      Cell: ({ value, row }) => (
+        <div>
+          <Link href={`/kelas/${idKelas}/progress/${row.values.id}`}>
+            <Text as="u" color="blue.500" _hover={{ color: "blue.400" }}>
+              {value}
+            </Text>
+          </Link>
+        </div>
+      ),
     },
     {
       Header: "Progress",
@@ -109,7 +119,7 @@ function Progress({
       ),
     },
     {
-      Header: "Komentar",
+      Header: "Komentar Terakhir",
       accessor: "last_comment",
       Cell: ({ value }) => (
         <Text
@@ -131,6 +141,8 @@ function Progress({
   let hidenCols: string[] = ["id", "assigment_answered_count", "action"];
 
   const filterOptions = [{ key: "title", label: "Nama Sesi" }];
+
+  console.log(ItemProgress);
 
   return isLoading ? (
     <Loading />
