@@ -32,6 +32,7 @@ import { axiosCustom } from "@/app/api/axios";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Pagination from "@/app/components/datatable/pagination";
 import dynamic from "next/dynamic";
+import DeletePartisipan from "./deletePartisipan";
 
 const TenantKelas = ({
   // partisipan,
@@ -131,6 +132,8 @@ const TenantKelas = ({
             roleAccess={roleAccess}
             classEnd={classEnd}
             idTenant={idTenant}
+            idKelas={idKelas}
+            onSubmit={() => getUpdatedPartisipan()}
             tabIndex={tabIndex}
           />
         ) : (
@@ -168,6 +171,8 @@ interface CardTableProps<T extends object> {
   column: ReadonlyArray<Column<T>>;
   roleAccess: string;
   classEnd: boolean;
+  idKelas: string;
+  onSubmit: () => void;
   idTenant: (id: string) => void;
   tabIndex: () => void;
 }
@@ -371,21 +376,11 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                         <BiDoorOpen size="20px" />
                         &nbsp;Progress
                       </Button>
-                      <Button
-                        title="Hapus Data"
-                        // p={5}
-                        colorScheme="red"
-                        shadow="xl"
-                        // onClick={() => setIsDeleteModalOpen(true)}
-                        key="hapusData"
-                        size={"sm"}
-                      >
-                        <DeleteIcon />
-                        &nbsp;
-                        <Box display={{ base: "none", md: "flex", xl: "none" }}>
-                          &nbsp;Hapus
-                        </Box>
-                      </Button>
+                      <DeletePartisipan
+                        dataDelete={row.values}
+                        idKelas={props.idKelas}
+                        onSubmit={() => props.onSubmit()}
+                      />
                     </Stack>
                   )}
                 </Stack>

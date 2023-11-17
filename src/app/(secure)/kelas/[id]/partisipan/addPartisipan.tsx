@@ -25,14 +25,12 @@ import { axiosCustom } from "@/app/api/axios";
 import FindTenant from "./FindTenant";
 
 interface addProps {
-    idKelas: string;
+  idKelas: string;
   onSubmit: () => void;
 }
 
 function AddPartisipan({ idKelas, onSubmit }: addProps) {
-    const {
-        handleSubmit,
-    } = useForm<{ id_tenant: string; }>();
+  const { handleSubmit } = useForm<{ id_tenant: string }>();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -56,19 +54,21 @@ function AddPartisipan({ idKelas, onSubmit }: addProps) {
     const dataBaru: {
       id_tenant?: string | null;
     } = {
-      id_tenant : idTenant,
+      id_tenant: idTenant,
     };
     // console.log(dataBaru);
     setIsLoading(true);
 
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      await axiosCustom.post(`/course/${idKelas}/add-tenant`, dataBaru).then((response) => {
-        // console.log(response);
-        if (response.status === 201) {
-          handleShowMessage("Data berhasil disimpan.", false);
-        }
-      });
+      await axiosCustom
+        .post(`/course/${idKelas}/add-tenant`, dataBaru)
+        .then((response) => {
+          // console.log(response);
+          if (response.status === 201) {
+            handleShowMessage("Data berhasil disimpan.", false);
+          }
+        });
 
       //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       // onClose(); // Tutup modal
@@ -120,7 +120,10 @@ function AddPartisipan({ idKelas, onSubmit }: addProps) {
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">
-                <FindTenant idKelas={idKelas} onResult={(idTenant) => setIdTenant(idTenant)} />
+                <FindTenant
+                  idKelas={idKelas}
+                  onResult={(idTenant) => setIdTenant(idTenant)}
+                />
               </div>
             </ModalBody>
             <ModalFooter>
@@ -168,6 +171,6 @@ function AddPartisipan({ idKelas, onSubmit }: addProps) {
       />
     </div>
   );
-};
+}
 
 export default AddPartisipan;
