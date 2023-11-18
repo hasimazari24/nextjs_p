@@ -9,10 +9,11 @@ export interface Mentor {
 export interface Kelas {
   id: string;
   name: string;
-  description : string;
+  course_ends: boolean;
+  description: string;
   participant_count: number;
   activity_count: number;
-  mentor : Mentor;
+  mentor: Mentor;
 }
 
 interface classHeading {
@@ -52,3 +53,18 @@ interface Partisipan {
   participant_count: number;
   participant: Item_partisipan;
 }
+
+type Tugas = {
+  id?: string;
+  title: string;
+  description: string;
+  open_date: string;
+  close_date: string;
+};
+
+type TmbLink = {
+  id?: string;
+  title: string;
+  description: string;
+  url: string;
+};

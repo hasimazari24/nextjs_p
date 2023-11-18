@@ -23,13 +23,21 @@ const customTheme = extendTheme({
       },
       ".tox.tox-tinymce-aux": {
         zIndex: 1401,
-        position: "fixed!important",
+        position: "fixed !important",
       },
       // ".tox .tox-tbtn .tox-icon svg": {
       //   height: "20px",
       //   width: "20px",
       //   ViewBox : "0 0 28 28",
       //   // viewBox: "0 0 28 28",
+      // },
+      // ".react-datepicker": {
+      //   zIndex: 1402,
+      //   fontFamily: "unset",
+      //   fontSize: "15px",
+      // },
+      // ".react-datepicker__input-container": {
+      //   fontSize: "15px",
       // },
     },
   },
@@ -87,6 +95,15 @@ const customTheme = extendTheme({
       400: "#F56565",
       500: "#E53E3E",
       600: "#C53030",
+    },
+    cyan: {
+      50: "#EDFDFD",
+      100: "#C4F1F9",
+      200: "#9DECF9",
+      300: "#76E4F7",
+      400: "#0BC5EA",
+      500: "#00B5D8",
+      600: "#00A3C4",
     },
   },
 });
