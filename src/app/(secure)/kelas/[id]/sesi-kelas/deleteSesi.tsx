@@ -34,7 +34,7 @@ const DeleteSesi = ({ dataDelete, onSubmit }: deleteProps) => {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/tenant/${dataDelete.id}/delete-gallery/${dataDelete?.id}`,
+          `/delete-course-item/${dataDelete?.id}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -68,9 +68,8 @@ const DeleteSesi = ({ dataDelete, onSubmit }: deleteProps) => {
         onClick={() => setIsDeleteModalOpen(true)}
         key="hapusData"
         size="sm"
-        w="184px"
       >
-        <DeleteIcon /> &nbsp; Hapus Kelas
+        <DeleteIcon /> &nbsp; Hapus
       </Button>
 
       <ConfirmationModal
