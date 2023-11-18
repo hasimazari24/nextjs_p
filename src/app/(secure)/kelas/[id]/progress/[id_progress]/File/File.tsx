@@ -1,12 +1,6 @@
 "use client";
-import React from "react";
-import {
-  DownloadIcon,
-  AddIcon,
-  EditIcon,
-  DeleteIcon,
-  ExternalLinkIcon,
-} from "@chakra-ui/icons";
+import React, { useState, useEffect } from "react";
+import { DownloadIcon, DeleteIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -15,82 +9,269 @@ import {
   Image,
   VStack,
   Text,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  PopoverArrow,
-  Flex,
+  Skeleton,
+  Divider,
 } from "@chakra-ui/react";
-import { MdArrowBackIosNew, MdTask } from "react-icons/md/";
+import { MdDone } from "react-icons/md/";
+import { axiosCustom } from "@/app/api/axios";
+import Link from "next/link";
+import AddFile from "./addFile";
+import UpdateFile from "./updateFile";
+import DeleteFile from "./deleteFile";
+import ChangeProgressTenant from "../ChangeProgressTenant";
 
-function File() {
-  return (
-    <div>
-      <VStack spacing={3} align="flex-start">
-        <HStack
-          //   justify="space-between"
-          flexWrap={"wrap"}
-          alignItems={"center"}
-        >
-          <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
-            File Materi 1 : Apa itu Digital Marketing ?
-          </Text>
-          <Button
-            bgColor="blue.100"
-            _hover={{
-              bg: "blue.200",
-            }}
-            title="Edit Data"
-            color="gray.700"
-            // onClick={() => setModalOpen(true)}
-            key="editData"
-            size="sm"
-          >
-            <EditIcon />
-            &nbsp; Edit
-          </Button>
-          <Button
-            title="Hapus Data"
-            colorScheme="red"
-            // onClick={() => setIsDeleteModalOpen(true)}
-            key="hapusData"
-            size="sm"
-          >
-            <DeleteIcon /> &nbsp; Hapus
-          </Button>
-        </HStack>
-        <Box
-          p={{ base: 3, md: 6 }}
-          rounded={["md", "lg"]}
-          borderWidth={"4px"}
-          borderColor={"blue.500"}
-          w="full"
-        >
-          <Text textAlign="justify">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo, id.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit,
-            sunt.
-          </Text>
-        </Box>
-        <Button
-          bgColor="blue.500"
-          _hover={{
-            bg: "blue.400",
-          }}
-          title="Edit Data"
-          color="white"
-          // onClick={() => setModalOpen(true)}
-          key="editData"
-          size="sm"
-          fontWeight={"thin"}
-        >
-          <DownloadIcon />
-          &nbsp; Download - Materi 1 : Digital ...
-        </Button>
-      </VStack>
-    </div>
-  );
+interface FileMentor {
+  id: string;
+  title: string;
+  description: string;
+  id_asset: string;
+  url_asset: string;
 }
 
-export default File;
+interface FileTenant {
+  id: string;
+  title: string;
+  description: string;
+  id_asset: string;
+  url_asset: string;
+  progress: string | null;
+}
+
+export const FileByTenant = ({ idSesi }: { idSesi: string }) => {
+  const [fileTenant, setFileTenant] = useState<FileTenant[] | []>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // if (need_updated === true)
+    getFileTenant();
+  }, []);
+  const getFileTenant = async () => {
+    try {
+      setIsLoading(true);
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(
+        `/course-item/${idSesi}/file-tenant`,
+      );
+      const timer = setTimeout(() => {
+        // setIdTenant(id);
+        setFileTenant(response.data.data); // Set isLoading to false to stop the spinner
+        setIsLoading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal memuat data:", error);
+      setIsLoading(false);
+    }
+  };
+  return (
+    <Box display={fileTenant.length > 0 || isLoading ? "block" : "none"}>
+      <Skeleton
+        isLoaded={!isLoading}
+        display={!isLoading && fileTenant.length < 1 ? "none" : "flex"}
+        minH={!isLoading ? "0px" : "120px"}
+      >
+        {fileTenant && (
+          <Stack spacing={4} w="full">
+            {fileTenant.map((data) => (
+              <Box key={data.id}>
+                <VStack spacing={3} align="flex-start">
+                  <HStack
+                    //   justify="space-between"
+                    flexWrap={"wrap"}
+                    alignItems={"center"}
+                  >
+                    <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
+                      {data.title}
+                    </Text>
+                    <ChangeProgressTenant
+                      idSesi={idSesi}
+                      idItem={data.id}
+                      progress={data.progress}
+                      onSubmit={() => getFileTenant()}
+                    />
+                  </HStack>
+                  {data.description && (
+                    <Box
+                      p={{ base: 3, md: 6 }}
+                      rounded={["md", "lg"]}
+                      borderWidth={"4px"}
+                      borderColor={"blue.500"}
+                      w="full"
+                    >
+                      <Text
+                        textAlign="justify"
+                        dangerouslySetInnerHTML={{ __html: data.description }}
+                      />
+                    </Box>
+                  )}
+                  <Link href={data.url_asset} target="_blank">
+                    <Box
+                      bgColor="blue.500"
+                      _hover={{
+                        bg: "blue.400",
+                      }}
+                      title="Kunjungi Link"
+                      color="white"
+                      // onClick={() => setModalOpen(true)}
+                      key="visitLink"
+                      w="auto"
+                      px={2}
+                      py={1}
+                      rounded={"md"}
+                      cursor="pointer"
+                    >
+                      <HStack>
+                        <ExternalLinkIcon fontSize="sm" />
+                        <Text
+                          fontSize="sm"
+                          fontWeight={"thin"}
+                          textOverflow="ellipsis"
+                          whiteSpace={"nowrap"}
+                          maxW={"150px"}
+                          overflow="hidden"
+                        >
+                          Download - {data.title}
+                        </Text>
+                      </HStack>
+                    </Box>
+                  </Link>
+                </VStack>
+                <Divider mt={4} borderColor="gray.400" />
+              </Box>
+            ))}
+          </Stack>
+        )}
+      </Skeleton>
+    </Box>
+  );
+};
+
+export function FileByMentor({
+  idSesi,
+  isAddFile,
+  closeAddFile,
+  classEnd,
+}: {
+  idSesi: string;
+  isAddFile: boolean;
+  closeAddFile: () => void;
+  classEnd: boolean;
+}) {
+  const [fileMentor, setFileMentor] = useState<FileMentor[] | []>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // if (need_updated === true)
+    getFileMentor();
+  }, []);
+  const getFileMentor = async () => {
+    try {
+      setIsLoading(true);
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(`/course-item/${idSesi}/file`);
+      const timer = setTimeout(() => {
+        // setIdTenant(id);
+        setFileMentor(response.data.data); // Set isLoading to false to stop the spinner
+        setIsLoading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal memuat data:", error);
+      setIsLoading(false);
+    }
+  };
+  return (
+    <Box display={fileMentor.length > 0 || isLoading ? "block" : "none"}>
+      <Skeleton
+        isLoaded={!isLoading}
+        display={!isLoading && fileMentor.length < 1 ? "none" : "flex"}
+        minH={!isLoading ? "0px" : "120px"}
+      >
+        {fileMentor.length > 0 && (
+          <Stack spacing={4} w="full">
+            {fileMentor.map((data) => (
+              <Box key={data.id}>
+                <VStack spacing={3} align="flex-start">
+                  <HStack
+                    //   justify="space-between"
+                    flexWrap={"wrap"}
+                    alignItems={"center"}
+                  >
+                    <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
+                      {data.title}
+                    </Text>
+                    {classEnd !== true && (
+                      <>
+                        <UpdateFile
+                          rowData={data}
+                          onSubmit={() => getFileMentor()}
+                        />
+                        <DeleteFile
+                          dataDelete={data}
+                          onSubmit={() => getFileMentor()}
+                        />
+                      </>
+                    )}
+                  </HStack>
+                  {data.description && (
+                    <Box
+                      p={{ base: 3, md: 6 }}
+                      rounded={["md", "lg"]}
+                      borderWidth={"4px"}
+                      borderColor={"blue.500"}
+                      w="full"
+                    >
+                      <Text
+                        textAlign="justify"
+                        dangerouslySetInnerHTML={{ __html: data.description }}
+                      />
+                    </Box>
+                  )}
+
+                  <Link href={data.url_asset} target="_blank">
+                    <Box
+                      bgColor="blue.500"
+                      _hover={{
+                        bg: "blue.400",
+                      }}
+                      title="Download File"
+                      color="white"
+                      // onClick={() => setModalOpen(true)}
+                      key="downloadFile"
+                      w="auto"
+                      px={2}
+                      py={1}
+                      rounded={"md"}
+                      cursor="pointer"
+                    >
+                      <HStack>
+                        <DownloadIcon fontSize="sm" />
+                        <Text
+                          fontSize="sm"
+                          fontWeight={"thin"}
+                          textOverflow="ellipsis"
+                          whiteSpace={"nowrap"}
+                          maxW={"150px"}
+                          overflow="hidden"
+                        >
+                          Download - {data.title}
+                        </Text>
+                      </HStack>
+                    </Box>
+                  </Link>
+                </VStack>
+                <Divider mt={4} borderColor="gray.400" />
+              </Box>
+            ))}
+          </Stack>
+        )}
+      </Skeleton>
+      <AddFile
+        isOpen={isAddFile}
+        onClose={() => closeAddFile()}
+        onSubmit={() => getFileMentor()}
+        idSesi={idSesi}
+      />
+    </Box>
+  );
+}
