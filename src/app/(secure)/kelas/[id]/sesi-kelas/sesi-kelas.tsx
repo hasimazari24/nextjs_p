@@ -15,7 +15,9 @@ import { BiDoorOpen } from "react-icons/bi";
 import EditSesi from "./editSesi";
 import { axiosCustom } from "@/app/api/axios";
 import Loading from "../../loading";
+import { useRouter } from "next/navigation";
 import * as ClassInfo from "@/app/type/class-type.d";
+import DeleteSesi from "./deleteSesi";
 
 function SesiKelas({
   idKelas,
@@ -28,12 +30,15 @@ function SesiKelas({
 }) {
   const [dataSesi, setDataSesi] = useState<ClassInfo.Sesi | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const router = useRouter();
   const getUpdatedSesi = async () => {
     setIsLoading(true);
+    let Url = "";
+    if (roleAccess === "Tenant") Url = `/course/${idKelas}/item-tenant`;
+    else Url = `/course/${idKelas}/item`;
     try {
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/course/${idKelas}/item`);
+      const response = await axiosCustom.get(Url);
       const timer = setTimeout(() => {
         setDataSesi(response.data.data); // Set isLoading to false to stop the spinner
         setIsLoading(false);
@@ -154,15 +159,7 @@ function SesiKelas({
               {roleAccess !== "Tenant" && classEnd !== true && (
                 <>
                   <EditSesi onSubmit={() => getUpdatedSesi()} rowData={d} />
-                  <Button
-                    title="Hapus Data"
-                    colorScheme="red"
-                    // onClick={() => setIsDeleteModalOpen(true)}
-                    key="hapusData"
-                    size="sm"
-                  >
-                    <DeleteIcon /> &nbsp; Hapus
-                  </Button>
+                  <DeleteSesi onSubmit={() => getUpdatedSesi()} dataDelete={d} />
                 </>
               )}
 
@@ -174,7 +171,9 @@ function SesiKelas({
                 color="white"
                 size={"sm"}
                 alignContent={"center"}
-                // onClick={() => router.push(`/kelas/24df32`)}
+                onClick={() =>
+                  router.push(`/kelas/${idKelas}/progress/${d.id}`)
+                }
               >
                 <BiDoorOpen size="20px" />
                 &nbsp; {roleAccess !== "Tenant" ? "Kelola Sesi" : "Masuk Sesi"}
