@@ -33,6 +33,7 @@ import { axiosCustom } from "@/app/api/axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(secure)/kelas/loading";
 import ReviewMentor from "../review/reviewMentor";
+import { useAuth } from "@/app/components/utils/AuthContext";
 
 interface answer_sheet {
   answer_file_download_url: string | null;
@@ -71,6 +72,12 @@ interface DataItem {
 
 function page({ params }: { params: { id_tugas: string } }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useAuth();
+  let getUser: any = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+  }
   const columns: ReadonlyArray<Column<answer_sheet>> = [
     {
       Header: "Logo",
@@ -284,6 +291,7 @@ function page({ params }: { params: { id_tugas: string } }) {
         onSubmit={() => getDataReview()}
         dataReview={dataReviewShow}
         namaTugas={dataReview && dataReview.title}
+        roleAccess={getUser.role}
       />
     </Stack>
   );

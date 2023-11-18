@@ -44,6 +44,7 @@ interface editProps {
   onSubmit: () => void;
   dataReview: any | null;
   namaTugas: string | null;
+  roleAccess: string;
 }
 
 interface Review {
@@ -57,6 +58,7 @@ const ReviewMentor: React.FC<editProps> = ({
   onSubmit,
   dataReview,
   namaTugas,
+  roleAccess,
 }) => {
   const { register, handleSubmit, reset } = useForm<Review>();
 
@@ -212,7 +214,9 @@ const ReviewMentor: React.FC<editProps> = ({
                     // style={{ height: "100%" }}
                   >
                     <Stack spacing={{ base: 4, md: 6 }}>
-                      <FormControl>
+                      <FormControl
+                        isReadOnly={roleAccess === "Mentor" ? false : true}
+                      >
                         <FormLabel>Nilai</FormLabel>
                         <RadioGroup
                           defaultValue={
@@ -270,8 +274,9 @@ const ReviewMentor: React.FC<editProps> = ({
                           </Stack>
                         </RadioGroup>
                       </FormControl>
-
-                      <FormControl>
+                      <FormControl
+                        isReadOnly={roleAccess === "Mentor" ? false : true}
+                      >
                         <FormLabel>Komentar</FormLabel>
                         <Textarea
                           w="full"
@@ -282,18 +287,20 @@ const ReviewMentor: React.FC<editProps> = ({
                           {...register("feedback")}
                         />
                       </FormControl>
-                      <HStack align={"end"}>
-                        <Button
-                          leftIcon={<CheckIcon />}
-                          colorScheme="blue"
-                          type="submit"
-                          isLoading={isLoading}
-                          size="md"
-                          w="full"
-                        >
-                          {"Simpan"}
-                        </Button>
-                      </HStack>
+                      {roleAccess === "Mentor" && (
+                        <HStack align={"end"}>
+                          <Button
+                            leftIcon={<CheckIcon />}
+                            colorScheme="blue"
+                            type="submit"
+                            isLoading={isLoading}
+                            size="md"
+                            w="full"
+                          >
+                            {"Simpan"}
+                          </Button>
+                        </HStack>
+                      )}
                     </Stack>
                   </form>
                 </Box>
