@@ -142,10 +142,6 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
     props.onSelectedRowsChange(selectedFlatRows.map((d) => d.original));
   }
 
-  console.log("pageIndex " + pageIndex);
-  console.log("pageOptions " + pageOptions);
-  console.log("gotoPage " + gotoPage);
-
   return (
     <Box>
       <Stack
@@ -347,7 +343,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
               page.map((row, i) => {
                 prepareRow(row);
                 //jika terdapat row dengan values id
-                return row.values.id ? (
+                return row.values ? (
                   <Tr {...row.getRowProps()} key={i}>
                     {row.cells.map((cell, x) => {
                       const attrCol = props.column.find(
