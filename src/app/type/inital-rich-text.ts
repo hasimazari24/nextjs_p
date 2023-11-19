@@ -19,7 +19,7 @@ const initRichTextProps = {
     "table",
     "help",
     "wordcount",
-    "textcolor",
+    // "textcolor",
   ],
   toolbar:
     "fullscreen preview | undo redo | bold italic|forecolor|" +
