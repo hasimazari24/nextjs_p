@@ -464,7 +464,7 @@ function PageTenant() {
                 pb="2"
                 direction={["column", "row"]}
               >
-                <Heading fontSize={"2xl"}>DAFTAR TENANT</Heading>
+                <Heading fontSize={"2xl"}>DATA TENANT</Heading>
 
                 {backPanelTenantFeatures?.access.includes("tmbhTenant") ||
                 allMenu?.access.includes("all_access") ? (

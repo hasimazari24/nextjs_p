@@ -318,7 +318,7 @@ function PageUser() {
             pb="2"
             direction={["column", "row"]}
           >
-            <Heading fontSize={"2xl"}>DAFTAR USER</Heading>
+            <Heading fontSize={"2xl"}>DATA USER</Heading>
             <Button
               colorScheme="green"
               key="tambahData"
