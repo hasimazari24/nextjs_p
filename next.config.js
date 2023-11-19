@@ -12,9 +12,9 @@ const nextConfig = {
     API_TINYMCE: "o4l95gui4izt7wza5inl45ilj7fle6abfwt08h5hwn6ffx5x",
     pdfjsVersion: packageJSON.dependencies["pdfjs-dist"],
   },
-  images: {
-    domains: ["img.freepik.com", "veterinaire-tour-hassan.com"],
-  },
+  // images: {
+  //   domains: ["img.freepik.com", "veterinaire-tour-hassan.com"],
+  // },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.node/,
