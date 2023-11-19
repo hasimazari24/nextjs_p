@@ -71,6 +71,7 @@ import ProfileMentor from "./profileMentor";
 import { useRouter } from "next/navigation";
 import DeleteClass from "./deleteClass";
 import { Column, useFilters, usePagination, useTable } from "react-table";
+import EndClass from "./endClass";
 
 interface ClassProps {
   rowData: Kelas[];
@@ -87,6 +88,10 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
     {
       Header: "name",
       accessor: "name",
+    },
+    {
+      Header: "ClassEnd",
+      accessor: "course_ends",
     },
     {
       Header: "description",
@@ -279,7 +284,11 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                         xl: "13rem",
                       }}
                       objectFit={"cover"}
-                      src={"/img/class-avatar.png"}
+                      src={
+                        row.values.course_ends === true
+                          ? "/img/class-ends-min.png"
+                          : "/img/class-avatar.png"
+                      }
                       alt="#"
                       // boxShadow={"xl"}
                     />
@@ -384,6 +393,13 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                               rowData={row.values}
                               onSubmit={() => props.onSubmit()}
                               roleAccess={props.roleAccess}
+                            />
+                          </MenuItem>
+                          <MenuItem>
+                            <EndClass
+                              endClass={row.values.course_ends}
+                              dataClass={row.values}
+                              onSubmit={() => props.onSubmit()}
                             />
                           </MenuItem>
                           <MenuItem>
