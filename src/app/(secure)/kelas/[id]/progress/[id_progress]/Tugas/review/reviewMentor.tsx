@@ -36,6 +36,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { MdArrowBackIosNew, MdOutlineScheduleSend } from "react-icons/md";
 import { FaBuildingUser } from "react-icons/fa6";
+import dynamic from "next/dynamic";
+// import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 // import "@/app/components/template/date-picker.css";
 
 interface editProps {
@@ -51,6 +53,12 @@ interface Review {
   grade: string;
   feedback: string;
 }
+
+// Use next/dynamic to import Viewer with ssr: false
+  const PDFDynamic = dynamic(
+    () => import("@/app/components/template/PDFViewer"),
+    { ssr: false },
+  );
 
 const ReviewMentor: React.FC<editProps> = ({
   isOpen,
@@ -79,6 +87,7 @@ const ReviewMentor: React.FC<editProps> = ({
   //   isLoading: true,
   //   dataReview: null,
   // });
+  //  / Create new defaultLayoutPlugin instance
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     // console.log(data);
@@ -194,18 +203,22 @@ const ReviewMentor: React.FC<editProps> = ({
               >
                 <Box
                   w="full"
-                  px={3}
+                  p={3}
                   bgColor={"gray.200"}
                   height="full"
                   minH={"200px"}
                   // maxH={"430px"}
                 >
                   {dataReview && dataReview.answer_file_view_url && (
-                    <iframe
-                      src={dataReview.answer_file_view_url}
-                      width="auto"
-                      height="500px"
-                    ></iframe>
+                    // <iframe
+                    //   src={dataReview.answer_file_view_url}
+                    //   width="auto"
+                    //   height="500px"
+                    // ></iframe>
+                    <PDFDynamic
+                      // fileUrl={dataReview.answer_file_view_url}
+                      fileUrl={"/img/pdf-open-parameters.pdf"}
+                    />
                   )}
                 </Box>
                 <Box w="full" h="full" display="flex" flexDirection="column">

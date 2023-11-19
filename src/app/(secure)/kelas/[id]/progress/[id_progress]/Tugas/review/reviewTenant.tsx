@@ -49,7 +49,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { MdArrowBackIosNew, MdTask } from "react-icons/md";
 import { BsBox2HeartFill } from "react-icons/bs";
+import dynamic from "next/dynamic";
 // import "@/app/components/template/date-picker.css";
+
+// Use next/dynamic to import Viewer with ssr: false
+const PDFDynamic = dynamic(
+  () => import("@/app/components/template/PDFViewer"),
+  { ssr: false },
+);
 
 interface editProps {
   rowData: any;
@@ -163,17 +170,24 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
               >
                 <Box
                   w="full"
-                  px={3}
+                  p={3}
                   bgColor={"gray.200"}
                   height="full"
                   minH={"200px"}
                   // maxH={"430px"}
                 >
-                  {/* <embed
-                    //   src={URL.createObjectURL(file || null)}
-                    width="auto"
-                    height="500px"
-                  /> */}
+                  {reviewAssign.dataReview &&
+                    reviewAssign.dataReview.submitted_file_view_url && (
+                      // <iframe
+                      //   src={dataReview.answer_file_view_url}
+                      //   width="auto"
+                      //   height="500px"
+                      // ></iframe>
+                      <PDFDynamic
+                        // fileUrl={dataReview.answer_file_view_url}
+                        fileUrl={"/img/pdf-open-parameters.pdf"}
+                      />
+                    )}
                 </Box>
                 <Stack
                   w="full"

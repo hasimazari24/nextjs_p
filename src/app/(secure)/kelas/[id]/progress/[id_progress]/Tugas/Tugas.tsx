@@ -208,6 +208,8 @@ export function TugasMentor({
   const router = useRouter();
   const pathName = usePathname();
 
+  // console.log(pathName);
+
   useEffect(() => {
     // if (need_updated === true)
     getTugasMentor();
