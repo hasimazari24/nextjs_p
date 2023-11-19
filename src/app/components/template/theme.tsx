@@ -25,6 +25,13 @@ const customTheme = extendTheme({
         zIndex: 1401,
         position: "fixed !important",
       },
+      "ol, ul": {
+        pl: "40px", // padding-inline-start
+        mt: "1em", // margin-block-start
+        mb: "1em", // margin-block-end
+        ml: "0", // margin-inline-start
+        mr: "0", // margin-inline-end
+      },
       // ".tox .tox-tbtn .tox-icon svg": {
       //   height: "20px",
       //   width: "20px",

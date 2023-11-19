@@ -122,7 +122,7 @@ const EndClass = ({ dataClass, onSubmit, endClass }: deleteProps) => {
               </ModalBody>
               <ModalFooter>
                 <Button
-                  colorScheme="red"
+                  colorScheme="yellow"
                   mr={3}
                   onClick={() => endActiveClass()}
                   isLoading={isLoadingDelete}
@@ -141,7 +141,7 @@ const EndClass = ({ dataClass, onSubmit, endClass }: deleteProps) => {
               </ModalBody>
               <ModalFooter>
                 <Button
-                  colorScheme="red"
+                  colorScheme="pink"
                   mr={3}
                   onClick={() => endActiveClass()}
                   isLoading={isLoadingDelete}

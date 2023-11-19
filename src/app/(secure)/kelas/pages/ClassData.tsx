@@ -6,25 +6,13 @@ import {
   Flex,
   HStack,
   Stack,
-  VStack,
   Icon,
   Button,
-  Spacer,
-  Tag,
-  SimpleGrid,
-  Center,
   Image,
-  Heading,
-  IconButton,
   Grid,
-  Avatar,
   Input,
   InputGroup,
   InputLeftElement,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -371,45 +359,84 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                     {(props.roleAccess === "Super Admin" ||
                       props.roleAccess === "Manajemen" ||
                       props.roleAccess === "Mentor") && (
-                      <Menu>
-                        <MenuButton
-                          as={Button}
-                          bgColor="teal.400"
-                          _hover={{
-                            bg: "teal.300",
-                          }}
-                          // colorScheme="aqua"
-                          title="More ..."
-                          color="white"
-                          // onClick={() => handleDetail(rowData)}
-                          key="more"
-                          size={{ base: "xs", sm: "sm" }}
+                      // <Menu>
+                      //   <MenuButton
+                      //     as={Button}
+                      //     bgColor="teal.400"
+                      //     _hover={{
+                      //       bg: "teal.300",
+                      //     }}
+                      //     // colorScheme="aqua"
+                      //     title="More ..."
+                      //     color="white"
+                      //     // onClick={() => handleDetail(rowData)}
+                      //     key="more"
+                      //     size={{ base: "xs", sm: "sm" }}
+                      //   >
+                      //     <GrMoreVertical />
+                      //   </MenuButton>
+                      //   <MenuList>
+                      //     <MenuItem style={{ width: "100%" }}>
+                      //       <EditClass
+                      //         rowData={row.values}
+                      //         onSubmit={() => props.onSubmit()}
+                      //         roleAccess={props.roleAccess}
+                      //       />
+                      //     </MenuItem>
+                      //     <MenuItem>
+                      //       <EndClass
+                      //         endClass={row.values.course_ends}
+                      //         dataClass={row.values}
+                      //         onSubmit={() => props.onSubmit()}
+                      //       />
+                      //     </MenuItem>
+                      //     <MenuItem>
+
+                      //     </MenuItem>
+                      //   </MenuList>
+                      // </Menu>
+                      <Popover placement="bottom">
+                        <PopoverTrigger>
+                          <Button
+                            bgColor="teal.400"
+                            _hover={{
+                              bg: "teal.300",
+                            }}
+                            // colorScheme="aqua"
+                            title="More ..."
+                            color="white"
+                            // onClick={() => handleDetail(rowData)}
+                            key="more"
+                            size={{ base: "xs", sm: "sm" }}
+                          >
+                            <GrMoreVertical />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          w="fit-content"
+                          _focus={{ boxShadow: "none" }}
                         >
-                          <GrMoreVertical />
-                        </MenuButton>
-                        <MenuList>
-                          <MenuItem style={{ width: "100%" }}>
-                            <EditClass
-                              rowData={row.values}
-                              onSubmit={() => props.onSubmit()}
-                              roleAccess={props.roleAccess}
-                            />
-                          </MenuItem>
-                          <MenuItem>
-                            <EndClass
-                              endClass={row.values.course_ends}
-                              dataClass={row.values}
-                              onSubmit={() => props.onSubmit()}
-                            />
-                          </MenuItem>
-                          <MenuItem>
-                            <DeleteClass
-                              dataDelete={row.values}
-                              onSubmit={() => props.onSubmit()}
-                            />
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
+                          <PopoverArrow />
+                          <PopoverBody>
+                            <Stack>
+                              <EditClass
+                                rowData={row.values}
+                                onSubmit={() => props.onSubmit()}
+                                roleAccess={props.roleAccess}
+                              />
+                              <EndClass
+                                endClass={row.values.course_ends}
+                                dataClass={row.values}
+                                onSubmit={() => props.onSubmit()}
+                              />
+                              <DeleteClass
+                                dataDelete={row.values}
+                                onSubmit={() => props.onSubmit()}
+                              />
+                            </Stack>
+                          </PopoverBody>
+                        </PopoverContent>
+                      </Popover>
                     )}
                   </Stack>
                 </Stack>
