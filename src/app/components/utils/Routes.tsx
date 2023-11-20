@@ -16,7 +16,7 @@ const Routes: IRoutes[] = [
   { name: "Data User", icon: BsPeople, href: "/user" },
   { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
   { name: "Data Kelas", icon: SiGoogleclassroom, href: "/kelas" },
-  { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "#" },
+  { name: "Data Penilaian", icon: BsFillJournalBookmarkFill, href: "/penilaian" },
   { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "#" },
   { name: "Data Asset", icon: ImFileText2, href: "/assets" },
   { name: "My Profile", href: "/myprofile" },
