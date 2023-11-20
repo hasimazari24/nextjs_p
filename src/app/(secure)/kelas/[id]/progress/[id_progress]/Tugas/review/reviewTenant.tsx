@@ -185,7 +185,9 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
                       // ></iframe>
                       <PDFDynamic
                         // fileUrl={dataReview.answer_file_view_url}
-                        fileUrl={"/img/pdf-open-parameters.pdf"}
+                        fileUrl={
+                          reviewAssign.dataReview.submitted_file_view_url
+                        }
                       />
                     )}
                 </Box>

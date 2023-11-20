@@ -216,8 +216,8 @@ const ReviewMentor: React.FC<editProps> = ({
                     //   height="500px"
                     // ></iframe>
                     <PDFDynamic
-                      // fileUrl={dataReview.answer_file_view_url}
-                      fileUrl={"/img/pdf-open-parameters.pdf"}
+                      fileUrl={dataReview.answer_file_view_url}
+                      // fileUrl={"/img/pdf-open-parameters.pdf"}
                     />
                   )}
                 </Box>
