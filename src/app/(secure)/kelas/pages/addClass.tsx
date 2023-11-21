@@ -68,7 +68,7 @@ const AddClass: React.FC<editProps> = ({ onSubmit, roleAccess }) => {
   } = useController({
     control,
     name: "description",
-    rules: { required: "Deskripsi Kelas harus diisi!" },
+    // rules: { required: "Deskripsi Kelas harus diisi!" },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -198,9 +198,9 @@ const AddClass: React.FC<editProps> = ({ onSubmit, roleAccess }) => {
                 <FormControl isInvalid={!!errors.description} mb="3">
                   <FormLabel>
                     Deskripsi Kelas&nbsp;
-                    <Text as={"span"} color={"red"}>
+                    {/* <Text as={"span"} color={"red"}>
                       *
-                    </Text>
+                    </Text> */}
                   </FormLabel>
                   <Editor
                     {...field}

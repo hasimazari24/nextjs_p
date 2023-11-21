@@ -35,7 +35,7 @@ type AwardItem = {
 interface editProps {
   onSubmit: () => void;
   rowData: any;
-  roleAccess:string;
+  roleAccess: string;
 }
 
 const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
@@ -46,6 +46,7 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
     control,
     formState: { errors },
     clearErrors,
+    setValue,
   } = useForm<AwardItem>();
 
   const fields = {
@@ -66,11 +67,12 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
   };
 
   const {
-    field: { onChange, ref, ...field },
+    field: { onChange, ref, value, ...field },
   } = useController({
     control,
     name: "description",
-    rules: { required: "Deskripsi Kelas harus diisi!" },
+    // rules: { required: "Deskripsi Kelas harus diisi!" },
+    defaultValue: rowData?.description,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -90,12 +92,11 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
   const [idMentor, setIdMentor] = useState<string | null>(null);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    setIsLoading(true);
     // console.log(dataBaru);
     if (data.id) {
       let url = "";
-      if (!idMentor && roleAccess !== "Mentor")
-        return handleShowMessage("Maaf Mentor harus dipilih!", true);
+      // if ((!idMentor && !rowData?.id_mentor) && roleAccess !== "Mentor")
+      //   return handleShowMessage("Maaf Mentor harus dipilih!", true);
       const dataBaru: {
         name: string;
         description: string;
@@ -106,21 +107,20 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
       };
 
       if (roleAccess !== "Mentor") {
-        dataBaru.id_mentor = idMentor;
+        if (idMentor && idMentor !== "") dataBaru.id_mentor = idMentor;
         url = `/course/${data.id}/update-course`;
       } else {
         url = `/course/${data.id}/update-course-by-mentor`;
       }
       try {
+        setIsLoading(true);
         // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-        await axiosCustom
-          .patch(url, dataBaru)
-          .then((response) => {
-            // console.log(response);
-            if (response.status === 200) {
-              handleShowMessage("Data berhasil diubah.", false);
-            }
-          });
+        await axiosCustom.patch(url, dataBaru).then((response) => {
+          // console.log(response);
+          if (response.status === 200) {
+            handleShowMessage("Data berhasil diubah.", false);
+          }
+        });
 
         //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
         // onClose(); // Tutup modal
@@ -145,6 +145,12 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
     reset({ description: "" });
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (isModalOpen === true) {
+      setValue("description", rowData?.description);
+    }
+  }, [isModalOpen]);
 
   return (
     <div>
@@ -215,14 +221,12 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
                 <FormControl isInvalid={!!errors.description} mb="3">
                   <FormLabel>
                     Deskripsi Kelas&nbsp;
-                    <Text as={"span"} color={"red"}>
-                      *
-                    </Text>
                   </FormLabel>
                   <Editor
                     {...field}
                     apiKey={process.env.API_TINYMCE}
                     initialValue={rowData?.description}
+                    value={value}
                     init={{
                       ...initRichTextProps,
                       toolbar_mode: "sliding",

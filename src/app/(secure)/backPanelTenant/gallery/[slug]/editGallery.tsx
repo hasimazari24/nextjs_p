@@ -70,6 +70,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     clearErrors,
     watch,
     setFocus,
+    setValue,
   } = useForm<GalleryItem>();
 
   const fields = {
@@ -88,14 +89,15 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
 
   //ini diperlukan utk mengatur tinyMCE
   const {
-    field: { onChange, ref, ...field },
+    field: { onChange, ref, value, ...field },
   } = useController({
     control,
     name: "description",
     rules: { required: "Deskripsi Event harus diisi!" },
+    defaultValue: rowData?.description,
   });
 
-  let descriptionContent = watch("description");
+  // let descriptionContent = watch("description");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
@@ -223,6 +225,12 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
   }, [avatar, isEditModalOpen]);
 
+  useEffect(()=>{
+    if (isEditModalOpen === true) {
+      setValue("description", rowData?.description)
+    }
+  },[isEditModalOpen])
+
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
 
@@ -294,6 +302,8 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     clearErrors("description");
     setIsEditModalOpen(true);
   };
+
+  // console.log(rowData);
 
   return (
     <div>
@@ -487,7 +497,8 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
                             {...field}
                             apiKey={process.env.API_TINYMCE}
                             initialValue={rowData?.description}
-                            // value={descriptionContent}
+                            // textareaName={name}
+                            value={value}
                             init={{
                               ...initRichTextProps,
                               toolbar_mode: "sliding",
