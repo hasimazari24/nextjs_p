@@ -128,7 +128,7 @@ function PageValuasi() {
               pb="2"
               direction={["column", "row"]}
             >
-              <Heading fontSize={"2xl"}>Data Valuasi</Heading>
+              <Heading fontSize={"2xl"}>DATA VALUASI</Heading>
               <HStack>
                 {valuasiFeatures?.access.includes("tmbhValuasi") ||
                 allMenu?.access.includes("all_access") ? (
