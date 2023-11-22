@@ -43,6 +43,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
           route.name === "Data Kelas" ||
           route.name === "Data Penilaian" ||
           route.name === "Data User" ||
+          route.name === "Data Valuasi" ||
           route.name === "Data Asset" ||
           route.name === "Data Kuesioner",
       ),
@@ -204,6 +205,7 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
       (route) =>
         route.name === "Dashboard" ||
         route.name === "Data Tenant" ||
+        route.name === "Data Valuasi" ||
         route.name === "Data Kelas" ||
         route.name === "Data Penilaian" ||
         route.name === "Data Kuesioner",
@@ -244,6 +246,10 @@ export const permissions: Record<UserRoles, RoleAccessItem> = {
       {
         menu: "kelas",
         access: ["tmbhKelas", "editKelas"],
+      },
+      {
+        menu: "valuasi",
+        access: ["tmbhValuasi", "editValuasi"],
       },
     ],
   },
