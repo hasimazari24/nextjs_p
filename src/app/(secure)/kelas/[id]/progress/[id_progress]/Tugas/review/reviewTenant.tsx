@@ -60,8 +60,8 @@ const PDFDynamic = dynamic(
 
 interface editProps {
   rowData: any;
-  onSubmit: () => void;
-  idSesi: string;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 interface Review {
@@ -70,9 +70,7 @@ interface Review {
   comment: string;
 }
 
-const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+const ReviewTenant: React.FC<editProps> = ({ rowData, isOpen, onClose }) => {
   const [stateNotif, setStateNotif] = useState({
     msg: "",
     isError: false,
@@ -91,7 +89,7 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
     dataReview: any | null;
   }>({
     isLoading: true,
-    dataReview: null,
+    dataReview: rowData,
   });
 
   const getReview = async () => {
@@ -99,7 +97,7 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
 
     try {
       await axiosCustom
-        .get(`/assigment/${rowData?.id}/grade/${rowData?.assigment_grade_id}`)
+        .get(`/assigment/${rowData?.id}/grade/${rowData?.graded_answer_id}`)
         .then((response) => {
           console.log(response);
           if (response.status === 200) {
@@ -125,27 +123,11 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
   };
 
   useEffect(() => {
-    if (rowData?.assigment_grade_id) getReview();
-  }, [rowData?.assigment_grade_id]);
+    if (rowData?.graded_answer_id && isOpen) getReview();
+  }, [rowData?.graded_answer_id, isOpen]);
 
   return (
     <div>
-      <Button
-        bgColor="blue.500"
-        _hover={{
-          bg: "blue.400",
-        }}
-        title="Edit Data"
-        color="white"
-        onClick={() => onOpen()}
-        key="reviewTugas"
-        size="sm"
-        fontWeight={"thin"}
-      >
-        <MdTask fontSize="16px" />
-        &nbsp; Review Tugas
-      </Button>
-
       <Modal
         isOpen={isOpen}
         onClose={() => {
@@ -177,7 +159,7 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
                   // maxH={"430px"}
                 >
                   {reviewAssign.dataReview &&
-                    reviewAssign.dataReview.submitted_file_view_url && (
+                    reviewAssign.dataReview.answer_file_view_url && (
                       // <iframe
                       //   src={dataReview.answer_file_view_url}
                       //   width="auto"
@@ -185,9 +167,7 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
                       // ></iframe>
                       <PDFDynamic
                         // fileUrl={dataReview.answer_file_view_url}
-                        fileUrl={
-                          reviewAssign.dataReview.submitted_file_view_url
-                        }
+                        fileUrl={reviewAssign.dataReview.answer_file_view_url}
                       />
                     )}
                 </Box>
@@ -203,8 +183,8 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
                       {rowData?.title}
                     </Text>
                     <Text fontWeight={"thin"} fontSize={["md", "lg"]}>
-                      Mengumpulkan pada : {rowData?.assigment_answer_date},{" "}
-                      {rowData?.assigment_answer_time}
+                      Mengumpulkan pada : {rowData?.submitted_date},{" "}
+                      {rowData?.submitted_time}
                     </Text>
                   </Box>
                   <Box>
@@ -212,8 +192,10 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
                       Tanggal Dinilai :
                     </Text>
                     <Text fontWeight={"thin"} fontSize={["md", "lg"]}>
-                      {reviewAssign.dataReview?.review_date || "Belum dinilai"}{" "}
-                      {reviewAssign.dataReview?.review_time || null}
+                      {reviewAssign.dataReview?.graded_answer_review_date ||
+                        "Belum dinilai"}{" "}
+                      {reviewAssign.dataReview?.graded_answer_review_time ||
+                        null}
                     </Text>
                   </Box>
                   <Box>
@@ -221,7 +203,8 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
                       Nilai :
                     </Text>
                     <Text fontWeight={"thin"} fontSize={["md", "lg"]}>
-                      {reviewAssign.dataReview?.review_grade || "Belum dinilai"}
+                      {reviewAssign.dataReview?.graded_answer_grade ||
+                        "Belum dinilai"}
                     </Text>
                   </Box>
                   <Box>
@@ -229,7 +212,7 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
                       Komentar Mentor :
                     </Text>
                     <Text fontWeight={"thin"} fontSize={["md", "lg"]}>
-                      {reviewAssign.dataReview?.review_feedback ||
+                      {reviewAssign.dataReview?.graded_answer_feedback ||
                         "Belum dinilai"}
                     </Text>
                   </Box>
@@ -250,7 +233,6 @@ const ReviewTenant: React.FC<editProps> = ({ onSubmit, rowData }) => {
         }
         message={stateNotif.msg}
         isError={stateNotif.isError}
-        onSubmit={() => onSubmit()}
       />
     </div>
   );

@@ -214,7 +214,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
             <ModalBody>
               {/* Jika sudah closed dan belum upload jwban maka tdk bsa upload */}
               {rowData?.assigment_closed === true &&
-              rowData?.assigment_answer_id === null ? (
+              rowData?.answer_id === null ? (
                 <>
                   <Center mb="3">
                     <WarningIcon w={12} h={12} color="green.500" />
@@ -223,7 +223,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
                     Anda Tidak Bisa Upload Karena Terlambat
                   </Text>
                 </>
-              ) : rowData?.assigment_grade_id ? (
+              ) : rowData?.graded_answer_id ? (
                 // jika sudah upload dan sudah dinilai
                 <>
                   <Center mb="3">
@@ -238,8 +238,8 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
                   </Text>
                 </>
               ) : rowData?.assigment_closed === true &&
-                rowData?.assigment_answer_id &&
-                rowData?.assigment_grade_id === null ? (
+                rowData?.answer_id &&
+                rowData?.graded_answer_id === null ? (
                 // jika sudah close dan sudah submit dan blum dinilai mentor
                 <>
                   <Center mb="3">

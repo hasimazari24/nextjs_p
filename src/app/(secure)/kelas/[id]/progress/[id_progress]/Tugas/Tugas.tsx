@@ -24,6 +24,7 @@ import {
   SimpleGrid,
   Skeleton,
   Divider,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { MdArrowBackIosNew, MdTask } from "react-icons/md/";
 import ReviewMentor from "./review/reviewMentor";
@@ -51,7 +52,7 @@ interface MentorTugas {
 interface TenantTugas {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   open_date: string;
   open_date_format: string;
   open_time_format: string;
@@ -59,12 +60,12 @@ interface TenantTugas {
   close_date_format: string;
   close_time_format: string;
   assigment_closed: boolean;
-  assigment_answer_id: string;
-  assigment_answer_view_url: string;
-  assigment_answer_download_url: string;
-  assigment_answer_date: string;
-  assigment_answer_time:string;
-  assigment_grade_id: string;
+  answer_id: string;
+  submitted_date: string;
+  submitted_time: string;
+  answer_file_view_url: string;
+  answer_file_download_url: string;
+  graded_answer_id: string | null;
   progress: string | null;
 }
 
@@ -75,9 +76,10 @@ export function TugasTenant({
   idSesi: string;
   classEnd: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [tugasTenant, setTugasTenant] = useState<TenantTugas[] | []>([]);
+  const [selectReview, setIsSelectReview] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     // if (need_updated === true)
@@ -164,12 +166,25 @@ export function TugasTenant({
                       idSesi={idSesi}
                       onSubmit={() => getTugasTenant()}
                     />
-                    {data.assigment_answer_id && (
-                      <ReviewTenant
-                        rowData={data}
-                        idSesi={idSesi}
-                        onSubmit={() => getTugasTenant()}
-                      />
+                    {data.graded_answer_id && (
+                      <Button
+                        bgColor="blue.500"
+                        _hover={{
+                          bg: "blue.400",
+                        }}
+                        title="Edit Data"
+                        color="white"
+                        onClick={() => {
+                          setIsSelectReview(data);
+                          onOpen();
+                        }}
+                        key="reviewTugas"
+                        size="sm"
+                        fontWeight={"thin"}
+                      >
+                        <MdTask fontSize="16px" />
+                        &nbsp; Review Tugas
+                      </Button>
                     )}
                   </HStack>
                 </VStack>
@@ -180,12 +195,7 @@ export function TugasTenant({
         )}
       </Skeleton>
 
-      {/* <ReviewTenant
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        idTugas={"uergfhje"}
-        onSubmit={() => console.log("jhsdfsd")}
-      /> */}
+      <ReviewTenant rowData={selectReview} isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }

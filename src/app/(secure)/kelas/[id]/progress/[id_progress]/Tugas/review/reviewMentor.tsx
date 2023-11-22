@@ -169,7 +169,7 @@ const ReviewMentor: React.FC<editProps> = ({
           {/* <ModalHeader>Penilaian Tugas</ModalHeader> */}
           <ModalCloseButton />
           <ModalBody>
-            <Stack spacing={{ base: 4, md: 6 }} h={"full"} p={3}>
+            <Stack spacing={{ base: 4, md: 6 }} h={"full"} p={[0, 3]}>
               <VStack spacing={0} align="flex-start">
                 <Text fontWeight={"bold"} fontSize={["17px", "xl", "2xl"]}>
                   Penilaian Tugas : {namaTugas}
@@ -200,6 +200,7 @@ const ReviewMentor: React.FC<editProps> = ({
                 alignItems={"center"}
                 justifyItems={"center"}
                 gap={{ base: 8, sm: 6, lg: 8 }}
+                w="full"
               >
                 <Box
                   w="full"
@@ -243,6 +244,7 @@ const ReviewMentor: React.FC<editProps> = ({
                             spacing={{ base: 6, md: 8 }}
                             direction="row"
                             fontWeight={"bold"}
+                            flexWrap={"wrap"}
                           >
                             <Radio
                               value="A"

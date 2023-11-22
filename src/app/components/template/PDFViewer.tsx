@@ -1,10 +1,28 @@
 import * as React from "react";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
-import { toolbarPlugin, ToolbarSlot } from "@react-pdf-viewer/toolbar";
+import {
+  toolbarPlugin,
+  ToolbarSlot,
+  MoreActionsPopover,
+} from "@react-pdf-viewer/toolbar";
 
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  HStack,
+  PopoverTrigger,
+  Stack,
+} from "@chakra-ui/react";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 interface PDFViewerProps {
   fileUrl: string;
@@ -48,41 +66,80 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl }) => {
             } = props;
 
             return (
-              <>
-                <Box padding="0px 2px">
-                  <ShowSearchPopover />
-                </Box>
-                <Box padding="0px 2px">
-                  <ZoomOut />
-                </Box>
-                <Box padding="0px 2px">
-                  <Zoom />
-                </Box>
-                <Box padding="0px 2px">
-                  <ZoomIn />
-                </Box>
-                <Box padding="0px 2px" marginLeft="auto">
-                  <GoToPreviousPage />
-                </Box>
-                <Box padding="0px 2px" width={{ base: "4rem", md: "6rem" }}>
-                  <CurrentPageInput />
-                </Box>
-                <Box padding="0px 2px">
-                  / <NumberOfPages />
-                </Box>
-                <Box padding="0px 2px">
-                  <GoToNextPage />
-                </Box>
-                <Box padding="0px 2px" marginLeft="auto">
-                  <EnterFullScreen />
-                </Box>
-                <Box padding="0px 2px">
-                  <Download />
-                </Box>
-                <Box padding="0px 2px">
-                  <Print />
-                </Box>
-              </>
+              <Stack justifyContent="space-between" direction={"row"} w="full">
+                <HStack spacing={0}>
+                  <Box margin="0">
+                    <ShowSearchPopover />
+                  </Box>
+                  <Box margin="0">
+                    <ZoomOut />
+                  </Box>
+                  <Box margin="0">
+                    <Zoom />
+                  </Box>
+                  <Box margin="0">
+                    <ZoomIn />
+                  </Box>
+                </HStack>
+                <HStack spacing={0}>
+                  <Box display={{ base: "none", lg: "flex" }}>
+                    <GoToPreviousPage />
+                  </Box>
+                  <Box width={{ base: "50px", lg: "4rem" }} pr="5px">
+                    <CurrentPageInput />
+                  </Box>
+                  <Box>
+                   &nbsp;/ <NumberOfPages />
+                  </Box>
+                  <Box display={{ base: "none", lg: "flex" }}>
+                    <GoToNextPage />
+                  </Box>
+                </HStack>
+
+                {/* <div style={{ padding: "0px 2px" }}>
+                  <MoreActionsPopover toolbarSlot={props} />
+                </div> */}
+                <HStack spacing={0}>
+                  <Box display={{ base: "none", lg: "flex" }}>
+                    <EnterFullScreen />
+                  </Box>
+                  <Box display={{ base: "none", lg: "flex" }}>
+                    <Download />
+                  </Box>
+                  <Box display={{ base: "none", lg: "flex" }}>
+                    <Print />
+                  </Box>
+                  <Box display={{ base: "flex", lg: "none" }}>
+                    <Popover placement="bottom">
+                      <PopoverTrigger>
+                        <IconButton
+                          aria-label="More server options"
+                          icon={<BsThreeDotsVertical />}
+                          variant="solid"
+                          w="fit-content"
+                        />
+                      </PopoverTrigger>
+                      <PopoverContent
+                        w="fit-content"
+                        _focus={{ boxShadow: "none" }}
+                      >
+                        <PopoverArrow />
+                        <PopoverBody>
+                          <Box>
+                            <EnterFullScreen />
+                          </Box>
+                          <Box>
+                            <Download />
+                          </Box>
+                          <Box>
+                            <Print />
+                          </Box>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  </Box>
+                </HStack>
+              </Stack>
             );
           }}
         </Toolbar>
