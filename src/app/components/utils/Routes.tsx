@@ -9,13 +9,13 @@ import {
 import { MdOutlineQuiz } from "react-icons/md";
 import { ImFileText2 } from "react-icons/im";
 import { SiGoogleclassroom } from "react-icons/si";
-import { TbReportMoney } from "react-icons/tb";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import { IRoutes } from "@/app/type/routes-navigation.d";
 
 const Routes: IRoutes[] = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
   { name: "Data User", icon: BsPeople, href: "/user" },
-  { name: "Data Valuasi", icon: TbReportMoney, href: "/valuasi" },
+  { name: "Data Valuasi", icon: LiaFileInvoiceDollarSolid, href: "/valuasi" },
   { name: "Data Tenant", icon: BsBuilding, href: "/backPanelTenant" },
   { name: "Data Kelas", icon: SiGoogleclassroom, href: "/kelas" },
   {
