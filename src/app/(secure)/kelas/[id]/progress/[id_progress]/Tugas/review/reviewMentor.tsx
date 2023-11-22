@@ -46,6 +46,7 @@ interface editProps {
   onSubmit: () => void;
   dataReview: any | null;
   namaTugas: string | null;
+  namaTenant?:string;
   roleAccess: string;
 }
 
@@ -66,6 +67,7 @@ const ReviewMentor: React.FC<editProps> = ({
   onSubmit,
   dataReview,
   namaTugas,
+  namaTenant,
   roleAccess,
 }) => {
   const { register, handleSubmit, reset } = useForm<Review>();
@@ -181,7 +183,7 @@ const ReviewMentor: React.FC<editProps> = ({
                   <HStack alignItems={"center"}>
                     <FaBuildingUser fontSize={"20px"} />
                     <Text fontSize={["15px", "lg", "xl"]}>
-                      {dataReview?.tenant_name}
+                      {dataReview?.tenant_name || namaTenant}
                     </Text>
                   </HStack>
                   <HStack alignItems={"center"}>
