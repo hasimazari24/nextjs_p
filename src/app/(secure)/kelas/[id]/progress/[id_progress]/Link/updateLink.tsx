@@ -28,7 +28,13 @@ import {
   useController,
   Controller,
 } from "react-hook-form";
-import { AddIcon, CalendarIcon, CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  CalendarIcon,
+  CheckIcon,
+  CloseIcon,
+  EditIcon,
+} from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import initRichTextProps from "@/app/type/inital-rich-text";
@@ -43,10 +49,7 @@ interface editProps {
   dataEdit: any;
 }
 
-const UpdateLink: React.FC<editProps> = ({
-  onSubmit,
-  dataEdit,
-}) => {
+const UpdateLink: React.FC<editProps> = ({ onSubmit, dataEdit }) => {
   const {
     register,
     handleSubmit,
@@ -103,7 +106,7 @@ const UpdateLink: React.FC<editProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
+    // console.log(data);
     setIsLoading(true);
 
     try {
@@ -111,7 +114,7 @@ const UpdateLink: React.FC<editProps> = ({
       await axiosCustom
         .patch(`/update-course-item-link/${dataEdit.id}`, data)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             handleShowMessage("Data berhasil diubah.", false);
             setIsLoading(false);

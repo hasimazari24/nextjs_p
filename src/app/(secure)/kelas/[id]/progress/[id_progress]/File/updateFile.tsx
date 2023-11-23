@@ -174,7 +174,7 @@ const UpdateFile: React.FC<editProps> = ({ onSubmit, rowData }) => {
       await axiosCustom
         .patch(`/update-course-item-file/${data.id}`, dataBaru)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             handleShowMessage("Data berhasil diubah.", false);
             setIsLoading(false);

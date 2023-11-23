@@ -97,9 +97,13 @@ const ReviewTenant: React.FC<editProps> = ({ rowData, isOpen, onClose }) => {
 
     try {
       await axiosCustom
-        .get(`/assigment/${rowData?.id || rowData?.assigment_id}/grade/${rowData?.graded_answer_id}`)
+        .get(
+          `/assigment/${rowData?.id || rowData?.assigment_id}/grade/${
+            rowData?.graded_answer_id
+          }`,
+        )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             setReviewAssign({
               isLoading: false,

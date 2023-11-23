@@ -142,7 +142,7 @@ function Progress({
 
   const filterOptions = [{ key: "title", label: "Nama Sesi" }];
 
-  console.log(ItemProgress);
+  // console.log(ItemProgress);
 
   return isLoading ? (
     <Loading />

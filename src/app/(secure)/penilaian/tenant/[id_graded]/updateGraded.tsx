@@ -107,7 +107,7 @@ const UpdateGraded: React.FC<editProps> = ({
         await axiosCustom
           .patch(`/update-general-grades-tenant/${data.id}`, data)
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 200) {
               handleShowMessage("Data berhasil diubah.", false);
               setIsLoading(false);

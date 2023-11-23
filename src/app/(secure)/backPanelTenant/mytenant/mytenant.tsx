@@ -354,7 +354,7 @@ export default function MyTenant() {
                       <SimpleGrid spacing={10}>
                         <Table pt="0">
                           <Tbody>
-                            <Tr key={2} pb="3">
+                            <Tr key={1} pb="3">
                               <Td width="20%" pr="0" pl="0" pt="0">
                                 Founder
                               </Td>
@@ -372,7 +372,7 @@ export default function MyTenant() {
                               </Td>
                             </Tr>
 
-                            <Tr key={1}>
+                            <Tr key={2}>
                               <Td width="20%" pr="0" pl="0">
                                 Alamat
                               </Td>
@@ -385,7 +385,7 @@ export default function MyTenant() {
                               {/* Tambahkan kolom lainnya sesuai kebutuhan */}
                             </Tr>
 
-                            <Tr key={4} pb="3">
+                            <Tr key={3} pb="3">
                               <Td width="20%" pr="0" pl="0">
                                 E-mail
                               </Td>
@@ -396,7 +396,7 @@ export default function MyTenant() {
                                 {dataMyTenant?.email}
                               </Td>
                             </Tr>
-                            <Tr key={5} borderBottom={"hidden"}>
+                            <Tr key={4} borderBottom={"hidden"}>
                               <Td width="20%" pr="0" pl="0">
                                 Kontak
                               </Td>
@@ -418,7 +418,7 @@ export default function MyTenant() {
                                 {dataMyTenant?.jangkauan || "-"}
                               </Td>
                             </Tr>
-                            <Tr key={5} borderBottom={"hidden"}>
+                            <Tr key={6} borderBottom={"hidden"}>
                               <Td width="20%" pr="0" pl="0">
                                 Valuasi
                               </Td>
@@ -501,7 +501,7 @@ export default function MyTenant() {
                           );
                         } else if (link.title === "Facebook") {
                           return (
-                            <Link href={link.url} target="_blank">
+                            <Link href={link.url} key={link.id} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
                                   color="blue.600"
@@ -519,7 +519,7 @@ export default function MyTenant() {
                           );
                         } else if (link.title === "Instagram") {
                           return (
-                            <Link href={link.url} target="_blank">
+                            <Link href={link.url} key={link.id} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
                                   color="pink.500"
@@ -537,7 +537,7 @@ export default function MyTenant() {
                           );
                         } else if (link.title === "Twitter") {
                           return (
-                            <Link href={link.url} target="_blank">
+                            <Link href={link.url} key={link.id} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
                                   color="blue.400"
@@ -555,7 +555,7 @@ export default function MyTenant() {
                           );
                         } else if (link.title === "YouTube") {
                           return (
-                            <Link href={link.url} target="_blank">
+                            <Link href={link.url} key={link.id} target="_blank">
                               <HStack alignItems={"center"} pr="3">
                                 <IconButton
                                   color="red.500"
@@ -573,7 +573,7 @@ export default function MyTenant() {
                           );
                         } else if (link.title === "LinkedIn") {
                           return (
-                            <Link href={link.url} target="_blank">
+                            <Link href={link.url} key={link.id} target="_blank">
                               <Link href="impuls.id">
                                 <HStack alignItems={"center"} pr="3">
                                   <IconButton
@@ -619,7 +619,6 @@ export default function MyTenant() {
               </Center>
             </Flex>
           )}
-          {/* <SplitWithImage selectedSocialLinks={selectedSocialLinks} /> */}
         </>
       )}
       <ModalSocial

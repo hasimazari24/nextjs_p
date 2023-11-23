@@ -1,6 +1,5 @@
 "use client";
 import { axiosCustom } from "@/app/api/axios";
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Stack,
   HStack,
@@ -87,7 +86,7 @@ function CommentSection({ idSesi }: { idSesi: string }) {
       await axiosCustom
         .post(`/course-item/${idSesi}/add-comment`, data)
         .then((response) => {
-        //   console.log(response);
+          //   console.log(response);
           if (response.status === 201) {
             setIsLoadingComment(false);
           }
@@ -100,7 +99,7 @@ function CommentSection({ idSesi }: { idSesi: string }) {
       setIsLoadingComment(false);
     }
   };
-  console.log(dataComment);
+  // console.log(dataComment);
   return (
     <div>
       <Skeleton
@@ -112,7 +111,10 @@ function CommentSection({ idSesi }: { idSesi: string }) {
             Komentar
           </Text>
 
-          <form onSubmit={handleSubmit(handleFormSubmit)} style={{ width : "100%" }}>
+          <form
+            onSubmit={handleSubmit(handleFormSubmit)}
+            style={{ width: "100%" }}
+          >
             <FormControl isInvalid={!!errors.comment}>
               <Stack
                 // justifyContent={"justify-content"}
@@ -149,7 +151,7 @@ function CommentSection({ idSesi }: { idSesi: string }) {
           </form>
 
           {dataComment.length > 0 &&
-            dataComment.map((data:any) => (
+            dataComment.map((data: any) => (
               <Box
                 rounded={["md", "lg"]}
                 boxShadow={["md", "lg"]}
@@ -170,10 +172,7 @@ function CommentSection({ idSesi }: { idSesi: string }) {
                         src={data.user.image_url || "/img/avatar-default.jpg"}
                         backgroundColor={"white"}
                       />
-                      <VStack
-                        alignItems="flex-start"
-                        spacing={"0px"}
-                      >
+                      <VStack alignItems="flex-start" spacing={"0px"}>
                         <Text
                           as="b"
                           fontSize="sm"
@@ -206,7 +205,10 @@ function CommentSection({ idSesi }: { idSesi: string }) {
                     </Text>
                   </Stack>
                   {data.delete_access && (
-                    <DeleteComment dataDelete={data} onSubmit={()=>getComment()}/>
+                    <DeleteComment
+                      dataDelete={data}
+                      onSubmit={() => getComment()}
+                    />
                   )}
                 </Stack>
               </Box>

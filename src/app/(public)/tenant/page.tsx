@@ -21,11 +21,11 @@ import {
   WrapItem,
   SimpleGrid,
   Spinner,
-  Skeleton
+  Skeleton,
 } from "@chakra-ui/react";
 // import { usePublic } from "../utils/PublicContext";
 import { useRouter } from "next/navigation";
-import NextLink from 'next/link';
+import NextLink from "next/link";
 import { axiosCustom } from "@/app/api/axios";
 import dynamic from "next/dynamic";
 import Loading from "../loading";
@@ -34,7 +34,7 @@ interface Beranda {
   id: string;
   name: string;
   motto: string;
-  slug:string;
+  slug: string;
   image_url: string;
   image_banner_url: string;
 }
@@ -70,7 +70,7 @@ function Tenant() {
         setLoadingBeranda(false);
       });
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       if (error?.response) {
         setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
       } else setMsg(`Terjadi Kesalahan: ${error.message}`);
@@ -161,7 +161,10 @@ function Tenant() {
                         bg={
                           isHovered[index]
                             ? "white"
-                            : `url(${p.image_banner_url || "/img/tenant-banner-default.jpg"}) center/cover no-repeat`
+                            : `url(${
+                                p.image_banner_url ||
+                                "/img/tenant-banner-default.jpg"
+                              }) center/cover no-repeat`
                         }
                       ></Box>
                       <Center

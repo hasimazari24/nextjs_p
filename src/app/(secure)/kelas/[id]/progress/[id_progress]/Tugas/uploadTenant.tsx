@@ -122,7 +122,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
   // console.log(idFile);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
+    // console.log(data);
     if (!idFile) {
       return handleShowMessage("Maaf. Silahkan upload file dengan benar", true);
     }
@@ -139,7 +139,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
         await axiosCustom
           .put(`/course-item/${idSesi}/update-submit-assigment`, dataBaru)
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 200) {
               handleShowMessage("Upload jawaban berhasil diubah.", false);
               setIsLoading(false);
@@ -150,7 +150,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
         await axiosCustom
           .post(`/course-item/${idSesi}/submit-assigment`, dataBaru)
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 201) {
               handleShowMessage(
                 "Upload jawaban berhasil. Silahkan lihat Review Tugas.",

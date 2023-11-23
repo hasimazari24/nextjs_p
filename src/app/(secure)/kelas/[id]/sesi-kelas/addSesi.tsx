@@ -19,11 +19,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler, useController } from "react-hook-form";
-import {
-  AddIcon,
-  CheckIcon,
-  CloseIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import initRichTextProps from "@/app/type/inital-rich-text";
@@ -36,7 +32,7 @@ type SesiItem = {
 };
 
 interface editProps {
-  idKelas:string
+  idKelas: string;
   onSubmit: () => void;
 }
 
@@ -99,7 +95,7 @@ const AddSesi: React.FC<editProps> = ({ onSubmit, idKelas }) => {
       await axiosCustom
         .post(`/course/${idKelas}/add-item`, data)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 201) {
             handleShowMessage("Data berhasil disimpan.", false);
           }
@@ -178,9 +174,7 @@ const AddSesi: React.FC<editProps> = ({ onSubmit, idKelas }) => {
                   </Flex>
                 </FormControl>
                 <FormControl isInvalid={!!errors.description} mb="3">
-                  <FormLabel>
-                    Deskripsi Sesi
-                  </FormLabel>
+                  <FormLabel>Deskripsi Sesi</FormLabel>
                   <Editor
                     {...field}
                     apiKey={process.env.API_TINYMCE}

@@ -89,7 +89,7 @@ const AddGraded: React.FC<editProps> = ({ onSubmit, idGraded }) => {
       await axiosCustom
         .post(`/add-general-grades-tenant/${idGraded}`, data)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 201) {
             handleShowMessage("Data berhasil disimpan.", false);
           }

@@ -147,7 +147,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
     hidenCols.push("action");
   }
 
-  console.log(is_admin);
+  // console.log(is_admin);
 
   const columns: ReadonlyArray<Column<AwardItem>> = [
     {

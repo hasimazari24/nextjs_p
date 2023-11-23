@@ -146,7 +146,7 @@ const AddFile: React.FC<editProps> = ({
   // console.log(idFile);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
+    // console.log(data);
     if (!idFile) {
       return handleShowMessage("Maaf. Silahkan upload file dengan benar", true);
     }
@@ -163,7 +163,7 @@ const AddFile: React.FC<editProps> = ({
       await axiosCustom
         .post(`/course-item/${idSesi}/add-file`, dataBaru)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 201) {
             handleShowMessage("Data berhasil disimpan.", false);
             setIsLoading(false);

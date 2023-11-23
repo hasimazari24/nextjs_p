@@ -112,7 +112,7 @@ const AddLink: React.FC<editProps> = ({
       await axiosCustom
         .post(`/course-item/${idSesi}/add-link`, data)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 201) {
             handleShowMessage("Data berhasil disimpan.", false);
             setIsLoading(false);
