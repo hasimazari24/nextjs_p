@@ -56,6 +56,7 @@ interface UserLog {
 
 export default function PageTeam({ params }: { params: { slug: string } }) {
   const { user } = useAuth();
+
   let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
 
   if (user !== null && user !== 401) {
@@ -114,10 +115,11 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
   const searchParams = useSearchParams();
   // const idTenant = searchParams.get("id");
   const [namaTenant, setNamaTenant] = useState<string | null>();
-  const [loadingTeam, setLoadingTeam] = useState<boolean>(false);
+  const [is_admin, setIs_Admin] = useState<boolean>(false);
+  const [loadingTeam, setLoadingTeam] = useState<boolean>(true);
   const router = useRouter();
 
-  const getTeam = async (tabs:number ) => {
+  const getTeam = async (tabs: number) => {
     try {
       setLoadingTeam(true);
       // Panggil API menggunakan Axios dengan async/await
@@ -129,6 +131,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
         setDataTeamNon(response.data.data.user_tenant_cant_login);
 
         setNamaTenant(response.data.data.name);
+        setIs_Admin(response.data.data.is_admin);
         // setIdTenant(id);
         setLoadingTeam(false); // Set isLoading to false to stop the spinner
       }, 1000);
@@ -241,7 +244,8 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                     <AiOutlineRollback />
                     &nbsp;Data Tenant
                   </Button>
-                  {teamFeatures?.access.includes("tmbhTeam") ||
+                  {(teamFeatures?.access.includes("tmbhTeam") &&
+                    is_admin === true) ||
                   allMenu?.access.includes("all_access") ? (
                     <Popover placement="bottom" isLazy>
                       <PopoverTrigger>
@@ -315,6 +319,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                       dataTeam={dataTeamLogin}
                       onSubmit={() => getTeam(0)}
                       idTenant={getParamsId}
+                      is_admin={is_admin}
                     />
                   </TabPanel>
                   {/* initially not mounted */}
@@ -323,6 +328,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                       dataTeam={dataTeamNonLogin}
                       onSubmit={() => getTeam(1)}
                       idTenant={getParamsId}
+                      is_admin={is_admin}
                     />
                   </TabPanel>
                 </TabPanels>

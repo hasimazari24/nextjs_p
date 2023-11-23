@@ -38,6 +38,7 @@ interface GalleryItem {
 interface DataItem {
   id: string;
   name: string;
+  is_admin: boolean;
   gallery: GalleryItem;
 }
 
@@ -59,31 +60,27 @@ function PageGallery({ params }: { params: { slug: string } }) {
   // const [dataGallery, setDataGallery] = useState<DataItem[]>([]);
   const [galleryItem, setGalleryItem] = useState<GalleryItem[]>([]);
   const [namaTenant, setNamaTenant] = useState<string | null>();
+  const [is_admin, setIs_Admin] = useState<boolean>(false);
 
   const fetchData = async (): Promise<void> => {
     try {
       const response = await axiosCustom.get(
         `/tenant/${getParamsId}/get-gallery`,
       );
-      const newDataGallery: DataItem[] = [await response.data.data];
-      const newGalleryItem = newDataGallery.flatMap((dataItem) =>
-        Array.isArray(dataItem.gallery)
-          ? dataItem.gallery.map((gallery) => ({
-              id: gallery.id,
-              image_id: gallery.image_id,
-              image_url: gallery.image_url,
-              title: gallery.title,
-              description: gallery.description,
-              event_date_format: gallery.event_date_format,
-              event_date: gallery.event_date,
-            }))
-          : [],
-      );
-      const namatenant = newDataGallery
-        .map((item) => item.name.toUpperCase())
-        .toString();
-      setNamaTenant(namatenant);
-      // setDataGallery(newDataGallery);
+      const newDataGallery: DataItem = response.data.data;
+      const newGalleryItem = Array.isArray(newDataGallery.gallery)
+        ? newDataGallery.gallery.map((gallery) => ({
+            id: gallery.id,
+            image_id: gallery.image_id,
+            image_url: gallery.image_url,
+            title: gallery.title,
+            description: gallery.description,
+            event_date_format: gallery.event_date_format,
+            event_date: gallery.event_date,
+          }))
+        : [];
+      setNamaTenant(newDataGallery.name.toUpperCase());
+      setIs_Admin(newDataGallery.is_admin);
       setGalleryItem(newGalleryItem);
       setDataGalleryLoading(false);
     } catch (error) {
@@ -130,6 +127,7 @@ function PageGallery({ params }: { params: { slug: string } }) {
   let hidenCols: string[] = ["id", "event_date", "image_id"];
   if (
     (GalleryFeatures?.access.includes("tmbhGallery") &&
+      is_admin === true &&
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");
@@ -182,7 +180,8 @@ function PageGallery({ params }: { params: { slug: string } }) {
     },
   ];
   const renderActions = (rowData: any) => {
-    return GalleryFeatures?.access.includes("editGallery") ||
+    return (GalleryFeatures?.access.includes("editGallery") &&
+      is_admin === true) ||
       allMenu?.access.includes("all_access") ? (
       <HStack>
         <EditGallery
@@ -233,7 +232,8 @@ function PageGallery({ params }: { params: { slug: string } }) {
                     <AiOutlineRollback />
                     &nbsp;Data Tenant
                   </Button>
-                  {GalleryFeatures?.access.includes("tmbhGallery") ||
+                  {(GalleryFeatures?.access.includes("tmbhGallery") &&
+                    is_admin === true) ||
                   allMenu?.access.includes("all_access") ? (
                     <AddGallery
                       idTenant={getParamsId}

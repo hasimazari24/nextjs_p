@@ -41,12 +41,18 @@ interface UserLog {
 }
 
 interface NonLoginTeam {
-    dataTeam : DataItem[],
-    onSubmit : () => void,
-    idTenant?:string,
+  dataTeam: DataItem[];
+  onSubmit: () => void;
+  idTenant?: string;
+  is_admin: boolean;
 }
 
-function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
+function TeamNonLogin({
+  dataTeam,
+  onSubmit,
+  idTenant,
+  is_admin,
+}: NonLoginTeam) {
   const { user } = useAuth();
   let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
 
@@ -69,6 +75,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
   let hidenCols: string[] = ["id"];
   if (
     (teamFeatures?.access.includes("tmbhTeam") &&
+      is_admin === true &&
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");
@@ -141,7 +148,7 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
   ];
 
   const renderActions = (rowData: any) => {
-    return teamFeatures?.access.includes("editTeam") ||
+    return (teamFeatures?.access.includes("editTeam") && is_admin === true) ||
       allMenu?.access.includes("all_access") ? (
       <>
         <Menu>
@@ -205,12 +212,11 @@ function TeamNonLogin({ dataTeam, onSubmit, idTenant }:NonLoginTeam) {
           `/tenant/${idTenant}/delete-user-tenant-cant-login/${editingData?.id}`,
         );
 
-       if (response.status === 200) {
-         setIsLoadingDelete(false);
-         setIsModalDeleteOpen(false);
-         handleShowMessage("Data berhasil dihapus.", false);
-       }
-       
+        if (response.status === 200) {
+          setIsLoadingDelete(false);
+          setIsModalDeleteOpen(false);
+          handleShowMessage("Data berhasil dihapus.", false);
+        }
       } catch (error: any) {
         if (error?.response) {
           handleShowMessage(

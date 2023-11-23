@@ -2,12 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
-import {
-  Button,
-  Center,
-  Avatar,
-  Checkbox,
-} from "@chakra-ui/react";
+import { Button, Center, Avatar, Checkbox } from "@chakra-ui/react";
 import DataTable from "@/app/components/datatable/data-table";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 // import { AiOutlineRollback } from "react-icons/ai";
@@ -43,9 +38,10 @@ interface NonLoginTeam {
   dataTeam: DataItem[];
   onSubmit: () => void;
   idTenant?: string;
+  is_admin: boolean;
 }
 
-function TeamLogin({ dataTeam, onSubmit, idTenant }: NonLoginTeam) {
+function TeamLogin({ dataTeam, onSubmit, idTenant, is_admin }: NonLoginTeam) {
   const { user } = useAuth();
   let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
 
@@ -68,6 +64,7 @@ function TeamLogin({ dataTeam, onSubmit, idTenant }: NonLoginTeam) {
   let hidenCols: string[] = ["id"];
   if (
     (teamFeatures?.access.includes("tmbhTeam") &&
+      is_admin === true &&
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");
@@ -158,7 +155,7 @@ function TeamLogin({ dataTeam, onSubmit, idTenant }: NonLoginTeam) {
   ];
 
   const renderActions = (rowData: any) => {
-    return teamFeatures?.access.includes("editTeam") ||
+    return (teamFeatures?.access.includes("editTeam") && is_admin === true) ||
       allMenu?.access.includes("all_access") ? (
       <>
         <Button

@@ -36,6 +36,7 @@ interface AwardItem {
 interface DataItem {
   id: string;
   name: string;
+  is_admin: boolean;
   award: AwardItem;
 }
 
@@ -70,7 +71,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
   const router = useRouter();
 
   const [dataAwardsLoading, setDataAwardsLoading] = useState(true);
-  // const [dataAwards, setDataAwards] = useState<DataItem[]>([]);
+  const [is_admin, setIs_Admin] = useState<boolean>(false);
   const [awardItem, setAwardItem] = useState<AwardItem[]>([]);
   const [namaTenant, setNamaTenant] = useState<string | null>();
 
@@ -80,22 +81,18 @@ function PageAwards({ params }: { params: { slug: string } }) {
       const response = await axiosCustom.get(
         `/tenant/${getParamsId}/get-award`,
       );
-      const newDataAwards: DataItem[] = [await response.data.data];
-      const newAwardItem = newDataAwards.flatMap((dataItem) =>
-        Array.isArray(dataItem.award)
-          ? dataItem.award.map((award) => ({
-              id: award.id,
-              image_id: award.image_id,
-              image_url: award.image_url,
-              name: award.name,
-              rank: award.rank,
-            }))
-          : [],
-      );
-      const namatenant = newDataAwards
-        .map((item) => item.name.toUpperCase())
-        .toString();
-      setNamaTenant(namatenant);
+      const newDataAwards: DataItem = response.data.data;
+      const newAwardItem = Array.isArray(newDataAwards.award)
+        ? newDataAwards.award.map((award) => ({
+            id: award.id,
+            image_id: award.image_id,
+            image_url: award.image_url,
+            name: award.name,
+            rank: award.rank,
+          }))
+        : [];
+      setNamaTenant(newDataAwards.name.toUpperCase());
+      setIs_Admin(newDataAwards.is_admin);
       // setDataAwards(newDataAwards);
       setAwardItem(newAwardItem);
       setDataAwardsLoading(false);
@@ -144,10 +141,13 @@ function PageAwards({ params }: { params: { slug: string } }) {
   let hidenCols: string[] = ["id", "image_id"];
   if (
     (awardsFeatures?.access.includes("tmbhAwards") &&
+      is_admin === true &&
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");
   }
+
+  console.log(is_admin);
 
   const columns: ReadonlyArray<Column<AwardItem>> = [
     {
@@ -176,7 +176,8 @@ function PageAwards({ params }: { params: { slug: string } }) {
     },
   ];
   const renderActions = (rowData: any) => {
-    return awardsFeatures?.access.includes("editAwards") ||
+    return (awardsFeatures?.access.includes("editAwards") &&
+      is_admin === true) ||
       allMenu?.access.includes("all_access") ? (
       <HStack>
         <EditAwards
@@ -225,7 +226,8 @@ function PageAwards({ params }: { params: { slug: string } }) {
                     <AiOutlineRollback />
                     &nbsp;Data Tenant
                   </Button>
-                  {awardsFeatures?.access.includes("tmbhAwards") ||
+                  {(awardsFeatures?.access.includes("tmbhAwards") &&
+                    is_admin === true) ||
                   allMenu?.access.includes("all_access") ? (
                     <AddAwards
                       idTenant={getParamsId}

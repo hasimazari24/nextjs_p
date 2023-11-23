@@ -42,6 +42,7 @@ interface UserLog {
 
 export default function PageProgram({ params }: { params: { slug: string } }) {
   const { user } = useAuth();
+  const [is_admin, setIs_Admin] = useState<boolean>(false);
   let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
 
   if (user !== null && user !== 401) {
@@ -60,23 +61,24 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
       (feature) => feature.menu === "allmenu",
     );
 
-   if (!programFeatures && !allMenu) {
-     return (
-       <NotFound
-         statusCode={403}
-         msg={"Access Denied"}
-         statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
-       />
-     );
-   }
+    if (!programFeatures && !allMenu) {
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
+    }
   }
   let hidenCols: string[] = ["id"];
   if (
     (programFeatures?.access.includes("tmbhProgram") &&
+      is_admin === true &&
       allMenu?.access.includes("all_access")) === false
   ) {
     hidenCols.push("action");
-  } 
+  }
 
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -154,11 +156,14 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
     try {
       setLoadingProgram(true);
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(`/tenant/${getParamsId}/get-program`);
+      const response = await axiosCustom.get(
+        `/tenant/${getParamsId}/get-program`,
+      );
       if (response.data.data) {
         // console.log(response);
         setDataProgram(response.data.data.program);
-        setNamaTenant(response.data.data.name);
+        setNamaTenant(response.data.data.name.toUpperCase());
+        setIs_Admin(response.data.data.is_admin);
       }
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -184,7 +189,8 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
   }, []);
 
   const renderActions = (rowData: any) => {
-    return programFeatures?.access.includes("editProgram") ||
+    return (programFeatures?.access.includes("editProgram") &&
+      is_admin === true) ||
       allMenu?.access.includes("all_access") ? (
       <>
         <Button
@@ -241,7 +247,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/tenant/${getParamsId}/delete-program/${dataDeleteId}`
+          `/tenant/${getParamsId}/delete-program/${dataDeleteId}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -311,7 +317,8 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
                     <AiOutlineRollback />
                     &nbsp;Data Tenant
                   </Button>
-                  {programFeatures?.access.includes("tmbhProgram") ||
+                  {(programFeatures?.access.includes("tmbhProgram") &&
+                    is_admin === true) ||
                   allMenu?.access.includes("all_access") ? (
                     <Button
                       colorScheme="green"

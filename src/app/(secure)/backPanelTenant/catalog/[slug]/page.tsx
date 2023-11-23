@@ -2,10 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Column } from "react-table";
-import {
-  useSearchParams,
-  useRouter,
-} from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Button,
   Text,
@@ -24,7 +21,7 @@ import {
 } from "@chakra-ui/icons";
 import { AiOutlineRollback } from "react-icons/ai";
 import { axiosCustom } from "@/app/api/axios";
-import Loading from "../../loading";                    
+import Loading from "../../loading";
 import ModalEditCatalog from "./modal-edit-catalog";
 import ConfirmationModal from "@/app/components/modal/modal-confirm";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
@@ -76,13 +73,6 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       );
     }
   }
-  let hidenCols: string[] = ["id", "image_id"];
-  if (
-    (catalogFeatures?.access.includes("tmbhCatalog") &&
-      allMenu?.access.includes("all_access")) === false
-  ) {
-    hidenCols.push("action");
-  }
 
   const [isModalNotif, setModalNotif] = useState(false);
   const [message, setMessage] = useState("");
@@ -92,6 +82,8 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
     setIsError(err);
     setModalNotif(true);
   };
+
+  const [is_admin, setIs_Admin] = useState<boolean>(false);
 
   //handle edit data
   const [editingData, setEditingData] = useState<any | null>(null);
@@ -105,6 +97,15 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
   const [dataDeleteId, setDataDeleteId] = useState<number | null>(null);
   const [textConfirm, setTextConfirm] = useState(" ");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+  let hidenCols: string[] = ["id", "image_id"];
+  if (
+    (catalogFeatures?.access.includes("tmbhCatalog") &&
+      is_admin === true &&
+      allMenu?.access.includes("all_access")) === false
+  ) {
+    hidenCols.push("action");
+  }
 
   const filterOptions = [{ key: "title", label: "Judul" }];
 
@@ -187,7 +188,8 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       if (response.data.data) {
         // console.log(response);
         setDataCatalog(response.data.data.catalog);
-        setNamaTenant(response.data.data.name);
+        setNamaTenant(response.data.data.name.toUpperCase());
+        setIs_Admin(response.data.data.is_admin);
       }
 
       // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -211,7 +213,8 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
   }, []);
 
   const renderActions = (rowData: any) => {
-    return catalogFeatures?.access.includes("tmbhCatalog") ||
+    return (catalogFeatures?.access.includes("tmbhCatalog") &&
+      is_admin === true) ||
       allMenu?.access.includes("all_access") ? (
       <>
         <Button
@@ -307,7 +310,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
   return (
     <div>
       {loadingCatalog ? (
-        <Loading/>
+        <Loading />
       ) : (
         <>
           {namaTenant ? (
@@ -338,7 +341,8 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
                     <AiOutlineRollback />
                     &nbsp;Data Tenant
                   </Button>
-                  {catalogFeatures?.access.includes("tmbhCatalog") ||
+                  {(catalogFeatures?.access.includes("tmbhCatalog") &&
+                    is_admin === true) ||
                   allMenu?.access.includes("all_access") ? (
                     <Button
                       colorScheme="green"

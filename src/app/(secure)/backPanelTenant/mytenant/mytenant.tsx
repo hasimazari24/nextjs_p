@@ -113,6 +113,18 @@ export default function MyTenant() {
     }
   };
 
+  const [dataValuasi, setDataValuasi] = useState<any | null>(null);
+  const getValuasi = async () => {
+    try {
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get("/valuasi");
+      setDataValuasi(response.data.data);
+    } catch (error) {
+      console.error("Gagal memuat Data Valuasi:", error);
+      setIsLoading(false);
+    }
+  };
+
   const handleEdit = () => {
     setIsModalEditOpen(true);
     // console.log(item);
@@ -131,20 +143,21 @@ export default function MyTenant() {
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
     getMyTenant();
-    if (is_admin) {
-      if (getUser !== null) {
-        // ambil permission sesuai login role
-        myTenant = permissions[getUser.role]?.features.find(
-          (feature) => feature.menu === "myTenant",
-        );
-        // console.log(backPanelTenantFeatures);
-        // console.log(allMenu);
-        // console.log(
-        //   backPanelTenantFeatures?.access.includes("editTenant") ||
-        //     allMenu?.access.includes("all_access"),
-        // );
-      }
-    }
+    getValuasi();
+    // if (is_admin) {
+    //   if (getUser !== null) {
+    //     // ambil permission sesuai login role
+    //     myTenant = permissions[getUser.role]?.features.find(
+    //       (feature) => feature.menu === "myTenant",
+    //     );
+    //     // console.log(backPanelTenantFeatures);
+    //     // console.log(allMenu);
+    //     // console.log(
+    //     //   backPanelTenantFeatures?.access.includes("editTenant") ||
+    //     //     allMenu?.access.includes("all_access"),
+    //     // );
+    //   }
+    // }
     // Clear the timeout when the component is unmounted
   }, []);
 
@@ -188,60 +201,56 @@ export default function MyTenant() {
                       &nbsp; Lihat Situs
                     </MenuItem>
                   </Link>
-                  {is_admin ? (
-                    <>
-                      <MenuItem
-                        onClick={() =>
-                          router.push(
-                            `/backPanelTenant/catalog/${dataMyTenant?.id}`,
-                          )
-                        }
-                      >
-                        <HamburgerIcon />
-                        &nbsp; Catalog Tenant
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() =>
-                          router.push(
-                            `/backPanelTenant/team/${dataMyTenant?.id}`,
-                          )
-                        }
-                      >
-                        <SiMicrosoftteams />
-                        &nbsp; Team Tenant
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() =>
-                          router.push(
-                            `/backPanelTenant/program/${dataMyTenant.id}`,
-                          )
-                        }
-                      >
-                        <LiaClipboardListSolid />
-                        &nbsp; Program Tenant
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() =>
-                          router.push(
-                            `/backPanelTenant/awards/${dataMyTenant.id}`,
-                          )
-                        }
-                      >
-                        <GrTrophy />
-                        &nbsp; Awards Tenant
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() =>
-                          router.push(
-                            `/backPanelTenant/gallery/${dataMyTenant.id}`,
-                          )
-                        }
-                      >
-                        <BsCalendar2Event />
-                        &nbsp; Gallery Events Tenant
-                      </MenuItem>
-                    </>
-                  ) : null}
+                  <>
+                    <MenuItem
+                      onClick={() =>
+                        router.push(
+                          `/backPanelTenant/catalog/${dataMyTenant?.id}`,
+                        )
+                      }
+                    >
+                      <HamburgerIcon />
+                      &nbsp; Catalog Tenant
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        router.push(`/backPanelTenant/team/${dataMyTenant?.id}`)
+                      }
+                    >
+                      <SiMicrosoftteams />
+                      &nbsp; Team Tenant
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        router.push(
+                          `/backPanelTenant/program/${dataMyTenant.id}`,
+                        )
+                      }
+                    >
+                      <LiaClipboardListSolid />
+                      &nbsp; Program Tenant
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        router.push(
+                          `/backPanelTenant/awards/${dataMyTenant.id}`,
+                        )
+                      }
+                    >
+                      <GrTrophy />
+                      &nbsp; Awards Tenant
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() =>
+                        router.push(
+                          `/backPanelTenant/gallery/${dataMyTenant.id}`,
+                        )
+                      }
+                    >
+                      <BsCalendar2Event />
+                      &nbsp; Gallery Events Tenant
+                    </MenuItem>
+                  </>
                 </MenuList>
               </Menu>
               &nbsp;
@@ -396,6 +405,28 @@ export default function MyTenant() {
                               </Td>
                               <Td width="75%" pr="0" pl="0">
                                 {dataMyTenant?.contact}
+                              </Td>
+                            </Tr>
+                            <Tr key={5} borderBottom={"hidden"}>
+                              <Td width="20%" pr="0" pl="0">
+                                Jangkauan
+                              </Td>
+                              <Td width="5%" pr="0" pl="0" textAlign="center">
+                                :
+                              </Td>
+                              <Td width="75%" pr="0" pl="0">
+                                {dataMyTenant?.jangkauan || "-"}
+                              </Td>
+                            </Tr>
+                            <Tr key={5} borderBottom={"hidden"}>
+                              <Td width="20%" pr="0" pl="0">
+                                Valuasi
+                              </Td>
+                              <Td width="5%" pr="0" pl="0" textAlign="center">
+                                :
+                              </Td>
+                              <Td width="75%" pr="0" pl="0">
+                                {dataMyTenant?.valuasi_string || "-"}
                               </Td>
                             </Tr>
                           </Tbody>
@@ -616,6 +647,7 @@ export default function MyTenant() {
         }}
         isEdit={true}
         formData={dataMyTenant}
+        dataValuasi={dataValuasi}
       />
     </>
   );
