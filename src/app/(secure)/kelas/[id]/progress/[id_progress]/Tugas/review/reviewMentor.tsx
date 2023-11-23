@@ -46,7 +46,7 @@ interface editProps {
   onSubmit: () => void;
   dataReview: any | null;
   namaTugas: string | null;
-  namaTenant?:string;
+  namaTenant?: string;
   roleAccess: string;
 }
 
@@ -56,10 +56,10 @@ interface Review {
 }
 
 // Use next/dynamic to import Viewer with ssr: false
-  const PDFDynamic = dynamic(
-    () => import("@/app/components/template/PDFViewer"),
-    { ssr: false },
-  );
+const PDFDynamic = dynamic(
+  () => import("@/app/components/template/PDFViewer"),
+  { ssr: false },
+);
 
 const ReviewMentor: React.FC<editProps> = ({
   isOpen,
@@ -111,7 +111,7 @@ const ReviewMentor: React.FC<editProps> = ({
             data,
           )
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 200) {
               handleShowMessage("Penilain berhasil diperbaharui.", false);
               setIsLoading(false);
@@ -124,7 +124,7 @@ const ReviewMentor: React.FC<editProps> = ({
         await axiosCustom
           .post(`/assigment-answer/${dataReview?.answer_id}/add-grading`, data)
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 201) {
               handleShowMessage("Penilaian berhasil disimpan.", false);
               setIsLoading(false);
