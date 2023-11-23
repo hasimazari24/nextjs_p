@@ -2,11 +2,6 @@
 
 import { Spinner, Center, Box, Text } from "@chakra-ui/react";
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
 const Loading = () => {
   return (
     <Box rounded="md">
@@ -19,7 +14,9 @@ const Loading = () => {
           size="xl"
           mb="3"
         />
-        <Text as="i" whiteSpace={"normal"}>Sedang memuat halaman, mohon tunggu sebentar ...</Text>
+        <Text as="i" whiteSpace={"normal"}>
+          Sedang memuat halaman, mohon tunggu sebentar ...
+        </Text>
       </Center>
     </Box>
   );

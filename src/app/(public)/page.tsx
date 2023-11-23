@@ -9,30 +9,6 @@ import { axiosCustom } from "../api/axios";
 import Loading from "./loading";
 import dynamic from "next/dynamic";
 
-// interface Tenant {
-//   id: string;
-//   name: string;
-//   motto: string;
-//   slug: string;
-//   image_url: string;
-//   image_banner_url: string;
-// }
-
-// interface Beranda {
-//   total_tenant: Number;
-//   level_tenant: {
-//     pra_inkubasi: Number;
-//     inkubasi: Number;
-//     inkubasi_lanjutan: Number;
-//     scale_up: Number;
-//   };
-//   tenant: Tenant[];
-// }
-
-// interface pageProps {
-//   beranda: Beranda;
-// }
-
 function page() {
   const [beranda, setBeranda] = useState<any | null>([]);
   const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
@@ -50,7 +26,7 @@ function page() {
         setLoadingBeranda(false);
       });
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       if (error?.response) {
         setMsg(`Terjadi Kesalahan: ${error.response.data.message}`);
       } else setMsg(`Terjadi Kesalahan: ${error.message}`);

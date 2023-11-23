@@ -58,6 +58,8 @@ export interface Tenant {
   level_tenant: string;
   image_url: string | null;
   image_banner_url: string | null;
+  valuasi_string: string | null;
+  jangkauan: string | null;
   tenant_link: TLinks;
   user_tenant: user_tenant;
   tenant_catalog: tenant_catalog;
