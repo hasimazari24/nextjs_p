@@ -228,7 +228,9 @@ function page({ params }: { params: { id_graded: string } }) {
             >
               Kembali
             </Button>
-            <AddGraded idGraded={idGraded} onSubmit={() => getDataReview()} />
+            {getUser.role === "Mentor" && (
+              <AddGraded idGraded={idGraded} onSubmit={() => getDataReview()} />
+            )}
           </HStack>
         </Flex>
         <DataTable

@@ -22,12 +22,13 @@ import Loading from "../loading";
 import { axiosCustom } from "@/app/api/axios";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Pagination from "@/app/components/datatable/pagination";
-import { useAuth } from "@/app/components/utils/AuthContext";
 import { useRouter } from "next/navigation";
 import { BiDoorOpen, BiPlus } from "react-icons/bi";
 import AddTenantRated from "./addTenantRated";
 import DeleteTenantRated from "./deleteTenantRated";
 import { MdArrowBackIosNew } from "react-icons/md";
+import { Mentor } from "@/app/type/class-type";
+import ProfileMentor from "@/app/(secure)/kelas/pages/profileMentor";
 
 interface listPenilaian {
   id: string;
@@ -37,6 +38,7 @@ interface listPenilaian {
   tenant_image_url: string;
   last_grade_date: string;
   last_grade_time: string;
+  mentor: Mentor;
 }
 
 const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
@@ -99,6 +101,18 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
       Header: "last_grade_time",
       accessor: "last_grade_time",
     },
+    {
+      Header: "Mentor",
+      accessor: "mentor",
+      filter: (rows, id, filterValue) => {
+        return rows.filter((row) =>
+          row.values.mentor.fullname
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()),
+        );
+      },
+      // Cell: ({ cell }) => cell.value.fullname, // Display only the fullname in the table cell
+    },
   ];
 
   return isLoading ? (
@@ -108,7 +122,7 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
       <Flex
         justifyContent={"space-between"}
         pb="2"
-        direction={["column", "row"]}
+        direction={["column-reverse", "row"]}
       >
         <Heading fontSize={"2xl"}>NILAI TENANT</Heading>
         <HStack spacing={2} mb={2}>
@@ -122,7 +136,9 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
           >
             Kembali
           </Button>
-          <AddTenantRated onSubmit={() => getTenantRated()} />
+          {roleAccess === "Mentor" && (
+            <AddTenantRated onSubmit={() => getTenantRated()} />
+          )}
         </HStack>
       </Flex>
       {/* konten disinii (daftar participant) */}
@@ -199,7 +215,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
   const router = useRouter();
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={6}>
       <Stack
         justifyContent="space-between"
         direction={["column", "row"]}
@@ -216,12 +232,27 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                 <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
               </InputLeftElement>
               <Input
-                maxW={60}
                 pl="3rem"
                 // key={option.key}
                 type="text"
                 placeholder={`Cari Nama Tenant`}
-                onChange={(e) => setFilter("name", e.target.value)}
+                // onChange={(e) => setFilter(option.key, e.target.value)}
+                onChange={(e) => setFilter("tenant_name", e.target.value)}
+                mb="2"
+              />
+            </InputGroup>
+
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
+              </InputLeftElement>
+              <Input
+                pl="3rem"
+                type="text"
+                placeholder={`Cari Mentor`}
+                onChange={(e) => {
+                  setFilter("mentor", e.target.value);
+                }}
                 mb="2"
               />
             </InputGroup>
@@ -231,7 +262,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
         <Flex
           justifyContent={["center", "flex-end"]}
           alignItems={"center"}
-          mt="-2"
+          mt={{ base: "0", md: "-2" }}
         >
           {/* <Stack direction={["column","row"]}> */}
           <Text>Showing</Text>
@@ -355,15 +386,17 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                   >
                     {row.values.tenant_name}
                   </Text>
-                  {row.values.last_grade_date && (
-                    <VStack spacing={0}>
-                      <Text>Terakhir Dinilai :</Text>
-                      <Text>
-                        {row.values.last_grade_date},{" "}
-                        {row.values.last_grade_time}
-                      </Text>
-                    </VStack>
-                  )}
+
+                  <VStack spacing={0} textAlign={"center"}>
+                    <Text>Terakhir Dinilai :</Text>
+                    <Text>
+                      {row.values.last_grade_date
+                        ? `${row.values.last_grade_date}, ${row.values.last_grade_time}`
+                        : "-"}
+                    </Text>
+                  </VStack>
+
+                  <ProfileMentor mentor={row.values.mentor} />
 
                   <Stack
                     spacing={1}
@@ -434,7 +467,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
       ) : (
         <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
           <Image
-            src="/img/classroom.png"
+            src="/img/grades-notfound.png"
             h={{ base: "200px", sm: "250px", md: "350px" }}
             w="auto"
             // w="auto"
