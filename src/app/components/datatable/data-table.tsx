@@ -308,20 +308,17 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       </Th>
                     );
                   })}
-                  <Th
-                    key={"theadAction"}
-                    width="100px"
-                    fontSize="sm"
-                    id="action"
-                    display={
-                      props.hiddenColumns.includes("action")
-                        ? "none"
-                        : "table-cell"
-                    }
-                    borderBottom={"none"}
-                  >
-                    <Text>Action</Text>
-                  </Th>
+                  {!props.hiddenColumns.includes("action") && (
+                    <Th
+                      key={"theadAction"}
+                      width="100px"
+                      fontSize="sm"
+                      id="action"
+                      borderBottom={"none"}
+                    >
+                      <Text>Action</Text>
+                    </Th>
+                  )}
                 </Tr>
               );
             })}
@@ -364,7 +361,8 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
                       );
                     })}
                     {/* <Td>{props.children(props.data[i])}</Td> */}
-                    {props.children ? (
+                    {props.children &&
+                    !props.hiddenColumns.includes("action") ? (
                       <Td key={i}>{props.children(row.values)}</Td>
                     ) : null}
                   </Tr>
