@@ -114,8 +114,6 @@ const ModalEditProgram: React.FC<ModalProps> = ({
             }
           });
       }
-
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
       setIsLoading(false);
@@ -200,7 +198,11 @@ const ModalEditProgram: React.FC<ModalProps> = ({
               </Button>
               <Button
                 leftIcon={<CloseIcon />}
-                colorScheme="red"
+                color={"red.400"}
+                bgColor="red.50"
+                _hover={{
+                  bg: "red.50",
+                }}
                 onClick={() => {
                   onClose();
                   reset();
@@ -220,6 +222,7 @@ const ModalEditProgram: React.FC<ModalProps> = ({
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={() => onSubmit()}
       />
     </>
   );

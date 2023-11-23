@@ -47,6 +47,7 @@ interface ModalProps {
   // title: string;
   isEdit?: boolean; // Tambahkan prop isEdit untuk menentukan apakah ini mode edit
   formData?: any; // Jika mode edit, kirim data yang akan diedit
+  dataValuasi: any[];
 }
 
 interface FormValues {
@@ -62,6 +63,8 @@ interface FormValues {
   image?: string;
   image_banner?: string;
   is_public?: boolean;
+  jangkauan?: string;
+  valuasi?: string;
 }
 
 const ModalEdit: React.FC<ModalProps> = ({
@@ -70,12 +73,14 @@ const ModalEdit: React.FC<ModalProps> = ({
   onSubmit,
   isEdit = false,
   formData,
+  dataValuasi,
 }) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
+    setValue,
   } = useForm<FormValues>();
 
   const fields = {
@@ -132,6 +137,8 @@ const ModalEdit: React.FC<ModalProps> = ({
     level_tenant: register("level_tenant", {
       required: "Pilih salah satu level tenant!",
     }),
+    jangkauan: register("jangkauan"),
+    valuasi: register("valuasi"),
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -160,7 +167,12 @@ const ModalEdit: React.FC<ModalProps> = ({
       founder: `${data.founder}`,
       level_tenant: `${data.level_tenant}`,
       is_public: data.is_public === "true" ? true : false,
+      valuasi : data.valuasi === "default" ? null : data.valuasi,
+      jangkauan : data.jangkauan === "default" ? null : data.jangkauan,
     };
+
+    // if (data.valuasi !== "default") dataBaru.valuasi = data.valuasi;
+    // if (data.jangkauan !== "default") dataBaru.jangkauan = data.jangkauan;
     // append jika idimgava not null
     if (idImageAvatar) dataBaru.image = idImageAvatar;
     // append jika idimgbanner not null
@@ -194,7 +206,6 @@ const ModalEdit: React.FC<ModalProps> = ({
         });
       }
 
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
       setPreviewAvatar(undefined); // reset preview
@@ -265,36 +276,34 @@ const ModalEdit: React.FC<ModalProps> = ({
     }
   };
 
-  // logic update avatar disini
-  useEffect(() => {
-    async function uploadAvatar() {
-      if (avatar !== undefined && avatar !== null) {
-        try {
-          const data = new FormData();
-          data.append("asset", avatar as File);
-          const upload = await axiosCustom.post("/assets/upload", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          setIdImageAvatar(upload.data.data.id);
-          // jika dalam kondisi tambah user, aktifkan btn delete
-          if (!isEdit && isOpen) setBtnDeleteAvatar(true);
-        } catch (error: any) {
-          // tampilken error
-          if (error?.response) {
-            handleShowMessage(
-              `Terjadi Kesalahan: ${error.response.data.message}`,
-              true,
-            );
-          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        } finally {
-          setIsLoading(false);
-        }
-      }
+  async function uploadAvatar(file: File) {
+    try {
+      const data = new FormData();
+      data.append("asset", file as File);
+      const upload = await axiosCustom.post("/assets/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIdImageAvatar(upload.data.data.id);
+      // jika dalam kondisi tambah user, aktifkan btn delete
+      if (!isEdit && isOpen) setBtnDeleteAvatar(true);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
     }
+  }
 
-    uploadAvatar();
-    initialAvatar(undefined);
-  }, [avatar, isOpen]);
+  useEffect(() => {
+    if (isOpen === true && isEdit === true) {
+      initialAvatar(undefined);
+      initialBanner(undefined);
+      setValue("description", formData?.description);
+    }
+  }, [isOpen, isEdit]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -349,35 +358,29 @@ const ModalEdit: React.FC<ModalProps> = ({
     }
   };
 
-  // logic update avatar disini
-  useEffect(() => {
-    async function uploadBanner() {
-      if (banner !== undefined && banner !== null) {
-        try {
-          const data = new FormData();
-          data.append("asset", banner as File);
-          const upload = await axiosCustom.post("/assets/upload", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          setIdImageBanner(upload.data.data.id);
-          // jika dalam kondisi tambah user, aktifkan btn delete
-          if (!isEdit && isOpen) setBtnDeleteBanner(true);
-        } catch (error: any) {
-          // tampilken error
-          if (error?.response) {
-            handleShowMessage(
-              `Terjadi Kesalahan: ${error.response.data.message}`,
-              true,
-            );
-          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        } finally {
-          setIsLoading(false);
-        }
-      }
+  async function uploadBanner(file: File) {
+    setIsLoading(true);
+    try {
+      const data = new FormData();
+      data.append("asset", file as File);
+      const upload = await axiosCustom.post("/assets/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIdImageBanner(upload.data.data.id);
+      // jika dalam kondisi tambah user, aktifkan btn delete
+      if (!isEdit && isOpen) setBtnDeleteBanner(true);
+      setIsLoading(false);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoading(false);
     }
-    uploadBanner();
-    initialBanner(undefined);
-  }, [banner, isOpen]);
+  }
 
   const handleMouseEnterBanner = () => {
     setIsHoveredBanner(true);
@@ -424,17 +427,17 @@ const ModalEdit: React.FC<ModalProps> = ({
     else {
       // awasi ada dua kondisi dek
       if (from === "logo") {
-        setAvatar(file);
         const linkTemporary: string = URL.createObjectURL(file);
-        if (isOpen && isEdit && formData) initialAvatar(linkTemporary);
-        setPreviewAvatar(linkTemporary);
+        initialAvatar(linkTemporary);
+        setPreviewAvatar(URL.createObjectURL(file));
+        uploadAvatar(file);
       } else {
-        setBanner(file);
+        // setBanner(file);
         const linkTemporary: string = URL.createObjectURL(file);
-        if (isOpen && isEdit && formData) initialBanner(linkTemporary);
+        initialBanner(linkTemporary);
         setPreviewBanner(URL.createObjectURL(file));
+        uploadBanner(file);
       }
-      setIsLoading(true);
     }
   };
 
@@ -572,7 +575,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                         src={previewBanner || "/img/tenant-banner-default.jpg"}
                         w={{ base: "200px", sm: "300px", lg: "300px" }}
                         h={"auto"}
-                        minH="100px"
+                        minH="110px"
                         fit="cover"
                         alt="Preview Banner"
                       />
@@ -588,7 +591,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                         transition="opacity 0.2s ease-in-out" // Efek transisi
                         // h={previewBanner ? "100%" : "200px"}
                         h="100%"
-                        minH="100px"
+                        minH="110px"
                         w={"100%"}
                         justifyContent={"center"}
                         align={"center"}
@@ -651,7 +654,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                       // align={{ base: "start", md: "center" }}
                     >
                       <Box
-                        minWidth={["100%", "100px"]}
+                        minWidth={["100%", "110px"]}
                         marginRight={["0", "2"]}
                       >
                         <FormLabel>
@@ -692,7 +695,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                         align={{ base: "start", md: "center" }}
                       >
                         <Box
-                          minWidth={["100%", "100px"]}
+                          minWidth={["100%", "110px"]}
                           marginRight={["0", "2"]}
                         >
                           <FormLabel marginRight="2">
@@ -752,7 +755,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                       align={{ base: "start", md: "center" }}
                     >
                       <Box
-                        minWidth={["100%", "100px"]}
+                        minWidth={["100%", "110px"]}
                         marginRight={["0", "2"]}
                       >
                         <FormLabel>
@@ -780,7 +783,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                       align={{ base: "start", md: "center" }}
                     >
                       <Box
-                        minWidth={["100%", "100px"]}
+                        minWidth={["100%", "110px"]}
                         marginRight={["0", "2"]}
                       >
                         <FormLabel>
@@ -809,7 +812,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                       align={{ base: "start", md: "center" }}
                     >
                       <Box
-                        minWidth={["100%", "100px"]}
+                        minWidth={["100%", "110px"]}
                         marginRight={["0", "2"]}
                       >
                         <FormLabel>
@@ -843,7 +846,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                         align={{ base: "start", md: "center" }}
                       >
                         <Box
-                          minWidth={["100%", "100px"]}
+                          minWidth={["100%", "110px"]}
                           marginRight={["0", "2"]}
                         >
                           <FormLabel>
@@ -872,7 +875,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                         align={{ base: "start", md: "center" }}
                       >
                         <Box
-                          minWidth={["100%", "80px"]}
+                          minWidth={["100%", "100px"]}
                           marginRight={["0", "2"]}
                         >
                           <FormLabel>
@@ -934,8 +937,73 @@ const ModalEdit: React.FC<ModalProps> = ({
                         </Box>
                       </Flex>
                     </FormControl>
-                    <></>
+                    <FormControl mb="3">
+                      <Flex
+                        flexDir={{ base: "column", md: "row" }}
+                        align={{ base: "start", md: "center" }}
+                      >
+                        <Box
+                          minWidth={["100%", "100px"]}
+                          marginRight={["0", "2"]}
+                        >
+                          <FormLabel>Jangkauan</FormLabel>
+                        </Box>
+                        <Box w="full">
+                          <Select
+                            defaultValue={formData?.jangkauan}
+                            {...fields.jangkauan}
+                          >
+                            <option value="default">
+                              Pilih Jangkauan Tenant
+                            </option>
+                            <option value="Dalam Kota">Dalam Kota</option>
+                            <option value="Dalam Provinsi">
+                              Dalam Provinsi
+                            </option>
+                            <option value="Nasional">Nasional</option>
+                            <option value="Asia Tenggara">Asia Tenggara</option>
+                            <option value="Internasional">Internasional</option>
+                          </Select>
+                        </Box>
+                      </Flex>
+                    </FormControl>
                   </SimpleGrid>
+                  <FormControl isInvalid={!!errors.level_tenant} mb="3">
+                    <Flex
+                      flexDir={{ base: "column", md: "row" }}
+                      align={{ base: "start", md: "center" }}
+                    >
+                      <Box
+                        minWidth={["100%", "100px"]}
+                        marginRight={["0", "2"]}
+                      >
+                        <FormLabel>
+                          Valuasi&nbsp;
+                          <Text as={"span"} color={"red"}>
+                            *
+                          </Text>
+                        </FormLabel>
+                      </Box>
+                      <Box w="full">
+                        <Select
+                          defaultValue={formData?.valuasi_id}
+                          {...fields.valuasi}
+                        >
+                          <option value="default">Pilih Valuasi Tenant</option>
+                          {dataValuasi &&
+                            Array.isArray(dataValuasi) &&
+                            dataValuasi.map((data: any) => (
+                              <option key={data.id} value={data.id}>
+                                {data.valuasi}
+                              </option>
+                            ))}
+                        </Select>
+                        <FormErrorMessage>
+                          {errors.level_tenant && errors.level_tenant.message}
+                        </FormErrorMessage>
+                      </Box>
+                    </Flex>
+                  </FormControl>
                 </Box>
               </Stack>
             </ModalBody>
@@ -952,7 +1020,11 @@ const ModalEdit: React.FC<ModalProps> = ({
               </Button>
               <Button
                 leftIcon={<CloseIcon />}
-                colorScheme="red"
+                color={"red.400"}
+                bgColor="red.50"
+                _hover={{
+                  bg: "red.50",
+                }}
                 onClick={() => {
                   onClose();
                   reset();
@@ -980,6 +1052,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={() => onSubmit()}
       />
     </>
   );

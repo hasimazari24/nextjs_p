@@ -191,9 +191,6 @@ const AddAwards: React.FC<editProps> = ({ idTenant, onSubmit }) => {
             handleShowMessage("Data berhasil disimpan.", false);
           }
         });
-
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
-      // onClose(); // Tutup modal
       resetAll();
       // Setelah data disimpan, atur pesan berhasil ke dalam state
     } catch (error: any) {
@@ -352,7 +349,11 @@ const AddAwards: React.FC<editProps> = ({ idTenant, onSubmit }) => {
               </Button>
               <Button
                 leftIcon={<CloseIcon />}
-                colorScheme="red"
+                color={"red.400"}
+                bgColor="red.50"
+                _hover={{
+                  bg: "red.50",
+                }}
                 onClick={() => {
                   resetAll();
                 }}
@@ -369,6 +370,7 @@ const AddAwards: React.FC<editProps> = ({ idTenant, onSubmit }) => {
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={() => onSubmit()}
       />
     </div>
   );

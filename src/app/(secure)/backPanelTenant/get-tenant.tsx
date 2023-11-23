@@ -53,6 +53,9 @@ interface DataItem {
   image_url: string;
   image_banner_url: string;
   is_public: boolean;
+  jangkauan: string;
+  valuasi_id: string;
+  valuasi_string: string;
   // tenant_link : [{
   //   id : string,
   //   title:string,
@@ -120,6 +123,9 @@ function PageTenant() {
     "image_banner_id",
     "image_banner_url",
     "motto",
+    "valuasi_id",
+    "valuasi_string",
+    "jangkauan",
   ];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
@@ -190,6 +196,18 @@ function PageTenant() {
       accessor: "email",
     },
     {
+      Header: "Jangkauan",
+      accessor: "jangkauan",
+    },
+    {
+      Header: "Valuasi_ID",
+      accessor: "valuasi_id",
+    },
+    {
+      Header: "Valuasi_string",
+      accessor: "valuasi_string",
+    },
+    {
       Header: "Founder",
       accessor: "founder",
     },
@@ -229,6 +247,7 @@ function PageTenant() {
   const [dataTampil, setDataTampil] = useState<any | null>([]);
   const getTampil = async () => {
     try {
+      setIsLoading(true); 
       // Panggil API menggunakan Axios dengan async/await
       const response = await axiosCustom.get("/tenant");
 
@@ -246,11 +265,24 @@ function PageTenant() {
     }
   };
 
+  const [dataValuasi, setDataValuasi] = useState<any | null>(null);
+  const getValuasi = async () => {
+    try {
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get("/valuasi");
+      setDataValuasi(response.data.data);
+    } catch (error) {
+      console.error("Gagal memuat Data Valuasi:", error);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
     if (getUser?.role !== "Tenant") {
       getTampil();
-    } 
+      getValuasi();
+    }
     // Clear the timeout when the component is unmounted
   }, []);
   //handle edit data
@@ -316,29 +348,39 @@ function PageTenant() {
             </Link>
 
             <MenuItem
-              onClick={() => router.push(`/backPanelTenant/catalog/${rowData.id}`)}
+              onClick={() =>
+                router.push(`/backPanelTenant/catalog/${rowData.id}`)
+              }
             >
               <BiBookBookmark />
               &nbsp; Catalog Tenant
             </MenuItem>
-            <MenuItem onClick={() => router.push(`/backPanelTenant/team/${rowData.id}`)}>
+            <MenuItem
+              onClick={() => router.push(`/backPanelTenant/team/${rowData.id}`)}
+            >
               <SiMicrosoftteams />
               &nbsp; Team Tenant
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/backPanelTenant/program/${rowData.id}`)}
+              onClick={() =>
+                router.push(`/backPanelTenant/program/${rowData.id}`)
+              }
             >
               <LiaClipboardListSolid />
               &nbsp; Program Tenant
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/backPanelTenant/awards/${rowData.id}`)}
+              onClick={() =>
+                router.push(`/backPanelTenant/awards/${rowData.id}`)
+              }
             >
               <GrTrophy />
               &nbsp; Awards Tenant
             </MenuItem>
             <MenuItem
-              onClick={() => router.push(`/backPanelTenant/gallery/${rowData.id}`)}
+              onClick={() =>
+                router.push(`/backPanelTenant/gallery/${rowData.id}`)
+              }
             >
               <BsCalendar2Event />
               &nbsp; Gallery Events Tenant
@@ -506,6 +548,7 @@ function PageTenant() {
                 }}
                 isEdit={true}
                 formData={editingData}
+                dataValuasi={dataValuasi}
               />
 
               {/* untuk menambah data baru */}
@@ -517,6 +560,7 @@ function PageTenant() {
                   getTampil();
                 }}
                 isEdit={false}
+                dataValuasi={dataValuasi}
               />
 
               {/* Modal hapus data */}

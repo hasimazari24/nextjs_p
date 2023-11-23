@@ -71,6 +71,7 @@ const DeletePartisipan: React.FC<deleteProps> = ({ dataDelete, idKelas, onSubmit
         onClick={() => setIsDeleteModalOpen(true)}
         key="hapusData"
         size={"sm"}
+        w={{ base: "auto", md: "full", xl: "auto" }}
       >
         <DeleteIcon />
         <Box display={{ base: "none", md: "flex", xl: "none" }}>

@@ -5,13 +5,9 @@ import { Column } from "react-table";
 import {
   useSearchParams,
   useRouter,
-  useParams,
-  notFound,
 } from "next/navigation";
 import {
   Button,
-  Center,
-  Spinner,
   Text,
   HStack,
   Link,
@@ -135,7 +131,6 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
     {
       Header: "description",
       accessor: "description",
-      // dibikin kayak gni biar auto wrap ketika textnya kepanjangan shg tdk merusak col width
       Cell: ({ value }) => (
         <Text
           textOverflow={"ellipsis"}
@@ -143,9 +138,8 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
           flex="1"
           noOfLines={2}
           whiteSpace="normal"
-        >
-          {value}
-        </Text>
+          dangerouslySetInnerHTML={{ __html: value }}
+        />
       ),
       width: "450px",
       minWidth: 260,
@@ -157,7 +151,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
       Cell: ({ value }) =>
         value !== null ? (
           <div style={{ whiteSpace: "normal" }}>
-            <Link color="teal.500" href={value} target="_blank">
+            <Link color="blue.500" href={value} target="_blank">
               {value} <ExternalLinkIcon mx="2px" />
             </Link>
           </div>
@@ -173,7 +167,7 @@ export default function PageCatalog({ params }: { params: { slug: string } }) {
   const idTenant = searchParams.get("id");
   // const idTenant = params.id;
   const [namaTenant, setNamaTenant] = useState<string | null>();
-  const [loadingCatalog, setLoadingCatalog] = useState<boolean>(false);
+  const [loadingCatalog, setLoadingCatalog] = useState<boolean>(true);
   const router = useRouter();
   // if (!params.catalog) {
   //   router.push("/tenant");

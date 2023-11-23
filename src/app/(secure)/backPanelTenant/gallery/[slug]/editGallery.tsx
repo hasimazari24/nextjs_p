@@ -68,8 +68,6 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     formState: { errors },
     control,
     clearErrors,
-    watch,
-    setFocus,
     setValue,
   } = useForm<GalleryItem>();
 
@@ -110,7 +108,6 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
   };
 
   const [isHovered, setIsHovered] = useState(false);
-  const [avatar, setAvatar] = useState<File>();
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
@@ -123,6 +120,9 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
   };
   // fungsi ketika input file avatar change
   const onAvatarChange = (e: any) => {
+    // ambil input nya
+    const file = e?.[0];
+    if (!file) return;
     // prepare supported file type
     const SUPPORT_FILE_TYPE = [
       "image/jpeg",
@@ -132,27 +132,25 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     ];
     // prepare max file size
     const MAX_FILE_SIZE = 800000; //800KB
-    // ambil input nya
-    const file = e?.[0];
     // ambil type dari file
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
     const UPLOAD_FILE_SIZE = file?.size;
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
-      file.value = null;
+      return;
     } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
       handleShowMessage(
         "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
         true,
       );
-      file.value = null;
+      return;
     } else {
-      setAvatar(file);
+      // setAvatar(file);
       const linkTemporary: string = URL.createObjectURL(file);
-      if (isEditModalOpen && rowData) initialAvatar(linkTemporary);
+      initialAvatar(linkTemporary);
       setPreviewAvatar(URL.createObjectURL(file));
-      setIsLoading(true);
+      uploadAvatar(file);
     }
   };
 
@@ -192,44 +190,42 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
     }
   };
 
-  // console.log(previewAvatar, rowData);
+  async function uploadAvatar(file: File) {
+    setIsLoading(true);
+    try {
+      const data = new FormData();
+      data.append("asset", file as File);
+      const upload = await axiosCustom.post("/assets/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIdImageAvatar(upload.data.data.id);
+      setIsLoading(false);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoading(false);
+    }
+  }
 
   // logic update avatar disini
-  useEffect(() => {
-    async function uploadAvatar() {
-      if (avatar !== undefined && avatar !== null) {
-        try {
-          const data = new FormData();
-          data.append("asset", avatar as File);
-          const upload = await axiosCustom.post("/assets/upload", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          setIdImageAvatar(upload.data.data.id);
-        } catch (error: any) {
-          // tampilken error
-          if (error?.response) {
-            handleShowMessage(
-              `Terjadi Kesalahan: ${error.response.data.message}`,
-              true,
-            );
-          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    }
-    uploadAvatar();
-    initialAvatar(undefined);
-    // setDataEdited(rowData);
-    // console.log(dataEdited);
-    // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  }, [avatar, isEditModalOpen]);
+  // useEffect(() => {
+  //   if(isEditModalOpen === true) initialAvatar(undefined);
+  //   // setDataEdited(rowData);
+  //   // console.log(dataEdited);
+  //   // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
+  // }, [isEditModalOpen]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isEditModalOpen === true) {
-      setValue("description", rowData?.description)
+      setValue("description", rowData?.description);
+      initialAvatar(undefined);
     }
-  },[isEditModalOpen])
+  }, [isEditModalOpen]);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
@@ -259,7 +255,6 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
             if (response.status === 200) {
               // router.refresh();
               handleShowMessage("Data berhasil diubah.", false);
-              onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
               setIsEditModalOpen(false); // Tutup modal
               resetAll(); // Reset formulir
               setIsLoading(false);
@@ -554,7 +549,11 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
               </Button>
               <Button
                 leftIcon={<CloseIcon />}
-                colorScheme="red"
+                color={"red.400"}
+                bgColor="red.50"
+                _hover={{
+                  bg: "red.50",
+                }}
                 onClick={() => {
                   resetAll();
                   setIsEditModalOpen(false);
@@ -572,6 +571,7 @@ const EditGallery = ({ rowData, idTenant, onSubmit }: editProps) => {
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={()=>onSubmit()}
       />
     </div>
   );

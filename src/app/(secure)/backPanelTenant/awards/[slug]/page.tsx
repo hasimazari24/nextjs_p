@@ -76,6 +76,7 @@ function PageAwards({ params }: { params: { slug: string } }) {
 
   const fetchData = async (): Promise<void> => {
     try {
+      setDataAwardsLoading(true);
       const response = await axiosCustom.get(
         `/tenant/${getParamsId}/get-award`,
       );

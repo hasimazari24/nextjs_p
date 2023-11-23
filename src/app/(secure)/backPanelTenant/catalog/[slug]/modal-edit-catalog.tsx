@@ -24,7 +24,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, useController } from "react-hook-form";
 import {
   CheckIcon,
   CloseIcon,
@@ -34,6 +34,8 @@ import {
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import { AiOutlineCamera } from "react-icons/ai";
+import initRichTextProps from "@/app/type/inital-rich-text";
+import { Editor } from "@tinymce/tinymce-react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -67,7 +69,10 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
     register,
     handleSubmit,
     reset,
+    clearErrors,
+    setValue,
     formState: { errors },
+    control,
   } = useForm<FormValues>();
 
   const fields = {
@@ -88,6 +93,16 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
       },
     }),
   };
+
+  //ini diperlukan utk mengatur tinyMCE
+  const {
+    field: { onChange, ref, value, ...field },
+  } = useController({
+    control,
+    name: "description",
+    rules: { required: "Deskripsi Katalog harus diisi!" },
+    defaultValue: formData?.description,
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
@@ -146,7 +161,6 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
           });
       }
 
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
       setPreviewAvatar(undefined); // reset preview
@@ -168,7 +182,6 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   };
 
   const [isHovered, setIsHovered] = useState(false);
-  const [avatar, setAvatar] = useState<File>();
   const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
     undefined,
   );
@@ -195,35 +208,36 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
     setBtnDeleteAvatar(false);
   };
 
+  async function uploadAvatar(file: File) {
+    try {
+      setIsLoading(true);
+      const data = new FormData();
+      data.append("asset", file as File);
+      const upload = await axiosCustom.post("/assets/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIdImageAvatar(upload.data.data.id);
+      // jika dalam kondisi tambah user, aktifkan btn delete
+      if (!isEdit && isOpen) setBtnDeleteAvatar(true);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   // logic update avatar disini
   useEffect(() => {
-    async function uploadAvatar() {
-      if (avatar !== undefined && avatar !== null) {
-        try {
-          const data = new FormData();
-          data.append("asset", avatar as File);
-          const upload = await axiosCustom.post("/assets/upload", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          setIdImageAvatar(upload.data.data.id);
-          // jika dalam kondisi tambah user, aktifkan btn delete
-          if (!isEdit && isOpen) setBtnDeleteAvatar(true);
-        } catch (error: any) {
-          // tampilken error
-          if (error?.response) {
-            handleShowMessage(
-              `Terjadi Kesalahan: ${error.response.data.message}`,
-              true,
-            );
-          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        } finally {
-          setIsLoading(false);
-        }
-      }
+    if (isOpen === true) {
+      setValue("description", formData?.description);
+      initialAvatar(undefined);
     }
-    uploadAvatar();
-    initialAvatar(undefined);
-  }, [avatar, isOpen]);
+  }, [isOpen]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -253,6 +267,9 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
   // buat type untuk batasi input biar tidak ugal-ugalan di jalan
   // fungsi ketika input file avatar change
   const onAvatarChange = (e: any) => {
+    // ambil input nya
+    const file = e?.[0];
+    if (!file) return;
     // prepare supported file type
     const SUPPORT_FILE_TYPE = [
       "image/jpeg",
@@ -262,27 +279,24 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
     ];
     // prepare max file size
     const MAX_FILE_SIZE = 800000; //800KB
-    // ambil input nya
-    const file = e?.[0];
     // ambil type dari file
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
     const UPLOAD_FILE_SIZE = file?.size;
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
-      file.value = null;
+      return;
     } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
       handleShowMessage(
         "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
         true,
       );
-      file.value = null;
+      return;
     } else {
-      setAvatar(file);
       const linkTemporary: string = URL.createObjectURL(file);
       if (isOpen && isEdit && formData) initialAvatar(linkTemporary);
       setPreviewAvatar(linkTemporary);
-      setIsLoading(true);
+      uploadAvatar(file);
     }
   };
 
@@ -293,6 +307,8 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
+          reset({ description: "" });
+          clearErrors("description");
           setPreviewAvatar(undefined); // reset preview
           setIdImageAvatarOld(null); // kosongkan idimage
           setIdImageAvatar(null); // kosongkan idimage
@@ -436,9 +452,22 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
                           </FormLabel>
                         </Box>
                         <Box flex={["1", "80%"]}>
-                          <Textarea
+                          {/* <Textarea
                             {...fields.description}
                             defaultValue={formData?.description}
+                          /> */}
+                          <Editor
+                            {...field}
+                            apiKey={process.env.API_TINYMCE}
+                            initialValue={formData?.description}
+                            // textareaName={name}
+                            value={value}
+                            init={{
+                              ...initRichTextProps,
+                              toolbar_mode: "sliding",
+                              height: 250,
+                            }}
+                            onEditorChange={onChange}
                           />
                           <FormErrorMessage>
                             {errors.description && errors.description.message}
@@ -482,10 +511,16 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
               </Button>
               <Button
                 leftIcon={<CloseIcon />}
-                colorScheme="red"
+                color={"red.400"}
+                bgColor="red.50"
+                _hover={{
+                  bg: "red.50",
+                }}
                 onClick={() => {
                   onClose();
                   reset();
+                  reset({ description: "" });
+                  clearErrors("description");
                   setIsLoading(false);
                   setPreviewAvatar(undefined); // reset preview
                   setIdImageAvatarOld(null); // kosongkan idimage
@@ -506,6 +541,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={() => onSubmit()}
       />
     </>
   );
