@@ -90,7 +90,6 @@ const ModalTeamNonLogin = ({
     setIsError(err);
   };
 
-  const [avatar, setAvatar] = useState<File>();
   const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
     undefined,
   );
@@ -104,6 +103,9 @@ const ModalTeamNonLogin = ({
   };
   // fungsi ketika input file avatar change
   const onAvatarChange = (e: any) => {
+    // ambil input nya
+    const file = e?.[0];
+    if (!file) return;
     // prepare supported file type
     const SUPPORT_FILE_TYPE = [
       "image/jpeg",
@@ -113,27 +115,24 @@ const ModalTeamNonLogin = ({
     ];
     // prepare max file size
     const MAX_FILE_SIZE = 800000; //800KB
-    // ambil input nya
-    const file = e?.[0];
     // ambil type dari file
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
     const UPLOAD_FILE_SIZE = file?.size;
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
-      file.value = null;
+      return;
     } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
       handleShowMessage(
         "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
         true,
       );
-      file.value = null;
+      return;
     } else {
-      setAvatar(file);
       const linkTemporary: string = URL.createObjectURL(file);
       if (isOpen && isEdit && formData) initialAvatar(linkTemporary);
       setPreviewAvatar(URL.createObjectURL(file));
-      setIsLoading(true);
+      uploadAvatar(file);
     }
   };
 
@@ -179,36 +178,35 @@ const ModalTeamNonLogin = ({
   };
 
   // logic update avatar disini
-  useEffect(() => {
-    async function uploadAvatar() {
-      if (avatar !== undefined && avatar !== null) {
-        try {
-          const data = new FormData();
-          data.append("asset", avatar as File);
-          const upload = await axiosCustom.post("/assets/upload", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          setIdImageAvatar(upload.data.data.id);
-          // jika dalam kondisi tambah user, aktifkan btn delete
-          if (!isEdit && isOpen) setBtnDeleteAvatar(true);
-        } catch (error: any) {
-          // tampilken error
-          if (error?.response) {
-            handleShowMessage(
-              `Terjadi Kesalahan: ${error.response.data.message}`,
-              true,
-            );
-          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        } finally {
-          setIsLoading(false);
-        }
-      }
+  async function uploadAvatar(file: File) {
+    try {
+      setIsLoading(true);
+      const data = new FormData();
+      data.append("asset", file as File);
+      const upload = await axiosCustom.post("/assets/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIdImageAvatar(upload.data.data.id);
+      // jika dalam kondisi tambah user, aktifkan btn delete
+      if (!isEdit && isOpen) setBtnDeleteAvatar(true);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+    } finally {
+      setIsLoading(false);
     }
-    uploadAvatar();
-    initialAvatar(undefined);
+  }
+
+  useEffect(() => {
+    if (isOpen === true) initialAvatar(undefined);
     // console.log("isModalNotifTeam changed:", isModalNotifTeam);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  }, [avatar, isOpen]);
+  }, [isOpen]);
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
     setIsLoading(true);
