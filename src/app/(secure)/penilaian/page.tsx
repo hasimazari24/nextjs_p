@@ -164,7 +164,7 @@ function PagePenilaian() {
           </Stack>
 
           {/* Nilai Mentor */}
-          {getUser.role === "Super Admin" && (
+          {(getUser.role === "Super Admin" || getUser.role === "Manajemen") && (
             <Stack
               alignItems={"center"}
               spacing={3}
