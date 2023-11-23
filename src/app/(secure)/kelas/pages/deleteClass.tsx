@@ -9,9 +9,10 @@ import { DeleteIcon } from "@chakra-ui/icons";
 interface deleteProps {
   onSubmit: () => void;
   dataDelete: any;
+  roleAccess: string;
 }
 
-const DeleteClass = ({ dataDelete, onSubmit }: deleteProps) => {
+const DeleteClass = ({ dataDelete, onSubmit, roleAccess }: deleteProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [stateNotif, setStateNotif] = useState({
     msg: "",
@@ -30,12 +31,14 @@ const DeleteClass = ({ dataDelete, onSubmit }: deleteProps) => {
   const deleteData = async () => {
     if (dataDelete.id) {
       // Lakukan penghapusan data berdasarkan dataToDeleteId
+      let Url = "";
+      if (roleAccess === "Mentor") {
+        Url = `/course/${dataDelete.id}/delete-course-by-mentor`;
+      } else Url = `/course/${dataDelete.id}/delete-course`;
       try {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
-        const response = await axiosCustom.delete(
-          `/tenant/${dataDelete.id}/delete-gallery/${dataDelete?.id}`,
-        );
+        const response = await axiosCustom.delete(Url);
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
         const timer = setTimeout(() => {

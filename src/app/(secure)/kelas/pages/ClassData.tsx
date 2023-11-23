@@ -358,45 +358,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       <BiDoorOpen size="20px" />
                       &nbsp;Masuk
                     </Button>
-                    {(props.roleAccess === "Super Admin" ||
-                      props.roleAccess === "Manajemen" ||
-                      props.roleAccess === "Mentor") && (
-                      // <Menu>
-                      //   <MenuButton
-                      //     as={Button}
-                      //     bgColor="teal.400"
-                      //     _hover={{
-                      //       bg: "teal.300",
-                      //     }}
-                      //     // colorScheme="aqua"
-                      //     title="More ..."
-                      //     color="white"
-                      //     // onClick={() => handleDetail(rowData)}
-                      //     key="more"
-                      //     size={{ base: "xs", sm: "sm" }}
-                      //   >
-                      //     <GrMoreVertical />
-                      //   </MenuButton>
-                      //   <MenuList>
-                      //     <MenuItem style={{ width: "100%" }}>
-                      //       <EditClass
-                      //         rowData={row.values}
-                      //         onSubmit={() => props.onSubmit()}
-                      //         roleAccess={props.roleAccess}
-                      //       />
-                      //     </MenuItem>
-                      //     <MenuItem>
-                      //       <EndClass
-                      //         endClass={row.values.course_ends}
-                      //         dataClass={row.values}
-                      //         onSubmit={() => props.onSubmit()}
-                      //       />
-                      //     </MenuItem>
-                      //     <MenuItem>
-
-                      //     </MenuItem>
-                      //   </MenuList>
-                      // </Menu>
+                    {props.roleAccess !== "Tenant" && (
                       <Popover placement="bottom">
                         <PopoverTrigger>
                           <Button
@@ -434,6 +396,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                               <DeleteClass
                                 dataDelete={row.values}
                                 onSubmit={() => props.onSubmit()}
+                                roleAccess={props.roleAccess}
                               />
                             </Stack>
                           </PopoverBody>
