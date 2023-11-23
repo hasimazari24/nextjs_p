@@ -48,7 +48,7 @@ function PagePenilaian() {
           //   //   xl: "1fr 1fr 1fr",
           // }}
           columns={
-            getUser.role === "Super Admin"
+            getUser.role === "Super Admin" || getUser.role === "Manajemen"
               ? { base: 1, sm: 2, xl: 3 }
               : { base: 1, sm: 2 }
           }
