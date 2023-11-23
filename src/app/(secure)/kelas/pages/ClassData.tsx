@@ -287,7 +287,6 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                     fontSize={{ base: "16px", md: "17px" }}
                     textOverflow="ellipsis"
                     flex="1"
-                    cursor={"default"}
                     overflow="hidden"
                     title={row.values.name}
                     noOfLines={2}

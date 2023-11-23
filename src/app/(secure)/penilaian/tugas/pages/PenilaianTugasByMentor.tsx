@@ -321,7 +321,6 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                     // w="auto"
                     // whiteSpace="nowrap"
                     flex="1"
-                    cursor={"default"}
                     overflow="hidden"
                     // title={data.name}
                     noOfLines={2}
