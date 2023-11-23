@@ -22,6 +22,7 @@ import ReviewMentor from "@/app/(secure)/kelas/[id]/progress/[id_progress]/Tugas
 import { useAuth } from "@/app/components/utils/AuthContext";
 import ReviewTenant from "@/app/(secure)/kelas/[id]/progress/[id_progress]/Tugas/review/reviewTenant";
 import NotFound from "@/app/components/template/NotFound";
+import ModalNotif from "@/app/components/modal/modal-notif";
 
 interface DataItem {
   //   course_item_id: string;
@@ -69,6 +70,19 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
   }
 
   const router = useRouter();
+  const [stateNotif, setStateNotif] = useState({
+    msg: "",
+    isError: false,
+    isNotifShow: false,
+  });
+  const handleShowMessage = (msg: string, err: boolean) => {
+    setStateNotif({
+      msg: msg,
+      isError: err,
+      isNotifShow: true,
+    });
+  };
+
   const columns: ReadonlyArray<Column<DataItem>> = [
     {
       Header: "Jawaban Tugas",
@@ -96,20 +110,21 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
       accessor: "grade_status",
       Cell: ({ value, row }) =>
         value === "Ingatkan Tenant" ? (
-          <Link href={row.values.send_email_url} target="_blank">
-            <Button
-              leftIcon={<MdAlarm />}
-              colorScheme="gray"
-              variant="outline"
-              aria-label="btn-remain"
-              fontWeight={"Thin"}
-              size={"md"}
-              // onClick={()=>router.push}
-            >
-              {value}
-            </Button>
-          </Link>
+          // <Link href={row.values.send_email_url} target="_blank">
+          <Button
+            leftIcon={<MdAlarm />}
+            colorScheme="gray"
+            variant="outline"
+            aria-label="btn-remain"
+            fontWeight={"Thin"}
+            size={"md"}
+            isDisabled={isLoadingIngatkan}
+            onClick={() => sendIngatkanTenant(row.values.send_email_url)}
+          >
+            {value}
+          </Button>
         ) : (
+          // </Link>
           <div>{value}</div>
         ),
     },
@@ -234,6 +249,24 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
     }
   };
 
+  const [isLoadingIngatkan, setLoadingIngatkan] = useState(false);
+
+  const sendIngatkanTenant = async (Url: string) => {
+    try {
+      setLoadingIngatkan(true);
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(Url);
+      const timer = setTimeout(() => {
+        handleShowMessage(response.data?.message, false);
+        setLoadingIngatkan(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal mengingatkan Tenant :", error);
+      setLoadingIngatkan(false);
+    }
+  };
+
   useEffect(() => {
     // if (need_updated === true)
     getDataReview();
@@ -311,6 +344,19 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
           rowData={dataReviewShow}
           isOpen={isOpenTenant}
           onClose={onCloseTenant}
+        />
+        <ModalNotif
+          isOpen={stateNotif.isNotifShow}
+          onClose={() =>
+            setStateNotif({
+              msg: "",
+              isError: false,
+              isNotifShow: false,
+            })
+          }
+          message={stateNotif.msg}
+          isError={stateNotif.isError}
+          onSubmit={() => getDataReview()}
         />
       </Stack>
     </Suspense>
