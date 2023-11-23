@@ -51,6 +51,7 @@ const PenilaianTugasByMentor = ({ roleAccess }: { roleAccess: string }) => {
     try {
       switch (roleAccess) {
         case "Super Admin":
+        case "Manajemen":
           Url = "/grades-assigment/tenant";
           break;
         case "Mentor":

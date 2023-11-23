@@ -209,6 +209,7 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
     try {
       switch (getUser?.role) {
         case "Super Admin":
+        case "Manajemen":
           Url = `/grades-assigment/tenant-course/${idTenant}/course/${idKelas}`;
           break;
         case "Mentor":
@@ -297,7 +298,7 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
           hiddenColumns={hidenCols}
           filterOptions={filterOptions}
         />
-        {/* <ReviewMentor
+        <ReviewMentor
           isOpen={isOpen}
           onClose={() => onClose()}
           onSubmit={() => getDataReview()}
@@ -310,7 +311,7 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
           rowData={dataReviewShow}
           isOpen={isOpenTenant}
           onClose={onCloseTenant}
-        /> */}
+        />
       </Stack>
     </Suspense>
   ) : (

@@ -149,6 +149,7 @@ function page({ params }: { params: { id_graded: string } }) {
     try {
       switch (getUser?.role) {
         case "Super Admin":
+        case "Manajemen":
           Url = `/mentor-nilai-tenant/${idGraded}`;
           break;
         case "Mentor":

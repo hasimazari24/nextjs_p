@@ -301,6 +301,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       borderWidth={1}
                       pr={2}
                       pl={2}
+                      title="Partisipan"
                     >
                       <HStack
                         flexWrap={"wrap"}
@@ -322,6 +323,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       borderWidth={1}
                       pr={2}
                       pl={2}
+                      title="Sesi Pertemuan"
                     >
                       <HStack
                         flexWrap={"wrap"}

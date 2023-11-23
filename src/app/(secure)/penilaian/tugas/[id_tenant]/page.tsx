@@ -64,7 +64,8 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
     try {
       switch (getUser?.role) {
         case "Super Admin":
-          Url = `/grades-assigment/tenant-course/${idTenant}`;
+        case "Manajemen":
+          Url = `/grades-assigment/tenant/${idTenant}`;
           break;
         case "Mentor":
           Url = `/grades-assigment/tenant-course-mentor/${idTenant}`;

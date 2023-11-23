@@ -58,7 +58,9 @@ function PagePenilaian() {
           w="fit-content"
           spacing={{ base: 6, sm: 8, lg: 10 }}
         >
-          {(getUser.role === "Super Admin" || getUser.role === "Mentor") && (
+          {(getUser.role === "Super Admin" ||
+            getUser.role === "Manajemen" ||
+            getUser.role === "Mentor") && (
             <Stack
               alignItems={"center"}
               justifyContent={"center"}

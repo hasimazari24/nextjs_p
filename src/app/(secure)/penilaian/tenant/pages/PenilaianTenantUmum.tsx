@@ -55,6 +55,7 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
       setIsLoading(true);
       switch (roleAccess) {
         case "Super Admin":
+        case "Manajemen":
           Url = "/mentor-nilai-tenant";
           break;
         case "Mentor":
@@ -379,11 +380,13 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       w="full"
                       size={"sm"}
                       alignContent={"center"}
-                      onClick={()=>router.push(`/penilaian/tenant/${row.values.id}`)}
-                    //   onClick={() => {
-                    //     props.idTenant(row.values.id);
-                    //     props.tabIndex();
-                    //   }}
+                      onClick={() =>
+                        router.push(`/penilaian/tenant/${row.values.id}`)
+                      }
+                      //   onClick={() => {
+                      //     props.idTenant(row.values.id);
+                      //     props.tabIndex();
+                      //   }}
                     >
                       <BiDoorOpen size="20px" />
                       &nbsp;Masuk
