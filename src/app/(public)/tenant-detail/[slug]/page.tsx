@@ -8,16 +8,19 @@ import * as TenantTypes from "@/app/type/tenant-type.d";
 import NotFound from "@/app/components/template/NotFound";
 
 function page({ params }: { params: { slug: string } }) {
-  const [detailTenant, setDetailTenant] = useState<TenantTypes.Tenant | null>(null);
+  const [detailTenant, setDetailTenant] = useState<TenantTypes.Tenant | null>(
+    null,
+  );
   const [loadingBeranda, setLoadingBeranda] = useState<boolean>(true);
 
   const getTenant = async () => {
     setLoadingBeranda(true);
     try {
-      await axiosCustom.get(`/public/tenant/${params.slug}`).then((response) => {
-        setDetailTenant(response.data.data);
-        // setLoadingBeranda(false);
-      });
+      await axiosCustom
+        .get(`/public/tenant/${params.slug}`)
+        .then((response) => {
+          setDetailTenant(response.data.data);
+        });
     } catch (error: any) {
       console.error(error);
     }
@@ -44,12 +47,6 @@ function page({ params }: { params: { slug: string } }) {
       )}
     </>
   );
-
-  // <pre>
-  //   {
-  //     detailTenant && detailTenant.map((d) => JSON.stringify(d, null, 2)) // Argumen kedua (null) adalah replacer, dan argumen ketiga (2) adalah jumlah spasi indentasi
-  //   }
-  // </pre>
 }
 
 export default dynamic(() => Promise.resolve(page), {

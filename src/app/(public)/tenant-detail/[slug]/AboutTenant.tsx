@@ -1,38 +1,17 @@
 import * as React from "react";
-import {
-  MdMailOutline,
-  MdOutlineMap,
-  MdOutlineContacts,
-  MdSchool,
-  MdMap,
-} from "react-icons/md";
-import {
-  Box,
-  Text,
-  Flex,
-  HStack,
-  Stack,
-  VStack,
-  Icon,
-  Button,
-  Spacer,
-  Tag,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { MdSchool, MdMap } from "react-icons/md";
+import { Box, Text, Stack } from "@chakra-ui/react";
 import ContactInfo from "./ContactTenant";
 import SocialInfo from "./MediaSocial";
-import {
-  AiFillTwitterCircle,
-  AiOutlineFacebook,
-  AiOutlineCrown,
-  AiOutlineGlobal,
-} from "react-icons/ai";
+import { AiFillTwitterCircle, AiOutlineGlobal } from "react-icons/ai";
 import {
   IoLogoFacebook,
   IoLogoInstagram,
   IoLogoLinkedin,
   IoLogoYoutube,
 } from "react-icons/io5";
+import { GiQueenCrown, GiAerialSignal } from "react-icons/gi";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import * as TenantTypes from "@/app/type/tenant-type.d";
 
 const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
@@ -70,30 +49,7 @@ const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
   };
   return (
     <Stack spacing={8}>
-      {/* <HStack justifyContent={"center"}>
-        <Box
-          w={["20px", "30px"]}
-          h={["20px", "30px"]}
-          bg={"red.500"}
-          borderRadius={"full"}
-          display={"flex"}
-          alignItems="center"
-          justifyContent={"center"}
-        >
-          <Icon
-            as={FaInfo}
-            w={["15px", "20px"]}
-            h={["15px", "20px"]}
-            color={"white"}
-          />
-        </Box>
-        <Text fontWeight={"bold"} color={"red.500"} fontSize={["sm", "lg"]}>
-          DETAIL INFORMATION
-        </Text>
-      </HStack> */}
       <Stack
-        // columns={{ base: 1, lg: 2 }}
-        // spacing={{ base: 6, md: 12, lg: 20 }}
         flexDirection={{ base: "column", lg: "row" }}
         spacing={{ base: 10, md: 4, lg: 20 }}
       >
@@ -108,7 +64,6 @@ const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 fontWeight="bold"
                 color="gray.900"
                 fontSize={["20px", "2xl", "3xl"]}
-                // fontSize={["xl", "2xl", "3xl"]}
               >
                 Tentang
               </Text>
@@ -135,7 +90,6 @@ const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 label="alamat"
                 size={24}
               />
-
               {program && program.length > 0 && (
                 <ContactInfo
                   icon={MdSchool}
@@ -146,14 +100,31 @@ const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                   content=""
                 />
               )}
-
               <ContactInfo
-                icon={AiOutlineCrown}
+                icon={GiQueenCrown}
                 title="Founder"
                 content={tenant.founder}
                 label="founder"
                 size={24}
               />
+              {tenant.valuasi_string !== null && (
+                <ContactInfo
+                  icon={LiaFileInvoiceDollarSolid}
+                  title="Valuasi"
+                  content={tenant.valuasi_string}
+                  label="valuasi"
+                  size={24}
+                />
+              )}
+              {tenant.jangkauan !== null && (
+                <ContactInfo
+                  icon={GiAerialSignal}
+                  title="Jangkauan"
+                  content={tenant.jangkauan}
+                  label="jangkauan"
+                  size={24}
+                />
+              )}
             </Stack>
           </Stack>
         </Box>
