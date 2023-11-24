@@ -24,7 +24,7 @@ import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import initRichTextProps from "@/app/type/inital-rich-text";
 import { Editor } from "@tinymce/tinymce-react";
-import AddMentor from "./addMentor";
+import AddMentor from "./FindMentor";
 
 type AwardItem = {
   id?: string;
@@ -219,9 +219,7 @@ const EditClass: React.FC<editProps> = ({ onSubmit, rowData, roleAccess }) => {
                   </Flex>
                 </FormControl>
                 <FormControl isInvalid={!!errors.description} mb="3">
-                  <FormLabel>
-                    Deskripsi Kelas&nbsp;
-                  </FormLabel>
+                  <FormLabel>Deskripsi Kelas&nbsp;</FormLabel>
                   <Editor
                     {...field}
                     apiKey={process.env.API_TINYMCE}
