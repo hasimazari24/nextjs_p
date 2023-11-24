@@ -114,7 +114,7 @@ const ModalEdit: React.FC<ModalProps> = ({
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [avatar, setAvatar] = useState<File>();
+  // const [avatar, setAvatar] = useState<File>();
   const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
     undefined,
   );
@@ -139,23 +139,25 @@ const ModalEdit: React.FC<ModalProps> = ({
     const MAX_FILE_SIZE = 800000; //800KB
     // ambil input nya
     const file = e?.[0];
+    if (!file) return;
     // ambil type dari file
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
     const UPLOAD_FILE_SIZE = file?.size;
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
-      file.value = null;
+      return;
     } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
       handleShowMessage(
         "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
         true,
       );
-      file.value = null;
+      return;
     } else {
-      setAvatar(file);
+      // setAvatar(file);
       setPreviewAvatar(URL.createObjectURL(file));
-      setIsLoading(true);
+      uploadAvatar(file);
+      // setIsLoading(true);
     }
   };
 
@@ -170,7 +172,6 @@ const ModalEdit: React.FC<ModalProps> = ({
         // console.log("hapus ini kah?");
         setIdImageAvatar(`delete=${idImageAvatarOld}`);
       }
-      setDataEdited([]);
       setPreviewAvatar(undefined);
       setIdImageAvatarOld(null);
       setBtnDeleteAvatar(false);
@@ -185,51 +186,49 @@ const ModalEdit: React.FC<ModalProps> = ({
     }
   };
 
-  const [dataEdited, setDataEdited] = useState(formData ? formData : []);
-
   const initialAvatar = () => {
-    if (isOpen && isEdit && dataEdited && dataEdited.length !== 0) {
-      if (dataEdited?.image_id !== null) {
-        if (idImageAvatarOld !== dataEdited.image_id) {
-          setIdImageAvatarOld(dataEdited?.image_id);
-          setPreviewAvatar(dataEdited?.image_url);
+    if (isOpen && isEdit && formData) {
+      if (formData?.image_id !== null) {
+        if (idImageAvatarOld !== formData.image_id) {
+          setIdImageAvatarOld(formData?.image_id);
+          setPreviewAvatar(formData?.image_url);
           setBtnDeleteAvatar(true);
         }
       }
     }
   };
 
+  async function uploadAvatar(file: File) {
+    try {
+      setIsLoading(true);
+      const data = new FormData();
+      data.append("asset", file as File);
+      const upload = await axiosCustom.post("/assets/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIdImageAvatar(upload.data.data.id);
+      // jika dalam kondisi tambah user, aktifkan btn delete
+      if (!isEdit && isOpen) setBtnDeleteAvatar(true);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   // logic update avatar disini
   useEffect(() => {
-    async function uploadAvatar() {
-      if (avatar !== undefined && avatar !== null) {
-        try {
-          const data = new FormData();
-          data.append("asset", avatar as File);
-          const upload = await axiosCustom.post("/assets/upload", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          setIdImageAvatar(upload.data.data.id);
-          // jika dalam kondisi tambah user, aktifkan btn delete
-          if (!isEdit && isOpen) setBtnDeleteAvatar(true);
-        } catch (error: any) {
-          // tampilken error
-          if (error?.response) {
-            handleShowMessage(
-              `Terjadi Kesalahan: ${error.response.data.message}`,
-              true,
-            );
-          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        } finally {
-          setIsLoading(false);
-        }
-      }
+    if (isOpen === true && isEdit === true) {
+      initialAvatar();
     }
-    uploadAvatar();
-    initialAvatar();
-    setDataEdited(formData);
     // kondisi ketika edit data, tambah event ketika onClose setIsModalEditOpen null
-  }, [avatar, formData]);
+  }, [isOpen, isEdit]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);

@@ -410,10 +410,12 @@ const ModalEdit: React.FC<ModalProps> = ({
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
     const UPLOAD_FILE_SIZE = file?.size;
+    //jika pencet batal 
+    if (!file) return;
     // jika file type tidak disupport
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
-      file.value = null;
+      return;
     }
     // jika file size lebih dari yg sudah ditentukan
     else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
@@ -421,7 +423,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
         true,
       );
-      file.value = null;
+      return;
     }
     // lolos tilang pak solipi dek
     else {
