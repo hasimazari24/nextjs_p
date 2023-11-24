@@ -202,14 +202,12 @@ const page = ({ params }: { params: { id_progress: string } }) => {
               borderColor={"blue.500"}
               w="full"
             >
-              <Text textAlign="justify">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-                corporis, ipsum quod facilis laboriosam in quas natus voluptas.
-                Atque magnam nobis facere officia molestiae quibusdam vitae
-                eaque illum repellendus sit, cumque distinctio architecto modi
-                provident ipsa! Inventore ad maiores impedit distinctio a, iure
-                soluta, beatae facere consequatur dolorum odio libero?
-              </Text>
+              <Text
+                textAlign="justify"
+                dangerouslySetInnerHTML={{
+                  __html: dataDetailSesi.description,
+                }}
+              />
             </Box>
           )}
 
