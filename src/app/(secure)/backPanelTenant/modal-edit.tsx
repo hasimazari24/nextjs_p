@@ -974,7 +974,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                       align={{ base: "start", md: "center" }}
                     >
                       <Box
-                        minWidth={["100%", "100px"]}
+                        minWidth={["100%", "110px"]}
                         marginRight={["0", "2"]}
                       >
                         <FormLabel>

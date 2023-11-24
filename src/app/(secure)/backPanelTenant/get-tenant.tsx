@@ -245,43 +245,44 @@ function PageTenant() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [dataTampil, setDataTampil] = useState<any | null>([]);
+  const [dataValuasi, setDataValuasi] = useState<any | null>(null);
+
   const getTampil = async () => {
     try {
+      
       setIsLoading(true); 
       // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get("/tenant");
-
-      // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
-      const timer = setTimeout(() => {
-        setDataTampil(response.data.data);
-        // console.log(dataTampil);
-        setIsLoading(false); // Set isLoading to false to stop the spinner
-      }, 1000);
-
-      return () => clearTimeout(timer);
+      await Promise.all([
+        axiosCustom.get("/tenant"),
+        axiosCustom.get("/valuasi"), // ganti dengan endpoint API kedua Anda
+      ]).then((responses) => {
+        const [response1, response2] = responses;
+        setDataTampil(response1.data.data);
+        setDataValuasi(response2.data.data);
+        setIsLoading(false); 
+      });
     } catch (error) {
       console.error("Gagal memuat data:", error);
       setIsLoading(false);
     }
   };
 
-  const [dataValuasi, setDataValuasi] = useState<any | null>(null);
-  const getValuasi = async () => {
-    try {
-      // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get("/valuasi");
-      setDataValuasi(response.data.data);
-    } catch (error) {
-      console.error("Gagal memuat Data Valuasi:", error);
-      setIsLoading(false);
-    }
-  };
+  // const getValuasi = async () => {
+  //   try {
+  //     // Panggil API menggunakan Axios dengan async/await
+  //     const response = await axiosCustom.get("/valuasi");
+  //     setDataValuasi(response.data.data);
+  //   } catch (error) {
+  //     console.error("Gagal memuat Data Valuasi:", error);
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data
     if (getUser?.role !== "Tenant") {
       getTampil();
-      getValuasi();
+      // getValuasi();
     }
     // Clear the timeout when the component is unmounted
   }, []);
