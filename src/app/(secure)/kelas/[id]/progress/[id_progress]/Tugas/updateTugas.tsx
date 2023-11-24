@@ -83,6 +83,7 @@ const UpdateTugas: React.FC<editProps> = ({ onSubmit, idSesi, dataEdit }) => {
       setEndDate(new Date(dataEdit?.close_date));
       setValue("open_date", dataEdit?.open_date || "");
       setValue("close_date", dataEdit?.close_date || "");
+      setValue("description", dataEdit.description);
     }
   }, [isModalOpen]);
 
@@ -90,12 +91,14 @@ const UpdateTugas: React.FC<editProps> = ({ onSubmit, idSesi, dataEdit }) => {
     field: {
       onChange: onChangeDescription,
       ref: refDescription,
+      value: valDescription,
       ...fieldDescription
     },
     // fieldState: { invalid: isDescriptionInvalid, error: descriptionError },
   } = useController({
     control,
     name: "description",
+    defaultValue: dataEdit.description,
     // rules: { required: "Deskripsi Sesi harus diisi!" },
   });
 
@@ -111,7 +114,7 @@ const UpdateTugas: React.FC<editProps> = ({ onSubmit, idSesi, dataEdit }) => {
     control,
     name: "open_date",
     rules: { required: "Open Date harus diisi!" },
-    defaultValue: `${new Date(dataEdit.open_date)}`,
+    defaultValue: dataEdit.open_date,
   });
 
   const {
@@ -125,7 +128,7 @@ const UpdateTugas: React.FC<editProps> = ({ onSubmit, idSesi, dataEdit }) => {
     control,
     name: "close_date",
     rules: { required: "Due Date harus diisi!" },
-    defaultValue: `${new Date(dataEdit.close_date)}`,
+    defaultValue: dataEdit.close_date,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -146,19 +149,20 @@ const UpdateTugas: React.FC<editProps> = ({ onSubmit, idSesi, dataEdit }) => {
     // console.log(format(parseISO(data.open_date), "yyyy-MM-dd HH:mm"));
     setIsLoading(true);
     // console.log(data);
-    const dataBaru = {
-      title: data.title,
-      description: data.description,
-      open_date: format(parseISO(data.open_date), "yyyy-MM-dd HH:mm"),
-      close_date: format(parseISO(data.close_date), "yyyy-MM-dd HH:mm"),
-    };
+    // console.log(format(new Date(data.open_date), "yyyy-MM-dd HH:mm"));
 
     try {
+      const dataBaru = {
+        title: data.title,
+        description: data.description,
+        open_date: format(new Date(data.open_date), "yyyy-MM-dd HH:mm"),
+        close_date: format(new Date(data.close_date), "yyyy-MM-dd HH:mm"),
+      };
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       await axiosCustom
         .patch(`update-course-item-assigment/${data.id}`, dataBaru)
         .then((response) => {
-        //   console.log(response);
+          //   console.log(response);
           if (response.status === 200) {
             handleShowMessage("Data berhasil diubah.", false);
             setIsLoading(false);
@@ -257,6 +261,8 @@ const UpdateTugas: React.FC<editProps> = ({ onSubmit, idSesi, dataEdit }) => {
                     {...fieldDescription}
                     apiKey={process.env.API_TINYMCE}
                     initialValue={dataEdit?.description}
+                    // textareaName={name}
+                    value={valDescription}
                     init={{
                       ...initRichTextProps,
                       toolbar_mode: "sliding",

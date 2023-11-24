@@ -65,6 +65,7 @@ const UpdateFile: React.FC<editProps> = ({ onSubmit, rowData }) => {
     reset,
     control,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<{ id: string; title: string; description: string }>();
 
@@ -82,12 +83,14 @@ const UpdateFile: React.FC<editProps> = ({ onSubmit, rowData }) => {
     field: {
       onChange: onChangeDescription,
       ref: refDescription,
+      value:valDescription,
       ...fieldDescription
     },
     // fieldState: { invalid: isDescriptionInvalid, error: descriptionError },
   } = useController({
     control,
     name: "description",
+    defaultValue: rowData?.description,
     // rules: { required: "Deskripsi Sesi harus diisi!" },
   });
 
@@ -204,6 +207,13 @@ const UpdateFile: React.FC<editProps> = ({ onSubmit, rowData }) => {
     setChangeFile(false);
   };
 
+  useEffect(() => {
+    if (isModalOpen === true) {
+      setValue("description", rowData?.description);
+      // clearErrors("description");
+    }
+  }, [isModalOpen]);
+
   return (
     <div>
       <Button
@@ -273,10 +283,11 @@ const UpdateFile: React.FC<editProps> = ({ onSubmit, rowData }) => {
                     {...fieldDescription}
                     apiKey={process.env.API_TINYMCE}
                     initialValue={rowData?.description}
+                    value={valDescription}
                     init={{
                       ...initRichTextProps,
                       toolbar_mode: "sliding",
-                      height: 180,
+                      height: 200,
                     }}
                     onEditorChange={onChangeDescription}
                   />

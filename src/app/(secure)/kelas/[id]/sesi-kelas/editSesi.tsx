@@ -34,7 +34,7 @@ type SesiItem = {
 
 interface editProps {
   onSubmit: () => void;
-  rowData:SesiItem,
+  rowData: SesiItem;
 }
 
 const EditSesi: React.FC<editProps> = ({ onSubmit, rowData }) => {
@@ -45,6 +45,7 @@ const EditSesi: React.FC<editProps> = ({ onSubmit, rowData }) => {
     control,
     formState: { errors },
     clearErrors,
+    setValue,
   } = useForm<SesiItem>();
 
   const fields = {
@@ -66,10 +67,11 @@ const EditSesi: React.FC<editProps> = ({ onSubmit, rowData }) => {
   };
 
   const {
-    field: { onChange, ref, ...field },
+    field: { onChange, ref, value, ...field },
   } = useController({
     control,
     name: "description",
+    defaultValue: rowData?.description,
     // rules: { required: "Deskripsi Sesi harus diisi!" },
   });
 
@@ -123,12 +125,16 @@ const EditSesi: React.FC<editProps> = ({ onSubmit, rowData }) => {
     setModalOpen(false);
     reset(); // Reset formulir
     setIsLoading(false);
+    reset({ description: "" });
   };
 
   useEffect(() => {
-    clearErrors("description");
-    reset({ description: "" });
-  }, []);
+    if (isModalOpen === true) {
+      clearErrors("description");
+      setValue("description", rowData?.description);
+      // reset({ description: "" });
+    }
+  }, [isModalOpen]);
 
   return (
     <div>
@@ -190,13 +196,12 @@ const EditSesi: React.FC<editProps> = ({ onSubmit, rowData }) => {
                   </Flex>
                 </FormControl>
                 <FormControl isInvalid={!!errors.description} mb="3">
-                  <FormLabel>
-                    Deskripsi Sesi
-                  </FormLabel>
+                  <FormLabel>Deskripsi Sesi</FormLabel>
                   <Editor
                     {...field}
                     apiKey={process.env.API_TINYMCE}
                     initialValue={rowData.description}
+                    value={value}
                     init={{
                       ...initRichTextProps,
                       toolbar_mode: "sliding",

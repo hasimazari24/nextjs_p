@@ -56,6 +56,7 @@ const UpdateLink: React.FC<editProps> = ({ onSubmit, dataEdit }) => {
     reset,
     control,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<ClassInfo.TmbLink>();
 
@@ -76,18 +77,20 @@ const UpdateLink: React.FC<editProps> = ({ onSubmit, dataEdit }) => {
     }),
   };
 
-  const {
-    field: {
-      onChange: onChangeDescription,
-      ref: refDescription,
-      ...fieldDescription
-    },
-    // fieldState: { invalid: isDescriptionInvalid, error: descriptionError },
-  } = useController({
-    control,
-    name: "description",
-    // rules: { required: "Deskripsi Sesi harus diisi!" },
-  });
+   const {
+     field: {
+       onChange: onChangeDescription,
+       ref: refDescription,
+       value: valDescription,
+       ...fieldDescription
+     },
+     // fieldState: { invalid: isDescriptionInvalid, error: descriptionError },
+   } = useController({
+     control,
+     name: "description",
+     defaultValue: dataEdit?.description,
+     // rules: { required: "Deskripsi Sesi harus diisi!" },
+   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [stateNotif, setStateNotif] = useState({
@@ -142,6 +145,13 @@ const UpdateLink: React.FC<editProps> = ({ onSubmit, dataEdit }) => {
     clearErrors("description");
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (isOpen === true) {
+      setValue("description", dataEdit?.description);
+      // clearErrors("description");
+    }
+  }, [isOpen]);
 
   return (
     <div>
@@ -203,11 +213,12 @@ const UpdateLink: React.FC<editProps> = ({ onSubmit, dataEdit }) => {
                   <Editor
                     {...fieldDescription}
                     apiKey={process.env.API_TINYMCE}
-                    initialValue={dataEdit.description}
+                    initialValue={dataEdit?.description}
+                    value={valDescription}
                     init={{
                       ...initRichTextProps,
                       toolbar_mode: "sliding",
-                      height: 180,
+                      height: 200,
                     }}
                     onEditorChange={onChangeDescription}
                   />
