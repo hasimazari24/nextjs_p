@@ -31,12 +31,14 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
-import { useForm, SubmitHandler, set } from "react-hook-form";
+import { useForm, SubmitHandler, useController } from "react-hook-form";
 import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { AiOutlineCamera } from "react-icons/ai";
 import ModalNotif from "../../components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import { useAuth } from "@/app/components/utils/AuthContext";
+import initRichTextProps from "@/app/type/inital-rich-text";
+import { Editor } from "@tinymce/tinymce-react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -81,6 +83,8 @@ const ModalEdit: React.FC<ModalProps> = ({
     reset,
     formState: { errors },
     setValue,
+    control,
+    clearErrors,
   } = useForm<FormValues>();
 
   const fields = {
@@ -91,9 +95,9 @@ const ModalEdit: React.FC<ModalProps> = ({
         message: "Maksimal 255 karakter.",
       },
     }),
-    description: register("description", {
-      required: "Deskripsi harus diisi!",
-    }),
+    // description: register("description", {
+    //   required: "Deskripsi harus diisi!",
+    // }),
     motto: register("motto", {
       required: "Motto harus diisi!",
       maxLength: {
@@ -101,13 +105,13 @@ const ModalEdit: React.FC<ModalProps> = ({
         message: "Maksimal 255 karakter.",
       },
     }),
-    address: register("address", {
-      required: "Alamat harus diisi!",
-      maxLength: {
-        value: 255,
-        message: "Maksimal 255 karakter.",
-      },
-    }),
+    // address: register("address", {
+    //   required: "Alamat harus diisi!",
+    //   maxLength: {
+    //     value: 255,
+    //     message: "Maksimal 255 karakter.",
+    //   },
+    // }),
     contact: register("contact", {
       required: "Kontak harus diisi!",
       maxLength: {
@@ -140,6 +144,29 @@ const ModalEdit: React.FC<ModalProps> = ({
     jangkauan: register("jangkauan"),
     valuasi: register("valuasi"),
   };
+
+  const {
+    field: { onChange, ref, value, ...field },
+  } = useController({
+    control,
+    name: "description",
+    rules: { required: "Deskripsi Tenant harus diisi!" },
+    defaultValue: formData?.description,
+  });
+
+  const {
+    field: {
+      onChange: changeAdress,
+      ref: refAdress,
+      value: valAdress,
+      ...fieldAdress
+    },
+  } = useController({
+    control,
+    name: "address",
+    rules: { required: "Alamat harus diisi!" },
+    defaultValue: formData?.address,
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [isModalNotif, setModalNotif] = useState(false);
@@ -231,7 +258,7 @@ const ModalEdit: React.FC<ModalProps> = ({
   };
 
   const [isHovered, setIsHovered] = useState(false);
-  const [avatar, setAvatar] = useState<File>();
+  // const [avatar, setAvatar] = useState<File>();
   const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(
     undefined,
   );
@@ -302,6 +329,9 @@ const ModalEdit: React.FC<ModalProps> = ({
       initialAvatar(undefined);
       initialBanner(undefined);
       setValue("description", formData?.description);
+      clearErrors("description");
+      setValue("address", formData?.address);
+      clearErrors("address");
     }
   }, [isOpen, isEdit]);
 
@@ -450,6 +480,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => {
           onClose();
           reset();
+          reset({ description: "" });
           setPreviewAvatar(undefined); // reset preview
           setIdImageAvatarOld(null); // kosongkan idimage
           setIdImageAvatar(null); // kosongkan idimage
@@ -768,9 +799,18 @@ const ModalEdit: React.FC<ModalProps> = ({
                         </FormLabel>
                       </Box>
                       <Box w="full">
-                        <Textarea
-                          {...fields.description}
-                          defaultValue={formData?.description}
+                        <Editor
+                          {...field}
+                          apiKey={process.env.API_TINYMCE}
+                          initialValue={formData?.description}
+                          // textareaName={name}
+                          value={value}
+                          init={{
+                            ...initRichTextProps,
+                            toolbar_mode: "sliding",
+                            height: 200,
+                          }}
+                          onEditorChange={onChange}
                         />
                         <FormErrorMessage>
                           {errors.description && errors.description.message}
@@ -796,10 +836,23 @@ const ModalEdit: React.FC<ModalProps> = ({
                         </FormLabel>
                       </Box>
                       <Box w="full">
-                        <Textarea
+                        {/* <Textarea
                           {...fields.address}
                           height="10px"
                           defaultValue={formData?.address}
+                        /> */}
+                        <Editor
+                          {...fieldAdress}
+                          apiKey={process.env.API_TINYMCE}
+                          initialValue={formData?.address}
+                          // textareaName={name}
+                          value={valAdress}
+                          init={{
+                            ...initRichTextProps,
+                            toolbar_mode: "sliding",
+                            height: 200,
+                          }}
+                          onEditorChange={changeAdress}
                         />
                         <FormErrorMessage>
                           {errors.address && errors.address.message}
@@ -1030,6 +1083,7 @@ const ModalEdit: React.FC<ModalProps> = ({
                 onClick={() => {
                   onClose();
                   reset();
+                  reset({ description: "" });
                   setIsLoading(false);
                   setPreviewAvatar(undefined); // reset preview
                   setIdImageAvatarOld(null); // kosongkan idimage
