@@ -24,7 +24,7 @@ import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import initRichTextProps from "@/app/type/inital-rich-text";
 import { Editor } from "@tinymce/tinymce-react";
-import AddMentor from "./addMentor";
+import AddMentor from "./FindMentor";
 
 type ClassItem = {
   id?: string;
