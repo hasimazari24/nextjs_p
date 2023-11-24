@@ -12,11 +12,15 @@ import {
   FormControl,
   FormErrorMessage,
   Skeleton,
+  Icon,
+  Heading,
+  Divider
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { BsSendPlusFill } from "react-icons/bs";
 import { useForm, SubmitHandler } from "react-hook-form";
 import DeleteComment from "./commentDelete";
+import { CgComment } from "react-icons/cg";
 
 type Comment = {
   id: string;
@@ -106,10 +110,25 @@ function CommentSection({ idSesi }: { idSesi: string }) {
         isLoaded={!isLoading}
         // display={!isLoading && dataComment.length < 1 ? "none" : "flex"}
       >
-        <Stack spacing={3} align="flex-start" w="full">
-          <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
-            Komentar
-          </Text>
+        <Stack spacing={4} w="full" direction={"column"}>
+          <Box display="flex" alignItems="center">
+            <HStack>
+              {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
+              <Icon
+                as={CgComment}
+                fontSize={["17px", "19px"]}
+                fontWeight={"bold"}
+              />
+              <Heading
+                fontWeight={"bold"}
+                fontSize={["17px", "xl", "2xl"]}
+                mr="2"
+              >
+                {dataComment.length}&nbsp;Komentar
+              </Heading>
+            </HStack>
+            {/* <Divider borderColor="gray.400" /> */}
+          </Box>
 
           <form
             onSubmit={handleSubmit(handleFormSubmit)}

@@ -11,6 +11,9 @@ import {
   Text,
   Skeleton,
   Divider,
+  Heading,
+  AbsoluteCenter,
+  Icon,
 } from "@chakra-ui/react";
 import { MdDone } from "react-icons/md/";
 import { axiosCustom } from "@/app/api/axios";
@@ -19,6 +22,7 @@ import AddFile from "./addFile";
 import UpdateFile from "./updateFile";
 import DeleteFile from "./deleteFile";
 import ChangeProgressTenant from "../ChangeProgressTenant";
+import { FaRegFileAlt } from "react-icons/fa";
 
 interface FileMentor {
   id: string;
@@ -72,7 +76,25 @@ export const FileByTenant = ({ idSesi }: { idSesi: string }) => {
       >
         {fileTenant && (
           <Stack spacing={4} w="full">
-            {fileTenant.map((data) => (
+            <Box display="flex" alignItems="center">
+              <HStack>
+                {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
+                <Icon
+                  as={FaRegFileAlt}
+                  fontSize={["17px", "19px"]}
+                  fontWeight={"bold"}
+                />
+                <Heading
+                  fontWeight={"bold"}
+                  fontSize={["17px", "xl", "2xl"]}
+                  mr="2"
+                >
+                  FILE
+                </Heading>
+              </HStack>
+              <Divider borderColor="gray.400" />
+            </Box>
+            {fileTenant.map((data, index) => (
               <Box key={data.id}>
                 <VStack spacing={3} align="flex-start">
                   <HStack
@@ -81,7 +103,7 @@ export const FileByTenant = ({ idSesi }: { idSesi: string }) => {
                     alignItems={"center"}
                   >
                     <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
-                      {data.title}
+                      {index + 1}.&nbsp;{data.title}
                     </Text>
                     <ChangeProgressTenant
                       idSesi={idSesi}
@@ -136,7 +158,7 @@ export const FileByTenant = ({ idSesi }: { idSesi: string }) => {
                     </Box>
                   </Link>
                 </VStack>
-                <Divider mt={4} borderColor="gray.400" />
+                {/* <Divider mt={4} borderColor="gray.400" /> */}
               </Box>
             ))}
           </Stack>
@@ -189,7 +211,25 @@ export function FileByMentor({
       >
         {fileMentor.length > 0 && (
           <Stack spacing={4} w="full">
-            {fileMentor.map((data) => (
+            <Box display="flex" alignItems="center">
+              <HStack>
+                {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
+                <Icon
+                  as={FaRegFileAlt}
+                  fontSize={["17px", "19px"]}
+                  fontWeight={"bold"}
+                />
+                <Heading
+                  fontWeight={"bold"}
+                  fontSize={["17px", "xl", "2xl"]}
+                  mr="2"
+                >
+                  FILE
+                </Heading>
+              </HStack>
+              <Divider borderColor="gray.400" />
+            </Box>
+            {fileMentor.map((data, index) => (
               <Box key={data.id}>
                 <VStack spacing={3} align="flex-start">
                   <HStack
@@ -198,7 +238,7 @@ export function FileByMentor({
                     alignItems={"center"}
                   >
                     <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
-                      {data.title}
+                      {index + 1}.&nbsp;{data.title}
                     </Text>
                     {classEnd !== true && (
                       <>
@@ -260,7 +300,7 @@ export function FileByMentor({
                     </Box>
                   </Link>
                 </VStack>
-                <Divider mt={4} borderColor="gray.400" />
+                {/* <Divider mt={4} borderColor="gray.400" /> */}
               </Box>
             ))}
           </Stack>

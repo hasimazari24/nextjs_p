@@ -109,7 +109,9 @@ const page = ({ params }: { params: { id_progress: string } }) => {
               <Text as="b" fontWeight={"bold"} fontSize={["17px", "xl", "2xl"]}>
                 {dataDetailSesi.title}
               </Text>
-              <Text fontWeight={"thin"}>Publish : 25 Okt 2023</Text>
+              <Text fontWeight={"thin"}>
+                Publish : {dataDetailSesi.created_at}
+              </Text>
               <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
                 {dataDetailSesi.mentor_name}
               </Text>

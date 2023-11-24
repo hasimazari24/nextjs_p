@@ -25,6 +25,8 @@ import {
   Skeleton,
   Divider,
   useDisclosure,
+  Icon,
+  Heading,
 } from "@chakra-ui/react";
 import { MdArrowBackIosNew, MdTask } from "react-icons/md/";
 import ReviewMentor from "./review/reviewMentor";
@@ -37,6 +39,7 @@ import ChangeProgressTenant from "../ChangeProgressTenant";
 import { usePathname, useRouter } from "next/navigation";
 import { GrDocumentUpload } from "react-icons/gr";
 import UploadTenant from "./uploadTenant";
+import { GoTasklist } from "react-icons/go";
 
 interface MentorTugas {
   id: string;
@@ -79,7 +82,7 @@ export function TugasTenant({
   const [tugasTenant, setTugasTenant] = useState<TenantTugas[] | []>([]);
   const [selectReview, setIsSelectReview] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     // if (need_updated === true)
@@ -113,7 +116,25 @@ export function TugasTenant({
       >
         {tugasTenant.length > 0 && (
           <Stack spacing={4} w="full" direction={"column"}>
-            {tugasTenant.map((data) => (
+            <Box display="flex" alignItems="center">
+              <HStack>
+                {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
+                <Icon
+                  as={GoTasklist}
+                  fontSize={["21px", "23px"]}
+                  fontWeight={"bold"}
+                />
+                <Heading
+                  fontWeight={"bold"}
+                  fontSize={["17px", "xl", "2xl"]}
+                  mr="2"
+                >
+                  TUGAS
+                </Heading>
+              </HStack>
+              <Divider borderColor="gray.400" />
+            </Box>
+            {tugasTenant.map((data, index) => (
               <Box key={data.id}>
                 <VStack spacing={3} align="flex-start">
                   <HStack
@@ -122,6 +143,7 @@ export function TugasTenant({
                     alignItems={"center"}
                   >
                     <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
+                      {index + 1}.&nbsp;
                       {data.title}
                     </Text>
                     <ChangeProgressTenant
@@ -188,7 +210,7 @@ export function TugasTenant({
                     )}
                   </HStack>
                 </VStack>
-                <Divider mt={4} borderColor="gray.400" />
+                {/* <Divider mt={4} borderColor="gray.400" /> */}
               </Box>
             ))}
           </Stack>
@@ -252,7 +274,25 @@ export function TugasMentor({
       >
         {tugasMentor.length > 0 && (
           <Stack spacing={4} w="full" direction={"column"}>
-            {tugasMentor.map((data) => (
+            <Box display="flex" alignItems="center">
+              <HStack>
+                {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
+                <Icon
+                  as={GoTasklist}
+                  fontSize={["21px", "23px"]}
+                  fontWeight={"bold"}
+                />
+                <Heading
+                  fontWeight={"bold"}
+                  fontSize={["17px", "xl", "2xl"]}
+                  mr="2"
+                >
+                  TUGAS
+                </Heading>
+              </HStack>
+              <Divider borderColor="gray.400" />
+            </Box>
+            {tugasMentor.map((data, index) => (
               <Box key={data.id}>
                 <VStack spacing={3} align="flex-start">
                   <HStack
@@ -261,7 +301,7 @@ export function TugasMentor({
                     alignItems={"center"}
                   >
                     <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
-                      {data.title}
+                      {index + 1}.&nbsp;{data.title}
                     </Text>
                     {classEnd !== true && (
                       <>
@@ -326,7 +366,7 @@ export function TugasMentor({
                     </Button>
                   </HStack>
                 </VStack>
-                <Divider mt={4} borderColor="gray.400" />
+                {/* <Divider mt={4} borderColor="gray.400" /> */}
               </Box>
             ))}
           </Stack>

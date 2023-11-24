@@ -8,10 +8,10 @@ import {
 } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
+  Icon,
   HStack,
   Stack,
-  Image,
+  Heading,
   VStack,
   Text,
   Skeleton,
@@ -24,6 +24,7 @@ import UpdateLink from "./updateLink";
 import DeleteLink from "./deleteLink";
 import AddLink from "./addLink";
 import ChangeProgressTenant from "../ChangeProgressTenant";
+import { IoLinkSharp } from "react-icons/io5";
 
 interface LinkTenantI {
   id: string;
@@ -76,7 +77,25 @@ export function LinkTenant({ idSesi }: { idSesi: string }) {
       >
         {linkTenant.length > 0 && (
           <Stack spacing={4} w="full" direction={"column"}>
-            {linkTenant.map((data) => (
+            <Box display="flex" alignItems="center">
+              <HStack>
+                {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
+                <Icon
+                  as={ExternalLinkIcon}
+                  fontSize={["17px", "19px"]}
+                  fontWeight={"bold"}
+                />
+                <Heading
+                  fontWeight={"bold"}
+                  fontSize={["17px", "xl", "2xl"]}
+                  mr="2"
+                >
+                  LINK
+                </Heading>
+              </HStack>
+              <Divider borderColor="gray.400" />
+            </Box>
+            {linkTenant.map((data, index) => (
               <Box key={data.id}>
                 <VStack spacing={3} align="flex-start">
                   <HStack
@@ -85,7 +104,7 @@ export function LinkTenant({ idSesi }: { idSesi: string }) {
                     alignItems={"center"}
                   >
                     <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
-                      {data.title}
+                      {index + 1}.&nbsp;{data.title}
                     </Text>
                     <ChangeProgressTenant
                       idSesi={idSesi}
@@ -193,7 +212,25 @@ export function LinkMentor({
       >
         {linkMentor.length > 0 && (
           <Stack spacing={4} w="full" direction={"column"}>
-            {linkMentor.map((data) => (
+            <Box display="flex" alignItems="center">
+              <HStack>
+                {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
+                <Icon
+                  as={ExternalLinkIcon}
+                  fontSize={["17px", "19px"]}
+                  fontWeight={"bold"}
+                />
+                <Heading
+                  fontWeight={"bold"}
+                  fontSize={["17px", "xl", "2xl"]}
+                  mr="2"
+                >
+                  LINK
+                </Heading>
+              </HStack>
+              <Divider borderColor="gray.400" />
+            </Box>
+            {linkMentor.map((data, index) => (
               <Box key={data.id}>
                 <VStack spacing={3} align="flex-start" key={data.id}>
                   <HStack
@@ -202,7 +239,7 @@ export function LinkMentor({
                     alignItems={"center"}
                   >
                     <Text fontWeight={"bold"} fontSize={["md", "lg"]}>
-                      {data.title}
+                      {index + 1}.&nbsp;{data.title}
                     </Text>
                     {classEnd !== true && (
                       <>
@@ -263,7 +300,7 @@ export function LinkMentor({
                     </Box>
                   </Link>
                 </VStack>
-                <Divider mt={4} borderColor="gray.400" />
+                {/* <Divider mt={4} borderColor="gray.400" /> */}
               </Box>
             ))}
           </Stack>
