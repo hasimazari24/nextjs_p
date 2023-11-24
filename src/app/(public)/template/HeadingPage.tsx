@@ -197,7 +197,7 @@ function HeadingPage() {
                   leftIcon={<PlayIcon h={4} w={4} color={"gray.400"} />}
                   onClick={() => scrollToElement("GallerySliderTenant")}
                 >
-                  Get Started
+                  Explore Tenant
                 </Button>
               </SlideFade>
             </Stack>
