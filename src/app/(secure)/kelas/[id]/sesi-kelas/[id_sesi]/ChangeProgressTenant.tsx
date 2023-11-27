@@ -7,10 +7,17 @@ interface ChangeProg {
   idSesi: string;
   idItem:string;
   progress: string | null;
+  isTugas?:boolean;
   onSubmit: () => void;
 }
 
-function ChangeProgressTenant({ idSesi, idItem, progress, onSubmit }: ChangeProg) {
+function ChangeProgressTenant({
+  idSesi,
+  idItem,
+  progress,
+  onSubmit,
+  isTugas,
+}: ChangeProg) {
   const [isLoadingProgress, setIsLoadingProgress] = useState(false);
   const [isLoadingProgressDelete, setIsLoadingProgressDelete] = useState(false);
   const updateProgress = async (id_item: string) => {
@@ -58,7 +65,7 @@ function ChangeProgressTenant({ idSesi, idItem, progress, onSubmit }: ChangeProg
       size="sm"
       isLoading={isLoadingProgressDelete}
       boxShadow={"md"}
-      isDisabled
+      isDisabled={isTugas ? true : false}
     >
       <MdDoneAll />
       &nbsp; Terselesaikan
@@ -69,17 +76,21 @@ function ChangeProgressTenant({ idSesi, idItem, progress, onSubmit }: ChangeProg
       _hover={{
         bg: "green.100",
       }}
-      title="Atur Terselesaikan"
+      title={
+        isTugas
+          ? "Otomatis terselesaikan jika sudah upload jawaban"
+          : "Atur Terselesaikan"
+      }
       color="gray.700"
       onClick={() => updateProgress(idItem)}
       key="doneProgress"
       size="sm"
       isLoading={isLoadingProgress}
       boxShadow={"md"}
-      isDisabled
+      isDisabled={isTugas ? true : false}
     >
       <MdDone />
-      &nbsp; Selesai
+      &nbsp; {isTugas ? "Belum Selesai" : "Atur Selesai"}
     </Button>
   );
 }

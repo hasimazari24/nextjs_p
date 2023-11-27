@@ -93,7 +93,6 @@ function SesiKelas({
             key={d.id}
           >
             <HStack
-              cursor={"pointer"}
               // direction={{ base: "row", sm: "column", lg: "row" }}
               //   onClick={onOpen}
               align={"start"}
@@ -159,25 +158,50 @@ function SesiKelas({
               {roleAccess !== "Tenant" && classEnd !== true && (
                 <>
                   <EditSesi onSubmit={() => getUpdatedSesi()} rowData={d} />
-                  <DeleteSesi onSubmit={() => getUpdatedSesi()} dataDelete={d} />
+                  <DeleteSesi
+                    onSubmit={() => getUpdatedSesi()}
+                    dataDelete={d}
+                  />
                 </>
               )}
-
-              <Button
-                bgColor="gray.500"
-                _hover={{
-                  bg: "gray.400",
-                }}
-                color="white"
-                size={"sm"}
-                alignContent={"center"}
-                onClick={() =>
-                  router.push(`/kelas/${idKelas}/sesi-kelas/${d.id}`)
-                }
-              >
-                <BiDoorOpen size="20px" />
-                &nbsp; {roleAccess !== "Tenant" ? "Kelola Sesi" : "Masuk Sesi"}
-              </Button>
+              {roleAccess !== "Tenant" ? (
+                <Button
+                  bgColor="gray.500"
+                  _hover={{
+                    bg: "gray.400",
+                  }}
+                  color="white"
+                  size={"sm"}
+                  alignContent={"center"}
+                  onClick={() =>
+                    router.push(`/kelas/${idKelas}/sesi-kelas/${d.id}`)
+                  }
+                >
+                  <BiDoorOpen size="20px" />
+                  &nbsp; Kelola Sesi
+                </Button>
+              ) : (
+                <Button
+                  bgColor="gray.500"
+                  _hover={{
+                    bg: "gray.400",
+                  }}
+                  color="white"
+                  size={"sm"}
+                  alignContent={"center"}
+                  onClick={() =>
+                    router.push(`/kelas/${idKelas}/sesi-kelas/${d.id}`)
+                  }
+                  isDisabled={
+                    d.assigment_count < 1 &&
+                    d.file_count < 1 &&
+                    d.link_count < 1
+                  }
+                >
+                  <BiDoorOpen size="20px" />
+                  &nbsp; Masuk Sesi
+                </Button>
+              )}
             </HStack>
           </Stack>
         ))

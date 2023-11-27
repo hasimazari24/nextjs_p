@@ -150,6 +150,7 @@ export function TugasTenant({
                       idSesi={idSesi}
                       idItem={data.id}
                       progress={data.progress}
+                      isTugas={true}
                       onSubmit={() => getTugasTenant()}
                     />
                   </HStack>
