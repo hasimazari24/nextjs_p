@@ -18,11 +18,13 @@ import Link from "next/link";
 import { axiosCustom } from "@/app/api/axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(secure)/kelas/loading";
-import ReviewMentor from "@/app/(secure)/kelas/[id]/progress/[id_progress]/Tugas/review/reviewMentor";
+import ReviewMentor from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/reviewMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
-import ReviewTenant from "@/app/(secure)/kelas/[id]/progress/[id_progress]/Tugas/review/reviewTenant";
+// import ReviewTenant from "@/app/(secure)/kelas/[id]/progress/[id_progress]/Tugas/review/reviewTenant";
+import ReviewTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/reviewTenant";
 import NotFound from "@/app/components/template/NotFound";
 import ModalNotif from "@/app/components/modal/modal-notif";
+import IngatkanTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/IngatkanTenant";
 
 interface DataItem {
   //   course_item_id: string;
@@ -110,19 +112,7 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
       accessor: "grade_status",
       Cell: ({ value, row }) =>
         value === "Ingatkan Tenant" ? (
-          // <Link href={row.values.send_email_url} target="_blank">
-          <Button
-            leftIcon={<MdAlarm />}
-            colorScheme="gray"
-            variant="outline"
-            aria-label="btn-remain"
-            fontWeight={"Thin"}
-            size={"md"}
-            isDisabled={isLoadingIngatkan}
-            onClick={() => sendIngatkanTenant(row.values.send_email_url)}
-          >
-            {value}
-          </Button>
+          <IngatkanTenant Url={row.values.send_email_url} />
         ) : (
           // </Link>
           <div>{value}</div>

@@ -58,6 +58,7 @@ function ChangeProgressTenant({ idSesi, idItem, progress, onSubmit }: ChangeProg
       size="sm"
       isLoading={isLoadingProgressDelete}
       boxShadow={"md"}
+      isDisabled
     >
       <MdDoneAll />
       &nbsp; Terselesaikan
@@ -75,6 +76,7 @@ function ChangeProgressTenant({ idSesi, idItem, progress, onSubmit }: ChangeProg
       size="sm"
       isLoading={isLoadingProgress}
       boxShadow={"md"}
+      isDisabled
     >
       <MdDone />
       &nbsp; Selesai

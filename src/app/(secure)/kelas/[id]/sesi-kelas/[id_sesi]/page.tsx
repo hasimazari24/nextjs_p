@@ -1,19 +1,11 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
-import {
-  DownloadIcon,
-  AddIcon,
-  EditIcon,
-  DeleteIcon,
-  ExternalLinkIcon,
-} from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   HStack,
   Stack,
-  Image,
-  Avatar,
   VStack,
   Text,
   Popover,
@@ -22,26 +14,22 @@ import {
   PopoverBody,
   PopoverArrow,
   Flex,
-  Input,
   useDisclosure,
 } from "@chakra-ui/react";
-import { MdArrowBackIosNew, MdTask } from "react-icons/md/";
+import { MdArrowBackIosNew } from "react-icons/md/";
 import { FileByTenant, FileByMentor } from "./File/File";
 import { LinkTenant, LinkMentor } from "./Link/Link";
 import { TugasMentor, TugasTenant } from "./Tugas/Tugas";
-import { BsSendPlusFill } from "react-icons/bs";
-import AddTugas from "./Tugas/addTugas";
-import AddFile from "./File/addFile";
-import AddLink from "./Link/addLink";
 import { useRouter, notFound } from "next/navigation";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import Loading from "../../../loading";
 import { axiosCustom } from "@/app/api/axios";
 import CommentSection from "./Comment/commentSection";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
 // { params }: { params: { slug: string } }
-const page = ({ params }: { params: { id_progress: string } }) => {
-  const getParamsId = params.id_progress;
+const page = ({ params }: { params: { id_sesi: string } }) => {
+  const getParamsId = params.id_sesi;
   if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
     return notFound();
   }
@@ -53,6 +41,8 @@ const page = ({ params }: { params: { id_progress: string } }) => {
   if (user !== null && user !== 401) {
     getUser = user; // Setel nilai getUser jika user ada
   }
+
+  const { setBreadcrumbs } = useBreadcrumbContext();
 
   const [dataDetailSesi, setDataDetailSesi] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -85,6 +75,20 @@ const page = ({ params }: { params: { id_progress: string } }) => {
       const timer = setTimeout(() => {
         // setIdTenant(id);
         setDataDetailSesi(response.data.data); // Set isLoading to false to stop the spinner
+        setBreadcrumbs([
+          {
+            name: "Data Kelas",
+            href: `/kelas`,
+          },
+          {
+            name: response.data.data?.course_name,
+            href: `/kelas/${response.data.data?.course_id}`,
+          },
+          {
+            name: response.data.data?.title,
+            href: `/kelas/${response.data.data?.title}`,
+          },
+        ]);
         setIsLoading(false);
       }, 1000);
       return () => clearTimeout(timer);

@@ -172,7 +172,7 @@ function SesiKelas({
                 size={"sm"}
                 alignContent={"center"}
                 onClick={() =>
-                  router.push(`/kelas/${idKelas}/progress/${d.id}`)
+                  router.push(`/kelas/${idKelas}/sesi-kelas/${d.id}`)
                 }
               >
                 <BiDoorOpen size="20px" />

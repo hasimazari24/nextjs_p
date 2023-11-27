@@ -25,15 +25,21 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { MdAlarm, MdArrowBackIosNew, MdTask } from "react-icons/md/";
+import {
+  MdAlarm,
+  MdArrowBackIosNew,
+  MdOutlineRateReview,
+} from "react-icons/md/";
 import { Column } from "react-table";
 import DataTable from "@/app/components/datatable/data-table";
 import Link from "next/link";
 import { axiosCustom } from "@/app/api/axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(secure)/kelas/loading";
-import ReviewMentor from "../review/reviewMentor";
+import ReviewMentor from "./reviewMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import IngatkanTenant from "./IngatkanTenant";
 
 interface answer_sheet {
   answer_file_download_url: string | null;
@@ -74,6 +80,7 @@ function page({ params }: { params: { id_tugas: string } }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useAuth();
   let getUser: any = null; // Inisialisasikan getUser di sini
+  const { setBreadcrumbs } = useBreadcrumbContext();
 
   if (user !== null && user !== 401) {
     getUser = user; // Setel nilai getUser jika user ada
@@ -88,23 +95,39 @@ function page({ params }: { params: { id_tugas: string } }) {
     {
       Header: "Nama Tenant",
       accessor: "tenant_name",
-      Cell: ({ value, row }) => (
-        <HStack
+      // Cell: ({ value, row }) => (
+      //   <HStack
+      //     onClick={() => handleReviewShow(row.values)}
+      //     cursor="pointer"
+      //     alignItems={"center"}
+      //   >
+      //     <Text as="u" color="blue.500" _hover={{ color: "blue.400" }}>
+      //       {value}
+      //     </Text>
+      //     <Box>
+      //       <ExternalLinkIcon
+      //         color={"blue.500"}
+      //         _hover={{ color: "blue.400" }}
+      //       />
+      //     </Box>
+      //   </HStack>
+      // ),
+    },
+    {
+      Header: "Penilaian",
+      // accessor: "tenant_name",
+      Cell: ({ row }) => (
+        <Button
+          leftIcon={<MdOutlineRateReview />}
+          colorScheme="blue"
+          // variant="outline"
+          // aria-label="btn-remain"
+          fontWeight={"Thin"}
+          size={"md"}
           onClick={() => handleReviewShow(row.values)}
-          cursor="pointer"
-          alignItems={"center"}
-          
         >
-          <Text as="u" color="blue.500" _hover={{ color: "blue.400" }}>
-            {value}
-          </Text>
-          <Box>
-            <ExternalLinkIcon
-              color={"blue.500"}
-              _hover={{ color: "blue.400" }}
-            />
-          </Box>
-        </HStack>
+          {row.values.graded_answer_grade ? "Lihat Nilai" : "Isi Nilai"}
+        </Button>
       ),
     },
     {
@@ -166,18 +189,11 @@ function page({ params }: { params: { id_tugas: string } }) {
       accessor: "grade_status",
       Cell: ({ value, row }) =>
         value === "Ingatkan Tenant" ? (
-          <Link href={row.values.send_email_url} target="_blank">
-            <Button
-              leftIcon={<MdAlarm />}
-              colorScheme="gray"
-              variant="outline"
-              aria-label="btn-remain"
-              fontWeight={"Thin"}
-              size={"md"}
-            >
-              {value}
-            </Button>
-          </Link>
+          <IngatkanTenant Url={row.values.send_email_url} />
+        ) : value === "Sudah Dinilai" ? (
+          <div>
+            Nilai : <Text as="b">{row.values.graded_answer_grade}</Text>
+          </div>
         ) : (
           <div>{value}</div>
         ),
@@ -209,7 +225,7 @@ function page({ params }: { params: { id_tugas: string } }) {
   const [dataReview, setDataReview] = useState<DataItem | null>(null);
   const [dataReviewShow, setDataReviewShow] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter;
+  const router = useRouter();
 
   const getDataReview = async () => {
     try {
@@ -218,6 +234,16 @@ function page({ params }: { params: { id_tugas: string } }) {
       const response = await axiosCustom.get(
         `/assigment/${params.id_tugas}/review`,
       );
+      setBreadcrumbs([
+        {
+          name: response.data.data?.course_item_name,
+          href: `/kelas/${response.data.data?.course_item_id}`,
+        },
+        {
+          name: response.data.data?.title,
+          href: `/kelas/${response.data.data?.title}`,
+        },
+      ]);
       const timer = setTimeout(() => {
         // setIdTenant(id);
         setDataReview(response.data.data); // Set isLoading to false to stop the spinner
@@ -266,7 +292,7 @@ function page({ params }: { params: { id_tugas: string } }) {
           variant="outline"
           aria-label="btn-email"
           size={"sm"}
-          // onClick={() => router.push(`/kelas/${idKelas}/progress/${d.id}`)}
+          onClick={() => router.push(`/kelas/[id]/sesi-kelas/${dataReview?.course_item_id}`)}
         >
           Kembali
         </Button>

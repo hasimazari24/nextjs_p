@@ -29,12 +29,12 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { MdArrowBackIosNew, MdTask } from "react-icons/md/";
-import ReviewMentor from "./review/reviewMentor";
+import ReviewMentor from "../review/[id_tugas]/reviewMentor";
 import { axiosCustom } from "@/app/api/axios";
 import AddTugas from "./addTugas";
 import UpdateTugas from "./updateTugas";
 import DeleteTugas from "./deleteTugas";
-import ReviewTenant from "./review/reviewTenant";
+import ReviewTenant from "../review/[id_tugas]/reviewTenant";
 import ChangeProgressTenant from "../ChangeProgressTenant";
 import { usePathname, useRouter } from "next/navigation";
 import { GrDocumentUpload } from "react-icons/gr";
@@ -355,7 +355,7 @@ export function TugasMentor({
                       title="Edit Data"
                       color="white"
                       onClick={() =>
-                        router.push(`${pathName}/Tugas/${data.id}`)
+                        router.push(`${pathName}/review/${data.id}`)
                       }
                       key="reviewTugas"
                       size="sm"
