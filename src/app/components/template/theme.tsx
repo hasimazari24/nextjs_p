@@ -32,6 +32,10 @@ const customTheme = extendTheme({
         ml: "0", // margin-inline-start
         mr: "0", // margin-inline-end
       },
+      ".chakra-breadcrumb__list": {
+        pl: "0", // padding-inline-start
+        width : "fit-content",
+      },
       // ".tox .tox-tbtn .tox-icon svg": {
       //   height: "20px",
       //   width: "20px",

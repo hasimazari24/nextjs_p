@@ -22,6 +22,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  SlideFade,
 } from "@chakra-ui/react";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { AiOutlineHome } from "react-icons/ai";
@@ -32,9 +33,10 @@ import { useState } from "react";
 import { useAuth } from "../utils/AuthContext";
 import { usePathname } from "next/navigation";
 import Routes from "@/app/components/utils/Routes";
-import { findCurrentRoute } from "@/app/components/utils/Navigation";
+// import { findCurrentRoute } from "@/app/components/utils/Navigation";
 import { IRoutes } from "@/app/type/routes-navigation.d";
 import { ChevronRightIcon } from "@chakra-ui/icons";
+import { useBreadcrumbContext } from "../utils/BreadCrumbsContext";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
@@ -52,18 +54,16 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   };
 
   // const { user, logout, loadingLogOut } = useAuth();
+  const { breadcrumbs } = useBreadcrumbContext();
   const { user, logout } = useAuth();
   const getUser: any = user;
-  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   //split membagi string ke array setiap ada /
   // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda /
   // const namePath = pathname.split("/").filter(Boolean);
 
-  let getActiveRoute: IRoutes | undefined = findCurrentRoute(Routes);
-  // useEffect(() => {
-  //   getActiveRoute = findCurrentRoute(Routes);
-  // }, [pathname]);
+  // let getActiveRoute: IRoutes | undefined = findCurrentRoute(Routes);
+
   // console.log(pathname);
   // console.log(getActiveRoute);
   return (
@@ -94,6 +94,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
         display={{ base: "flex", md: "flex-start" }}
         align="center"
         justify={"center"}
+        flexWrap={"wrap"}
       >
         {/* <VStack
           display={{ base: "none", md: "flex" }}
@@ -111,6 +112,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
           // spacing="1px"
           // cursor="pointer"
         >
+          {/* <div>{breadcrumbs.join(" > ")}</div> */}
           {/* <HStack alignItems="center" justify={"center"}> */}
           <Breadcrumb
             separator={
@@ -118,9 +120,10 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                 <ChevronRightIcon color="gray.500" />
               </Box>
             }
+            w="fit-content"
           >
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">
+              <Link href="/" target="_blank">
                 <Box
                   mt="-3px"
                   _hover={{
@@ -129,28 +132,48 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                 >
                   <AiOutlineHome mr="2.5" size="20px" title="Halaman Public" />
                 </Box>
-              </BreadcrumbLink>
+              </Link>
             </BreadcrumbItem>
 
-            <BreadcrumbItem>
+            {/* <BreadcrumbItem>
               <Text>Page</Text>
-            </BreadcrumbItem>
-            {getActiveRoute?.layout && (
-              <BreadcrumbItem>
-                {/* <BreadcrumbLink isCurrentPage>
-                  <Link href={getActiveRoute?.href}>
-                    {getActiveRoute?.layout}
-                  </Link>
-                </BreadcrumbLink> */}
-                <BreadcrumbLink isCurrentPage href={getActiveRoute?.href}>
-                  {getActiveRoute?.layout}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            )}
-
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink href="#">{getActiveRoute?.name}</BreadcrumbLink>
-            </BreadcrumbItem>
+            </BreadcrumbItem> */}
+            {breadcrumbs.length > 0 &&
+              breadcrumbs.map((value, index) => {
+                const last = index === breadcrumbs.length - 1;
+                return (
+                  // <SlideFade in={breadcrumbs.length > 0} key={index}>
+                  <BreadcrumbItem
+                    key={index}
+                    isCurrentPage={last}
+                    w="fit-content"
+                  >
+                    {!last ? (
+                      <Link href={value.href}>
+                        <Text
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                          maxW={{ md: "100px", lg: "200px", xl: "full" }}
+                          _hover={{ textDecoration: "underline" }}
+                        >
+                          {value.name}
+                        </Text>
+                      </Link>
+                    ) : (
+                      <Text
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                        whiteSpace="nowrap"
+                        maxW={{ md: "100px", lg: "200px", xl: "full" }}
+                      >
+                        {value.name}
+                      </Text>
+                    )}
+                  </BreadcrumbItem>
+                  // </SlideFade>
+                );
+              })}
           </Breadcrumb>
           {/* <Link href="/"></Link>
             <Text>pages</Text>
@@ -216,10 +239,23 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                     spacing="1px"
                     ml="2"
                   >
-                    <Text fontSize="sm">
+                    <Text
+                      fontSize="sm"
+                      noOfLines={1}
+                      whiteSpace={"nowrap"}
+                      // textOverflow={"nowrap"}
+                      // flex="1"
+                    >
                       {getUser ? `${getUser?.fullname.substring(0, 25)}` : null}
                     </Text>
-                    <Text fontSize="xs" color="gray.600">
+                    <Text
+                      fontSize="xs"
+                      color="gray.600"
+                      noOfLines={1}
+                      whiteSpace={"nowrap"}
+                      // textOverflow={"nowrap"}
+                      // flex="1"
+                    >
                       {getUser ? getUser?.role : null}
                     </Text>
                   </VStack>

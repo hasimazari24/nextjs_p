@@ -3,6 +3,7 @@ import { Providers } from "./components/utils/Providers";
 import { AuthProvider } from "./components/utils/AuthContext";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { BreadcrumbProvider } from "./components/utils/BreadCrumbsContext";
 // import Loading from "./loading";
 
 export const metadata: Metadata = {
@@ -20,7 +21,9 @@ export default function RootLayout({
       <body>
         {/* <Suspense fallback={<Loading />}> */}
         <Providers>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <BreadcrumbProvider>{children}</BreadcrumbProvider>
+          </AuthProvider>
         </Providers>
         {/* </Suspense> */}
       </body>

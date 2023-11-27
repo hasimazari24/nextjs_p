@@ -27,7 +27,8 @@ import NotFound from "@/app/components/template/NotFound";
 import useSession from "./api/api-masuk-kelas";
 import ProfileMentor from "../pages/profileMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
-import Progress from "./progress/progress";
+import Progress from "./partisipan/progress";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
 function page({ params }: { params: { id: string } }) {
   const getParamsId = params.id;
@@ -37,6 +38,7 @@ function page({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   const { user } = useAuth();
+  const { setBreadcrumbs } = useBreadcrumbContext();
   let getUser: any = null; // Inisialisasikan getUser di sini
 
   if (user !== null && user !== 401) {
@@ -60,6 +62,27 @@ function page({ params }: { params: { id: string } }) {
           isLoading: false,
           dataClass: response.data.data,
         });
+        setBreadcrumbs([
+          {
+            name: "Data Kelas",
+            href: `/kelas`,
+          },
+          {
+            name: response.data.data?.name,
+            href: `/kelas/${getParamsId}`,
+          },
+        ]);
+        // setBreadcrumbs((prevArray) => [
+        //   ...prevArray,
+        //   {
+        //     name: response.data.data?.name,
+        //     href: `/kelas/${response.data.data?.name}`,
+        //   },
+        // ]);
+        // breadcrumbs.push({
+        //   name: response.data.data?.name,
+        //   href: `/kelas/${response.data.data?.name}`,
+        // });
       } catch (error) {
         console.error(error);
         setState({
