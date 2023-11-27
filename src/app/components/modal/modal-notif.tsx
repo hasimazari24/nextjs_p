@@ -15,7 +15,7 @@ import {
   Box,
   Flex,
 } from "@chakra-ui/react";
-import { CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 
 interface ModalProps {
@@ -80,7 +80,9 @@ const ModalNotif: React.FC<ModalProps> = ({
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          if (isError === false && onSubmit) { onSubmit()};
+          if (isError === false && onSubmit) {
+            onSubmit();
+          }
         }}
         size="lg"
         closeOnOverlayClick={false}
@@ -124,7 +126,12 @@ const ModalNotif: React.FC<ModalProps> = ({
           <ModalFooter>
             <Flex justify="center">
               <Button
-                colorScheme="blue"
+                leftIcon={<CloseIcon />}
+                color={"red.400"}
+                bgColor="red.50"
+                _hover={{
+                  bg: "red.50",
+                }}
                 onClick={() => {
                   onClose();
                   if (isError === false && onSubmit) {
