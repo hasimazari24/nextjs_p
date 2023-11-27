@@ -381,7 +381,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       alignContent={"center"}
                       onClick={() =>
                         router.push(
-                          `/penilaian/tugas/${props.idTenant}/${row.values.id}`,
+                          `/penilaian/tugas/${props.idTenant}/kelas/${row.values.id}`,
                         )
                       }
                     >
