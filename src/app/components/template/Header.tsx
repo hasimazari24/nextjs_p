@@ -31,10 +31,7 @@ import { RiLogoutBoxRLine } from "react-icons/ri";
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "../utils/AuthContext";
-import { usePathname } from "next/navigation";
-import Routes from "@/app/components/utils/Routes";
-// import { findCurrentRoute } from "@/app/components/utils/Navigation";
-import { IRoutes } from "@/app/type/routes-navigation.d";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { useBreadcrumbContext } from "../utils/BreadCrumbsContext";
 
@@ -57,7 +54,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   const { breadcrumbs } = useBreadcrumbContext();
   const { user, logout } = useAuth();
   const getUser: any = user;
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   //split membagi string ke array setiap ada /
   // filter(Boolean) untuk menghapus elemen kosong dari array, jika ada tanda /
   // const namePath = pathname.split("/").filter(Boolean);
@@ -149,26 +146,32 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                     w="fit-content"
                   >
                     {!last ? (
-                      <Link href={value.href}>
+                      <SlideFade in={!last}>
+                        {/* <Link href={value.href}> */}
                         <Text
                           overflow="hidden"
                           textOverflow="ellipsis"
                           whiteSpace="nowrap"
                           maxW={{ md: "100px", lg: "200px", xl: "full" }}
                           _hover={{ textDecoration: "underline" }}
+                          onClick={() => router.push(value.href)}
+                          cursor={"pointer"}
                         >
                           {value.name}
                         </Text>
-                      </Link>
+                        {/* </Link> */}
+                      </SlideFade>
                     ) : (
-                      <Text
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                        whiteSpace="nowrap"
-                        maxW={{ md: "100px", lg: "200px", xl: "full" }}
-                      >
-                        {value.name}
-                      </Text>
+                      <SlideFade in={last}>
+                        <Text
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                          maxW={{ md: "100px", lg: "200px", xl: "full" }}
+                        >
+                          {value.name}
+                        </Text>
+                      </SlideFade>
                     )}
                   </BreadcrumbItem>
                   // </SlideFade>
@@ -301,7 +304,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                           size="sm"
                           fontWeight="normal"
                           onClick={closeDropdown}
-                          isLoading={isLoading}
+                          // isLoading={isLoading}
                         >
                           <ImProfile />
                           &nbsp;Profile
@@ -313,7 +316,10 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                         key="LogOut"
                         size="sm"
                         fontWeight="normal"
-                        onClick={logout}
+                        onClick={() => {
+                          logout();
+                          closeDropdown();
+                        }}
                         // isLoading={loadingLogOut}
                       >
                         Log Out&nbsp;
