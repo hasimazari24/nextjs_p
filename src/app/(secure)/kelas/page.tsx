@@ -4,6 +4,9 @@ import Loading from "./loading";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import dynamic from "next/dynamic";
 import ManajemenClass from "./pages/ManajemenClass";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import React from "react";
 
 interface UserLog {
   // id: string;
@@ -27,6 +30,12 @@ const Tenant = dynamic(() => import("./pages/TenantClass"), {
 
 const page = () => {
   const { user } = useAuth();
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  React.useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
+
   let getUser: UserLog | null = null; // Inisialisasikan getUser di sini
 
   if (user !== null && user !== 401) {
@@ -35,13 +44,11 @@ const page = () => {
 
   if (getUser?.role === "Super Admin" || getUser?.role === "Manajemen") {
     return <Manajemen roleAccess={getUser?.role} />;
-  }
-  else if (getUser?.role === "Mentor") {
+  } else if (getUser?.role === "Mentor") {
     return <Mentor roleAccess={getUser?.role} />;
-  } 
-  else if (getUser?.role === "Tenant") {
-    return <Tenant />
-  } 
+  } else if (getUser?.role === "Tenant") {
+    return <Tenant />;
+  }
   // return <ManajemenClass />;
 };
 

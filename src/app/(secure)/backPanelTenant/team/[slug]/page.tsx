@@ -46,6 +46,8 @@ import TeamLogin from "./TeamLogin";
 import TeamNonLogin from "./TeamNonLogin";
 import ModalTeamNonLogin from "./modal-team-nonlogin";
 import dynamic from "next/dynamic";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 
 interface UserLog {
   // id: string;
@@ -207,10 +209,11 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
       setIsLoadSave(false);
     }
   };
-  // const DynamicDataComponent = dynamic(() => import("./TeamNonLogin"), {
-  //   ssr: false,
-  //   loading: () => <p>Loading ...</p>, // Tampilan loading saat komponen dimuat
-  // });
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
 
   return (
     <div>

@@ -26,6 +26,7 @@ import Loading from "../../../loading";
 import { axiosCustom } from "@/app/api/axios";
 import CommentSection from "./Comment/commentSection";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { IRoutes } from "@/app/type/routes-navigation";
 
 // { params }: { params: { slug: string } }
 const page = ({ params }: { params: { id_sesi: string } }) => {
@@ -42,7 +43,7 @@ const page = ({ params }: { params: { id_sesi: string } }) => {
     getUser = user; // Setel nilai getUser jika user ada
   }
 
-  const { setBreadcrumbs } = useBreadcrumbContext();
+  const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
 
   const [dataDetailSesi, setDataDetailSesi] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,25 +73,53 @@ const page = ({ params }: { params: { id_sesi: string } }) => {
       setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
       const response = await axiosCustom.get(`/course-item/${getParamsId}/`);
+
+      // Membuat nilai baru
+      const newValue: IRoutes[] = [
+        {
+          name: response.data.data?.course_name,
+          href: `/kelas/${response.data.data?.course_id}`,
+        },
+        {
+          name: response.data.data?.title,
+          href: `/kelas/${response.data.data?.title}`,
+        },
+      ];
+
+      //buat filter untuk untuk pemeriksaan melui some
+      // apakah setidaknya satu elemen di dalam breadcrumbs memenuhi kondisi
+      // jika setidaknya satu elemen memenuhi,  hasilnya akan menjadi false, 
+      // dan elemen tersebut tidak akan dimasukkan ke dalam array
+      // artinya sudah tidak ada yg perlu di add dlm breadcrumbs
+      const filteredNewBreadcrumbs:IRoutes[] = newValue.filter((newBreadcrumb) => {
+        return !breadcrumbs.some(
+          (breadcrumb) =>
+            breadcrumb.name === newBreadcrumb.name &&
+            breadcrumb.href === newBreadcrumb.href,
+        );
+      });
+
+      //cek apakah rute kelas dihapus
+      // (artinya navigasi dari halaman sblumnya /review/[id_tugas])
+      const deletedRute = { name: "Data Kelas", href: "/kelas" };
+
+      const prevPage = breadcrumbs.some(
+        (breadcrumb) =>
+          JSON.stringify(breadcrumb) === JSON.stringify(deletedRute),
+      );
+      if (!prevPage) {
+        //jika ternyata tidak ada deletedRoute,
+        //maka Menghapus elemen terakhir dari array, masukan deleted di awal elemen
+        const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
+        setBreadcrumbs([deletedRute, ...newBreadcrumbs]);
+      } else setBreadcrumbs([...breadcrumbs, ...filteredNewBreadcrumbs]);
+
       const timer = setTimeout(() => {
         // setIdTenant(id);
         setDataDetailSesi(response.data.data); // Set isLoading to false to stop the spinner
-        setBreadcrumbs([
-          {
-            name: "Data Kelas",
-            href: `/kelas`,
-          },
-          {
-            name: response.data.data?.course_name,
-            href: `/kelas/${response.data.data?.course_id}`,
-          },
-          {
-            name: response.data.data?.title,
-            href: `/kelas/${response.data.data?.title}`,
-          },
-        ]);
         setIsLoading(false);
       }, 1000);
+
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);

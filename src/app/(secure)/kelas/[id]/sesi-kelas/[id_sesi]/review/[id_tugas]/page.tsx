@@ -34,7 +34,7 @@ import { Column } from "react-table";
 import DataTable from "@/app/components/datatable/data-table";
 import Link from "next/link";
 import { axiosCustom } from "@/app/api/axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Loading from "@/app/(secure)/kelas/loading";
 import ReviewMentor from "./reviewMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
@@ -62,6 +62,8 @@ interface answer_sheet {
 interface DataItem {
   assigment_id: string;
   course_ends: boolean;
+  course_id: string;
+  course_name: string;
   course_item_id: string;
   course_item_name: string;
   title: string;
@@ -236,12 +238,16 @@ function page({ params }: { params: { id_tugas: string } }) {
       );
       setBreadcrumbs([
         {
+          name: response.data.data?.course_name,
+          href: `/kelas/${response.data.data?.course_id}`,
+        },
+        {
           name: response.data.data?.course_item_name,
-          href: `/kelas/${response.data.data?.course_item_id}`,
+          href: `/kelas/${response.data.data.course_id}/sesi-kelas/${response.data.data?.course_item_id}`,
         },
         {
           name: response.data.data?.title,
-          href: `/kelas/${response.data.data?.title}`,
+          href: `#`,
         },
       ]);
       const timer = setTimeout(() => {
@@ -292,7 +298,9 @@ function page({ params }: { params: { id_tugas: string } }) {
           variant="outline"
           aria-label="btn-email"
           size={"sm"}
-          onClick={() => router.push(`/kelas/[id]/sesi-kelas/${dataReview?.course_item_id}`)}
+          onClick={() =>
+            router.push(`/kelas/[id]/sesi-kelas/${dataReview?.course_item_id}`)
+          }
         >
           Kembali
         </Button>

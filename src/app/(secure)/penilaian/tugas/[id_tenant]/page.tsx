@@ -28,6 +28,7 @@ import { axiosCustom } from "@/app/api/axios";
 import Loading from "../../loading";
 import { UUID } from "crypto";
 import { MdArrowBackIosNew } from "react-icons/md";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
 interface ClassProps {
   id: string;
@@ -36,14 +37,19 @@ interface ClassProps {
   mentor: Mentor;
 }
 
+interface DataTugas {
+  tenant_name : string;
+  course: ClassProps;
+}
+
 const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
   const idTenant = params.id_tenant;
   const [listKelas, setListKelas] = useState<{
     isLoading: boolean;
-    data: ClassProps[] | [];
+    data: DataTugas | null;
   }>({
     isLoading: true,
-    data: [],
+    data: null,
   });
 
   useEffect(() => {
@@ -56,6 +62,8 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
   if (user !== null && user !== 401) {
     getUser = user; // Setel nilai getUser jika user ada
   }
+
+  const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
 
   const router = useRouter();
 
@@ -75,6 +83,39 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
           break;
       }
       const response = await axiosCustom.get(Url);
+      if (getUser.role !== "Tenant") {
+        // Membuat nilai baru
+        const newValue = {
+          name: response.data.data?.tenant_name,
+          href: `/penilaian/tugas/${idTenant}`,
+        };
+        // Cek apakah nilai baru sudah ada dalam breadcrumbs
+        const alreadyExists = breadcrumbs.some(
+          (breadcrumb) =>
+            JSON.stringify(breadcrumb) === JSON.stringify(newValue),
+        );
+        // Jika belum ada, tambahkan ke breadcrumbs
+        if (!alreadyExists) {
+          setBreadcrumbs([...breadcrumbs, newValue]);
+        } else {
+          //else brarti ada, lakukan pemeriksaan lagi
+          //cek apakah rute penilaian dihapus
+          // (artinya navigasi dari halaman sblumnya /kelas/[id_kelas])
+          const deletedRute = { name: "Data Penilaian", href: "/penilaian" };
+
+          const prevPage = breadcrumbs.some(
+            (breadcrumb) =>
+              JSON.stringify(breadcrumb) === JSON.stringify(deletedRute),
+          );
+          if (!prevPage) {
+            //jika ternyata tidak ada deletedRoute,
+            //maka Menghapus elemen terakhir dari array, masukan deleted di awal elemen
+            const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
+            setBreadcrumbs([deletedRute, ...newBreadcrumbs]);
+          }
+        }
+      }
+
       const timer = setTimeout(() => {
         setListKelas({
           isLoading: false,
@@ -86,7 +127,7 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
       console.error("Gagal memuat data:", error);
       setListKelas({
         isLoading: false,
-        data: [],
+        data: null,
       });
     }
   };
@@ -159,9 +200,11 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
         )}
 
         {/* konten disinii (daftar participant) */}
-        {listKelas.data.length > 0 ? (
+        {listKelas.data &&
+        Array.isArray(listKelas.data.course) &&
+        listKelas.data.course.length > 0 ? (
           <CardTable
-            data={listKelas.data}
+            data={listKelas.data.course}
             column={columns}
             roleAccess={getUser?.role}
             idTenant={idTenant}

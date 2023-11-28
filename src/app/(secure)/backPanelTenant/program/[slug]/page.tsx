@@ -27,6 +27,8 @@ import ConfirmationModal from "@/app/components/modal/modal-confirm";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import NotFound from "@/app/components/template/NotFound";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 
 interface DataItem {
   id: string;
@@ -180,7 +182,11 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
     }
   };
 
-  // console.log(dataProgram);
+  const { breadcrumbs, setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data

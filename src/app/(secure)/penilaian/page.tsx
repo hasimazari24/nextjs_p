@@ -16,6 +16,8 @@ import Loading from "./loading";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import PageNilaiTugas from "./tugas/page";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 
 function PagePenilaian() {
   const router = useRouter();
@@ -25,6 +27,12 @@ function PagePenilaian() {
   if (user !== null && user !== 401) {
     getUser = user; // Setel nilai getUser jika user ada
   }
+
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  React.useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
 
   return getUser.role === "Tenant" ? (
     <>

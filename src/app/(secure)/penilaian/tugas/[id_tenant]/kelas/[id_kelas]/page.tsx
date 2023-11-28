@@ -25,6 +25,7 @@ import ReviewTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/
 import NotFound from "@/app/components/template/NotFound";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import IngatkanTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/IngatkanTenant";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
 interface DataItem {
   //   course_item_id: string;
@@ -58,6 +59,8 @@ interface Data {
 function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
   const idKelas: string = params.id_kelas;
   const idTenant: string = params.id_tenant;
+  const { breadcrumbs, setBreadcrumbs } = useBreadcrumbContext();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenTenant,
@@ -72,18 +75,6 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
   }
 
   const router = useRouter();
-  const [stateNotif, setStateNotif] = useState({
-    msg: "",
-    isError: false,
-    isNotifShow: false,
-  });
-  const handleShowMessage = (msg: string, err: boolean) => {
-    setStateNotif({
-      msg: msg,
-      isError: err,
-      isNotifShow: true,
-    });
-  };
 
   const columns: ReadonlyArray<Column<DataItem>> = [
     {
@@ -227,6 +218,31 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
       setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
       const response = await axiosCustom.get(Url);
+      getUser.role === "Tenant"
+        ? setBreadcrumbs([
+            {
+              name: "Data Penilaian",
+              href: "/penilaian",
+            },
+            {
+              name: response.data.data?.course_name,
+              href: "/penilaian/tugas",
+            },
+          ])
+        : setBreadcrumbs([
+            {
+              name: "Nilai Tugas",
+              href: "/penilaian/tugas",
+            },
+            {
+              name: response.data.data?.tenant_name,
+              href: `/penilaian/tugas/${idTenant}`,
+            },
+            {
+              name: response.data.data?.course_name,
+              href: "/penilaian/tugas",
+            },
+          ]);
       const timer = setTimeout(() => {
         // setIdTenant(id);
         setDataReview(response.data.data); // Set isLoading to false to stop the spinner
@@ -239,23 +255,7 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
     }
   };
 
-  const [isLoadingIngatkan, setLoadingIngatkan] = useState(false);
-
-  const sendIngatkanTenant = async (Url: string) => {
-    try {
-      setLoadingIngatkan(true);
-      // Panggil API menggunakan Axios dengan async/await
-      const response = await axiosCustom.get(Url);
-      const timer = setTimeout(() => {
-        handleShowMessage(response.data?.message, false);
-        setLoadingIngatkan(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } catch (error: any) {
-      console.error("Gagal mengingatkan Tenant :", error);
-      setLoadingIngatkan(false);
-    }
-  };
+  console.log(breadcrumbs);
 
   useEffect(() => {
     // if (need_updated === true)
@@ -334,19 +334,6 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
           rowData={dataReviewShow}
           isOpen={isOpenTenant}
           onClose={onCloseTenant}
-        />
-        <ModalNotif
-          isOpen={stateNotif.isNotifShow}
-          onClose={() =>
-            setStateNotif({
-              msg: "",
-              isError: false,
-              isNotifShow: false,
-            })
-          }
-          message={stateNotif.msg}
-          isError={stateNotif.isError}
-          onSubmit={() => getDataReview()}
         />
       </Stack>
     </Suspense>

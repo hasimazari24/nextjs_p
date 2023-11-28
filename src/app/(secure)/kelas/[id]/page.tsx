@@ -38,7 +38,7 @@ function page({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   const { user } = useAuth();
-  const { setBreadcrumbs } = useBreadcrumbContext();
+  const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
   let getUser: any = null; // Inisialisasikan getUser di sini
 
   if (user !== null && user !== 401) {
@@ -62,27 +62,23 @@ function page({ params }: { params: { id: string } }) {
           isLoading: false,
           dataClass: response.data.data,
         });
-        setBreadcrumbs([
-          {
-            name: "Data Kelas",
-            href: `/kelas`,
-          },
-          {
-            name: response.data.data?.name,
-            href: `/kelas/${getParamsId}`,
-          },
-        ]);
-        // setBreadcrumbs((prevArray) => [
-        //   ...prevArray,
-        //   {
-        //     name: response.data.data?.name,
-        //     href: `/kelas/${response.data.data?.name}`,
-        //   },
-        // ]);
-        // breadcrumbs.push({
-        //   name: response.data.data?.name,
-        //   href: `/kelas/${response.data.data?.name}`,
-        // });
+        // Membuat nilai baru
+        const newValue = {
+          name: response.data.data?.name,
+          href: `/kelas/${getParamsId}`,
+        };
+        // Cek apakah nilai baru sudah ada dalam breadcrumbs
+        const alreadyExists = breadcrumbs.some(
+          (breadcrumb) =>
+            JSON.stringify(breadcrumb) === JSON.stringify(newValue),
+        );
+        // Jika belum ada, tambahkan ke breadcrumbs
+        if (!alreadyExists) {
+          setBreadcrumbs([...breadcrumbs, newValue]);
+        } else {
+           const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
+           setBreadcrumbs(newBreadcrumbs);
+        }
       } catch (error) {
         console.error(error);
         setState({

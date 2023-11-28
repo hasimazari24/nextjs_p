@@ -30,6 +30,8 @@ import dynamic from "next/dynamic";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import NotFound from "@/app/components/template/NotFound";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 
 interface DataItem {
   image_id: string;
@@ -50,19 +52,19 @@ interface UserLog {
 
 const Loading = () => {
   return (
-      <Center h="100%" m="10" flexDirection={"column"}>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-          mb="3"
-        />
-        <Text as="i" whiteSpace={"normal"}>
-          Sedang memuat data, mohon tunggu sebentar ...
-        </Text>
-      </Center>
+    <Center h="100%" m="10" flexDirection={"column"}>
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        emptyColor="gray.200"
+        color="blue.500"
+        size="xl"
+        mb="3"
+      />
+      <Text as="i" whiteSpace={"normal"}>
+        Sedang memuat data, mohon tunggu sebentar ...
+      </Text>
+    </Center>
   );
 };
 
@@ -163,6 +165,12 @@ function PageUser() {
       setIsLoading(false);
     }
   };
+
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
 
   useEffect(() => {
     // Panggil fungsi fetchData untuk memuat data

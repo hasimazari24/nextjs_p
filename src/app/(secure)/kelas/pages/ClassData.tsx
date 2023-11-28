@@ -60,7 +60,6 @@ import { useRouter } from "next/navigation";
 import DeleteClass from "./deleteClass";
 import { Column, useFilters, usePagination, useTable } from "react-table";
 import EndClass from "./endClass";
-import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
 interface ClassProps {
   rowData: Kelas[];
@@ -69,7 +68,6 @@ interface ClassProps {
 }
 
 const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
-  const { setBreadcrumbs } = useBreadcrumbContext();
   const columns: ReadonlyArray<Column<Kelas>> = [
     {
       Header: "id",
@@ -108,15 +106,6 @@ const ClassData = ({ rowData, onSubmit, roleAccess }: ClassProps) => {
       // Cell: ({ cell }) => cell.value.fullname, // Display only the fullname in the table cell
     },
   ];
-
-  useEffect(() => {
-    setBreadcrumbs([
-      {
-        name: "Data Kelas",
-        href: "/kelas",
-      },
-    ]);
-  }, []);
 
   return (
     <>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense, useEffect, useState, use } from "react";
-import { useRouter, notFound } from "next/navigation";
+import { useRouter, notFound, usePathname } from "next/navigation";
 import {
   Button,
   Center,
@@ -24,6 +24,8 @@ import DeleteAwards from "./deleteAwards";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import NotFound from "@/app/components/template/NotFound";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 
 interface AwardItem {
   id: string;
@@ -70,6 +72,8 @@ function PageAwards({ params }: { params: { slug: string } }) {
   }
   const router = useRouter();
 
+  const { breadcrumbs, setBreadcrumbs } = useBreadcrumbContext();
+
   const [dataAwardsLoading, setDataAwardsLoading] = useState(true);
   const [is_admin, setIs_Admin] = useState<boolean>(false);
   const [awardItem, setAwardItem] = useState<AwardItem[]>([]);
@@ -93,7 +97,6 @@ function PageAwards({ params }: { params: { slug: string } }) {
         : [];
       setNamaTenant(newDataAwards.name.toUpperCase());
       setIs_Admin(newDataAwards.is_admin);
-      // setDataAwards(newDataAwards);
       setAwardItem(newAwardItem);
       setDataAwardsLoading(false);
     } catch (error) {
@@ -103,7 +106,13 @@ function PageAwards({ params }: { params: { slug: string } }) {
     }
   };
 
+  const getForCrumbs: any = FindDefaultRoute();
   useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
+
+  useEffect(() => {
+    // if (getForCrumbs) setBreadcrumbs(getForCrumbs);
     fetchData();
   }, [getParamsId]);
 

@@ -40,6 +40,8 @@ import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import ModalSocial from "../../components/modal/modal-social";
 import { profile } from "console";
 import dynamic from "next/dynamic";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 
 type profile = {
   id?: string;
@@ -228,6 +230,12 @@ const MyProfile: React.FC = () => {
     // Panggil fungsi fetchData untuk memuat data
     getTampil();
     // Clear the timeout when the component is unmounted
+  }, []);
+
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  React.useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
   }, []);
 
   const onSubmitProfile: SubmitHandler<profile> = async (data) => {

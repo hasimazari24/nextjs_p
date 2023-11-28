@@ -1,30 +1,22 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 // import Loading from "@/components/modal/Loading";
 // import DataComponent from "./data";
 import Loading from "./loading";
-import { Button } from "@chakra-ui/react";
-
-const Data = dynamic(() => import("./data"), {
-  ssr: false,
-  loading: () => <Loading />, // Tampilan loading saat komponen dimuat
-});
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
 export default function YourPage() {
   const susKey = new Date().getTime();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  return (
-    <div>
-      {/* Konten lainnya */}
-      {/* <Suspense key={susKey} fallback={<Loading />}> */}
-      <Data />
-      {/* <Button onClick={() => setIsModalOpen(true)}>Click Me</Button> */}
-      {/* </Suspense> */}
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  // console.log(getForCrumbs);
 
-      {/* <DynamicDataComponent /> */}
+  useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
 
-      {/* Konten lainnya */}
-    </div>
-  );
+  return <div>Ini Dashboard</div>;
 }
