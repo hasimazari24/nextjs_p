@@ -13,6 +13,8 @@ import NotFound from "@/app/components/template/NotFound";
 import AddValuasi from "./addValuasi";
 import DeleteValuasi from "./deleteValuasi";
 import EditValuasi from "./editValuasi";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 
 interface DataItem {
   id: string;
@@ -49,6 +51,12 @@ function PageValuasi() {
       setIsLoading(false);
     }
   };
+
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
 
   useEffect(() => {
     // if (need_updated === true)

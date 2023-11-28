@@ -42,7 +42,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import * as ClassInfo from "@/app/type/class-type.d";
 import DatePicker from "react-datepicker";
 import "@/app/components/template/date-picker.css";
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
 import { parseISO, format } from "date-fns";
 
 interface editProps {
