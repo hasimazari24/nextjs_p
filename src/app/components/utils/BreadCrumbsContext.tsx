@@ -10,6 +10,7 @@ import {
 } from "react";
 import { IRoutes } from "@/app/type/routes-navigation.d";
 import Routes from "@/app/components/utils/Routes";
+import { FindDefaultRoute } from "./FindDefaultRoute";
 // import { findCurrentRoute } from "@/app/components/utils/Navigation";
 type BreadcrumbContextType = {
   breadcrumbs: IRoutes[];
@@ -33,17 +34,9 @@ type BreadcrumbProviderProps = {
 
 export const BreadcrumbProvider = ({ children }: BreadcrumbProviderProps) => {
   const [breadcrumbs, setBreadcrumbs] = useState<IRoutes[]>([]);
-  const pathname = usePathname();
-  const pathnames = pathname.split("/").filter((x) => x);
+  const getForDefaultCrumbs:any = FindDefaultRoute();
   useEffect(() => {
-    const defaultRoute: IRoutes | undefined = Routes.find(
-      // cari route href atau jika ada pathname temukan pathname yg mengandung nilai dari usepathname
-      // buat kondisi indexOf tidak sama dgn -1 (pathname tidak ditemukan)
-      (route) => pathname === route.href || route.href === "/" + pathnames[0],
-    );
-    if (defaultRoute) {
-      setBreadcrumbs([defaultRoute]);
-    }
+    if (getForDefaultCrumbs) setBreadcrumbs(getForDefaultCrumbs);
   }, []);
 
   return (
