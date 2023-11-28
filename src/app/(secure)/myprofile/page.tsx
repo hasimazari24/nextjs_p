@@ -78,7 +78,6 @@ const MyProfile: React.FC = () => {
     formState: { errors: errPwd },
   } = useForm<pwd>();
 
-  const [avatar, setAvatar] = useState<File>();
   const [previewAvatar, setPreviewAvatar] = useState<string>();
   const [idImageAvatar, setIdImageAvatar] = useState<string | null>(null);
   const [idImageAvatarOld, setIdImageAvatarOld] = useState<string | null>(null);
@@ -101,6 +100,7 @@ const MyProfile: React.FC = () => {
     const MAX_FILE_SIZE = 800000; //800KB
     // ambil input nya
     const file = e?.[0];
+    if (!file) return;
     // ambil type dari file
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
@@ -108,18 +108,43 @@ const MyProfile: React.FC = () => {
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
       handleShowMessage("Maaf. Format File Tidak Dibolehkan.", true);
       file.value = null;
+      return;
     } else if (UPLOAD_FILE_SIZE > MAX_FILE_SIZE) {
       handleShowMessage(
         "Maaf. File Terlalu Besar! Maksimal Upload 800 KB",
         true,
       );
       file.value = null;
+      return;
     } else {
-      setAvatar(file);
+      // setAvatar(file);
       setPreviewAvatar(URL.createObjectURL(file));
-      setIsLoadingEdit(true);
+      uploadAvatar(file);
+      // setIsLoadingEdit(true);
     }
   };
+
+  async function uploadAvatar(file:File) {
+    try {
+      setIsLoadingEdit(true);
+      const data = new FormData();
+      data.append("asset", file as File);
+      const upload = await axiosCustom.post("/assets/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIdImageAvatar(upload.data.data.id);
+    } catch (error: any) {
+      // tampilken error
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+    } finally {
+      setIsLoadingEdit(false);
+    }
+  }
 
   // fungsi ketika button delete avatar click
   const onButtonDeleteAvatar = () => {
@@ -128,33 +153,6 @@ const MyProfile: React.FC = () => {
     setIdImageAvatarOld(null);
     setBtnDeleteAvatar(false);
   };
-
-  // logic update avatar disini
-  useEffect(() => {
-    async function uploadAvatar() {
-      if (avatar !== undefined && avatar !== null) {
-        try {
-          const data = new FormData();
-          data.append("asset", avatar as File);
-          const upload = await axiosCustom.post("/assets/upload", data, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          setIdImageAvatar(upload.data.data.id);
-        } catch (error: any) {
-          // tampilken error
-          if (error?.response) {
-            handleShowMessage(
-              `Terjadi Kesalahan: ${error.response.data.message}`,
-              true,
-            );
-          } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        } finally {
-          setIsLoadingEdit(false);
-        }
-      }
-    }
-    uploadAvatar();
-  }, [avatar]);
 
   const fields = {
     fullname: registerProfile("fullname", {
@@ -363,7 +361,7 @@ const MyProfile: React.FC = () => {
                       />
                     ) : (
                       <Image
-                        src={dataTampil?.image_url}
+                        src={dataTampil?.image_url || "/img/avatar-default.jpg"}
                         h={{ base: "100px", sm: "200px", lg: "200px" }}
                         w={{ base: "100px", sm: "200px", lg: "200px" }}
                         borderRadius="full"
