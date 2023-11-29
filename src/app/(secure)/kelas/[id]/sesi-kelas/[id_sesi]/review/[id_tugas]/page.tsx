@@ -299,7 +299,9 @@ function page({ params }: { params: { id_tugas: string } }) {
           aria-label="btn-email"
           size={"sm"}
           onClick={() =>
-            router.push(`/kelas/[id]/sesi-kelas/${dataReview?.course_item_id}`)
+            router.push(
+              `/kelas/${dataReview?.course_id}/sesi-kelas/${dataReview?.course_item_id}`,
+            )
           }
         >
           Kembali
