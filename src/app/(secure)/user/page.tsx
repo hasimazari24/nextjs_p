@@ -32,6 +32,7 @@ import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import NotFound from "@/app/components/template/NotFound";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 
 interface DataItem {
   image_id: string;
@@ -327,15 +328,18 @@ function PageUser() {
             direction={["column", "row"]}
           >
             <Heading fontSize={"2xl"}>DATA USER</Heading>
-            <Button
-              colorScheme="green"
-              key="tambahData"
-              size="md"
-              onClick={handleAdd}
-            >
-              <AddIcon />
-              &nbsp;Tambah Baru
-            </Button>
+            <HStack>
+              <DownloadExcel Url={"/export/users"} popOver={["Semua Hak Akses","Super Admin", "Manajemen", "Mentor", "Tenant"]}/>
+              <Button
+                colorScheme="green"
+                key="tambahData"
+                size="md"
+                onClick={handleAdd}
+              >
+                <AddIcon />
+                &nbsp;Tambah Baru
+              </Button>
+            </HStack>
           </Flex>
           {/* {editingData && ( */}
           <ModalEdit
