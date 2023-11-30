@@ -47,6 +47,22 @@ const Routes: IRoutes[] = [
     name: "Gallery Events",
     href: "/backPanelTenant/gallery",
   },
+  {
+    name: "Daftar Pertanyaan",
+    href: "/kuesioner/daftar",
+  },
+  {
+    name: "Grup Pertanyaan",
+    href: "/kuesioner/grup",
+  },
+  {
+    name: "Kelola Kuesioner",
+    href: "/kuesioner/kelola",
+  },
+  {
+    name: "Review Kuesioner",
+    href: "/kuesioner/review",
+  },
   //   { name: "Program", href: "/backPanelTenant", layout:"Data Tenant" },
 ];
 
