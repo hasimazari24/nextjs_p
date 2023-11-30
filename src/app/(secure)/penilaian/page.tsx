@@ -90,7 +90,7 @@ function PagePenilaian() {
             >
               <Box>
                 <Image
-                  maxW={{
+                  maxH={{
                     base: "13rem",
                     sm: "9rem",
                     md: "11rem",
@@ -105,7 +105,7 @@ function PagePenilaian() {
               <Text
                 as="b"
                 fontWeight={"bold"}
-                fontSize={{ base: "lg", md: "xl" }}
+                fontSize={{ base: "15.5px", md: "17.5px" }}
                 textAlign={"center"}
               >
                 NILAI TENANT
@@ -113,7 +113,6 @@ function PagePenilaian() {
               <Text
                 // as="b"
                 // fontWeight={"bold"}
-                fontSize={{ base: "md", md: "lg" }}
                 textAlign={"center"}
               >
                 Penilaian Mentor terhadap Tenant.
@@ -131,6 +130,7 @@ function PagePenilaian() {
               md: "17rem",
               xl: "19rem",
             }}
+            w="full"
             h="full"
             p={6}
             boxShadow={"lg"}
@@ -141,7 +141,7 @@ function PagePenilaian() {
           >
             <Box>
               <Image
-                maxW={{
+                maxH={{
                   base: "13rem",
                   sm: "9rem",
                   md: "11rem",
@@ -156,7 +156,7 @@ function PagePenilaian() {
             <Text
               as="b"
               fontWeight={"bold"}
-              fontSize={{ base: "lg", md: "xl" }}
+              fontSize={{ base: "15.5px", md: "17.5px" }}
               textAlign={"center"}
             >
               NILAI TUGAS TENANT
@@ -164,7 +164,6 @@ function PagePenilaian() {
             <Text
               // as="b"
               // fontWeight={"bold"}
-              fontSize={{ base: "md", md: "lg" }}
               textAlign={"center"}
             >
               Penilaian Tugas Tenant dari Kelas.
@@ -182,6 +181,7 @@ function PagePenilaian() {
                 md: "17rem",
                 xl: "19rem",
               }}
+              w="full"
               h="full"
               p={6}
               boxShadow={"lg"}
@@ -190,7 +190,7 @@ function PagePenilaian() {
             >
               <Box>
                 <Image
-                  maxW={{
+                  maxH={{
                     base: "13rem",
                     sm: "9rem",
                     md: "11rem",
@@ -205,7 +205,7 @@ function PagePenilaian() {
               <Text
                 as="b"
                 fontWeight={"bold"}
-                fontSize={{ base: "lg", md: "xl" }}
+                fontSize={{ base: "15.5px", md: "17.5px" }}
                 textAlign={"center"}
               >
                 NILAI MENTOR
@@ -213,7 +213,6 @@ function PagePenilaian() {
               <Text
                 // as="b"
                 // fontWeight={"bold"}
-                fontSize={{ base: "md", md: "lg" }}
                 textAlign={"center"}
               >
                 Penilaian Tenant terhadap Mentor.
