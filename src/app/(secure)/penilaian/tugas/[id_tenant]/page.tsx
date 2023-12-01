@@ -199,10 +199,44 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
           </Flex>
         )}
 
-        {/* konten disinii (daftar participant) */}
-        {listKelas.data &&
-        Array.isArray(listKelas.data.course) &&
-        listKelas.data.course.length > 0 ? (
+        {getUser?.role === "Tenant" ? (
+          listKelas.data &&
+          Array.isArray(listKelas.data) &&
+          listKelas.data.length > 0 ? (
+            <CardTable
+              data={listKelas.data}
+              column={columns}
+              roleAccess={getUser?.role}
+              idTenant={idTenant}
+            />
+          ) : (
+            <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+              <Image
+                src="/img/grades-notfound.png"
+                h={{ base: "150px", sm: "170px", md: "250px" }}
+                w="auto"
+                // w="auto"
+                // objectFit={"cover"}
+              />
+              <Text
+                as="b"
+                fontWeight={"bold"}
+                fontSize={{ base: "16px", md: "17px" }}
+                textAlign={"center"}
+              >
+                Data Nilai Tugas Tenant Kosong
+              </Text>
+              <Text
+                fontSize={{ base: "15.5px", md: "16.5px" }}
+                textAlign={"center"}
+              >
+                Mungkin belum dibuat atau sudah dihapus
+              </Text>
+            </Stack>
+          )
+        ) : listKelas.data &&
+          Array.isArray(listKelas.data.course) &&
+          listKelas.data.course.length > 0 ? (
           <CardTable
             data={listKelas.data.course}
             column={columns}
