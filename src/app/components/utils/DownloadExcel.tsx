@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -38,7 +39,11 @@ function DownloadExcel({
   };
   const [isLoadingDownload, setLoadingDownload] = useState(false);
 
-  const sendDownloadExcel = async (newUrl: string) => {
+  const sendDownloadExcel = async (param?: string) => {
+    let newUrl = "";
+    if (param) {
+      newUrl = Url + "/" + param;
+    } else newUrl = Url;
     setLoadingDownload(true);
     try {
       const response = await axiosCustom.get(newUrl, {
@@ -73,10 +78,12 @@ function DownloadExcel({
       setLoadingDownload(false);
     }
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <div>
       {popOver && popOver.length > 0 ? (
-        <Popover placement="bottom" isLazy>
+        <Popover placement="bottom" isOpen={isOpen} onClose={() => onClose()}>
           <PopoverTrigger>
             <Button
               leftIcon={
@@ -88,8 +95,9 @@ function DownloadExcel({
               colorScheme="gray"
               variant="outline"
               aria-label="btn-remain"
-              size={"md"}
+              size={"sm"}
               isLoading={isLoadingDownload}
+              onClick={onOpen}
             >
               Download Excel
             </Button>
@@ -113,7 +121,10 @@ function DownloadExcel({
                     aria-label="btn-remain"
                     size={"md"}
                     key={index}
-                    onClick={() => sendDownloadExcel(data)}
+                    onClick={() => {
+                      sendDownloadExcel(data);
+                      onClose();
+                    }}
                   >
                     {data}
                   </Button>
@@ -130,12 +141,12 @@ function DownloadExcel({
               style={{ color: "green.400" }}
             />
           }
-          colorScheme="gray"
+          colorScheme="green"
           variant="outline"
           aria-label="btn-remain"
-          size={"md"}
+          size={"sm"}
           isLoading={isLoadingDownload}
-          onClick={() => sendDownloadExcel(Url)}
+          onClick={() => sendDownloadExcel()}
         >
           Download Excel
         </Button>
