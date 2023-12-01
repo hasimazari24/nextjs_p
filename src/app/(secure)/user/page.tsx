@@ -43,6 +43,7 @@ interface DataItem {
   email: string;
   role: string;
   fullname: string;
+  tenant?: string;
 }
 
 interface UserLog {
@@ -109,7 +110,7 @@ function PageUser() {
     }
   }
 
-  const hidenCols = ["id", "image_id"];
+  const hidenCols = ["id", "image_id", "tenant"];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
     { Header: "Image ID", accessor: "image_id" },
@@ -134,7 +135,10 @@ function PageUser() {
       Header: "Username",
       accessor: "username",
     },
-
+    {
+      Header: "tenant_name",
+      accessor: "tenant",
+    },
     {
       Header: "E-mail",
       accessor: "email",
@@ -142,6 +146,14 @@ function PageUser() {
     {
       Header: "Hak Akses",
       accessor: "role",
+      Cell: ({ value, row }) =>
+        row.values.tenant && value === "Tenant" ? (
+          <div>
+            {value} - {row.values.tenant}
+          </div>
+        ) : (
+          value
+        ),
     },
   ];
 
@@ -329,11 +341,20 @@ function PageUser() {
           >
             <Heading fontSize={"2xl"}>DATA USER</Heading>
             <HStack>
-              <DownloadExcel Url={"/export/users"} popOver={["Semua Hak Akses","Super Admin", "Manajemen", "Mentor", "Tenant"]}/>
+              <DownloadExcel
+                Url={"/export/users"}
+                popOver={[
+                  "Semua Hak Akses",
+                  "Super Admin",
+                  "Manajemen",
+                  "Mentor",
+                  "Tenant",
+                ]}
+              />
               <Button
                 colorScheme="green"
                 key="tambahData"
-                size="md"
+                size="sm"
                 onClick={handleAdd}
               >
                 <AddIcon />
