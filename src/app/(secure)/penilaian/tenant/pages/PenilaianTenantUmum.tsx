@@ -241,21 +241,22 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                 mb="2"
               />
             </InputGroup>
-
-            <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
-              </InputLeftElement>
-              <Input
-                pl="3rem"
-                type="text"
-                placeholder={`Cari Mentor`}
-                onChange={(e) => {
-                  setFilter("mentor", e.target.value);
-                }}
-                mb="2"
-              />
-            </InputGroup>
+            {props.roleAccess !== "Mentor" && (
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
+                </InputLeftElement>
+                <Input
+                  pl="3rem"
+                  type="text"
+                  placeholder={`Cari Mentor`}
+                  onChange={(e) => {
+                    setFilter("mentor", e.target.value);
+                  }}
+                  mb="2"
+                />
+              </InputGroup>
+            )}
           </Stack>
         </Flex>
 
@@ -395,7 +396,6 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                         : "-"}
                     </Text>
                   </VStack>
-
                   <ProfileMentor mentor={row.values.mentor} />
 
                   <Stack
