@@ -23,7 +23,7 @@ import { useAuth } from "@/app/components/utils/AuthContext";
 // import ReviewTenant from "@/app/(secure)/kelas/[id]/progress/[id_progress]/Tugas/review/reviewTenant";
 import ReviewTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/reviewTenant";
 import NotFound from "@/app/components/template/NotFound";
-import ModalNotif from "@/app/components/modal/modal-notif";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 import IngatkanTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/IngatkanTenant";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
@@ -283,9 +283,8 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
     <Suspense fallback={<Loading />}>
       <Stack spacing={{ base: 4, md: 6 }}>
         <Flex
-          flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
-          justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
-          align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
+          justifyContent={"space-between"}
+          direction={["column-reverse", "row"]}
         >
           <VStack spacing={0} align="flex-start" mr={2}>
             <Text as="b" fontWeight={"bold"} fontSize={["17px", "xl", "2xl"]}>
@@ -296,24 +295,27 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
               <span style={{ color: "green" }}>{dataReview.tenant_name}</span>
             </Text>
           </VStack>
-
-          <Button
-            leftIcon={<MdArrowBackIosNew />}
-            colorScheme="blue"
-            variant="outline"
-            aria-label="btn-email"
-            size={"sm"}
-            mb={2}
-            onClick={() =>
-              router.push(
-                getUser.role === "Tenant"
-                  ? `/penilaian/`
-                  : `/penilaian/tugas/${idTenant}`,
-              )
-            }
-          >
-            Kembali
-          </Button>
+          <HStack mb={{ base: 2, md: 0 }}>
+            <DownloadExcel
+              Url={`/export-nilai-tugas/${idTenant}/course/${idKelas}`}
+            />
+            <Button
+              leftIcon={<MdArrowBackIosNew />}
+              colorScheme="blue"
+              variant="outline"
+              aria-label="btn-email"
+              size={"sm"}
+              onClick={() =>
+                router.push(
+                  getUser.role === "Tenant"
+                    ? `/penilaian/`
+                    : `/penilaian/tugas/${idTenant}`,
+                )
+              }
+            >
+              Kembali
+            </Button>
+          </HStack>
         </Flex>
         <DataTable
           data={itemData}

@@ -396,7 +396,9 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                         : "-"}
                     </Text>
                   </VStack>
-                  <ProfileMentor mentor={row.values.mentor} />
+                  {props.roleAccess !== "Mentor" && (
+                    <ProfileMentor mentor={row.values.mentor} />
+                  )}
 
                   <Stack
                     spacing={1}

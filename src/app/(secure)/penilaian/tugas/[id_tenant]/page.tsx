@@ -26,7 +26,7 @@ import { Column, useFilters, usePagination, useTable } from "react-table";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import { axiosCustom } from "@/app/api/axios";
 import Loading from "../../loading";
-import { UUID } from "crypto";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
@@ -38,7 +38,7 @@ interface ClassProps {
 }
 
 interface DataTugas {
-  tenant_name : string;
+  tenant_name: string;
   course: ClassProps;
 }
 
@@ -166,36 +166,37 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
       <Stack spacing={{ base: 4, md: 6 }}>
         {getUser.role === "Tenant" ? (
           <Flex
-            flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
-            justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
-            align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
+            justifyContent={"space-between"}
+            direction={["column-reverse", "row"]}
           >
+            <DownloadExcel Url={`/export-nilai-tugas/${idTenant}`} />
             <Heading fontSize={"2xl"}>DATA PENILAIAN TUGAS TENANT</Heading>
           </Flex>
         ) : (
           <Flex
-            flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
-            justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
-            align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
+            justifyContent={"space-between"}
+            direction={["column-reverse", "row"]}
           >
             <Heading fontSize={"2xl"}>NILAI TUGAS TENANT</Heading>
-            <Button
-              leftIcon={<MdArrowBackIosNew />}
-              colorScheme="blue"
-              variant="outline"
-              aria-label="btn-email"
-              size={"sm"}
-              mb={2}
-              onClick={() =>
-                router.push(
-                  getUser.role === "Tenant"
-                    ? `/penilaian`
-                    : `/penilaian/tugas/`,
-                )
-              }
-            >
-              Kembali
-            </Button>
+            <HStack pb={{ base: 2, md: 0 }}>
+              <DownloadExcel Url={`/export-nilai-tugas/${idTenant}`} />
+              <Button
+                leftIcon={<MdArrowBackIosNew />}
+                colorScheme="blue"
+                variant="outline"
+                aria-label="btn-email"
+                size={"sm"}
+                onClick={() =>
+                  router.push(
+                    getUser.role === "Tenant"
+                      ? `/penilaian`
+                      : `/penilaian/tugas/`,
+                  )
+                }
+              >
+                Kembali
+              </Button>
+            </HStack>
           </Flex>
         )}
 

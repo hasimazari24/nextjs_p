@@ -21,7 +21,7 @@ import Loading from "../../loading";
 import { axiosCustom } from "@/app/api/axios";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Pagination from "@/app/components/datatable/pagination";
-import { useAuth } from "@/app/components/utils/AuthContext";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 import { useRouter } from "next/navigation";
 import { MdArrowBackIosNew } from "react-icons/md";
 
@@ -93,23 +93,25 @@ const PenilaianTugasByMentor = ({ roleAccess }: { roleAccess: string }) => {
   return listTenant.isLoading ? (
     <Loading />
   ) : (
-    <Stack spacing={{ base: 4, md: 6 }}>
+    <Stack spacing={{ base: 6, md: 8 }}>
       <Flex
         justifyContent={"space-between"}
-        pb="2"
-        direction={["column", "row"]}
+        direction={["column-reverse", "row"]}
       >
         <Heading fontSize={"2xl"}>NILAI TUGAS TENANT</Heading>
-        <Button
-          leftIcon={<MdArrowBackIosNew />}
-          colorScheme="blue"
-          variant="outline"
-          aria-label="btn-email"
-          size={"sm"}
-          onClick={() => router.push("/penilaian")}
-        >
-          Kembali
-        </Button>
+        <HStack pb={{ base:2, md:0 }}>
+          <DownloadExcel Url={"/export-nilai-tugas"} />
+          <Button
+            leftIcon={<MdArrowBackIosNew />}
+            colorScheme="blue"
+            variant="outline"
+            aria-label="btn-email"
+            size={"sm"}
+            onClick={() => router.push("/penilaian")}
+          >
+            Kembali
+          </Button>
+        </HStack>
       </Flex>
       {/* konten disinii (daftar participant) */}
       {listTenant.data.length > 0 ? (
