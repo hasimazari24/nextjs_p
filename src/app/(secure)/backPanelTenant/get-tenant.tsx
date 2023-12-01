@@ -19,6 +19,7 @@ import {
   Box,
   Avatar,
   Checkbox,
+  HStack,
 } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalNotif from "../../components/modal/modal-notif";
@@ -36,6 +37,7 @@ import MyTenant from "./mytenant/mytenant";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import Loading from "./loading";
 import { UserRoles, permissions } from "@/app/type/role-access-control.d";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 
 interface DataItem {
   id: string;
@@ -154,6 +156,9 @@ function PageTenant() {
     {
       Header: "Name",
       accessor: "name",
+      width: "350px",
+      minWidth: 240,
+      maxWidth: 350,
       Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
       // Cell: ({ value, row }) => (
       //   <div
@@ -530,19 +535,30 @@ function PageTenant() {
                 direction={["column", "row"]}
               >
                 <Heading fontSize={"2xl"}>DATA TENANT</Heading>
-
-                {backPanelTenantFeatures?.access.includes("tmbhTenant") ||
-                allMenu?.access.includes("all_access") ? (
-                  <Button
-                    colorScheme="green"
-                    key="tambahData"
-                    size="md"
-                    onClick={handleAdd}
-                  >
-                    <AddIcon />
-                    &nbsp;Tambah Baru
-                  </Button>
-                ) : null}
+                <HStack>
+                  <DownloadExcel
+                    Url={"/export/tenant"}
+                    popOver={[
+                      "Semua Level",
+                      "Pra Inkubasi",
+                      "Inkubasi",
+                      "Inkubasi Lanjutan",
+                      "Scale Up",
+                    ]}
+                  />
+                  {backPanelTenantFeatures?.access.includes("tmbhTenant") ||
+                  allMenu?.access.includes("all_access") ? (
+                    <Button
+                      colorScheme="green"
+                      key="tambahData"
+                      size="md"
+                      onClick={handleAdd}
+                    >
+                      <AddIcon />
+                      &nbsp;Tambah Baru
+                    </Button>
+                  ) : null}
+                </HStack>
               </Flex>
               <Box>
                 <DataTable
