@@ -92,7 +92,7 @@ function DownloadExcel({
                   style={{ color: "green.400" }}
                 />
               }
-              colorScheme="gray"
+              colorScheme="green"
               variant="outline"
               aria-label="btn-remain"
               size={"sm"}
