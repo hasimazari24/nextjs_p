@@ -305,7 +305,7 @@ const ReviewMentor: React.FC<editProps> = ({
                         />
                       </FormControl>
                       {roleAccess === "Mentor" && (
-                        <HStack align={"end"}>
+                        <HStack>
                           <Button
                             leftIcon={<CheckIcon />}
                             colorScheme="blue"
