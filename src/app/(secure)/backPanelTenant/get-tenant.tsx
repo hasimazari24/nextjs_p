@@ -9,7 +9,7 @@ import ModalSocial from "../../components/modal/modal-social";
 import {
   Button,
   Center,
-  Spinner,
+  Text,
   Heading,
   Flex,
   Menu,
@@ -173,6 +173,19 @@ function PageTenant() {
     {
       Header: "Deskripsi",
       accessor: "description",
+      Cell: ({ value }) => (
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+          dangerouslySetInnerHTML={{ __html: value }}
+        />
+      ),
+      width: "450px",
+      minWidth: 260,
+      maxWidth: 450,
     },
     {
       Header: "Motto",
@@ -181,11 +194,19 @@ function PageTenant() {
     {
       Header: "Alamat",
       accessor: "address",
+      Cell: ({ value }) => (
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+          dangerouslySetInnerHTML={{ __html: value }}
+        />
+      ),
       width: "450px",
       minWidth: 260,
       maxWidth: 450,
-      // dibikin kayak gni biar auto wrap ketika textnya kepanjangan shg tdk merusak col width
-      Cell: ({ value }) => <div style={{ whiteSpace: "normal" }}>{value}</div>,
     },
     {
       Header: "Kontak",
@@ -249,8 +270,7 @@ function PageTenant() {
 
   const getTampil = async () => {
     try {
-      
-      setIsLoading(true); 
+      setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
       await Promise.all([
         axiosCustom.get("/tenant"),
@@ -259,7 +279,7 @@ function PageTenant() {
         const [response1, response2] = responses;
         setDataTampil(response1.data.data);
         setDataValuasi(response2.data.data);
-        setIsLoading(false); 
+        setIsLoading(false);
       });
     } catch (error) {
       console.error("Gagal memuat data:", error);
@@ -341,12 +361,14 @@ function PageTenant() {
             <GrMoreVertical />
           </MenuButton>
           <MenuList>
-            <Link href={`/tenant-detail/${rowData?.slug}`} target="_blank">
-              <MenuItem>
-                <BiLinkExternal />
-                &nbsp; Lihat Situs
-              </MenuItem>
-            </Link>
+            {rowData?.is_public === true && (
+              <Link href={`/tenant-detail/${rowData?.slug}`} target="_blank">
+                <MenuItem>
+                  <BiLinkExternal />
+                  &nbsp; Lihat Situs
+                </MenuItem>
+              </Link>
+            )}
 
             <MenuItem
               onClick={() =>

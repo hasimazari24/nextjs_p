@@ -144,9 +144,10 @@ const CatalogTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                         scrollbarWidth: "thin",
                       }}
                       pr="3"
-                    >
-                      {data.description}
-                    </Text>
+                      dangerouslySetInnerHTML={{
+                        __html: data.description,
+                      }}
+                    />
                   </Stack>
                 </Box>
               </Stack>

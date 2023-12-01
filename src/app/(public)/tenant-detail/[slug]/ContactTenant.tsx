@@ -48,9 +48,13 @@ const ContactInfo = ({
         <Text fontSize={["lg", "xl"]} fontWeight="bold">
           {title}
         </Text>
-        <Text fontSize="md" fontWeight="regular">
-          {content}
-        </Text>
+        <Text
+          fontSize="md"
+          fontWeight="regular"
+          dangerouslySetInnerHTML={{
+            __html: content,
+          }}
+        />
         {tags && tags.length > 0 && (
           <Stack spacing="1" direction={"row"} flexWrap={"wrap"}>
             {tags.map((tag, index) => (

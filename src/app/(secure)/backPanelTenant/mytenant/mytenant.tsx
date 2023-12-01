@@ -326,17 +326,17 @@ export default function MyTenant() {
                       <Text>Deskripsi :</Text>
                       <Text
                         color={"gray.500"}
-                        fontSize={"xl"}
-                        // fontWeight={"300"}
-                      >
-                        {dataMyTenant?.description}
-                      </Text>
+                        fontSize={["md", "lg"]}
+                        dangerouslySetInnerHTML={{
+                          __html: dataMyTenant?.description,
+                        }}
+                      />
                     </Box>
                     <Box>
                       <Text>Motto :</Text>
                       <Text
                         color={"gray.500"}
-                        fontSize={"xl"}
+                        fontSize={["md", "lg"]}
                         // fontWeight={"300"}
                       >
                         {dataMyTenant?.motto}
@@ -382,7 +382,11 @@ export default function MyTenant() {
                                 :
                               </Td>
                               <Td width="75%" pr="0" pl="0">
-                                {dataMyTenant?.address}
+                                <Text
+                                  dangerouslySetInnerHTML={{
+                                    __html: dataMyTenant?.address,
+                                  }}
+                                />
                               </Td>
                               {/* Tambahkan kolom lainnya sesuai kebutuhan */}
                             </Tr>

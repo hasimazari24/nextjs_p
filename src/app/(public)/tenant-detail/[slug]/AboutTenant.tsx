@@ -74,9 +74,10 @@ const AboutTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
                 color="gray.900"
                 fontSize="md"
                 textAlign="justify"
-              >
-                {tenant.description}
-              </Text>
+                dangerouslySetInnerHTML={{
+                  __html: tenant.description,
+                }}
+              />
             </Box>
             <Stack
               spacing={4}

@@ -269,12 +269,13 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
               onChange={(e) => setFilter("valuasi", e.target.value)}
               mb="2"
               style={{ width: "auto" }}
+              key="filterValuasi"
             >
               <option value="">Semua Valuasi Tenant</option>
               {props.dataValuasi &&
                 Array.isArray(props.dataValuasi) &&
-                props.dataValuasi.map((data: any) => (
-                  <option key={data.valuasi} value={data.valuasi}>
+                props.dataValuasi.map((data: any, index) => (
+                  <option key={index} value={data.valuasi}>
                     {data.valuasi}
                   </option>
                 ))}
@@ -283,13 +284,24 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
             <Select
               onChange={(e) => setFilter("level_tenant", e.target.value)}
               mb="2"
+              key="filterLevel"
             >
               {/* "Pra Inkubasi", "Inkubasi", "Inkubasi Lanjutan", "Scale Up" */}
-              <option value="">Semua Level Tenant</option>
-              <option value="Pra Inkubasi">Pra Inkubasi</option>
-              <option value="Inkubasi">Inkubasi</option>
-              <option value="Inkubasi Lanjutan">Inkubasi Lanjutan</option>
-              <option value="Scale Up">Scale Up</option>
+              <option value="" key="semua">
+                Semua Level Tenant
+              </option>
+              <option value="Pra Inkubasi" key="Pra Inkubasi">
+                Pra Inkubasi
+              </option>
+              <option value="Inkubasi" key="Inkubasi">
+                Inkubasi
+              </option>
+              <option value="Inkubasi Lanjutan" key="Pra Inkubasi Lanjutan">
+                Inkubasi Lanjutan
+              </option>
+              <option value="Scale Up" key="Scale Up">
+                Scale Up
+              </option>
             </Select>
           </Stack>
         </Flex>
