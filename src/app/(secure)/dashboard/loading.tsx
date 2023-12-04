@@ -1,12 +1,21 @@
 "use client";
 
-import { Spinner, Center, Box } from "@chakra-ui/react";
-
+import { Spinner, Center, Box, Text } from "@chakra-ui/react";
 const Loading = () => {
   return (
     <Box rounded="md">
-      <Center h="100%" m="10">
-        <Spinner className="spinner" size="xl" color="green.500" />
+      <Center h="100%" m="10" flexDirection={"column"}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          mb="3"
+        />
+        <Text as="i" whiteSpace={"normal"} textAlign={"center"}>
+          Sedang memuat data, mohon tunggu sebentar ...
+        </Text>
       </Center>
     </Box>
   );
