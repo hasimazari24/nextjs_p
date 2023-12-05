@@ -285,7 +285,10 @@ export default function MyTenant() {
                   <Image
                     rounded={"md"}
                     alt={"product image"}
-                    src={dataMyTenant?.image_banner_url}
+                    src={
+                      dataMyTenant?.image_banner_url ||
+                      "/img/tenant-banner-default.jpg"
+                    }
                     fit={"cover"}
                     align={"center"}
                     w={"full"}
@@ -300,7 +303,10 @@ export default function MyTenant() {
                     <Avatar
                       h={{ base: "100px", sm: "200px", lg: "200px" }}
                       w="100%"
-                      src={dataMyTenant?.image_url}
+                      src={
+                        dataMyTenant?.image_url ||
+                        "/img/tenant-logo-default.png"
+                      }
                       css={{
                         border: "5px solid white",
                       }}
