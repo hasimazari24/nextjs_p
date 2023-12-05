@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
+  const [loadingValidation, setLoadingValidation] = useState<boolean>(true);
 
   const validation = async () => {
     try {
