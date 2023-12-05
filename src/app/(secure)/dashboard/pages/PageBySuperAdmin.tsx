@@ -20,8 +20,10 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FaNetworkWired } from "react-icons/fa";
 import { HiUserGroup } from "react-icons/hi";
 import DetailCard from "./DetailCard";
+import { useRouter } from "next/navigation";
 
 function PageBySuperAdmin({ data }: { data: any }) {
+  const router = useRouter();
   return (
     <div>
       <Stack spacing={{ base: 4, md: 6 }}>
@@ -147,7 +149,7 @@ function PageBySuperAdmin({ data }: { data: any }) {
             />
             <StatsCard
               title={"VALUASI TENANT"}
-              stat={"7"}
+              stat={`${Array.isArray(data.valuasi) && data.valuasi.length}`}
               icon={<LiaFileInvoiceDollarSolid size={"3em"} />}
               bgcolor="yellow.400"
               detail={
@@ -208,7 +210,7 @@ function PageBySuperAdmin({ data }: { data: any }) {
             />
             <StatsCard
               title={"ASSETS"}
-              stat={"50"}
+              stat={data.asset.not_used}
               icon={<ImFileText2 size={"3em"} />}
               bgcolor="red.300"
               detail={
@@ -219,6 +221,7 @@ function PageBySuperAdmin({ data }: { data: any }) {
                   w="full"
                   color={"white"}
                   colorScheme="red"
+                  onClick={() => router.push("/assets")}
                 >
                   View Details &nbsp;
                   <ExternalLinkIcon fontSize={"15px"} />

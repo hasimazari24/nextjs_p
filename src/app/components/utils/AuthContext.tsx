@@ -36,18 +36,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingValidation, setLoadingValidation] = useState<boolean>(true);
+  const [loadingValidation, setLoadingValidation] = useState<boolean>(false);
 
   const validation = async () => {
     try {
-      setLoadingValidation(true);
-      const response = await axiosCustom.get("/validation");
-      const validUser: User = {
-        fullname: response.data.data.fullname,
-        role: response.data.data.role,
-        image_url: response.data.data.image_url,
-      };
-      setUser(validUser);
+      // setLoadingValidation(true);
+      // const response = await axiosCustom.get("/validation");
+      // const validUser: User = {
+      //   fullname: response.data.data.fullname,
+      //   role: response.data.data.role,
+      //   image_url: response.data.data.image_url,
+      // };
+      // setUser(validUser);
     } catch (error: any) {
       setUser(401);
       // toast({
