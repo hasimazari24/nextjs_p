@@ -270,12 +270,12 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
                         </FormLabel>
                       </Box>
                       <Box w="full">
-                        {rowData?.assigment_answer_id ? (
+                        {rowData?.answer_id ? (
                           changeFile !== true ? (
                             <HStack spacing={2}>
                               <BsFiletypePdf fontSize="20px" />
                               <Link
-                                href={rowData?.assigment_answer_download_ur}
+                                href={rowData?.answer_file_download_url}
                                 target="_blank"
                                 color="blue.500"
                                 _hover={{ color: "blue.400" }}

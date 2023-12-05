@@ -332,7 +332,7 @@ const AccordionDetail = ({
                     fontSize={{ base: "14px", md: "15px" }}
                     textAlign={"center"}
                   >
-                    Tidak ada kuesioner yang perlu diisi.
+                    Tidak ada tugas yang perlu dikerjakan.
                   </Text>
                 </Stack>
               ))}
@@ -512,7 +512,7 @@ const AccordionDetail = ({
                   alignItems={"center"}
                 >
                   <Image
-                    src="/img/classroom.png"
+                    src="/img/kuesioner-notfound.png"
                     h={{ base: "200px", sm: "250px", md: "350px" }}
                     w="auto"
                     // w="auto"
@@ -524,7 +524,7 @@ const AccordionDetail = ({
                     fontSize={{ base: "16px", md: "17px" }}
                     textAlign={"center"}
                   >
-                    Tidak ada tugas yang perlu dikerjakan
+                    Tidak ada kuesioner yang perlu diisi.
                   </Text>
                 </Stack>
               ))}

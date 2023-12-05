@@ -169,8 +169,8 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
             justifyContent={"space-between"}
             direction={["column-reverse", "row"]}
           >
-            <DownloadExcel Url={`/export-nilai-tugas/${idTenant}`} />
             <Heading fontSize={"2xl"}>DATA PENILAIAN TUGAS TENANT</Heading>
+            <DownloadExcel Url={`/export-nilai-tugas/${idTenant}`} />
           </Flex>
         ) : (
           <Flex
