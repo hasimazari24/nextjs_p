@@ -77,7 +77,7 @@ function PageByMentor({ data }: { data: any }) {
           </SimpleGrid>
         )}
 
-        <Accordion w={"full"} allowToggle>
+        <Accordion w={"full"} allowToggle defaultIndex={[0]}>
           <AccordionItem>
             <AccordionButton
               bg={"yellow.100"}
