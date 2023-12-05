@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
 import ListKelas from "../[id_tenant]/page";
-// import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 function PenilaianTugasByTenant() {
-  const crypto = require("crypto");
-  const randomID = crypto.randomUUID();
+  const randomID = uuidv4();
   return (
     <div>
       <ListKelas params={{ id_tenant: randomID }} />
