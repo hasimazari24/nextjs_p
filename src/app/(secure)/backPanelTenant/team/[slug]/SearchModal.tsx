@@ -209,7 +209,7 @@ const SearchModal = ({
                     </Box>
                     <Box flex={["1", "50%"]}>
                       <RadioGroup
-                        defaultValue="tidak_admin"
+                        defaultValue="ya_admin"
                         onChange={handleIsAdmin}
                         name="isAdmin"
                       >
@@ -234,7 +234,7 @@ const SearchModal = ({
                     </Box>
                     <Box flex={["1", "45%"]}>
                       <RadioGroup
-                        defaultValue="ya_public"
+                        defaultValue="tidak_public"
                         onChange={handleIsPublic}
                         name="isPublic"
                       >

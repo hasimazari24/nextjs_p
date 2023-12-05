@@ -105,7 +105,6 @@ const ModalTeam: React.FC<ModalProps> = ({
         simpan,
       );
       if (response.status === 200) {
-        setModalNotifTeam(true);
         handleShowMessage("Data berhasil diubah.", false);
         // onSubmit();
         onClose(); // Tutup modal

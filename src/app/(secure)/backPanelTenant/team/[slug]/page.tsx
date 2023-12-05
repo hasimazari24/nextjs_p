@@ -198,7 +198,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
       if (response.status === 201) {
         handleShowMessage(`Anggota Tim berhasil ditambahkan`, false);
         setIsLoadSave(false);
-        await getTeam(defaultTabsIndex);
+        // await getTeam(defaultTabsIndex);
         setIsModalSearchOpen(false);
       }
     } catch (error: any) {
@@ -381,7 +381,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
         message={message}
         isError={isError}
         onSubmit={() => {
-          getTeam(1);
+          getTeam(0);
         }}
       />
     </div>
