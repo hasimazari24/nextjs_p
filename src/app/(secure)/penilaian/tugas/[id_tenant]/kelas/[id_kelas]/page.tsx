@@ -186,7 +186,7 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
       values: [
         "Belum Dinilai",
         "Sudah Dinilai",
-        "Ingatkan Tenant",
+        getUser.role !== "Tenant" ? "Ingatkan Tenant" : "Belum Mengerjakan",
         "Tidak Mengerjakan",
       ],
     },
@@ -255,7 +255,7 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
     }
   };
 
-  console.log(breadcrumbs);
+  // console.log(breadcrumbs);
 
   useEffect(() => {
     // if (need_updated === true)
