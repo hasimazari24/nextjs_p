@@ -40,14 +40,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const validation = async () => {
     try {
-      // setLoadingValidation(true);
-      // const response = await axiosCustom.get("/validation");
-      // const validUser: User = {
-      //   fullname: response.data.data.fullname,
-      //   role: response.data.data.role,
-      //   image_url: response.data.data.image_url,
-      // };
-      // setUser(validUser);
+      setLoadingValidation(true);
+      const response = await axiosCustom.get("/validation");
+      const validUser: User = {
+        fullname: response.data.data.fullname,
+        role: response.data.data.role,
+        image_url: response.data.data.image_url,
+      };
+      setUser(validUser);
     } catch (error: any) {
       setUser(401);
       // toast({
