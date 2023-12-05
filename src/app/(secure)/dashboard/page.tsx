@@ -83,11 +83,11 @@ export default function Dashboard() {
     case "Super Admin":
       return <SuperAdmin data={state.data} />;
     case "Manajemen":
-      return <Manajemen />;
+      return <Manajemen data={state.data} />;
     case "Mentor":
-      return <Mentor />;
+      return <Mentor data={state.data} />;
     case "Tenant":
-      return <Tenant />;
+      return <Tenant data={state.data} />;
     default:
       break;
   }
