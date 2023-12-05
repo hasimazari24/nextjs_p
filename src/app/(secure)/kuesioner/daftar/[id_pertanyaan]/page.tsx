@@ -13,9 +13,14 @@ import Loading from "../../loading";
 import { MdArrowBackIosNew } from "react-icons/md/";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 function page({ params }: { params: { id_pertanyaan: string } }) {
+  const getParamsId = params.id_pertanyaan;
+  if ((getParamsId && getParamsId.length === 0) || !getParamsId) {
+    return notFound();
+  }
+
   const { setBreadcrumbs } = useBreadcrumbContext();
   const getForCrumbs: any = FindDefaultRoute();
   //   useEffect(() => {
