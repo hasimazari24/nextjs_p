@@ -26,7 +26,15 @@ import { EditIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
 import ModalNotif from "@/app/components/modal/modal-notif";
 
-function EditPertanyaan({ formdata, type }: { formdata: any; type: string }) {
+function EditPertanyaan({
+  formdata,
+  type,
+  onSubmit,
+}: {
+  formdata: any;
+  type: string;
+  onSubmit: () => void;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,6 +50,21 @@ function EditPertanyaan({ formdata, type }: { formdata: any; type: string }) {
     reset();
     onClose();
   };
+  let title = "";
+  switch (type) {
+    case "checkbox":
+      title = "Checkbox";
+      break;
+    case "radio":
+      title = "Opsi Pilihan";
+      break;
+    case "short_text":
+      title = "Teks Pendek";
+      break;
+    case "long_text":
+      title = "Teks Panjang";
+      break;
+  }
 
   const fields = {
     question: register("question", {
@@ -81,8 +104,10 @@ function EditPertanyaan({ formdata, type }: { formdata: any; type: string }) {
         onClick={() => onOpen()}
         key="editData"
         size="sm"
+        w="165px"
       >
         <EditIcon />
+        &nbsp; Edit Pertanyaan
       </Button>
 
       <Modal
@@ -95,7 +120,7 @@ function EditPertanyaan({ formdata, type }: { formdata: any; type: string }) {
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <ModalHeader>Edit Pertanyaan {type}</ModalHeader>
+            <ModalHeader>Edit Pertanyaan {title}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">

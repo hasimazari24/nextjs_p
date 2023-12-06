@@ -116,7 +116,7 @@ function BtnAddPertanyaan() {
                 size="sm"
                 onClick={() => {
                   onOpen();
-                  setType({ name: "Checklist", value: "checkbox" });
+                  setType({ name: "Checkbox", value: "checkbox" });
                 }}
               >
                 <MdCheckBox />

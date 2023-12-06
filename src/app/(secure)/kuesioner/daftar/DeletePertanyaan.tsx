@@ -68,8 +68,10 @@ const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
         onClick={() => setIsDeleteModalOpen(true)}
         key="hapusData"
         size="sm"
+        w="165px"
       >
-        <DeleteIcon /> &nbsp; Hapus
+        <DeleteIcon />
+        &nbsp; Hapus Pertanyaan
       </Button>
 
       <ConfirmationModal
