@@ -8,7 +8,7 @@ const initRichTextProps = {
     "link",
     // "image",
     "charmap",
-    "preview",
+    // "preview",
     "anchor",
     "searchreplace",
     "visualblocks",
@@ -22,7 +22,7 @@ const initRichTextProps = {
     // "textcolor",
   ],
   toolbar:
-    "fullscreen preview | undo redo | bold italic|forecolor|" +
+    "fullscreen | undo redo | bold italic|forecolor|" +
     "alignleft aligncenter " +
     "alignright alignjustify | bullist numlist outdent indent | " +
     "removeformat",
