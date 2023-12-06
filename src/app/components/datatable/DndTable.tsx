@@ -44,6 +44,7 @@ type DndTableProps<T extends object> = {
   hiddenColumns: string[];
   children?: (rowData: any) => ReactNode;
   isLoading: boolean;
+  disabledDrag?: boolean;
 };
 
 function DndTable<T extends object>({
@@ -55,6 +56,7 @@ function DndTable<T extends object>({
   hiddenColumns,
   children,
   isLoading,
+  disabledDrag,
 }: DndTableProps<T>) {
   const {
     getTableProps,
@@ -92,7 +94,7 @@ function DndTable<T extends object>({
   };
 
   return (
-    <Stack>
+    <Stack w="full">
       <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
         <Stack
           direction={{ base: "column", md: "row", lg: "row" }}
@@ -175,7 +177,9 @@ function DndTable<T extends object>({
                           key={row.id}
                           draggableId={row.id.toString()}
                           index={index}
-                          isDragDisabled={isDisableDraggable}
+                          isDragDisabled={
+                            disabledDrag ? disabledDrag : isDisableDraggable
+                          }
                         >
                           {(provided, snapshot) => (
                             <Tr
@@ -193,7 +197,7 @@ function DndTable<T extends object>({
                                   {index + 1}
                                 </Skeleton>
                               </Td>
-                              {row.cells.map((cell) => {
+                              {row.cells.map((cell, i) => {
                                 return (
                                   <Td
                                     {...cell.getCellProps()}
@@ -202,6 +206,7 @@ function DndTable<T extends object>({
                                     //     ? "none"
                                     //     : "1px solid gray.100"
                                     // }
+                                    key={i}
                                     w="full"
                                   >
                                     <Skeleton isLoaded={!isLoading}>
@@ -210,6 +215,13 @@ function DndTable<T extends object>({
                                   </Td>
                                 );
                               })}
+                              {children && !hiddenColumns.includes("action") ? (
+                                <Td key={index}>
+                                  <Skeleton isLoaded={!isLoading}>
+                                    {children(row.values)}
+                                  </Skeleton>
+                                </Td>
+                              ) : null}
                             </Tr>
                           )}
                         </Draggable>
