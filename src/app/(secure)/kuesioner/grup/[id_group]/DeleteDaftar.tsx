@@ -11,7 +11,7 @@ interface deleteProps {
   dataDelete: any;
 }
 
-const DeleteGroup = ({ dataDelete, onSubmit }: deleteProps) => {
+const DeleteDaftar = ({ dataDelete, onSubmit }: deleteProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [stateNotif, setStateNotif] = useState({
     msg: "",
@@ -68,17 +68,15 @@ const DeleteGroup = ({ dataDelete, onSubmit }: deleteProps) => {
         onClick={() => setIsDeleteModalOpen(true)}
         key="hapusData"
         size="sm"
-        w="120px"
-        justifyContent={"start"}
       >
-        <DeleteIcon />&nbsp; Hapus
+        <DeleteIcon />
       </Button>
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={deleteData}
-        dataConfirm={`Yakin ingin hapus Grup : ${dataDelete?.title} ?`}
+        dataConfirm={`Yakin ingin hapus pertanyaan : ${dataDelete?.title} ?`}
         isLoading={isLoadingDelete}
       />
 
@@ -99,4 +97,4 @@ const DeleteGroup = ({ dataDelete, onSubmit }: deleteProps) => {
   );
 };
 
-export default DeleteGroup;
+export default DeleteDaftar;

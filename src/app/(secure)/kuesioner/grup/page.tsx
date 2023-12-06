@@ -1,20 +1,156 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
-import { Stack, Flex, Heading, HStack } from "@chakra-ui/react";
+import {
+  Stack,
+  Flex,
+  Heading,
+  HStack,
+  Image,
+  Text,
+  Button,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
+} from "@chakra-ui/react";
 import Loading from "../loading";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import { axiosCustom } from "@/app/api/axios";
+import { Column } from "react-table";
+import DataTable from "@/app/components/datatable/data-table";
+import { useRouter } from "next/navigation";
+import { MdArrowBackIosNew } from "react-icons/md";
+import { HiChevronRight } from "react-icons/hi";
+import { GrMoreVertical } from "react-icons/gr";
+
+interface DataItem {
+  id: string;
+  title: string;
+}
 import AddGroup from "./AddGroup";
+import EditGroup from "./EditGroup";
+import DeleteGroup from "./DeleteGroup";
 
 function page() {
+  const [dataGroup, setDataGroup] = useState<any[] | []>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  let hidenCols: string[] = ["id"];
+  const filterOptions = [{ key: "title", label: "Judul Kuesioner" }];
+
+  const router = useRouter();
+
+  const columns: ReadonlyArray<Column<DataItem>> = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Judul Grup",
+      accessor: "title",
+      Cell: ({ value }) => (
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+        >
+          {value}
+        </Text>
+      ),
+      // width: "450px",
+      // minWidth: 260,
+      // maxWidth: 550,
+    },
+  ];
+  const renderActions = (rowData: any) => {
+    return (
+      <div>
+        <HStack>
+          <Button
+            bgColor="yellow.400"
+            _hover={{
+              bg: "yellow.500",
+            }}
+            color="white"
+            title="Kelola Grup Pertanyaan"
+            // onClick={() => handleDetail(rowData)}
+            key="kelola"
+            size={"sm"}
+          >
+            <HiChevronRight fontSize={"20px"} />
+          </Button>
+          <Popover placement="bottom">
+            <PopoverTrigger>
+              <Button
+                bgColor="teal.300"
+                _hover={{
+                  bg: "teal.400",
+                }}
+                // colorScheme="aqua"
+                title="More ..."
+                color="white"
+                // onClick={() => handleDetail(rowData)}
+                key="more"
+                size={{ base: "xs", sm: "sm" }}
+              >
+                <GrMoreVertical />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent w="fit-content" _focus={{ boxShadow: "none" }}>
+              <PopoverArrow />
+              <PopoverBody>
+                <Stack>
+                  <EditGroup formData={rowData} onSubmit={() => getGroup()} />
+                  <DeleteGroup
+                    dataDelete={rowData}
+                    onSubmit={() => getGroup()}
+                  />
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </HStack>
+      </div>
+    );
+  };
+
+  const getGroup = async () => {
+    try {
+      setIsLoading(true);
+      // Panggil API menggunakan Axios dengan async/await
+      // const response = await axiosCustom.get(`/course/all`);
+      const timer = setTimeout(() => {
+        setDataGroup([
+          { id: "1234", title: "drtfhsjkl", type: "checkbox" },
+          { id: "1235", title: "Lrem 67 tye", type: "short_text" },
+        ]);
+        setIsLoading(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal memuat data:", error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getGroup();
+  }, []);
+
   const { setBreadcrumbs } = useBreadcrumbContext();
   const getForCrumbs: any = FindDefaultRoute();
   useEffect(() => {
     if (getForCrumbs) setBreadcrumbs(getForCrumbs);
   }, []);
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <Suspense fallback={<Loading />}>
-      <Stack spacing={{ base: 6, md: 8 }}>
+      <Stack spacing={{ base: 2, md: 4 }}>
         <Flex
           flexDirection={{ base: "column", md: "row" }} // Arah tata letak berdasarkan layar
           justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
@@ -23,10 +159,55 @@ function page() {
           <Heading fontSize={"2xl"} mb="2">
             DAFTAR GRUP PERTANYAAN
           </Heading>
-          <HStack>
+          <HStack align="start" mb={{ base: 2, md: 0 }}>
+            <Button
+              leftIcon={<MdArrowBackIosNew />}
+              colorScheme="blue"
+              variant="outline"
+              aria-label="btn-email"
+              title={`Kembali ke Halaman Sebelumnya`}
+              onClick={() => router.push(`/kuesioner`)}
+              size={"sm"}
+            >
+              Kembali
+            </Button>
             <AddGroup />
           </HStack>
         </Flex>
+        {dataGroup && dataGroup.length > 0 ? (
+          <DataTable
+            data={dataGroup}
+            column={columns}
+            hiddenColumns={hidenCols}
+            filterOptions={filterOptions}
+          >
+            {(rowData: any) => renderActions(rowData)}
+          </DataTable>
+        ) : (
+          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+            <Image
+              src="/img/kuesioner-notfound.png"
+              h={{ base: "200px", sm: "250px", md: "350px" }}
+              w="auto"
+              // w="auto"
+              // objectFit={"cover"}
+            />
+            <Text
+              as="b"
+              fontWeight={"bold"}
+              fontSize={{ base: "16px", md: "17px" }}
+              textAlign={"center"}
+            >
+              Daftar Grup Pertanyaan Kuesioner Kosong
+            </Text>
+            <Text
+              fontSize={{ base: "15.5px", md: "16.5px" }}
+              textAlign={"center"}
+            >
+              Mungkin belum dibuat atau sudah dihapus
+            </Text>
+          </Stack>
+        )}
       </Stack>
     </Suspense>
   );

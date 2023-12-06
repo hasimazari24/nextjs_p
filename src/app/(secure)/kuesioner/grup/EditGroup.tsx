@@ -78,12 +78,20 @@ function EditGroup({
   return (
     <div>
       <Button
-        colorScheme="green"
-        key="editGroup"
-        size="sm"
+        bgColor="blue.100"
+        _hover={{
+          bg: "blue.200",
+        }}
+        title="Edit Data"
+        color="gray.700"
         onClick={() => onOpen()}
+        key="editData"
+        size="sm"
+        w="120px"
+        justifyContent={"start"}
       >
         <EditIcon />
+        &nbsp; Edit
       </Button>
 
       <Modal
