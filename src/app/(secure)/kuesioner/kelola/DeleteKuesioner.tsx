@@ -11,7 +11,7 @@ interface deleteProps {
   dataDelete: any;
 }
 
-const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
+const DeleteKuesioner = ({ dataDelete, onSubmit }: deleteProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [stateNotif, setStateNotif] = useState({
     msg: "",
@@ -34,7 +34,7 @@ const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/delete-course-item/${dataDelete?.id}`,
+          `/kuesioner-tahunan/${dataDelete?.id}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -68,15 +68,17 @@ const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
         onClick={() => setIsDeleteModalOpen(true)}
         key="hapusData"
         size="sm"
+        w="165px"
+        justifyContent={"start"}
       >
-        <DeleteIcon /> &nbsp; Hapus
+        <DeleteIcon /> &nbsp; Hapus Kuesioner
       </Button>
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={deleteData}
-        dataConfirm={`Yakin ingin hapus Grup : ${dataDelete?.title} ?`}
+        dataConfirm={`Yakin ingin hapus kuesioner : ${dataDelete?.title} ?`}
         isLoading={isLoadingDelete}
       />
 
@@ -97,4 +99,4 @@ const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
   );
 };
 
-export default DeletePertanyaan;
+export default DeleteKuesioner;

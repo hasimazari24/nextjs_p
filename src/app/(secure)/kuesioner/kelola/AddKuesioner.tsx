@@ -36,7 +36,7 @@ interface editProps {
   onSubmit: () => void;
 }
 
-const AddKuesioner = () => {
+const AddKuesioner = ({ onSubmit }: { onSubmit: () => void }) => {
   const {
     register,
     handleSubmit,
@@ -92,14 +92,12 @@ const AddKuesioner = () => {
 
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
-      await axiosCustom
-        .post(`/course/add-item`, data)
-        .then((response) => {
-          // console.log(response);
-          if (response.status === 201) {
-            handleShowMessage("Data berhasil disimpan.", false);
-          }
-        });
+      await axiosCustom.post(`/kuesioner-tahunan`, data).then((response) => {
+        // console.log(response);
+        if (response.status === 201) {
+          handleShowMessage("Data berhasil disimpan.", false);
+        }
+      });
 
       //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       // onClose(); // Tutup modal
@@ -233,7 +231,7 @@ const AddKuesioner = () => {
         }
         message={stateNotif.msg}
         isError={stateNotif.isError}
-        // onSubmit={() => onSubmit()}
+        onSubmit={() => onSubmit()}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, useState } from "react";
 import {
   Box,
   Text,
@@ -19,98 +19,99 @@ import {
   PopoverBody,
   PopoverArrow,
   Select,
-  useDisclosure,
-  Img,
   Heading,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import {
-  AiFillTwitterCircle,
-  AiOutlineFacebook,
-  AiOutlineCrown,
-  AiOutlineGlobal,
-} from "react-icons/ai";
-import {
-  IoLogoFacebook,
-  IoLogoInstagram,
-  IoLogoLinkedin,
-  IoLogoYoutube,
-} from "react-icons/io5";
-import * as TenantTypes from "@/app/type/tenant-type.d";
-import Link from "next/link";
-import { Kelas, Mentor } from "@/app/type/class-type";
 import { MdArrowBackIosNew, MdOutlinePeople } from "react-icons/md";
-import {
-  HiChevronLeft,
-  HiChevronRight,
-  HiOutlineNewspaper,
-} from "react-icons/hi";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { MdDateRange } from "react-icons/md";
 import { BiDoorOpen } from "react-icons/bi";
-import {
-  DeleteIcon,
-  EditIcon,
-  ExternalLinkIcon,
-  SearchIcon,
-  ViewIcon,
-} from "@chakra-ui/icons";
+import { SearchIcon } from "@chakra-ui/icons";
 import { GrMoreVertical } from "react-icons/gr";
-import { useMemo, useState } from "react";
 import Pagination from "@/app/components/datatable/pagination";
 import { useRouter } from "next/navigation";
 import { Column, useFilters, usePagination, useTable } from "react-table";
 import DownloadExcel from "@/app/components/utils/DownloadExcel";
 import AddKuesioner from "./AddKuesioner";
+import EditKuesioner from "./EditKuesioner";
+import DeleteKuesioner from "./DeleteKuesioner";
+import { axiosCustom } from "@/app/api/axios";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import Loading from "../loading";
+import OnOffKuesioner from "./OnOffKuesioner";
 
-interface ClassProps {
-  // rowData: Kelas[];
-  // onSubmit: () => void;
-  // roleAccess: string;
+interface KelolaProps {
+  id: string;
+  title: string;
+  description: string | null;
+  is_active: boolean;
+  responden_count: string;
+  created_at: string;
 }
 
 const page = () => {
-  const columns: ReadonlyArray<Column<{ id: string; name: string }>> = [
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  const [dataKuesioner, setDataKuesioner] = useState<any[] | []>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const columns: ReadonlyArray<Column<KelolaProps>> = [
     {
       Header: "id",
       accessor: "id",
     },
     {
-      Header: "name",
-      accessor: "name",
+      Header: "title",
+      accessor: "title",
     },
-    // {
-    //   Header: "ClassEnd",
-    //   accessor: "course_ends",
-    // },
-    // {
-    //   Header: "description",
-    //   accessor: "description",
-    // },
-    // {
-    //   Header: "participant_count",
-    //   accessor: "participant_count",
-    // },
-    // {
-    //   Header: "activity_count",
-    //   accessor: "activity_count",
-    // },
-    // {
-    //   Header: "Mentor",
-    //   accessor: "mentor",
-    //   filter: (rows, id, filterValue) => {
-    //     return rows.filter((row) =>
-    //       row.values.mentor.fullname
-    //         .toLowerCase()
-    //         .includes(filterValue.toLowerCase()),
-    //     );
-    //   },
-    //   // Cell: ({ cell }) => cell.value.fullname, // Display only the fullname in the table cell
-    // },
+    {
+      Header: "is_active",
+      accessor: "is_active",
+    },
+    {
+      Header: "description",
+      accessor: "description",
+    },
+    {
+      Header: "responden_count",
+      accessor: "responden_count",
+    },
+    {
+      Header: "created_at",
+      accessor: "created_at",
+    },
   ];
 
   const router = useRouter();
 
-  return (
-    <>
+  const getKuesioner = async () => {
+    try {
+      setIsLoading(true);
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(`/kuesioner-tahunan`);
+      const timer = setTimeout(() => {
+        setDataKuesioner(response.data.data);
+        setIsLoading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal memuat data:", error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getKuesioner();
+  }, []);
+
+  useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
+
+  return isLoading ? (
+    <Loading />
+  ) : (
+    <Suspense fallback={<Loading />}>
       <Stack spacing={{ base: 2, md: 4 }}>
         <Flex
           flexDirection={{ base: "column", md: "row" }} // Arah tata letak berdasarkan layar
@@ -132,28 +133,50 @@ const page = () => {
             >
               Kembali
             </Button>
-            <AddKuesioner />
+            <AddKuesioner onSubmit={() => getKuesioner()} />
           </HStack>
         </Flex>
-        <CardTable
-          data={[
-            { id: "1234", name: "Kuesioner 1" },
-            { id: "124", name: "Kuesioner 2" },
-            { id: "1256", name: "Kuesioner 3" },
-          ]}
-          column={columns}
-          // onSubmit={() => onSubmit()}
-          // roleAccess={roleAccess}
-        />
+        {dataKuesioner && dataKuesioner.length > 0 ? (
+          <CardTable
+            data={dataKuesioner}
+            column={columns}
+            onSubmit={() => getKuesioner()}
+            // roleAccess={roleAccess}
+          />
+        ) : (
+          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+            <Image
+              src="/img/kuesioner-notfound.png"
+              h={{ base: "200px", sm: "250px", md: "350px" }}
+              w="auto"
+              // w="auto"
+              // objectFit={"cover"}
+            />
+            <Text
+              as="b"
+              fontWeight={"bold"}
+              fontSize={{ base: "16px", md: "17px" }}
+              textAlign={"center"}
+            >
+              Daftar Kuesioner yang perlu dikelola kosong
+            </Text>
+            <Text
+              fontSize={{ base: "15.5px", md: "16.5px" }}
+              textAlign={"center"}
+            >
+              Mungkin belum dibuat atau sudah dihapus
+            </Text>
+          </Stack>
+        )}
       </Stack>
-    </>
+    </Suspense>
   );
 };
 
 interface CardTableProps<T extends object> {
   data: T[];
   column: ReadonlyArray<Column<T>>;
-  // onSubmit: () => void;
+  onSubmit: () => void;
   // roleAccess: string;
 }
 
@@ -211,27 +234,12 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                 pl="3rem"
                 // key={option.key}
                 type="text"
-                placeholder={`Cari Nama Kuesioner`}
+                placeholder={`Cari Judul Kuesioner`}
                 // onChange={(e) => setFilter(option.key, e.target.value)}
-                onChange={(e) => setFilter("name", e.target.value)}
+                onChange={(e) => setFilter("title", e.target.value)}
                 mb="2"
               />
             </InputGroup>
-
-            {/* <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
-              </InputLeftElement>
-              <Input
-                pl="3rem"
-                type="text"
-                placeholder={`Cari Mentor`}
-                onChange={(e) => {
-                  setFilter("mentor", e.target.value);
-                }}
-                mb="2"
-              />
-            </InputGroup> */}
           </Stack>
         </Flex>
         <Flex
@@ -306,7 +314,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       //     ? "/img/class-ends-min.png"
                       //     : "/img/class-avatar.png"
                       // }
-                      src="/img/class-avatar.png"
+                      src="/img/kelola-kuesioner-detail.png"
                       alt="#"
                       // boxShadow={"xl"}
                     />
@@ -318,19 +326,19 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                     textOverflow="ellipsis"
                     flex="1"
                     overflow="hidden"
-                    title={row.values.name}
+                    title={row.values.title}
                     noOfLines={2}
                   >
-                    {row.values.name}
+                    {row.values.title}
                   </Text>
-                  <HStack w="full" justifyContent={"center"} spacing={2}>
+                  <Stack w="fit-content" spacing={2}>
                     <Box
                       borderColor={"blue.500"}
                       rounded={"7px"}
                       borderWidth={1}
                       pr={2}
                       pl={2}
-                      title="Partisipan"
+                      title="Responden"
                     >
                       <HStack
                         flexWrap={"wrap"}
@@ -343,7 +351,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                           as={MdOutlinePeople}
                           boxSize={{ base: "20px", sm: "17px", lg: "20px" }}
                         />
-                        <p>50</p>
+                        <p>{row.values.responden_count}&nbsp;Responden</p>
                       </HStack>
                     </Box>
                     <Box
@@ -352,7 +360,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       borderWidth={1}
                       pr={2}
                       pl={2}
-                      title="Sesi Pertemuan"
+                      title="Tanggal Dibuat"
                     >
                       <HStack
                         flexWrap={"wrap"}
@@ -360,19 +368,19 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                         fontSize={{ base: "sm", sm: "xs", lg: "sm" }}
                         color="blue.500"
                         justifyContent={"center"}
+                        alignItems={"center"}
                       >
                         <Icon
-                          as={HiOutlineNewspaper}
-                          boxSize={{ base: "20px", sm: "17px", lg: "20px" }}
+                          as={MdDateRange}
+                          boxSize={{ base: "18px", sm: "17px", lg: "20px" }}
                         />
-                        <p>10 Des 2022</p>
+                        <p>{row.values.created_at}</p>
                       </HStack>
                     </Box>
-                  </HStack>
+                  </Stack>
 
                   <Stack spacing={2} direction={"row"} w="full">
                     <Button
-                      leftIcon={<ViewIcon fontSize={"18px"} />}
                       bgColor="gray.500"
                       _hover={{
                         bg: "gray.400",
@@ -380,15 +388,14 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       color="white"
                       w="full"
                       size={{ base: "xs", sm: "sm" }}
-                      title={"Lihat Review Responden"}
+                      title={"Masuk untuk kelola kuesioner"}
                       // alignContent={"center"}
                       onClick={() =>
-                        router.push(
-                          `/kuesioner/review/responden/${row.values.id}`,
-                        )
+                        router.push(`/kuesioner/kelola/${row.values.id}`)
                       }
                     >
-                      Responden
+                      <BiDoorOpen size="20px" />
+                      &nbsp;Masuk
                     </Button>
                     <Popover placement="bottom">
                       <PopoverTrigger>
@@ -414,17 +421,19 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                         <PopoverArrow />
                         <PopoverBody>
                           <Stack>
-                            <Button
-                              leftIcon={<ViewIcon fontSize={"18px"} />}
-                              colorScheme="gray"
-                              variant="outline"
-                              size={"sm"}
-                              title={"Lihat Review Pertanyaan"}
-                              // onClick={onOpen}
-                            >
-                              Pertanyaan
-                            </Button>
-                            <DownloadExcel Url={"/export-nilai-tugas"} />
+                            <EditKuesioner
+                              rowData={row.values}
+                              onSubmit={() => props.onSubmit()}
+                            />
+                            {/* <OnOffKuesioner
+                              dataKuesioner={row.values}
+                              onSubmit={() => props.onSubmit()}
+                              onoff={row.values.is_active}
+                            /> */}
+                            <DeleteKuesioner
+                              dataDelete={row.values}
+                              onSubmit={() => props.onSubmit()}
+                            />
                           </Stack>
                         </PopoverBody>
                       </PopoverContent>

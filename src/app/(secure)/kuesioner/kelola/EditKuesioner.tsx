@@ -34,7 +34,7 @@ type SesiItem = {
 
 interface editProps {
   onSubmit: () => void;
-  rowData: SesiItem;
+  rowData: any;
 }
 
 const EditKuesioner: React.FC<editProps> = ({ onSubmit, rowData }) => {
@@ -51,7 +51,7 @@ const EditKuesioner: React.FC<editProps> = ({ onSubmit, rowData }) => {
   const fields = {
     // id:register("id"),
     title: register("title", {
-      required: "Judul sesi harus diisi!",
+      required: "Judul Kuesioner harus diisi!",
       maxLength: {
         value: 255,
         message: "Maksimal 255 karakter.",
@@ -97,7 +97,7 @@ const EditKuesioner: React.FC<editProps> = ({ onSubmit, rowData }) => {
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       await axiosCustom
-        .patch(`/update-course-item/${rowData.id}`, data)
+        .patch(`/kuesioner-tahunan/${rowData.id}`, data)
         .then((response) => {
           // console.log(response);
           if (response.status === 200) {
@@ -148,8 +148,10 @@ const EditKuesioner: React.FC<editProps> = ({ onSubmit, rowData }) => {
         onClick={() => setModalOpen(true)}
         key="editData"
         size="sm"
+        w="165px"
+        justifyContent={"start"}
       >
-        <EditIcon />
+        <EditIcon />&nbsp; Edit Kuesioner
       </Button>
 
       <Modal

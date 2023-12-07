@@ -39,50 +39,54 @@ function page({ params }: { params: { id_kuesioner: string } }) {
 
   const InitalState: {
     isLoading: boolean;
-    dataClass: any | null;
+    dataKuesioner: any | null;
   } = {
-    isLoading: false,
-    dataClass: null,
+    isLoading: true,
+    dataKuesioner: null,
   };
   const [state, setState] = useState(InitalState);
 
-  //   useEffect(() => {
-  //     const getAll = async () => {
-  //       try {
-  //         const response = await axiosCustom.get(`/course/${getParamsId}`);
-  //         setState({
-  //           isLoading: false,
-  //           dataClass: response.data.data,
-  //         });
-  //         // Membuat nilai baru
-  //         const newValue = {
-  //           name: response.data.data?.name,
-  //           href: `/kelas/${getParamsId}`,
-  //         };
-  //         // Cek apakah nilai baru sudah ada dalam breadcrumbs
-  //         const alreadyExists = breadcrumbs.some(
-  //           (breadcrumb) =>
-  //             JSON.stringify(breadcrumb) === JSON.stringify(newValue),
-  //         );
-  //         // Jika belum ada, tambahkan ke breadcrumbs
-  //         if (!alreadyExists) {
-  //           setBreadcrumbs([...breadcrumbs, newValue]);
-  //         } else {
-  //           const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
-  //           setBreadcrumbs(newBreadcrumbs);
-  //         }
-  //       } catch (error) {
-  //         console.error(error);
-  //         setState({
-  //           isLoading: false,
-  //           dataClass: null,
-  //         });
-  //       }
-  //     };
-  //     getAll();
-  //   }, [getParamsId]);
+  useEffect(() => {
+    const getAll = async () => {
+      try {
+        const response = await axiosCustom.get(
+          `/kuesioner-tahunan/${getParamsId}`,
+        );
+        setState({
+          isLoading: false,
+          dataKuesioner: response.data.data,
+        });
+        // Membuat nilai baru
+        const newValue = {
+          name: response.data.data?.title,
+          href: `/kuesioner/kelola/${getParamsId}`,
+        };
+        // Cek apakah nilai baru sudah ada dalam breadcrumbs
+        const alreadyExists = breadcrumbs.some(
+          (breadcrumb) =>
+            JSON.stringify(breadcrumb) === JSON.stringify(newValue),
+        );
+        // Jika belum ada, tambahkan ke breadcrumbs
+        if (!alreadyExists) {
+          setBreadcrumbs([...breadcrumbs, newValue]);
+        } else {
+          const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
+          setBreadcrumbs(newBreadcrumbs);
+        }
+      } catch (error) {
+        console.error(error);
+        setState({
+          isLoading: false,
+          dataKuesioner: null,
+        });
+      }
+    };
+    getAll();
+  }, [getParamsId]);
 
-  return (
+  return state.isLoading ? (
+    <Loading />
+  ) : state.dataKuesioner ? (
     <Suspense fallback={<Loading />}>
       <Stack spacing={6}>
         <Flex
@@ -100,30 +104,30 @@ function page({ params }: { params: { id_kuesioner: string } }) {
                 xl: "10rem",
               }}
               objectFit={"cover"}
-              src={"/img/class-avatar.png"}
+              src={"/img/kelola-kuesioner-detail.png"}
               alt="#"
               // boxShadow={"xl"}
             />
             <VStack spacing={2} align="flex-start">
               <Text as="b" fontWeight={"bold"} fontSize={["17px", "xl", "2xl"]}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Veritatis, maxime?
+                {state.dataKuesioner?.title}
               </Text>
               <Text
                 fontSize={["sm", "md"]}
                 fontWeight={"thin"}
                 color="gray.700"
               >
-                Dibuat : 27 November 2025
+                Dibuat : {state.dataKuesioner?.created_at}
               </Text>
               <Button
-                colorScheme="yellow"
+                bgColor={"teal.100"}
+                _hover={{ bgColor: "teal.200" }}
                 key="preview"
                 size="sm"
                 //   onClick={() => onOpen()}
               >
                 <ViewIcon />
-                &nbsp;Preview
+                &nbsp; Preview
               </Button>
             </VStack>
           </HStack>
@@ -134,7 +138,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
             aria-label="btn-email"
             size={"sm"}
             mb={6}
-            onClick={() => router.push("/kelas")}
+            onClick={() => router.push("/kuesioner/kelola")}
           >
             Kembali
           </Button>
@@ -144,15 +148,14 @@ function page({ params }: { params: { id_kuesioner: string } }) {
           <Text
             textAlign="justify"
             dangerouslySetInnerHTML={{
-              __html:
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo culpa obcaecati labore rem itaque commodi. Dicta repudiandae minus, et commodi nemo, amet ex architecto at harum illo delectus tenetur consequatur.",
+              __html: state.dataKuesioner?.description || "",
             }}
           />
         </Box>
 
         <Tabs variant="unstyled">
           <TabList justifyContent="center">
-            <HStack spacing={{ base: 6, md: 10 }}>
+            <Stack direction={{ base : "column", sm : "row" }} spacing={{ base: 4, md: 6 }}>
               <Tab
                 _selected={{
                   background: "blue.500",
@@ -170,7 +173,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
                   fontSize={{ base: "md", lg: "lg" }}
                 >
                   <MdOutlinePeople />
-                  <Text>Responden</Text>
+                  <Text >Responden</Text>
                 </HStack>
               </Tab>
               <Tab
@@ -191,23 +194,32 @@ function page({ params }: { params: { id_kuesioner: string } }) {
                   px={{ base: 0, md: 6 }}
                 >
                   <HiOutlineClipboardList />
-                  <Text>Kuesioner</Text>
+                  <Text >
+                    Grup Pertanyaan
+                  </Text>
                 </HStack>
               </Tab>
               {/* <Tab hidden={true}>Progress</Tab> */}
-            </HStack>
+            </Stack>
           </TabList>
           <TabPanels>
             <TabPanel pt={6} px={0} pb={0}>
-              <Responden />
+              <Responden idKuesioner={getParamsId} />
             </TabPanel>
             <TabPanel pt={6} px={0} pb={0}>
-              <Kuesioner />
+              <Kuesioner idKuesioner={getParamsId} />
             </TabPanel>
           </TabPanels>
         </Tabs>
       </Stack>
     </Suspense>
+  ) : (
+    <NotFound
+      statusCode={404}
+      msg="Not Found"
+      statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman Kelola Kuesioner."
+      backToHome="/kuesioner/kelola"
+    />
   );
 }
 
