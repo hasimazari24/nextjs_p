@@ -21,10 +21,11 @@ import {
   Checkbox,
   Textarea,
 } from "@chakra-ui/react";
-
+import { axiosCustom } from "@/app/api/axios";
 import { EditIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
 import ModalNotif from "@/app/components/modal/modal-notif";
+import ModelType from "./ModelType";
 
 function EditPertanyaan({
   formdata,
@@ -50,21 +51,6 @@ function EditPertanyaan({
     reset();
     onClose();
   };
-  let title = "";
-  switch (type) {
-    case "checkbox":
-      title = "Checkbox";
-      break;
-    case "radio":
-      title = "Opsi Pilihan";
-      break;
-    case "short_text":
-      title = "Teks Pendek";
-      break;
-    case "long_text":
-      title = "Teks Panjang";
-      break;
-  }
 
   const fields = {
     question: register("question", {
@@ -90,7 +76,41 @@ function EditPertanyaan({
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
+    const dataBaru: {
+      pertanyaan: string;
+      note: boolean;
+      is_required: boolean;
+    } = {
+      pertanyaan: data.question,
+      note: data.note,
+      is_required: data.checklist,
+    };
+    try {
+      setIsLoading(true);
+      // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+      await axiosCustom
+        .patch(`/kuesioner-tahunan/pertanyaan/${formdata.id}`, dataBaru)
+        .then((response) => {
+          // console.log(response);
+          if (response.status === 200) {
+            handleShowMessage("Data berhasil diubah.", false);
+          }
+        });
+
+      //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      // onClose(); // Tutup modal
+      resetAll();
+      // Setelah data disimpan, atur pesan berhasil ke dalam state
+    } catch (error: any) {
+      // console.error(error);
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoading(false);
+    }
   };
   return (
     <div>
@@ -105,6 +125,7 @@ function EditPertanyaan({
         key="editData"
         size="sm"
         w="165px"
+        justifyContent={"start"}
       >
         <EditIcon />
         &nbsp; Edit Pertanyaan
@@ -120,7 +141,7 @@ function EditPertanyaan({
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <ModalHeader>Edit Pertanyaan {title}</ModalHeader>
+            <ModalHeader>Edit Pertanyaan {ModelType(type)}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">
@@ -137,6 +158,7 @@ function EditPertanyaan({
                     <Box flex={["1", "80%"]}>
                       <Textarea
                         {...fields.question}
+                        defaultValue={formdata.pertanyaan}
                         // className={`form-control ${errors.name ? "is-invalid"}`}
                       />
                       <FormErrorMessage>
@@ -158,7 +180,7 @@ function EditPertanyaan({
                         onChange={(e) =>
                           setValue("checklist", e.target.checked)
                         }
-                        defaultChecked
+                        defaultChecked={formdata.is_required ? true : false}
                       >
                         {/* <Checkbox {...register('checkboxValue')} onChange={(e) => setValue('checkboxValue', e.target.checked)}></Checkbox> */}
                         (Checklist jika jawaban wajib diisi Responden)
@@ -178,6 +200,7 @@ function EditPertanyaan({
                       <Input
                         type="text"
                         {...register("note")}
+                        defaultValue={formdata.note}
                         // className={`form-control ${errors.name ? "is-invalid"}`}
                       />
                       <FormErrorMessage>
@@ -230,7 +253,7 @@ function EditPertanyaan({
         }
         message={stateNotif.msg}
         isError={stateNotif.isError}
-        // onSubmit={() => onSubmit()}
+        onSubmit={() => onSubmit()}
       />
     </div>
   );

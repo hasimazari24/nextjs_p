@@ -26,7 +26,7 @@ import {
   Checkbox,
   Textarea,
 } from "@chakra-ui/react";
-
+import { axiosCustom } from "@/app/api/axios";
 import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   MdCheckBox,
@@ -37,7 +37,7 @@ import { BsTextLeft } from "react-icons/bs";
 import { useForm, SubmitHandler } from "react-hook-form";
 import ModalNotif from "@/app/components/modal/modal-notif";
 
-function BtnAddPertanyaan() {
+function BtnAddPertanyaan({ onSubmit }: { onSubmit: () => void }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
   const [type, setType] = useState<{ name: string; value: string }>({
@@ -82,7 +82,43 @@ function BtnAddPertanyaan() {
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
+    const dataBaru: {
+      pertanyaan: string;
+      type: string;
+      note: boolean;
+      is_required: boolean;
+    } = {
+      pertanyaan: data.question,
+      type: type.value,
+      note: data.note,
+      is_required: data.checklist,
+    };
+    try {
+      setIsLoading(true);
+      // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+      await axiosCustom
+        .post(`/kuesioner-tahunan/pertanyaan`, dataBaru)
+        .then((response) => {
+          // console.log(response);
+          if (response.status === 201) {
+            handleShowMessage("Data berhasil disimpan.", false);
+          }
+        });
+
+      //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      // onClose(); // Tutup modal
+      resetAll();
+      // Setelah data disimpan, atur pesan berhasil ke dalam state
+    } catch (error: any) {
+      // console.error(error);
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -120,7 +156,7 @@ function BtnAddPertanyaan() {
                 }}
               >
                 <MdCheckBox />
-                &nbsp;Checklist
+                &nbsp;Checkbox
               </Button>
               <Button
                 colorScheme="green"
@@ -270,7 +306,7 @@ function BtnAddPertanyaan() {
         }
         message={stateNotif.msg}
         isError={stateNotif.isError}
-        // onSubmit={() => onSubmit()}
+        onSubmit={() => onSubmit()}
       />
     </div>
   );

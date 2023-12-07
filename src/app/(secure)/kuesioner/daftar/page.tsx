@@ -13,6 +13,9 @@ import {
   PopoverContent,
   PopoverBody,
   PopoverArrow,
+  Center,
+  Checkbox,
+  Portal,
 } from "@chakra-ui/react";
 import Loading from "../loading";
 import BtnAddPertanyaan from "./BtnAddPertanyaan";
@@ -25,14 +28,20 @@ import DeletePertanyaan from "./DeletePertanyaan";
 import DataTable from "@/app/components/datatable/data-table";
 import { useRouter } from "next/navigation";
 import { MdArrowBackIosNew } from "react-icons/md";
-import { HiChevronRight } from "react-icons/hi";
 import { GrMoreVertical } from "react-icons/gr";
 import { BsUiRadios } from "react-icons/bs";
+import OnOffPertanyaan from "./OnOffPertanyaan";
+
 interface DataItem {
   id: string;
-  title: string;
+  pertanyaan: string;
   type: string;
+  is_required: boolean;
+  note: string | null;
+  is_active: boolean;
+  opsi: string | null;
 }
+
 function page() {
   const { setBreadcrumbs } = useBreadcrumbContext();
   const getForCrumbs: any = FindDefaultRoute();
@@ -40,7 +49,24 @@ function page() {
   const [isLoading, setIsLoading] = useState(true);
 
   let hidenCols: string[] = ["id"];
-  const filterOptions = [{ key: "title", label: "Judul Kuesioner" }];
+  const filterOptions = [
+    { key: "pertanyaan", label: "Judul Pertanyaan" },
+    {
+      key: "is_active",
+      label: "Status",
+      values: ["Aktif", "Nonaktif"],
+    },
+    {
+      key: "type",
+      label: "Model",
+      values: ["Opsi Pilihan", "Checkbox", "Teks Pendek", "Teks Panjang"],
+    },
+    {
+      key: "is_required",
+      label: "Wajib Isi",
+      type: "val_check",
+    },
+  ];
 
   const router = useRouter();
 
@@ -50,12 +76,8 @@ function page() {
       accessor: "id",
     },
     {
-      Header: "Model",
-      accessor: "type",
-    },
-    {
-      Header: "Judul Kuesioner",
-      accessor: "title",
+      Header: "Judul Pertanyaan",
+      accessor: "pertanyaan",
       Cell: ({ value }) => (
         <Text
           textOverflow={"ellipsis"}
@@ -67,23 +89,110 @@ function page() {
           {value}
         </Text>
       ),
-      // width: "450px",
-      // minWidth: 260,
-      // maxWidth: 550,
+      width: "450px",
+      minWidth: 260,
+      maxWidth: 550,
+    },
+    {
+      Header: "Model",
+      accessor: "type",
+      filter: (rows, id, filterValues) => {
+        if (filterValues === "Opsi Pilihan")
+          return rows.filter((row) => row.values["type"] === "radio");
+        else if (filterValues === "Checkbox")
+          return rows.filter((row) => row.values["type"] === "checkbox");
+        else if (filterValues === "Teks Pendek")
+          return rows.filter((row) => row.values["type"] === "short_text");
+        else if (filterValues === "Teks Panjang")
+          return rows.filter((row) => row.values["type"] === "long_text");
+        else return rows;
+      },
+      Cell: ({ value }) =>
+        value === "checkbox" ? (
+          <Text>Checkbox</Text>
+        ) : value === "radio" ? (
+          <Text>Opsi Pilihan</Text>
+        ) : value === "short_text" ? (
+          <Text>Teks Pendek</Text>
+        ) : (
+          <Text>Teks Panjang</Text>
+        ),
+    },
+    {
+      Header: "Status",
+      accessor: "is_active",
+      filter: (rows, id, filterValues) => {
+        if (filterValues === "Aktif")
+          return rows.filter((row) => row.values["is_active"] === true);
+        else if (filterValues === "Nonaktif")
+          return rows.filter((row) => row.values["is_active"] === false);
+        else return rows;
+      },
+      Cell: ({ value }) =>
+        value === true ? <Text>Aktif</Text> : <Text>Non Aktif</Text>,
+    },
+    {
+      Header: "Wajib Isi",
+      accessor: "is_required",
+      Cell: ({ value }) =>
+        value === true ? (
+          <Center>
+            <Checkbox defaultChecked isDisabled size="lg" />
+          </Center>
+        ) : null,
+    },
+    {
+      Header: "Catatan",
+      accessor: "note",
+      Cell: ({ value }) => (
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+        >
+          {value}
+        </Text>
+      ),
+      width: "300px",
+      minWidth: 260,
+      maxWidth: 300,
+    },
+    {
+      Header: "Value Jawaban",
+      accessor: "opsi",
+      Cell: ({ value }) =>
+        value ? (
+          <Text
+            textOverflow={"ellipsis"}
+            overflow={"hidden"}
+            flex="1"
+            noOfLines={2}
+            whiteSpace="normal"
+          >
+            {value}
+          </Text>
+        ) : (
+          "-"
+        ),
+      width: "260px",
+      minWidth: 200,
+      maxWidth: 260,
     },
   ];
   const renderActions = (rowData: any) => {
     return (
-      <HStack alignItems={"end"}>
+      <HStack>
         {rowData?.type !== "short_text" && rowData?.type !== "long_text" && (
           <Button
-            bgColor="yellow.500"
+            bgColor="yellow.300"
             _hover={{
-              bg: "yellow.400",
+              bg: "yellow.200",
             }}
-            color="white"
+            color="gray.500"
             title="Buat Value Pertanyaan"
-            // onClick={() => handleDetail(rowData)}
+            onClick={() => router.push(`/kuesioner/daftar/${rowData.id}`)}
             key="kelola"
             size={"sm"}
           >
@@ -91,39 +200,54 @@ function page() {
           </Button>
         )}
 
-        <Popover placement="bottom">
-          <PopoverTrigger>
-            <Button
-              bgColor="teal.400"
-              _hover={{
-                bg: "teal.300",
-              }}
-              // colorScheme="aqua"
-              title="More ..."
-              color="white"
-              // onClick={() => handleDetail(rowData)}
-              key="more"
-              size={{ base: "xs", sm: "sm" }}
-            >
-              <GrMoreVertical />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent w="fit-content" _focus={{ boxShadow: "none" }}>
-            <PopoverArrow />
-            <PopoverBody>
-              <Stack>
-                <EditPertanyaan
-                  type={rowData.type}
-                  formdata={rowData}
-                  onSubmit={() => getDaftar()}
-                />
-                <DeletePertanyaan
-                  dataDelete={rowData}
-                  onSubmit={() => getDaftar()}
-                />
-              </Stack>
-            </PopoverBody>
-          </PopoverContent>
+        <Popover closeOnBlur={false} isLazy>
+          {({ isOpen }) => (
+            <>
+              <PopoverTrigger>
+                <Button
+                  bgColor="teal.400"
+                  _hover={{
+                    bg: "teal.300",
+                  }}
+                  // colorScheme="aqua"
+                  title="More ..."
+                  color="white"
+                  // onClick={() => handleDetail(rowData)}
+                  key="more"
+                  size={{ base: "xs", sm: "sm" }}
+                >
+                  <GrMoreVertical />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                w="fit-content"
+                _focus={{ boxShadow: "none" }}
+                display={isOpen ? "block" : "none"}
+                overflowX={"auto"}
+                rootProps={{ style: { left: 0 } }}
+              >
+                <PopoverArrow />
+                <PopoverBody>
+                  <Stack>
+                    <EditPertanyaan
+                      type={rowData.type}
+                      formdata={rowData}
+                      onSubmit={() => getDaftar()}
+                    />
+                    <OnOffPertanyaan
+                      onoff={rowData.is_active}
+                      onSubmit={() => getDaftar()}
+                      dataPertanyaan={rowData}
+                    />
+                    <DeletePertanyaan
+                      dataDelete={rowData}
+                      onSubmit={() => getDaftar()}
+                    />
+                  </Stack>
+                </PopoverBody>
+              </PopoverContent>
+            </>
+          )}
         </Popover>
       </HStack>
     );
@@ -133,14 +257,11 @@ function page() {
     try {
       setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
-      // const response = await axiosCustom.get(`/course/all`);
+      const response = await axiosCustom.get(`/kuesioner-tahunan/pertanyaan`);
       const timer = setTimeout(() => {
-        setDataPertanyaan([
-          { id: "1234", title: "drtfhsjkl", type: "checkbox" },
-          { id: "1235", title: "Lrem 67 tye", type: "short_text" },
-        ]);
+        setDataPertanyaan(response.data.data);
         setIsLoading(false);
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
@@ -179,7 +300,7 @@ function page() {
             >
               Kembali
             </Button>
-            <BtnAddPertanyaan />
+            <BtnAddPertanyaan onSubmit={() => getDaftar()} />
           </HStack>
         </Flex>
         {daftarPertanyaan && daftarPertanyaan?.length > 0 ? (

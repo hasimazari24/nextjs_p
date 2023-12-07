@@ -27,33 +27,48 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Pagination from "@/app/components/datatable/pagination";
 import dynamic from "next/dynamic";
 
-const Responden = () => {
-  //   const [dataPartisipan, setDataPartisipan] =
-  //     useState<ClassInfo.Partisipan | null>(null);
-  //   const [isLoading, setIsLoading] = useState(true);
+interface RespondenList {
+  id: string;
+  name: string;
+  image_id: string;
+  image_url: string;
+}
 
-  //   useEffect(() => {
-  //     // if (need_updated === true)
-  //     getUpdatedPartisipan();
-  //   }, []);
-  //   const getUpdatedPartisipan = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       // Panggil API menggunakan Axios dengan async/await
-  //       const response = await axiosCustom.get(`/course/participant`);
-  //       const timer = setTimeout(() => {
-  //         // setIdTenant(id);
-  //         setDataPartisipan(response.data.data); // Set isLoading to false to stop the spinner
-  //         setIsLoading(false);
-  //       }, 1000);
-  //       return () => clearTimeout(timer);
-  //     } catch (error: any) {
-  //       console.error("Gagal memuat data:", error);
-  //       setIsLoading(false);
-  //     }
-  //   };
+interface RespondenProps {
+  responden_count: number;
+  responden: RespondenList;
+}
 
-  const columns: ReadonlyArray<Column<{ id: string; name: string }>> = [
+const Responden = ({ idKuesioner }: { idKuesioner: string }) => {
+  const [dataResponden, setDataResponden] = useState<RespondenProps | null>(
+    null,
+  );
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // if (need_updated === true)
+    getResponden();
+  }, []);
+  const getResponden = async () => {
+    try {
+      setIsLoading(true);
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(
+        `/kuesioner-tahunan/${idKuesioner}/responden`,
+      );
+      const timer = setTimeout(() => {
+        // setIdTenant(id);
+        setDataResponden(response.data.data); // Set isLoading to false to stop the spinner
+        setIsLoading(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal memuat data:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const columns: ReadonlyArray<Column<RespondenList>> = [
     {
       Header: "id",
       accessor: "id",
@@ -62,13 +77,15 @@ const Responden = () => {
       Header: "name",
       accessor: "name",
     },
-    // {
-    //   Header: "image_url",
-    //   accessor: "image_url",
-    // },
+    {
+      Header: "image_url",
+      accessor: "image_url",
+    },
   ];
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <Suspense fallback={<Loading />}>
       <Stack spacing={{ base: 4, md: 6 }}>
         <Flex
@@ -81,7 +98,10 @@ const Responden = () => {
               Responden Kuesioner
             </Text>
             <Text fontWeight="medium">
-              Total : <span style={{ color: "green" }}>10 Responden</span>
+              Total :{" "}
+              <span style={{ color: "green" }}>
+                {dataResponden?.responden_count} Responden
+              </span>
             </Text>
           </VStack>
           <HStack spacing={2} align="start">
@@ -91,48 +111,39 @@ const Responden = () => {
           </HStack>
         </Flex>
         {/* konten disinii (daftar participant) */}
-        {/* {dataPartisipan &&
-        Array.isArray(dataPartisipan.participant) &&
-        dataPartisipan.participant.length > 0 ? ( */}
-        <CardTable
-          data={[
-            {
-              id: "35353",
-              name: "jhdfgnsdf",
-            },
-            {
-              id: "35373",
-              name: "jhdfgnsdf",
-            },
-          ]}
-          column={columns}
-        />
-        {/* )  */}
-        {/* // : (
-        //   <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
-        //     <Image
-        //       src="/img/classroom.png"
-        //       h={{ base: "150px", sm: "170px", md: "250px" }}
-        //       w="auto"
-        //       // w="auto"
-        //       // objectFit={"cover"}
-        //     />
-        //     <Text
-        //       as="b"
-        //       fontWeight={"bold"}
-        //       fontSize={{ base: "16px", md: "17px" }}
-        //       textAlign={"center"}
-        //     >
-        //       Data Partisipan Kosong
-        //     </Text>
-        //     <Text
-        //       fontSize={{ base: "15.5px", md: "16.5px" }}
-        //       textAlign={"center"}
-        //     >
-        //       Mungkin belum dibuat atau sudah dihapus
-        //     </Text>
-        //   </Stack>
-        // )} */}
+        {dataResponden &&
+        Array.isArray(dataResponden.responden) &&
+        dataResponden.responden.length > 0 ? (
+          <CardTable
+            data={dataResponden?.responden}
+            column={columns}
+            onSubmit={() => getResponden()}
+          />
+        ) : (
+          <Stack justifyContent={"center"} spacing={0} alignItems={"center"}>
+            <Image
+              src="/img/kuesioner-item.png"
+              h={{ base: "150px", sm: "170px", md: "250px" }}
+              w="auto"
+              // w="auto"
+              // objectFit={"cover"}
+            />
+            <Text
+              as="b"
+              fontWeight={"bold"}
+              fontSize={{ base: "16px", md: "17px" }}
+              textAlign={"center"}
+            >
+              Data Responden Kosong
+            </Text>
+            <Text
+              fontSize={{ base: "15.5px", md: "16.5px" }}
+              textAlign={"center"}
+            >
+              Mungkin belum dibuat atau sudah dihapus
+            </Text>
+          </Stack>
+        )}
       </Stack>
     </Suspense>
   );
@@ -144,12 +155,13 @@ interface CardTableProps<T extends object> {
   //   roleAccess: string;
   //   classEnd: boolean;
   //   idKelas: string;
-  //   onSubmit: () => void;
+  onSubmit: () => void;
   //   idTenant: (id: string) => void;
   //   tabIndex: () => void;
 }
 
 function CardTable<T extends object>(props: CardTableProps<T>) {
+  const { data, column, onSubmit } = props;
   const {
     page,
     prepareRow,
@@ -166,8 +178,8 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
     state: { pageIndex },
   } = useTable(
     {
-      data: props.data,
-      columns: props.column,
+      data: data,
+      columns: column,
       initialState: {
         pageSize: 5,
       },

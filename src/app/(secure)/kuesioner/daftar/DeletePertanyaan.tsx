@@ -34,7 +34,7 @@ const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/delete-course-item/${dataDelete?.id}`,
+          `/kuesioner-tahunan/pertanyaan/${dataDelete?.id}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -69,6 +69,7 @@ const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
         key="hapusData"
         size="sm"
         w="165px"
+        justifyContent={"start"}
       >
         <DeleteIcon />
         &nbsp; Hapus Pertanyaan
@@ -78,7 +79,7 @@ const DeletePertanyaan = ({ dataDelete, onSubmit }: deleteProps) => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={deleteData}
-        dataConfirm={`Yakin ingin hapus pertanyaan : ${dataDelete?.title} ?`}
+        dataConfirm={`Yakin ingin hapus pertanyaan : ${dataDelete?.pertanyaan} ?`}
         isLoading={isLoadingDelete}
       />
 
