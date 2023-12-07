@@ -9,6 +9,11 @@ import {
   VStack,
   Text,
   Image,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
 } from "@chakra-ui/react";
 import Loading from "../../loading";
 import { MdArrowBackIosNew } from "react-icons/md/";
@@ -21,10 +26,26 @@ import DndTable from "@/app/components/datatable/DndTable";
 import EditValueJawaban from "./EditValueJawaban";
 import DeleteValueJawaban from "./DeleteValueJawaban";
 import AddValueJawaban from "./AddValueJawaban";
+import { axiosCustom } from "@/app/api/axios";
+import NotFound from "@/app/components/template/NotFound";
+import ModelType from "../ModelType";
+import OnOffValueJawaban from "./OnOffValueJawaban";
+import { GrMoreVertical } from "react-icons/gr";
+
+interface OpsiProps {
+  id_opsi: string;
+  value: string;
+  is_active: boolean;
+}
 
 interface Cards {
-  id: string;
-  title: string;
+  id_pertanyaan: string;
+  pertanyaan: string;
+  type: string;
+  is_required: boolean;
+  note: string;
+  is_active: boolean;
+  opsi: OpsiProps;
 }
 
 function page({ params }: { params: { id_pertanyaan: string } }) {
@@ -42,7 +63,8 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingDragging, setLoadingDragging] = useState(false);
 
-  const [data, setData] = useState<Cards[] | []>([]);
+  const [data, setData] = useState<Cards | null>(null);
+  const [dataOpsi, setDataOpsi] = useState<OpsiProps[] | []>([]);
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source } = result;
 
@@ -57,10 +79,11 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
     setLoadingDragging(true);
 
     // Update the order in your state (or wherever you keep it)
-    const newData = Array.from(data);
+    const newData: OpsiProps[] =
+      data && Array.isArray(data.opsi) ? data.opsi : [];
     const [removed] = newData.splice(source.index, 1);
     newData.splice(destination.index, 0, removed);
-    setData([...newData]);
+    setDataOpsi([...newData]);
     const updatedData = newData.map((item, index) => {
       return { ...item, no_urut: index + 1 };
     });
@@ -68,20 +91,26 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
     console.log("updatedData : ", updatedData);
     const timeoutId = setTimeout(() => {
       setLoadingDragging(false);
-    }, 3000);
+    }, 1000);
 
     // Membersihkan timeout jika komponen dilepas
     return () => clearTimeout(timeoutId);
   };
 
-  const columns: ReadonlyArray<Column<Cards>> = [
+  const columns: ReadonlyArray<Column<OpsiProps>> = [
     {
       Header: "ID",
-      accessor: "id",
+      accessor: "id_opsi",
     },
     {
-      Header: "Judul",
-      accessor: "title",
+      Header: "Value",
+      accessor: "value",
+    },
+    {
+      Header: "Status",
+      accessor: "is_active",
+      Cell: ({ value }) =>
+        value === true ? <Text>Aktif</Text> : <Text>Non Aktif</Text>,
     },
   ];
 
@@ -89,32 +118,14 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
     try {
       setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
-      // const response = await axiosCustom.get(`/course/all`);
+      const response = await axiosCustom.get(
+        `/kuesioner-tahunan/pertanyaan-opsi/${getParamsId}`,
+      );
       const timer = setTimeout(() => {
-        setData([
-          {
-            id: "656aac72bf7b36c645595886",
-            title: "Dean Mclaughlin",
-          },
-          {
-            id: "656aac7245358b8608c5f028",
-            title: "Brock Compton",
-          },
-          {
-            id: "656aac72ac9ae63994e686bd",
-            title: "Harvey Rodriguez",
-          },
-          {
-            id: "656aac7234c589aef01bf4a3",
-            title: "Connie Hill",
-          },
-          {
-            id: "656aac722a9a5778cf140483",
-            title: "Jarvis Maldonado",
-          },
-        ]);
+        setData(response.data.data);
+        setDataOpsi(response.data.data.opsi);
         setIsLoading(false);
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
@@ -131,10 +142,40 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
       <div>
         <HStack>
           <EditValueJawaban formData={rowData} onSubmit={() => getValueJ()} />
-          <DeleteValueJawaban
-            dataDelete={rowData}
-            onSubmit={() => getValueJ()}
-          />
+          <Popover placement="bottom">
+            <PopoverTrigger>
+              <Button
+                bgColor="teal.300"
+                _hover={{
+                  bg: "teal.200",
+                }}
+                // colorScheme="aqua"
+                title="More ..."
+                color="white"
+                // onClick={() => handleDetail(rowData)}
+                key="more"
+                size={{ base: "xs", sm: "sm" }}
+              >
+                <GrMoreVertical />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent w="fit-content" _focus={{ boxShadow: "none" }}>
+              <PopoverArrow />
+              <PopoverBody>
+                <Stack>
+                  <OnOffValueJawaban
+                    onoff={rowData.is_active}
+                    dataValue={rowData}
+                    onSubmit={() => getValueJ()}
+                  />
+                  <DeleteValueJawaban
+                    dataDelete={rowData}
+                    onSubmit={() => getValueJ()}
+                  />
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </HStack>
       </div>
     );
@@ -142,7 +183,7 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
 
   return isLoading ? (
     <Loading />
-  ) : (
+  ) : data ? (
     <Suspense fallback={<Loading />}>
       <Stack spacing={{ base: 2, md: 4 }}>
         <Flex
@@ -166,27 +207,29 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
             >
               Kembali
             </Button>
-            <AddValueJawaban onSubmit={() => getValueJ()} />
+            <AddValueJawaban
+              idPertanyaan={getParamsId}
+              onSubmit={() => getValueJ()}
+            />
           </HStack>
         </Flex>
         <VStack spacing={1} align="flex-start" mr={{ base: 0, md: 2 }}>
           <Text fontSize={["md", "lg"]}>
-            <span style={{ fontWeight: "bold" }}>PERTANYAAN :</span> Bagaimana
-            Perkembangan Bisnis Anda dan dari tahun mana saja anda memperoleh
-            Tahun Pendanaan dsfgsdfg fdgdsfgdsv fd
+            <span style={{ fontWeight: "bold" }}>PERTANYAAN :</span>{" "}
+            {data.pertanyaan}
           </Text>
           <Text fontSize={["md", "lg"]}>
             <span style={{ fontWeight: "bold" }}>MODEL PERTANYAAN :</span>{" "}
-            Checklist
+            {ModelType(data.type)}
           </Text>
         </VStack>
-        {data && data.length > 0 ? (
+        {dataOpsi.length > 0 ? (
           <DndTable
             columns={columns}
-            data={data}
+            data={dataOpsi}
             droppableId={"ValueJawabanTable"}
             onDragEnd={(result) => handleDragEnd(result)}
-            hiddenColumns={["id"]}
+            hiddenColumns={["id_opsi"]}
             isLoading={loadingDragging}
             disabledDrag={true}
           >
@@ -219,6 +262,13 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
         )}
       </Stack>
     </Suspense>
+  ) : (
+    <NotFound
+      statusCode={404}
+      msg={"Not Found"}
+      statusDesc="Halaman tidak ditemukan. Periksa kembali URL Halaman yang anda kunjungi atau kembali ke halaman daftar pertanyaan kuesioner."
+      backToHome="/kuesioner/daftar"
+    />
   );
 }
 

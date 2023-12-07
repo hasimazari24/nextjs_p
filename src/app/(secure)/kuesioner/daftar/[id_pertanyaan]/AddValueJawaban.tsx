@@ -28,6 +28,7 @@ import { axiosCustom } from "@/app/api/axios";
 
 interface ModalProps {
   onSubmit: () => void;
+  idPertanyaan:string;
 }
 
 interface FormValues {
@@ -35,7 +36,7 @@ interface FormValues {
   valueJ: string;
 }
 
-const AddValueJawaban: React.FC<ModalProps> = ({ onSubmit }) => {
+const AddValueJawaban: React.FC<ModalProps> = ({ onSubmit, idPertanyaan }) => {
   const {
     register,
     handleSubmit,
@@ -74,7 +75,7 @@ const AddValueJawaban: React.FC<ModalProps> = ({ onSubmit }) => {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       // const getIdTenant: any = idTenant;
       await axiosCustom
-        .post(`/tenant/add-program`, {
+        .post(`/kuesioner-tahunan/pertanyaan-opsi/${idPertanyaan}`, {
           value: data.valueJ,
         })
         .then((response) => {
@@ -103,7 +104,7 @@ const AddValueJawaban: React.FC<ModalProps> = ({ onSubmit }) => {
 
   return (
     <>
-      <Button colorScheme="green" key="tambahData" size="sm">
+      <Button colorScheme="green" key="tambahData" size="sm" onClick={()=> onOpen()}>
         <AddIcon />
         &nbsp;Tambah Value
       </Button>

@@ -36,7 +36,10 @@ interface FormValues {
   valueJ: string;
 }
 
-const EditValueJawaban: React.FC<ModalProps> = ({ formData, onSubmit }) => {
+const EditValueJawaban: React.FC<ModalProps> = ({
+  formData,
+  onSubmit,
+}) => {
   const {
     register,
     handleSubmit,
@@ -75,13 +78,13 @@ const EditValueJawaban: React.FC<ModalProps> = ({ formData, onSubmit }) => {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       // const getIdTenant: any = idTenant;
       await axiosCustom
-        .post(`/tenant/add-program`, {
+        .patch(`/kuesioner-tahunan/pertanyaan-opsi/${data.id}`, {
           value: data.valueJ,
         })
         .then((response) => {
           // console.log(response);
-          if (response.status === 201) {
-            handleShowMessage("Data berhasil disimpan.", false);
+          if (response.status === 200) {
+            handleShowMessage("Data berhasil diubah.", false);
           }
         });
       onClose(); // Tutup modal
@@ -138,7 +141,7 @@ const EditValueJawaban: React.FC<ModalProps> = ({ formData, onSubmit }) => {
                     <Input
                       type="text"
                       {...register("id")}
-                      defaultValue={formData?.id}
+                      defaultValue={formData?.id_opsi}
                       // className={`form-control ${errors.name ? "is-invalid"}`}
                     />
                     <FormErrorMessage>
@@ -161,7 +164,7 @@ const EditValueJawaban: React.FC<ModalProps> = ({ formData, onSubmit }) => {
                       <Input
                         type="text"
                         {...fields.valueJ}
-                        defaultValue={formData?.valueJ}
+                        defaultValue={formData?.value}
                       />
                       <FormErrorMessage>
                         {errors.valueJ && errors.valueJ.message}
