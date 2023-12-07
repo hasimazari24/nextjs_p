@@ -34,7 +34,7 @@ const DeleteDaftar = ({ dataDelete, onSubmit }: deleteProps) => {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/delete-course-item/${dataDelete?.id}`,
+          `/group-pertanyaan/${dataDelete?.id}/destroy`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
@@ -76,7 +76,7 @@ const DeleteDaftar = ({ dataDelete, onSubmit }: deleteProps) => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={deleteData}
-        dataConfirm={`Yakin ingin hapus pertanyaan : ${dataDelete?.title} ?`}
+        dataConfirm={`Yakin ingin hapus pertanyaan : ${dataDelete?.pertanyaan} ?`}
         isLoading={isLoadingDelete}
       />
 

@@ -1,64 +1,40 @@
 "use client";
-import React, { useState } from "react";
 import {
-  Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   Button,
-  Stack,
-  Flex,
-  useDisclosure,
-  Box,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Checkbox,
+  Flex,
+  Box,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
-import { axiosCustom } from "@/app/api/axios";
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
+import { axiosCustom } from "@/app/api/axios";
+import FindPertanyaan from "./FindPertanyaan";
 
-function EditGroup({
-  formData,
-  onSubmit,
-}: {
-  formData: any;
+interface addProps {
+  idGroup: string;
   onSubmit: () => void;
-}) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+}
+
+function AddPertanyaanToGroup({ idGroup, onSubmit }: addProps) {
+  const { handleSubmit } = useForm<{ id_pertanyaan: string }>();
+
   const [isLoading, setIsLoading] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    setValue,
-  } = useForm<{ title: string }>();
-
-  const resetAll = () => {
-    reset();
-    onClose();
-  };
-
-  const fields = {
-    title: register("title", {
-      required: "Pertanyaan harus diisi!",
-      maxLength: {
-        value: 255,
-        message: "Maksimal 255 karakter.",
-      },
-    }),
-  };
-
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [idPertanyaan, setIdPertanyaan] = useState<string | null>(null);
   const [stateNotif, setStateNotif] = useState({
     msg: "",
     isError: false,
@@ -72,16 +48,28 @@ function EditGroup({
     });
   };
 
-  const handleFormSubmit: SubmitHandler<any> = async (data) => {
+  const handleFormSubmit: SubmitHandler<any> = async () => {
+    // console.log(data);
+    if (!idPertanyaan) return handleShowMessage("Maaf pertanyaan harus dipilih!", true);
+    const dataBaru: {
+      id_pertanyaan?: string | null;
+    } = {
+      id_pertanyaan: idPertanyaan,
+    };
+    // console.log(dataBaru);
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       await axiosCustom
-        .put(`/kuesioner-tahunan/pertanyaan-header/${formData.id}`, data)
+        .post(
+          `/grup-pertanyaan/${idGroup}/tambah-pertanyaan`,
+          dataBaru,
+        )
         .then((response) => {
           // console.log(response);
-          if (response.status === 200) {
-            handleShowMessage("Data berhasil diubah.", false);
+          if (response.status === 201) {
+            handleShowMessage("Data berhasil disimpan.", false);
           }
         });
 
@@ -100,61 +88,44 @@ function EditGroup({
       setIsLoading(false);
     }
   };
+
+  const resetAll = () => {
+    setModalOpen(false);
+    setIdPertanyaan(null);
+    setIsLoading(false);
+  };
+
   return (
     <div>
       <Button
-        bgColor="blue.100"
-        _hover={{
-          bg: "blue.200",
-        }}
-        title="Edit Data"
-        color="gray.700"
-        onClick={() => onOpen()}
-        key="editData"
+        colorScheme="green"
+        key="tambahData"
         size="sm"
-        w="120px"
-        justifyContent={"start"}
+        onClick={() => {
+          setModalOpen(true);
+        }}
       >
-        <EditIcon />
-        &nbsp; Edit
+        <AddIcon />
+        &nbsp;Tambah Pertanyaan
       </Button>
 
       <Modal
-        isOpen={isOpen}
+        isOpen={isModalOpen}
         onClose={() => {
           resetAll();
         }}
-        size="2xl"
+        size="3xl"
       >
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <ModalHeader>Tambah Grup Pertanyaan</ModalHeader>
+            <ModalHeader>Tambah Pertanyaan untuk Grup</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">
-                <FormControl mb="3" isInvalid={!!errors.title}>
-                  <Flex flexDirection={["column", "row"]}>
-                    <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
-                      <FormLabel>
-                        Judul Grup&nbsp;
-                        <Text as={"span"} color={"red"}>
-                          *
-                        </Text>
-                      </FormLabel>
-                    </Box>
-                    <Box flex={["1", "80%"]}>
-                      <Textarea
-                        {...fields.title}
-                        defaultValue={formData.title}
-                        // className={`form-control ${errors.name ? "is-invalid"}`}
-                      />
-                      <FormErrorMessage>
-                        {errors.title && errors.title.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </Flex>
-                </FormControl>
+                <FindPertanyaan
+                  onResult={(idPertanyaan) => setIdPertanyaan(idPertanyaan)}
+                />
               </div>
             </ModalBody>
             <ModalFooter>
@@ -166,7 +137,7 @@ function EditGroup({
                 isLoading={isLoading}
                 size="sm"
               >
-                {"Simpan Perubahan"}
+                {"Tambah"}
               </Button>
               <Button
                 leftIcon={<CloseIcon />}
@@ -187,7 +158,6 @@ function EditGroup({
           </form>
         </ModalContent>
       </Modal>
-
       <ModalNotif
         isOpen={stateNotif.isNotifShow}
         onClose={() =>
@@ -205,4 +175,4 @@ function EditGroup({
   );
 }
 
-export default EditGroup;
+export default AddPertanyaanToGroup;

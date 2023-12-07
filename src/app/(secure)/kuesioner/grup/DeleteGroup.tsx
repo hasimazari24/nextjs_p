@@ -34,7 +34,7 @@ const DeleteGroup = ({ dataDelete, onSubmit }: deleteProps) => {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.delete(
-          `/delete-course-item/${dataDelete?.id}`,
+          `/kuesioner-tahunan/pertanyaan-header/${dataDelete?.id}`,
         );
 
         // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)

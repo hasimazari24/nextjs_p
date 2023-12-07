@@ -24,20 +24,30 @@ import { useRouter } from "next/navigation";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { HiChevronRight } from "react-icons/hi";
 import { GrMoreVertical } from "react-icons/gr";
+import { BsUiRadios } from "react-icons/bs";
 
 interface DataItem {
   id: string;
   title: string;
+  pertanyaan_count: string;
+  pertanyaan_aktif_count: string;
+  pertanyaan_nonaktif_count: string;
+  created_at: string;
 }
+
 import AddGroup from "./AddGroup";
 import EditGroup from "./EditGroup";
 import DeleteGroup from "./DeleteGroup";
 
 function page() {
-  const [dataGroup, setDataGroup] = useState<any[] | []>();
+  const [dataGroup, setDataGroup] = useState<DataItem[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  let hidenCols: string[] = ["id"];
+  let hidenCols: string[] = [
+    "id",
+    "pertanyaan_nonaktif_count",
+    "pertanyaan_aktif_count",
+  ];
   const filterOptions = [{ key: "title", label: "Judul Kuesioner" }];
 
   const router = useRouter();
@@ -61,9 +71,44 @@ function page() {
           {value}
         </Text>
       ),
-      // width: "450px",
-      // minWidth: 260,
-      // maxWidth: 550,
+      width: "450px",
+      minWidth: 260,
+      maxWidth: 450,
+    },
+    {
+      Header: "pertanyaan_aktif_count",
+      accessor: "pertanyaan_aktif_count",
+    },
+    {
+      Header: "pertanyaan_nonaktif_count",
+      accessor: "pertanyaan_nonaktif_count",
+    },
+    {
+      Header: "Pertanyaan",
+      accessor: "pertanyaan_count",
+      Cell: ({ value, row }) => (
+        <Stack>
+          <Text as="b">
+            Total : <span style={{ fontWeight: "normal" }}>{value}</span>
+          </Text>
+          <Text as="b">
+            Aktif :{" "}
+            <span style={{ fontWeight: "normal" }}>
+              {row.values["pertanyaan_aktif_count"]}
+            </span>
+          </Text>
+          <Text as="b">
+            Nonaktif :{" "}
+            <span style={{ fontWeight: "normal" }}>
+              {row.values["pertanyaan_nonaktif_count"]}
+            </span>
+          </Text>
+        </Stack>
+      ),
+    },
+    {
+      Header: "Tgl Dibuat",
+      accessor: "created_at",
     },
   ];
   const renderActions = (rowData: any) => {
@@ -71,24 +116,24 @@ function page() {
       <div>
         <HStack>
           <Button
-            bgColor="yellow.400"
+            bgColor="yellow.300"
             _hover={{
-              bg: "yellow.500",
+              bg: "yellow.200",
             }}
-            color="white"
-            title="Kelola Grup Pertanyaan"
-            // onClick={() => handleDetail(rowData)}
+            color="gray.500"
+            title="Kelola Pertanyaan untuk dibuat grup"
+            onClick={() => router.push(`/kuesioner/grup/${rowData.id}`)}
             key="kelola"
             size={"sm"}
           >
-            <HiChevronRight fontSize={"20px"} />
+            <BsUiRadios fontSize={"17px"} />
           </Button>
           <Popover placement="bottom">
             <PopoverTrigger>
               <Button
-                bgColor="teal.300"
+                bgColor="teal.400"
                 _hover={{
-                  bg: "teal.400",
+                  bg: "teal.300",
                 }}
                 // colorScheme="aqua"
                 title="More ..."
@@ -122,14 +167,13 @@ function page() {
     try {
       setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
-      // const response = await axiosCustom.get(`/course/all`);
+      const response = await axiosCustom.get(
+        `/kuesioner-tahunan/pertanyaan-header`,
+      );
       const timer = setTimeout(() => {
-        setDataGroup([
-          { id: "1234", title: "drtfhsjkl", type: "checkbox" },
-          { id: "1235", title: "Lrem 67 tye", type: "short_text" },
-        ]);
+        setDataGroup(response.data.data);
         setIsLoading(false);
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     } catch (error: any) {
       console.error("Gagal memuat data:", error);
@@ -146,6 +190,7 @@ function page() {
   useEffect(() => {
     if (getForCrumbs) setBreadcrumbs(getForCrumbs);
   }, []);
+
   return isLoading ? (
     <Loading />
   ) : (
@@ -171,7 +216,7 @@ function page() {
             >
               Kembali
             </Button>
-            <AddGroup />
+            <AddGroup onSubmit={() => getGroup()} />
           </HStack>
         </Flex>
         {dataGroup && dataGroup.length > 0 ? (

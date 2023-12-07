@@ -21,12 +21,12 @@ import {
   Checkbox,
   Textarea,
 } from "@chakra-ui/react";
-
+import { axiosCustom } from "@/app/api/axios";
 import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
 import ModalNotif from "@/app/components/modal/modal-notif";
 
-function AddGroup() {
+function AddGroup({ onSubmit }: { onSubmit: () => void }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -67,7 +67,32 @@ function AddGroup() {
   };
 
   const handleFormSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
+    try {
+      setIsLoading(true);
+      // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+      await axiosCustom
+        .post(`/kuesioner-tahunan/pertanyaan-header`, data)
+        .then((response) => {
+          // console.log(response);
+          if (response.status === 201) {
+            handleShowMessage("Data berhasil disimpan.", false);
+          }
+        });
+
+      //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      // onClose(); // Tutup modal
+      resetAll();
+      // Setelah data disimpan, atur pesan berhasil ke dalam state
+    } catch (error: any) {
+      // console.error(error);
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoading(false);
+    }
   };
   return (
     <div>
@@ -160,7 +185,7 @@ function AddGroup() {
         }
         message={stateNotif.msg}
         isError={stateNotif.isError}
-        // onSubmit={() => onSubmit()}
+        onSubmit={() => onSubmit()}
       />
     </div>
   );
