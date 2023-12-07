@@ -141,7 +141,6 @@ function DndTable<T extends object>({
                       width="100px"
                       fontSize="sm"
                       id="action"
-                      borderBottom={"none"}
                     >
                       <Box>Action</Box>
                     </Th>

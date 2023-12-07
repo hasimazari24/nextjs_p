@@ -30,13 +30,14 @@ interface NavItemProps extends FlexProps {
   icon: IconType;
   children: React.ReactNode;
   link: string;
+  onClose: () => void;
 }
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
 
-const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, link, onClose, ...rest }: NavItemProps) => {
   // const [isLoading, setIsLoading] = useState(false);
   // const pathname = usePathname();
 
@@ -47,13 +48,7 @@ const NavItem = ({ icon, children, link, ...rest }: NavItemProps) => {
   // }, [pathname]);
 
   return (
-    <NextLink
-      href={link}
-      passHref
-      // onClick={() => {
-      //   if (link !== pathname) setIsLoading(true);
-      // }}
-    >
+    <NextLink href={link} passHref onClick={onClose}>
       {/* <a> */}
       <Flex
         align="center"
@@ -92,7 +87,12 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
   const renderMenu = () => {
     if (getUser) {
       return permissions[getUser.role]?.link_menu.map((link) => (
-        <NavItem key={link.name} icon={link.icon} link={link.href}>
+        <NavItem
+          key={link.name}
+          icon={link.icon}
+          link={link.href}
+          onClose={() => onClose()}
+        >
           {link.name}
         </NavItem>
       ));
