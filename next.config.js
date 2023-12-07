@@ -6,7 +6,7 @@ const packageJSON = require("./package.json");
 const nextConfig = {
   //ini diperlukan utk reordering row dalam mode develop
   // comment jika mode production krn nextjs otomatis set ini scr true
-  // reactStrictMode : false,
+  reactStrictMode : false,
   env: {
     APP_NAME: "SITEMAN-STP",
     APP_DESCRIPTION: "Sistem Tenant Mentoring dan Manajemen Solo Technopark",
