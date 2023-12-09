@@ -27,6 +27,7 @@ import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext"
 import { ViewIcon } from "@chakra-ui/icons";
 import Responden from "./components/Responden";
 import Kuesioner from "./components/Kuesioner";
+import PreviewKuesioner from "./components/PreviewKuesioner";
 
 function page({ params }: { params: { id_kuesioner: string } }) {
   const getParamsId = params.id_kuesioner;
@@ -119,16 +120,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
               >
                 Dibuat : {state.dataKuesioner?.created_at}
               </Text>
-              <Button
-                bgColor={"teal.100"}
-                _hover={{ bgColor: "teal.200" }}
-                key="preview"
-                size="sm"
-                //   onClick={() => onOpen()}
-              >
-                <ViewIcon />
-                &nbsp; Preview
-              </Button>
+              <PreviewKuesioner idKuesioner={getParamsId} />
             </VStack>
           </HStack>
           <Button
@@ -155,7 +147,10 @@ function page({ params }: { params: { id_kuesioner: string } }) {
 
         <Tabs variant="unstyled">
           <TabList justifyContent="center">
-            <Stack direction={{ base : "column", sm : "row" }} spacing={{ base: 4, md: 6 }}>
+            <Stack
+              direction={{ base: "column", sm: "row" }}
+              spacing={{ base: 4, md: 6 }}
+            >
               <Tab
                 _selected={{
                   background: "blue.500",
@@ -173,7 +168,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
                   fontSize={{ base: "md", lg: "lg" }}
                 >
                   <MdOutlinePeople />
-                  <Text >Responden</Text>
+                  <Text>Responden</Text>
                 </HStack>
               </Tab>
               <Tab
@@ -194,9 +189,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
                   px={{ base: 0, md: 6 }}
                 >
                   <HiOutlineClipboardList />
-                  <Text >
-                    Grup Pertanyaan
-                  </Text>
+                  <Text>Grup Pertanyaan</Text>
                 </HStack>
               </Tab>
               {/* <Tab hidden={true}>Progress</Tab> */}

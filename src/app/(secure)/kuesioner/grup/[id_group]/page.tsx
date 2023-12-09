@@ -28,6 +28,7 @@ import { axiosCustom } from "@/app/api/axios";
 import AddPertanyaanToGroup from "./AddPertanyaanToGroup";
 import NotFound from "@/app/components/template/NotFound";
 import ModalNotif from "@/app/components/modal/modal-notif";
+import PreviewGroup from "./PreviewGroup";
 
 interface PertanyaanProps {
   id: string;
@@ -255,18 +256,7 @@ function page({ params }: { params: { id_group: string } }) {
                 idGroup={paramsId}
                 onSubmit={() => getGroup()}
               />
-              <Button
-                bgColor={"teal.100"}
-                _hover={{ bgColor: "teal.200" }}
-                key="preview"
-                size="sm"
-                onClick={() =>
-                  router.push(`/kuesioner/grup/${paramsId}/preview`)
-                }
-              >
-                <ViewIcon />
-                &nbsp; Preview
-              </Button>
+              <PreviewGroup idGroup={paramsId} />
             </HStack>
           </Flex>
 
