@@ -29,6 +29,10 @@ import {
   InputLeftElement,
   Box,
   Skeleton,
+  Select,
+  Checkbox,
+  HStack,
+  Text
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 
@@ -37,9 +41,11 @@ type DndTableProps<T extends object> = {
   columns: ReadonlyArray<Column<T>>;
   onDragEnd: (result: DropResult) => void;
   droppableId: string;
-  filterOptions?: {
+  filterOptions: {
     key: string;
     label: string;
+    values?: string[];
+    type?: string;
   }[];
   hiddenColumns: string[];
   children?: (rowData: any) => ReactNode;
@@ -94,28 +100,78 @@ function DndTable<T extends object>({
   };
 
   return (
-    <Stack w="full">
+    <Stack w="full" mb="2">
       <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
         <Stack
           direction={{ base: "column", md: "row", lg: "row" }}
           alignItems={"center"}
         >
           {filterOptions &&
-            filterOptions.map((filter, index) => (
-              <InputGroup key={index}>
-                <InputLeftElement pointerEvents="none">
-                  <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
-                </InputLeftElement>
-                <Input
-                  pl="3rem"
-                  type="text"
-                  placeholder={`Cari ${filter.label}`}
-                  onChange={handleFilterChange}
-                  mb="2"
-                  isDisabled={isLoading}
-                />
-              </InputGroup>
-            ))}
+            filterOptions.map((option, index) => {
+              if (Array.isArray(option.values)) {
+                return (
+                  <Select
+                    key={index}
+                    onChange={(e) => setFilter(option.key, e.target.value)}
+                    mb="2"
+                    isDisabled={isLoading}
+                  >
+                    <option key={"optionAll"} value="">
+                      Semua {option.label}
+                    </option>
+                    {option.values.map((value, index) => (
+                      <option key={index} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </Select>
+                );
+              }
+              if (option.type) {
+                return (
+                  <HStack
+                    key={option.label}
+                    mb="2"
+                    alignItems={"center"}
+                    pr="3"
+                  >
+                    <Text
+                      whiteSpace={{
+                        base: "nowrap",
+                        md: "normal",
+                        lg: "nowrap",
+                      }}
+                    >
+                      {option.label}
+                    </Text>{" "}
+                    <Checkbox
+                      key={option.label}
+                      onChange={(e) =>
+                        setFilter(option.key, e.target.checked ? true : null)
+                      }
+                      size="lg"
+                      isDisabled={isLoading}
+                    />
+                  </HStack>
+                );
+              } else
+                return (
+                  <InputGroup key={option.key}>
+                    <InputLeftElement pointerEvents="none">
+                      <Button pl="1rem" leftIcon={<SearchIcon />}></Button>
+                    </InputLeftElement>
+                    <Input
+                      pl="3rem"
+                      key={option.key}
+                      type="text"
+                      placeholder={`Cari ${option.label}`}
+                      onChange={(e) => setFilter(option.key, e.target.value)}
+                      mb="2"
+                      isDisabled={isLoading}
+                    />
+                  </InputGroup>
+                );
+            })}
         </Stack>
       </Flex>
 
