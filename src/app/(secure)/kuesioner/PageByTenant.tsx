@@ -9,6 +9,8 @@ import {
   Image,
   SimpleGrid,
   Center,
+  Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
@@ -17,10 +19,12 @@ import { useRouter } from "next/navigation";
 import { Column } from "react-table";
 import DataTable from "@/app/components/datatable/data-table";
 import TenantModalKuesioner from "./TenantModalKuesioner";
+import TenantNilaiMentor from "./TenantNilaiMentor";
 
 interface DataItem {
   id: string;
   title: string;
+  type: string;
 }
 
 function PageByTenant() {
@@ -57,16 +61,25 @@ function PageByTenant() {
       {
         id: "1234",
         title: "Saya Cobaa",
+        type: "tahunan",
       },
     ],
   );
 
   const renderActions = (rowData: any) => {
-    return <TenantModalKuesioner />;
+    return (
+      <>
+        <Button onClick={onOpen}>Nilai Mentor</Button>
+      </>
+    );
+    // <TenantModalKuesioner />;
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     // <Stack spacing={{ base: 4, md: 6 }}>
+    <>
       <DataTable
         data={datKuesionerTenant}
         column={columns}
@@ -75,6 +88,9 @@ function PageByTenant() {
       >
         {(rowData: any) => renderActions(rowData)}
       </DataTable>
+
+      <TenantNilaiMentor isOpen={isOpen} onClose={onClose} />
+    </>
     // </Stack>
   );
 }

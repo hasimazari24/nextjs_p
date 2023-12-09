@@ -35,7 +35,7 @@ function PageKuesioner() {
   }, []);
 
   return (
-    <Stack spacing={{ base: 4, md: 6 }} w="full">
+    <Stack spacing={{ base: 2, md: 4 }} w="full">
       <Flex
         justifyContent={"space-between"}
         // pb="2"
