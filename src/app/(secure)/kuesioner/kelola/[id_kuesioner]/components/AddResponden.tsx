@@ -1,18 +1,40 @@
 "use client";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Flex,
+  Box,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
-import ConfirmationModal from "@/app/components/modal/modal-confirm";
-import { Button } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import FindResponden from "./FindResponden";
 
-interface deleteProps {
+interface addProps {
+  idKuesioner: string;
   onSubmit: () => void;
-  dataDelete: any;
 }
 
-const DeleteResponden = ({ dataDelete, onSubmit }: deleteProps) => {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+function AddResponden({ idKuesioner, onSubmit }: addProps) {
+  const { handleSubmit } = useForm<{ id_tenant: string }>();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [idTenant, setIdTenant] = useState<string | null>(null);
   const [stateNotif, setStateNotif] = useState({
     msg: "",
     isError: false,
@@ -26,60 +48,114 @@ const DeleteResponden = ({ dataDelete, onSubmit }: deleteProps) => {
     });
   };
 
-  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
-  const deleteData = async () => {
-    if (dataDelete.id) {
-      // Lakukan penghapusan data berdasarkan dataToDeleteId
-      try {
-        setIsLoadingDelete(true);
-        // Panggil API menggunakan Axios dengan async/await
-        const response = await axiosCustom.delete(
-          `/delete-course-item/${dataDelete?.id}`,
-        );
+  const handleFormSubmit: SubmitHandler<any> = async () => {
+    // console.log(data);
+    if (!idTenant) return handleShowMessage("Maaf Tenant harus dipilih!", true);
+    const dataBaru: {
+      id_tenant?: string | null;
+    } = {
+      id_tenant: idTenant,
+    };
+    // console.log(dataBaru);
+    setIsLoading(true);
 
-        // Imitasi penundaan dengan setTimeout (ganti nilai 2000 dengan waktu yang Anda inginkan dalam milidetik)
-        const timer = setTimeout(() => {
+    try {
+      // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
+      await axiosCustom
+        .post(`/kuesioner-tahunan/${idKuesioner}/tambah-responden`, dataBaru)
+        .then((response) => {
           // console.log(response);
-          if (response.status === 200) {
-            setIsLoadingDelete(false);
-            handleShowMessage("Data berhasil dihapus.", false);
-            setIsDeleteModalOpen(false);
+          if (response.status === 201) {
+            handleShowMessage("Data berhasil disimpan.", false);
           }
-        }, 1000);
+        });
 
-        return () => clearTimeout(timer);
-      } catch (error: any) {
-        if (error?.response) {
-          handleShowMessage(
-            `Terjadi Kesalahan: ${error.response.data.message}`,
-            true,
-          );
-        } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
-        setIsLoadingDelete(false);
-      }
+      //   onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      // onClose(); // Tutup modal
+      resetAll();
+      // Setelah data disimpan, atur pesan berhasil ke dalam state
+    } catch (error: any) {
+      // console.error(error);
+      if (error?.response) {
+        handleShowMessage(
+          `Terjadi Kesalahan: ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
+      setIsLoading(false);
     }
+  };
+
+  const resetAll = () => {
+    setModalOpen(false);
+    setIdTenant(null);
+    setIsLoading(false);
   };
 
   return (
     <div>
       <Button
-        title="Hapus Data"
-        colorScheme="red"
-        onClick={() => setIsDeleteModalOpen(true)}
-        key="hapusData"
+        colorScheme="green"
+        key="tambahData"
         size="sm"
+        onClick={() => {
+          setModalOpen(true);
+        }}
       >
-        <DeleteIcon /> &nbsp; Hapus Responden
+        <AddIcon />
+        &nbsp;Tambah Responden
       </Button>
 
-      <ConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={deleteData}
-        dataConfirm={`Yakin ingin hapus Responden ini : ${dataDelete?.title} ?`}
-        isLoading={isLoadingDelete}
-      />
-
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          resetAll();
+        }}
+        size="2xl"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
+            <ModalHeader>Tambah Responden Kuesioner</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="data-form">
+                <FindResponden
+                  idKuesioner={idKuesioner}
+                  onResult={(idTenant) => setIdTenant(idTenant)}
+                />
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                leftIcon={<CheckIcon />}
+                colorScheme="blue"
+                mr={3}
+                type="submit"
+                isLoading={isLoading}
+                size="sm"
+              >
+                {"Tambah"}
+              </Button>
+              <Button
+                leftIcon={<CloseIcon />}
+                color={"red.400"}
+                bgColor="red.50"
+                _hover={{
+                  bg: "red.50",
+                }}
+                onClick={() => {
+                  resetAll();
+                }}
+                boxShadow="md"
+                size="sm"
+              >
+                Tutup
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
       <ModalNotif
         isOpen={stateNotif.isNotifShow}
         onClose={() =>
@@ -95,6 +171,6 @@ const DeleteResponden = ({ dataDelete, onSubmit }: deleteProps) => {
       />
     </div>
   );
-};
+}
 
-export default DeleteResponden;
+export default AddResponden;

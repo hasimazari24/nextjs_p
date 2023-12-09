@@ -26,6 +26,8 @@ import { axiosCustom } from "@/app/api/axios";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Pagination from "@/app/components/datatable/pagination";
 import dynamic from "next/dynamic";
+import AddResponden from "./AddResponden";
+import DeleteResponden from "./DeleteResponden";
 
 interface RespondenList {
   id: string;
@@ -105,9 +107,10 @@ const Responden = ({ idKuesioner }: { idKuesioner: string }) => {
             </Text>
           </VStack>
           <HStack spacing={2} align="start">
-            <Stack spacing={4}>
-              <Spacer />
-            </Stack>
+            <AddResponden
+              idKuesioner={idKuesioner}
+              onSubmit={() => getResponden()}
+            />
           </HStack>
         </Flex>
         {/* konten disinii (daftar participant) */}
@@ -336,15 +339,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                   >
                     {row.values.name}
                   </Text>
-                  <Button
-                    colorScheme="red"
-                    key="preview"
-                    size="sm"
-                    //   onClick={() => onOpen()}
-                  >
-                    <DeleteIcon />
-                    &nbsp;Hapus Responden
-                  </Button>
+                  <DeleteResponden dataDelete={row.values} onSubmit={()=>props.onSubmit()} />
                 </Stack>
               );
             })}
