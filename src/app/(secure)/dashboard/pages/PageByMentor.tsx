@@ -134,9 +134,8 @@ function PageByMentor({ data }: { data: any }) {
                         p={{ base: 2, md: 4 }}
                         cursor="pointer"
                         _hover={{ bgColor: "gray.100" }}
-                        w="full"
                       >
-                        <HStack align={"start"} spacing={3} w="full">
+                        <HStack align={"start"} spacing={3}>
                           <Box
                             p={2}
                             rounded={"md"}
@@ -155,134 +154,94 @@ function PageByMentor({ data }: { data: any }) {
                               {index + 1}
                             </Text>
                           </Box>
-                          {/* <TableContainer w="100%"> */}
-                          <Stack width="full">
-                            <Table>
-                              <Tbody>
-                                <Tr>
-                                  <Td
-                                    width="80px"
-                                    borderBottom={"none"}
-                                    pr="0"
-                                    pl="0"
-                                    pt="0"
-                                    p="5px"
+                          <Stack spacing={[2, 1]} direction="column" w="full">
+                            <Stack
+                              direction={["column", "row"]}
+                              spacing={[0, 3]}
+                            >
+                              <HStack align={"start"}>
+                                <Box w="75px">
+                                  <Text
+                                    as="b"
+                                    fontSize={"md"}
+                                    color={"gray.500"}
                                   >
-                                    <Text
-                                      as="b"
-                                      fontSize={"md"}
-                                      color={"gray.500"}
-                                    >
-                                      Kelas
-                                    </Text>
-                                  </Td>
-                                  <Td
-                                    width="5%"
-                                    textAlign="center"
-                                    borderBottom={"none"}
-                                    pr="0"
-                                    pl="0"
-                                    pt="0"
-                                    p="5px"
+                                    Kelas
+                                  </Text>
+                                </Box>
+                                <Text as="b">:</Text>
+                              </HStack>
+
+                              <Box w="full">
+                                <Text fontSize={"md"} color={"gray.500"}>
+                                  {d.nama_kelas}
+                                </Text>
+                              </Box>
+                            </Stack>
+                            <Stack
+                              direction={["column", "row"]}
+                              spacing={[0, 3]}
+                            >
+                              <HStack align={"start"}>
+                                <Box w="75px">
+                                  <Text
+                                    fontSize={{ base: "lg", md: "xl" }}
+                                    fontWeight={"bold"}
                                   >
-                                    :
-                                  </Td>
-                                  <Td
-                                    width="full"
-                                    borderBottom={"none"}
-                                    pr="0"
-                                    pl="0"
-                                    pt="0"
-                                    p="5px"
-                                  >
-                                    <Text fontSize={"md"} color={"gray.500"}>
-                                      {d.nama_kelas}
-                                    </Text>
-                                  </Td>
-                                </Tr>
-                                <Tr>
-                                  <Td
-                                    width="80px"
-                                    borderBottom={"none"}
-                                    pr="0"
-                                    pl="0"
-                                    pt="0"
-                                    p="5px"
-                                  >
-                                    <Text
-                                      fontSize={{ base: "lg", md: "xl" }}
-                                      fontWeight={"bold"}
-                                    >
-                                      <span style={{ fontWeight: "bold" }}>
-                                        Tugas
-                                      </span>
-                                    </Text>
-                                  </Td>
-                                  <Td
-                                    width="5%"
-                                    textAlign="center"
-                                    borderBottom={"none"}
-                                    pr="0"
-                                    pl="0"
-                                    pt="0"
-                                    p="5px"
-                                  >
-                                    :
-                                  </Td>
-                                  <Td
-                                    width="full"
-                                    borderBottom={"none"}
-                                    pr="0"
-                                    pl="0"
-                                    pt="0"
-                                    p="5px"
-                                  >
-                                    <Text
-                                      fontSize={{ base: "lg", md: "xl" }}
-                                      fontWeight={"bold"}
-                                    >
-                                      {d.nama_tugas}
-                                    </Text>
-                                  </Td>
-                                </Tr>
-                                <Tr>
-                                  <Td width="80px" pr="0" pl="0" pt="0" p="5px">
-                                    <Text fontSize="15px" color={"gray.500"}>
-                                      <span style={{ fontWeight: "bold" }}>
-                                        Dikirim
-                                      </span>
-                                    </Text>
-                                  </Td>
-                                  <Td
-                                    width="5%"
-                                    textAlign="center"
-                                    pr="0"
-                                    pl="0"
-                                    pt="0"
-                                    p="5px"
-                                  >
-                                    :
-                                  </Td>
-                                  <Td width="full" pr="0" pl="0" pt="0" p="5px">
-                                    <Text fontSize="15px" color={"gray.500"}>
-                                      {d.nama_tenant} - {d.tgl_submit_jawaban}
-                                    </Text>
-                                  </Td>
-                                </Tr>
-                              </Tbody>
-                            </Table>
+                                    Tugas
+                                  </Text>
+                                </Box>
+                                <Text as="b">:</Text>
+                              </HStack>
+
+                              <Box w="full">
+                                <Text
+                                  fontSize={{ base: "lg", md: "xl" }}
+                                  fontWeight={"bold"}
+                                >
+                                  {d.nama_tugas}
+                                </Text>
+                              </Box>
+                            </Stack>
+                            <Stack
+                              direction={["column", "row"]}
+                              spacing={[0, 3]}
+                            >
+                              <HStack align={"start"}>
+                                <Box w="75px">
+                                  <Text fontSize="15px" color={"gray.500"}>
+                                    <span style={{ fontWeight: "bold" }}>
+                                      Dikirim
+                                    </span>
+                                  </Text>
+                                </Box>
+                                <Text as="b">:</Text>
+                              </HStack>
+
+                              <Box w="full">
+                                <Text fontSize="15px" color={"gray.500"}>
+                                  {d.nama_tenant} - {d.tgl_submit_jawaban}
+                                </Text>
+                              </Box>
+                            </Stack>
                           </Stack>
-                          {/* </TableContainer> */}
                         </HStack>
                         <Box
                           bgColor="gray.500"
                           color="white"
                           rounded={"md"}
                           alignContent={"center"}
-                          p={3}
+                          p={{ base: 2, md: 3 }}
                           opacity={"0.2"}
                         >
-                          <ExternalLinkIcon fontSize="22px" />
+                          <ExternalLinkIcon
+                            fontSize={{
+                              base: "18px",
+                              sm: "19px",
+                              md: "20px",
+                              xl: "22px",
+                            }}
+                          />
                         </Box>
                       </Flex>
                     </Link>

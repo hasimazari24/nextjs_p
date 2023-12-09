@@ -425,11 +425,11 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                               rowData={row.values}
                               onSubmit={() => props.onSubmit()}
                             />
-                            {/* <OnOffKuesioner
+                            <OnOffKuesioner
                               dataKuesioner={row.values}
                               onSubmit={() => props.onSubmit()}
                               onoff={row.values.is_active}
-                            /> */}
+                            />
                             <DeleteKuesioner
                               dataDelete={row.values}
                               onSubmit={() => props.onSubmit()}

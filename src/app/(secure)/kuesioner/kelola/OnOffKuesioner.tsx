@@ -48,7 +48,7 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
         setIsLoadingDelete(true);
         // Panggil API menggunakan Axios dengan async/await
         const response = await axiosCustom.put(
-          `/kuesioner-tahunan/pertanyaan/${dataKuesioner.id}/set-active`,
+          `/kuesioner-tahunan/${dataKuesioner.id}/set-active`,
           {
             is_active: onoff === false ? true : false,
           },
@@ -61,8 +61,8 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
             setIsLoadingDelete(false);
             handleShowMessage(
               onoff === true
-                ? "Pertanyaan telah Nonaktifkan."
-                : "Pertanyaan Berhasil Diaktifkan kembali",
+                ? "Kuesioner telah Nonaktifkan."
+                : "Kuesioner Berhasil Diaktifkan kembali",
               false,
             );
             setIsDeleteModalOpen(false);
@@ -86,7 +86,7 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
     <div>
       {onoff === true ? (
         <Button
-          title="Nonaktifkan Pertanyaan"
+          title="Nonaktifkan Kuesioner"
           bgColor={"orange.500"}
           _hover={{ bgColor: "orange.600" }}
           color="white"
@@ -101,7 +101,7 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
         </Button>
       ) : (
         <Button
-          title="Aktifkan Pertanyaan"
+          title="Aktifkan Kuesioner"
           colorScheme="pink"
           onClick={() => onOpen()}
           key="activeClass"
@@ -119,12 +119,12 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
         <ModalContent>
           {onoff === true ? (
             <>
-              <ModalHeader>Konfirmasi Nonaktifkan Pertanyaan</ModalHeader>
+              <ModalHeader>Konfirmasi Nonaktifkan Kuesioner</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Text>
-                  Yakin Ingin menonaktifkan pertanyaan :{" "}
-                  {dataKuesioner.pertanyaan} ?
+                  Yakin Ingin menonaktifkan Kuesioner :{" "}
+                  {dataKuesioner.title} ?
                 </Text>
               </ModalBody>
               <ModalFooter>
@@ -143,11 +143,11 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
             </>
           ) : (
             <>
-              <ModalHeader>Konfirmasi Aktifkan Pertanyaan</ModalHeader>
+              <ModalHeader>Konfirmasi Aktifkan Kuesioner</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Text>
-                  Yakin Ingin aktifkan pertanyaan : {dataKuesioner.pertanyaan}{" "}
+                  Yakin Ingin aktifkan Kuesioner : {dataKuesioner.title}{" "}
                   ?
                 </Text>
               </ModalBody>
