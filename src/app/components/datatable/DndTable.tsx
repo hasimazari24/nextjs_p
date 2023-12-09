@@ -41,7 +41,7 @@ type DndTableProps<T extends object> = {
   columns: ReadonlyArray<Column<T>>;
   onDragEnd: (result: DropResult) => void;
   droppableId: string;
-  filterOptions: {
+  filterOptions?: {
     key: string;
     label: string;
     values?: string[];
