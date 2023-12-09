@@ -20,7 +20,7 @@ import {
   Td,
   Tbody,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { BsBuilding, BsPeople, BsPerson } from "react-icons/bs";
 import { FaBookReader } from "react-icons/fa";
 import { RiMoneyDollarBoxLine, RiSignalTowerLine } from "react-icons/ri";
@@ -36,6 +36,8 @@ import DetailCard from "./DetailCard";
 import { VscFolderActive, VscCloseAll } from "react-icons/vsc";
 import { BiDoorOpen } from "react-icons/bi";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import TenantModalKuesioner from "../../kuesioner/TenantModalKuesioner";
 
 function PageByTenant({ data }: { data: any }) {
   return (
@@ -85,7 +87,10 @@ function PageByTenant({ data }: { data: any }) {
                 tugas={data.tugas}
                 heading="DAFTAR TUGAS BELUM DIKERJAKAN"
               />
-              <AccordionDetail heading="DAFTAR KUESIONER PERLU DIISI" />
+              <AccordionDetail
+                heading="DAFTAR KUESIONER PERLU DIISI"
+                kuesioner={data.kuesioner}
+              />
             </SimpleGrid>
           </>
         )}
@@ -103,248 +108,221 @@ const AccordionDetail = ({
   kuesioner?: any[] | [];
   heading: string;
 }) => {
-  return (
-    <Accordion w={"full"} allowToggle defaultIndex={[0]}>
-      <AccordionItem borderWidth={0}>
-        <AccordionButton
-          bg={"yellow.100"}
-          _hover={{ bg: "yellow.200" }}
-          borderWidth={0}
-          _expanded={{ bg: "yellow.200" }}
-        >
-          <Text
-            flex="1"
-            textAlign="left"
-            fontWeight={"bold"}
-            color={"gray.600"}
-          >
-            {heading}
-          </Text>
-          <AccordionIcon />
-        </AccordionButton>
-        <AccordionPanel
-          pb={4}
-          maxH={{ base: "250px", md: "320px" }}
-          overflowY={"auto"}
-          css={{
-            // For Chrome
-            "&::-webkit-scrollbar": {
-              width: "4px",
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "#E2E8F0",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#A0AEC0",
-              borderRadius: "4px",
-            },
-            // For Firefox
-            scrollbarColor: "#A0AEC0",
-            scrollbarWidth: "thin",
-          }}
-          pr="1"
-        >
-          <Stack spacing={3} py={3}>
-            {tugas &&
-              (tugas.length > 0 ? (
-                tugas.map((d: any, index: number) => (
-                  <Link
-                    href={`/kelas/${d.id_kelas}/sesi-kelas/${d.id_sesi}`}
-                    target="_blank"
-                    key={index}
-                  >
-                    <Flex
-                      justifyContent={"space-between"}
-                      backgroundColor={"gray.50"}
-                      borderColor={"gray.400"}
-                      rounded={"lg"}
-                      alignItems={"center"}
-                      h="full"
-                      p={{ base: 2, md: 4 }}
-                      cursor="pointer"
-                      _hover={{ bgColor: "gray.100" }}
-                    >
-                      <HStack align={"start"} spacing={3}>
-                        <Box
-                          p={2}
-                          rounded={"md"}
-                          bgColor={"teal.300"}
-                          boxSize={"30px"}
-                          color={"white"}
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Text
-                            as={"b"}
-                            textAlign={"center"}
-                            whiteSpace={"nowrap"}
-                          >
-                            {index + 1}
-                          </Text>
-                        </Box>
-                        <Stack width="full">
-                          <Table>
-                            <Tbody>
-                              <Tr>
-                                <Td
-                                  width="18%"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text
-                                    as="b"
-                                    fontSize={"md"}
-                                    color={"gray.500"}
-                                  >
-                                    Kelas
-                                  </Text>
-                                </Td>
-                                <Td
-                                  width="3%"
-                                  textAlign="center"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  :
-                                </Td>
-                                <Td
-                                  width="full"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text fontSize={"md"} color={"gray.500"}>
-                                    {d.nama_kelas}
-                                  </Text>
-                                </Td>
-                              </Tr>
-                              <Tr>
-                                <Td
-                                  width="18%"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text
-                                    fontSize={{ base: "lg", md: "xl" }}
-                                    fontWeight={"bold"}
-                                  >
-                                    <span style={{ fontWeight: "bold" }}>
-                                      Tugas
-                                    </span>
-                                  </Text>
-                                </Td>
-                                <Td
-                                  width="3%"
-                                  textAlign="center"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  :
-                                </Td>
-                                <Td
-                                  width="full"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text
-                                    fontSize={{ base: "lg", md: "xl" }}
-                                    fontWeight={"bold"}
-                                  >
-                                    {d.nama_tugas}
-                                  </Text>
-                                </Td>
-                              </Tr>
-                              <Tr>
-                                <Td width="18%" pr="0" pl="0" pt="0" p="5px">
-                                  <Text fontSize="15px" color={"gray.500"}>
-                                    <span style={{ fontWeight: "bold" }}>
-                                      Due Date
-                                    </span>
-                                  </Text>
-                                </Td>
-                                <Td
-                                  width="3%"
-                                  textAlign="center"
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  :
-                                </Td>
-                                <Td width="full" pr="0" pl="0" pt="0" p="5px">
-                                  <Text fontSize="15px" color="red">
-                                    {d.batas_pengumpulan}
-                                  </Text>
-                                </Td>
-                              </Tr>
-                            </Tbody>
-                          </Table>
-                        </Stack>
-                      </HStack>
-                      <Box
-                        bgColor="gray.500"
-                        color="white"
-                        rounded={"md"}
-                        alignContent={"center"}
-                        p={3}
-                        opacity={"0.2"}
-                      >
-                        <ExternalLinkIcon fontSize="22px" />
-                      </Box>
-                    </Flex>
-                  </Link>
-                ))
-              ) : (
-                <Stack
-                  justifyContent={"center"}
-                  spacing={3}
-                  alignItems={"center"}
-                >
-                  <Image
-                    src="/img/classroom.png"
-                    h={{ base: "120px", sm: "140px", md: "180px" }}
-                    w="auto"
-                    // w="auto"
-                    // objectFit={"cover"}
-                  />
-                  <Text
-                    as="b"
-                    fontWeight={"bold"}
-                    fontSize={{ base: "14px", md: "15px" }}
-                    textAlign={"center"}
-                  >
-                    Tidak ada tugas yang perlu dikerjakan.
-                  </Text>
-                </Stack>
-              ))}
+  const [isModalKuesioner, setIsModalKuesioner] = useState(false);
+  const [isModalPenilaian, setIsModalPenilaian] = useState(false);
+  const [idKuesioner, setIdKuesioner] = useState("");
+  const router = useRouter();
 
-            {kuesioner &&
-              (kuesioner.length > 0 ? (
-                kuesioner.map((d: any, index: number) => (
-                  <Link
-                    href={`/kelas/${d.id_kelas}/sesi-kelas/${d.id_sesi}`}
-                    target="_blank"
-                    key={index}
+  const handleKuesioner = (data: any) => {
+    if (data.type === "tahunan") {
+      setIsModalKuesioner(true);
+      setIdKuesioner(data.id);
+    }
+    // else if (data.type === "nilai_mentor")
+  };
+
+  return (
+    <>
+      <Accordion w={"full"} allowToggle defaultIndex={[0]}>
+        <AccordionItem borderWidth={0}>
+          <AccordionButton
+            bg={"yellow.100"}
+            _hover={{ bg: "yellow.200" }}
+            borderWidth={0}
+            _expanded={{ bg: "yellow.200" }}
+          >
+            <Text
+              flex="1"
+              textAlign="left"
+              fontWeight={"bold"}
+              color={"gray.600"}
+            >
+              {heading}
+            </Text>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel
+            pb={4}
+            maxH={{ base: "250px", md: "320px" }}
+            overflowY={"auto"}
+            css={{
+              // For Chrome
+              "&::-webkit-scrollbar": {
+                width: "4px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "#E2E8F0",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#A0AEC0",
+                borderRadius: "4px",
+              },
+              // For Firefox
+              scrollbarColor: "#A0AEC0",
+              scrollbarWidth: "thin",
+            }}
+            pr="1"
+          >
+            <Stack spacing={3} py={3}>
+              {tugas &&
+                (tugas.length > 0 ? (
+                  tugas.map((d: any, index: number) => (
+                    <Link
+                      href={`/kelas/${d.id_kelas}/sesi-kelas/${d.id_sesi}`}
+                      target="_blank"
+                      key={index}
+                    >
+                      <Flex
+                        justifyContent={"space-between"}
+                        backgroundColor={"gray.50"}
+                        borderColor={"gray.400"}
+                        rounded={"lg"}
+                        alignItems={"center"}
+                        h="full"
+                        p={{ base: 2, md: 4 }}
+                        cursor="pointer"
+                        _hover={{ bgColor: "gray.100" }}
+                      >
+                        <HStack align={"start"} spacing={3}>
+                          <Box
+                            p={2}
+                            rounded={"md"}
+                            bgColor={"teal.300"}
+                            boxSize={"30px"}
+                            color={"white"}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Text
+                              as={"b"}
+                              textAlign={"center"}
+                              whiteSpace={"nowrap"}
+                            >
+                              {index + 1}
+                            </Text>
+                          </Box>
+                          <Stack spacing={[2, 1]} direction="column" w="full">
+                            <Stack
+                              direction={["column", "row"]}
+                              spacing={[0, 3]}
+                            >
+                              <HStack align={"start"}>
+                                <Box w="120px">
+                                  <Text
+                                    as="b"
+                                    fontSize={"md"}
+                                    color={"gray.500"}
+                                  >
+                                    Kelas
+                                  </Text>
+                                </Box>
+                                <Text as="b">:</Text>
+                              </HStack>
+
+                              <Box w="full">
+                                <Text fontSize={"md"} color={"gray.500"}>
+                                  {d.nama_kelas}
+                                </Text>
+                              </Box>
+                            </Stack>
+                            <Stack
+                              direction={["column", "row"]}
+                              spacing={[0, 3]}
+                            >
+                              <HStack align={"start"}>
+                                <Box w="120px">
+                                  <Text
+                                    fontSize={{ base: "lg", md: "xl" }}
+                                    fontWeight={"bold"}
+                                  >
+                                    Tugas
+                                  </Text>
+                                </Box>
+                                <Text as="b">:</Text>
+                              </HStack>
+
+                              <Box w="full">
+                                <Text
+                                  fontSize={{ base: "lg", md: "xl" }}
+                                  fontWeight={"bold"}
+                                >
+                                  {d.nama_tugas}
+                                </Text>
+                              </Box>
+                            </Stack>
+                            <Stack
+                              direction={["column", "row"]}
+                              spacing={[0, 3]}
+                            >
+                              <HStack align={"start"}>
+                                <Box w="120px">
+                                  <Text
+                                    fontSize="15px"
+                                    color={"gray.500"}
+                                    fontWeight={"bold"}
+                                  >
+                                    Due Date
+                                  </Text>
+                                </Box>
+                                <Text as="b">:</Text>
+                              </HStack>
+
+                              <Box w="full">
+                                <Text fontSize="15px" color="red">
+                                  {d.batas_pengumpulan}
+                                </Text>
+                              </Box>
+                            </Stack>
+                          </Stack>
+                        </HStack>
+                        <Box
+                          bgColor="gray.500"
+                          color="white"
+                          rounded={"md"}
+                          alignContent={"center"}
+                          p={{ base: 2, md: 3 }}
+                          opacity={"0.2"}
+                        >
+                          <ExternalLinkIcon
+                            fontSize={{
+                              base: "18px",
+                              sm: "19px",
+                              md: "20px",
+                              xl: "22px",
+                            }}
+                          />
+                        </Box>
+                      </Flex>
+                    </Link>
+                  ))
+                ) : (
+                  <Stack
+                    justifyContent={"center"}
+                    spacing={3}
+                    alignItems={"center"}
                   >
+                    <Image
+                      src="/img/classroom.png"
+                      h={{ base: "120px", sm: "140px", md: "180px" }}
+                      w="auto"
+                      // w="auto"
+                      // objectFit={"cover"}
+                    />
+                    <Text
+                      as="b"
+                      fontWeight={"bold"}
+                      fontSize={{ base: "14px", md: "15px" }}
+                      textAlign={"center"}
+                    >
+                      Tidak ada tugas yang perlu dikerjakan.
+                    </Text>
+                  </Stack>
+                ))}
+
+              {kuesioner &&
+                (kuesioner.length > 0 ? (
+                  kuesioner.map((d: any, index: number) => (
                     <Flex
                       justifyContent={"space-between"}
                       backgroundColor={"gray.50"}
@@ -355,6 +333,8 @@ const AccordionDetail = ({
                       p={{ base: 2, md: 4 }}
                       cursor="pointer"
                       _hover={{ bgColor: "gray.100" }}
+                      key={index}
+                      onClick={() => handleKuesioner(d)}
                     >
                       <HStack align={"start"} spacing={3}>
                         <Box
@@ -375,121 +355,35 @@ const AccordionDetail = ({
                             {index + 1}
                           </Text>
                         </Box>
-                        <Stack width="full">
-                          <Table>
-                            <Tbody>
-                              <Tr>
-                                <Td
-                                  width="18%"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text
-                                    as="b"
-                                    fontSize={"md"}
-                                    color={"gray.500"}
-                                  >
-                                    Kelas
-                                  </Text>
-                                </Td>
-                                <Td
-                                  width="3%"
-                                  textAlign="center"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  :
-                                </Td>
-                                <Td
-                                  width="full"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text fontSize={"md"} color={"gray.500"}>
-                                    {d.nama_kelas}
-                                  </Text>
-                                </Td>
-                              </Tr>
-                              <Tr>
-                                <Td
-                                  width="18%"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text
-                                    fontSize={{ base: "lg", md: "xl" }}
-                                    fontWeight={"bold"}
-                                  >
-                                    <span style={{ fontWeight: "bold" }}>
-                                      Tugas
-                                    </span>
-                                  </Text>
-                                </Td>
-                                <Td
-                                  width="3%"
-                                  textAlign="center"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  :
-                                </Td>
-                                <Td
-                                  width="full"
-                                  borderBottom={"none"}
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  <Text
-                                    fontSize={{ base: "lg", md: "xl" }}
-                                    fontWeight={"bold"}
-                                  >
-                                    {d.nama_tugas}
-                                  </Text>
-                                </Td>
-                              </Tr>
-                              <Tr>
-                                <Td width="18%" pr="0" pl="0" pt="0" p="5px">
-                                  <Text fontSize="15px" color={"gray.500"}>
-                                    <span style={{ fontWeight: "bold" }}>
-                                      Due Date
-                                    </span>
-                                  </Text>
-                                </Td>
-                                <Td
-                                  width="3%"
-                                  textAlign="center"
-                                  pr="0"
-                                  pl="0"
-                                  pt="0"
-                                  p="5px"
-                                >
-                                  :
-                                </Td>
-                                <Td width="full" pr="0" pl="0" pt="0" p="5px">
-                                  <Text fontSize="15px" color="red">
-                                    {d.batas_pengumpulan}
-                                  </Text>
-                                </Td>
-                              </Tr>
-                            </Tbody>
-                          </Table>
+                        <Stack spacing={[2, 1]} direction="column" w="full">
+                          <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                            <HStack align={"start"}>
+                              <Box w="120px">
+                                <Text as="b">Judul Kuesioner</Text>
+                              </Box>
+                              <Text as="b">:</Text>
+                            </HStack>
+
+                            <Box w="full">
+                              <Text>{d.kuesioner}</Text>
+                            </Box>
+                          </Stack>
+                          <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                            <HStack align={"start"}>
+                              <Box w="120px">
+                                <Text as="b">Tipe Kuesioner</Text>
+                              </Box>
+                              <Text as="b">:</Text>
+                            </HStack>
+
+                            <Box w="full">
+                              <Text>
+                                {d.type === "tahunan"
+                                  ? "Tahunan"
+                                  : "Penilaian Mentor"}
+                              </Text>
+                            </Box>
+                          </Stack>
                         </Stack>
                       </HStack>
                       <Box
@@ -497,41 +391,55 @@ const AccordionDetail = ({
                         color="white"
                         rounded={"md"}
                         alignContent={"center"}
-                        p={3}
+                        p={{ base: 2, md: 3 }}
                         opacity={"0.2"}
                       >
-                        <ExternalLinkIcon fontSize="22px" />
+                        <ExternalLinkIcon
+                          fontSize={{
+                            base: "18px",
+                            sm: "19px",
+                            md: "20px",
+                            xl: "22px",
+                          }}
+                        />
                       </Box>
                     </Flex>
-                  </Link>
-                ))
-              ) : (
-                <Stack
-                  justifyContent={"center"}
-                  spacing={0}
-                  alignItems={"center"}
-                >
-                  <Image
-                    src="/img/kuesioner-notfound.png"
-                    h={{ base: "200px", sm: "250px", md: "350px" }}
-                    w="auto"
-                    // w="auto"
-                    // objectFit={"cover"}
-                  />
-                  <Text
-                    as="b"
-                    fontWeight={"bold"}
-                    fontSize={{ base: "16px", md: "17px" }}
-                    textAlign={"center"}
+                  ))
+                ) : (
+                  <Stack
+                    justifyContent={"center"}
+                    spacing={0}
+                    alignItems={"center"}
                   >
-                    Tidak ada kuesioner yang perlu diisi.
-                  </Text>
-                </Stack>
-              ))}
-          </Stack>
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
+                    <Image
+                      src="/img/kuesioner-notfound.png"
+                      h={{ base: "200px", sm: "250px", md: "350px" }}
+                      w="auto"
+                      // w="auto"
+                      // objectFit={"cover"}
+                    />
+                    <Text
+                      as="b"
+                      fontWeight={"bold"}
+                      fontSize={{ base: "16px", md: "17px" }}
+                      textAlign={"center"}
+                    >
+                      Tidak ada kuesioner yang perlu diisi.
+                    </Text>
+                  </Stack>
+                ))}
+            </Stack>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+
+      <TenantModalKuesioner
+        isOpen={isModalKuesioner}
+        onClose={() => setIsModalKuesioner(false)}
+        idKuesioner={idKuesioner}
+        onSubmit={() => router.refresh()}
+      />
+    </>
   );
 };
 
