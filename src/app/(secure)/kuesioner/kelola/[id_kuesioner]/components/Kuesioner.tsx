@@ -30,6 +30,7 @@ import { DropResult } from "react-beautiful-dnd";
 import DndTable from "@/app/components/datatable/DndTable";
 import DeleteGroupKuesioner from "./DeleteGroupKuesioner";
 import AddGroupKuesioner from "./AddGroupKuesioner";
+import ModalNotif from "@/app/components/modal/modal-notif";
 
 interface GrupListProps {
   id: string;
@@ -49,6 +50,19 @@ function Kuesioner({ idKuesioner }: { idKuesioner: string }) {
   const [dataGrup, setDataGrup] = useState<GrupPertanyaanProps | null>(null);
   const [dataListGrup, setDataListGrup] = useState<GrupListProps[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [stateNotif, setStateNotif] = useState({
+    msg: "",
+    isError: false,
+    isNotifShow: false,
+  });
+  const handleShowMessage = (msg: string, err: boolean) => {
+    setStateNotif({
+      msg: msg,
+      isError: err,
+      isNotifShow: true,
+    });
+  };
 
   useEffect(() => {
     // if (need_updated === true)
@@ -155,18 +169,30 @@ function Kuesioner({ idKuesioner }: { idKuesioner: string }) {
         : [];
     const [removed] = newData.splice(source.index, 1);
     newData.splice(destination.index, 0, removed);
-    setDataListGrup([...newData]);
+
     const updatedData = newData.map((item, index) => {
-      return { ...item, order: index + 1 };
+      return { ...item, no_urut: index + 1 };
     });
 
-    console.log("updatedData : ", updatedData);
-    const timeoutId = setTimeout(() => {
+    try {
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom
+        .post(`/kuesioner-tahunan/grup/reorder-row`, {
+          updatedRowData: updatedData,
+        })
+        .then(() => {
+          setDataListGrup([...newData]);
+          setLoadingDragging(false);
+        });
+    } catch (error: any) {
+      if (error?.response) {
+        handleShowMessage(
+          `Pemindahan posisi tabel gagal : ${error.response.data.message}`,
+          true,
+        );
+      } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
       setLoadingDragging(false);
-    }, 1000);
-
-    // Membersihkan timeout jika komponen dilepas
-    return () => clearTimeout(timeoutId);
+    }
   };
 
   return isLoading ? (
