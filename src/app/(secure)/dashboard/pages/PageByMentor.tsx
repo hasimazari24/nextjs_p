@@ -254,7 +254,7 @@ function PageByMentor({ data }: { data: any }) {
                   >
                     <Image
                       src="/img/grades-notfound.png"
-                      h={{ base: "120px", sm: "140px", md: "180px" }}
+                      h={{ base: "150px", sm: "180px", md: "200px" }}
                       w="auto"
                       // w="auto"
                       // objectFit={"cover"}

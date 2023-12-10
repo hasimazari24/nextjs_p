@@ -37,7 +37,8 @@ import { VscFolderActive, VscCloseAll } from "react-icons/vsc";
 import { BiDoorOpen } from "react-icons/bi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import TenantModalKuesioner from "../../kuesioner/TenantModalKuesioner";
+import TenantModalKuesioner from "../../kuesioner/byTenant/TenantModalKuesioner";
+import TenantNilaiMentor from "../../kuesioner/byTenant/TenantNilaiMentor";
 
 function PageByTenant({ data }: { data: any }) {
   return (
@@ -117,8 +118,10 @@ const AccordionDetail = ({
     if (data.type === "tahunan") {
       setIsModalKuesioner(true);
       setIdKuesioner(data.id);
+    } else if (data.type === "nilai_mentor") {
+      setIsModalPenilaian(true);
+      setIdKuesioner(data.id);
     }
-    // else if (data.type === "nilai_mentor")
   };
 
   return (
@@ -304,7 +307,7 @@ const AccordionDetail = ({
                   >
                     <Image
                       src="/img/classroom.png"
-                      h={{ base: "120px", sm: "140px", md: "180px" }}
+                      h={{ base: "150px", sm: "180px", md: "200px" }}
                       w="auto"
                       // w="auto"
                       // objectFit={"cover"}
@@ -413,7 +416,7 @@ const AccordionDetail = ({
                   >
                     <Image
                       src="/img/kuesioner-notfound.png"
-                      h={{ base: "200px", sm: "250px", md: "350px" }}
+                      h={{ base: "150px", sm: "180px", md: "200px" }}
                       w="auto"
                       // w="auto"
                       // objectFit={"cover"}
@@ -435,7 +438,19 @@ const AccordionDetail = ({
 
       <TenantModalKuesioner
         isOpen={isModalKuesioner}
-        onClose={() => setIsModalKuesioner(false)}
+        onClose={() => {
+          setIsModalKuesioner(false);
+          setIdKuesioner("");
+        }}
+        idKuesioner={idKuesioner}
+        onSubmit={() => router.refresh()}
+      />
+      <TenantNilaiMentor
+        isOpen={isModalPenilaian}
+        onClose={() => {
+          setIsModalPenilaian(false);
+          setIdKuesioner("");
+        }}
         idKuesioner={idKuesioner}
         onSubmit={() => router.refresh()}
       />
