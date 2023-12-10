@@ -243,7 +243,7 @@ function page() {
           </Button>
         )}
 
-        <Popover closeOnBlur={false} isLazy>
+        <Popover isLazy>
           <PopoverTrigger>
             <Button
               bgColor="teal.400"

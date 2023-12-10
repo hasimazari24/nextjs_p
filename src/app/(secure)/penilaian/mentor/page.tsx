@@ -74,7 +74,7 @@ function PageNilaiMentor() {
             rounded={"2xl"}
             bgColor={"gray.50"}
             cursor={"pointer"}
-            onClick={() => router.push("penilaian/tenant")}
+            onClick={() => router.push("/penilaian/mentor/daftarpertanyaan")}
           >
             <Box>
               <Image
@@ -123,7 +123,7 @@ function PageNilaiMentor() {
             rounded={"2xl"}
             bgColor={"gray.50"}
             cursor={"pointer"}
-            onClick={() => router.push("penilaian/tenant")}
+            onClick={() => router.push("/penilaian/mentor/hasilpenilaian")}
           >
             <Box>
               <Image
@@ -145,7 +145,7 @@ function PageNilaiMentor() {
               fontSize={{ base: "15.5px", md: "17.5px" }}
               textAlign={"center"}
             >
-              PENILAIAN MENTOR
+              HASIL PENILAIAN
             </Text>
             <Text
               // as="b"

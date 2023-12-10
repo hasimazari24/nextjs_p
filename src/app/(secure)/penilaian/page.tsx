@@ -187,6 +187,7 @@ function PagePenilaian() {
               boxShadow={"lg"}
               rounded={"2xl"}
               bgColor={"gray.50"}
+              onClick={() => router.push("penilaian/mentor")}
             >
               <Box>
                 <Image
