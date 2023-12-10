@@ -15,10 +15,10 @@ import {
   Box,
   Image,
 } from "@chakra-ui/react";
-import FormKuesioner from "./kelola/[id_kuesioner]/components/FormKuesioner";
+import FormKuesioner from "../kelola/[id_kuesioner]/components/FormKuesioner";
 import { axiosCustom } from "@/app/api/axios";
 import { ViewIcon } from "@chakra-ui/icons";
-import Loading from "./loading";
+import Loading from "../loading";
 
 interface KuesionerProps {
   id: string;

@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
-import PageByTenant from "./PageByTenant";
+import PageByTenant from "./byTenant/PageByTenant";
 
 function PageKuesioner() {
   const router = useRouter();
