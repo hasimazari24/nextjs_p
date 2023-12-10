@@ -1,46 +1,13 @@
 "use client";
 
-import DataTable from "@/app/components/datatable/data-table";
-import { Column } from "react-table";
 import { useEffect, useState } from "react";
-import ModalSocial from "@/app/components/modal/modal-social";
-import {
-  Button,
-  Center,
-  Spinner,
-  Heading,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Box,
-  Avatar,
-  Checkbox,
-  HStack,
-  Grid,
-  Stack,
-  Image,
-  Text,
-} from "@chakra-ui/react";
-import ConfirmationModal from "@/app/components/modal/modal-confirm";
-import ModalNotif from "@/app/components/modal/modal-notif";
-import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/navigation";
-// import { useNavigate } from "react-router-dom";
-import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
-import { SiMicrosoftteams } from "react-icons/si";
-import { BsCalendar2Event } from "react-icons/bs";
-import { LiaClipboardListSolid } from "react-icons/lia";
-import { BiLinkExternal, BiBookBookmark } from "react-icons/bi";
+import { Heading, Flex, HStack, Stack, Image, Text } from "@chakra-ui/react";
 import { axiosCustom } from "@/app/api/axios";
-import Link from "next/link";
-import { useAuth } from "@/app/components/utils/AuthContext";
 import Loading from "../loading";
-import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import { Kelas } from "@/app/type/class-type.d";
 import AddClass from "./addClass";
 import ClassData from "./ClassData";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 
 function MentorClass({ roleAccess }: { roleAccess: string }) {
   const initialState: { isLoading?: boolean; dataKelas?: Kelas[] } = {
@@ -92,8 +59,10 @@ function MentorClass({ roleAccess }: { roleAccess: string }) {
             direction={["column", "row"]}
           >
             <Heading fontSize={"2xl"}>DATA KELAS</Heading>
-
-            <AddClass onSubmit={() => getClass()} roleAccess={roleAccess} />
+            <HStack>
+              <DownloadExcel Url={"/export-course"} />
+              <AddClass onSubmit={() => getClass()} roleAccess={roleAccess} />
+            </HStack>
           </Flex>
 
           {state.dataKelas && state.dataKelas.length > 0 ? (

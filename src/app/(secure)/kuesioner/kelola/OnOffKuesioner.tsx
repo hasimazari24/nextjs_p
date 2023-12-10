@@ -84,86 +84,92 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
 
   return (
     <div>
-      {onoff === true ? (
-        <Button
-          title="Nonaktifkan Kuesioner"
-          bgColor={"orange.500"}
-          _hover={{ bgColor: "orange.600" }}
-          color="white"
-          onClick={() => onOpen()}
-          key="onoff"
-          size="sm"
-          w="165px"
-          justifyContent={"start"}
-        >
-          <AiOutlineCloseSquare fontSize="17px" />
-          &nbsp; Nonaktifkan
-        </Button>
-      ) : (
-        <Button
-          title="Aktifkan Kuesioner"
-          colorScheme="pink"
-          onClick={() => onOpen()}
-          key="activeClass"
-          size="sm"
-          w="165px"
-          justifyContent={"start"}
-        >
-          <AiOutlineCheckSquare fontSize="17px" />
-          &nbsp; Aktifkan
-        </Button>
-      )}
+      {
+        onoff === true ? (
+          <Button
+            title="Nonaktifkan Kuesioner"
+            bgColor={"orange.500"}
+            _hover={{ bgColor: "orange.600" }}
+            color="white"
+            onClick={() => onOpen()}
+            key="onoff"
+            size="sm"
+            w="165px"
+            justifyContent={"start"}
+          >
+            <AiOutlineCloseSquare fontSize="17px" />
+            &nbsp; Nonaktifkan
+          </Button>
+        ) : null
+        // (
+        //   <Button
+        //     title="Aktifkan Kuesioner"
+        //     colorScheme="pink"
+        //     onClick={() => onOpen()}
+        //     key="activeClass"
+        //     size="sm"
+        //     w="165px"
+        //     justifyContent={"start"}
+        //   >
+        //     <AiOutlineCheckSquare fontSize="17px" />
+        //     &nbsp; Aktifkan
+        //   </Button>
+        // )
+      }
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {onoff === true ? (
-            <>
-              <ModalHeader>Konfirmasi Nonaktifkan Kuesioner</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Text>
-                  Yakin Ingin menonaktifkan Kuesioner :{" "}
-                  {dataKuesioner.title} ?
-                </Text>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  bgColor={"orange.500"}
-                  _hover={{ bgColor: "orange.600" }}
-                  color="white"
-                  mr={3}
-                  onClick={() => onOffKuesioner()}
-                  isLoading={isLoadingDelete}
-                >
-                  Ya
-                </Button>
-                <Button onClick={onClose}>Tidak</Button>
-              </ModalFooter>
-            </>
-          ) : (
-            <>
-              <ModalHeader>Konfirmasi Aktifkan Kuesioner</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Text>
-                  Yakin Ingin aktifkan Kuesioner : {dataKuesioner.title}{" "}
-                  ?
-                </Text>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="pink"
-                  mr={3}
-                  onClick={() => onOffKuesioner()}
-                  isLoading={isLoadingDelete}
-                >
-                  Ya
-                </Button>
-                <Button onClick={onClose}>Tidak</Button>
-              </ModalFooter>
-            </>
-          )}
+          {
+            onoff === true && (
+              <>
+                <ModalHeader>Konfirmasi Nonaktifkan Kuesioner</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Text>
+                    Yakin Ingin menonaktifkan Kuesioner : {dataKuesioner.title}{" "}
+                    ?
+                  </Text>
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    bgColor={"orange.500"}
+                    _hover={{ bgColor: "orange.600" }}
+                    color="white"
+                    mr={3}
+                    onClick={() => onOffKuesioner()}
+                    isLoading={isLoadingDelete}
+                  >
+                    Ya
+                  </Button>
+                  <Button onClick={onClose}>Tidak</Button>
+                </ModalFooter>
+              </>
+            )
+            // : (
+            //   <>
+            //     <ModalHeader>Konfirmasi Aktifkan Kuesioner</ModalHeader>
+            //     <ModalCloseButton />
+            //     <ModalBody>
+            //       <Text>
+            //         Yakin Ingin aktifkan Kuesioner : {dataKuesioner.title}{" "}
+            //         ?
+            //       </Text>
+            //     </ModalBody>
+            //     <ModalFooter>
+            //       <Button
+            //         colorScheme="pink"
+            //         mr={3}
+            //         onClick={() => onOffKuesioner()}
+            //         isLoading={isLoadingDelete}
+            //       >
+            //         Ya
+            //       </Button>
+            //       <Button onClick={onClose}>Tidak</Button>
+            //     </ModalFooter>
+            //   </>
+            // )
+          }
         </ModalContent>
       </Modal>
 

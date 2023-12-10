@@ -96,29 +96,32 @@ const EndClass = ({ dataClass, onSubmit, endClass }: deleteProps) => {
           <AiOutlineCloseSquare fontSize="17px" />
           &nbsp; Akhiri Kelas
         </Button>
-      ) : (
-        <Button
-          title="Aktifkan Kelas"
-          colorScheme="pink"
-          onClick={() => onOpen()}
-          key="activeClass"
-          size="sm"
-          w="184px"
-        >
-          <AiOutlineCheckSquare fontSize="17px" />
-          &nbsp; Aktifkan Kelas
-        </Button>
-      )}
+      ) : // <Button
+      //   title="Aktifkan Kelas"
+      //   colorScheme="pink"
+      //   onClick={() => onOpen()}
+      //   key="activeClass"
+      //   size="sm"
+      //   w="184px"
+      // >
+      //   <AiOutlineCheckSquare fontSize="17px" />
+      //   &nbsp; Aktifkan Kelas
+      // </Button>
+      null}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {endClass === false ? (
+          {endClass === false && (
             <>
               <ModalHeader>Konfirmasi Akhiri Kelas</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Text>Yakin Ingin Akhiri Kelas {dataClass.name} ?</Text>
+                <Text>
+                  Jika diakhiri kelas ini tidak akan bisa diaktifkan kembali.
+                  Namun, masih bisa diakses sebagai arsip. Yakin Ingin Akhiri
+                  Kelas {dataClass.name} ?
+                </Text>
               </ModalBody>
               <ModalFooter>
                 <Button
@@ -132,26 +135,28 @@ const EndClass = ({ dataClass, onSubmit, endClass }: deleteProps) => {
                 <Button onClick={onClose}>Tidak</Button>
               </ModalFooter>
             </>
-          ) : (
-            <>
-              <ModalHeader>Konfirmasi Aktifkan Kelas</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Text>Yakin Ingin Aktifkan Kelas {dataClass.name} ?</Text>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="pink"
-                  mr={3}
-                  onClick={() => endActiveClass()}
-                  isLoading={isLoadingDelete}
-                >
-                  Ya
-                </Button>
-                <Button onClick={onClose}>Tidak</Button>
-              </ModalFooter>
-            </>
-          )}
+          ) 
+          // : (
+          //   <>
+          //     <ModalHeader>Konfirmasi Aktifkan Kelas</ModalHeader>
+          //     <ModalCloseButton />
+          //     <ModalBody>
+          //       <Text>Yakin Ingin Aktifkan Kelas {dataClass.name} ?</Text>
+          //     </ModalBody>
+          //     <ModalFooter>
+          //       <Button
+          //         colorScheme="pink"
+          //         mr={3}
+          //         onClick={() => endActiveClass()}
+          //         isLoading={isLoadingDelete}
+          //       >
+          //         Ya
+          //       </Button>
+          //       <Button onClick={onClose}>Tidak</Button>
+          //     </ModalFooter>
+          //   </>
+          // )
+          }
         </ModalContent>
       </Modal>
 

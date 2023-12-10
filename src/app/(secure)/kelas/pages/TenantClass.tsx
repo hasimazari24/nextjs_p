@@ -1,45 +1,11 @@
 "use client";
 
-import DataTable from "@/app/components/datatable/data-table";
-import { Column } from "react-table";
 import { useEffect, useState } from "react";
-import ModalSocial from "@/app/components/modal/modal-social";
-import {
-  Button,
-  Center,
-  Spinner,
-  Heading,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Box,
-  Avatar,
-  Checkbox,
-  HStack,
-  Grid,
-  Stack,
-  Image,
-  Text,
-} from "@chakra-ui/react";
-import ConfirmationModal from "@/app/components/modal/modal-confirm";
-import ModalNotif from "@/app/components/modal/modal-notif";
-import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/navigation";
-// import { useNavigate } from "react-router-dom";
-import { GrMoreVertical, GrShareOption, GrTrophy } from "react-icons/gr";
-import { SiMicrosoftteams } from "react-icons/si";
-import { BsCalendar2Event } from "react-icons/bs";
-import { LiaClipboardListSolid } from "react-icons/lia";
-import { BiLinkExternal, BiBookBookmark } from "react-icons/bi";
+import { Heading, Flex, Stack, Image, Text } from "@chakra-ui/react";
 import { axiosCustom } from "@/app/api/axios";
-import Link from "next/link";
-import { useAuth } from "@/app/components/utils/AuthContext";
 import Loading from "../loading";
-import { UserRoles, permissions } from "@/app/type/role-access-control.d";
 import { Kelas } from "@/app/type/class-type.d";
-import AddClass from "./addClass";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 import ClassData from "./ClassData";
 
 function TenantClass() {
@@ -92,6 +58,7 @@ function TenantClass() {
             direction={["column", "row"]}
           >
             <Heading fontSize={"2xl"}>DATA KELAS</Heading>
+            <DownloadExcel Url={"/export-course"} />
           </Flex>
 
           {state.dataKelas && state.dataKelas.length > 0 ? (

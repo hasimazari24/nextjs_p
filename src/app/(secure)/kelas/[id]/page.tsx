@@ -29,6 +29,7 @@ import ProfileMentor from "../pages/profileMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import Progress from "./partisipan/progress";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 
 function page({ params }: { params: { id: string } }) {
   const getParamsId = params.id;
@@ -140,17 +141,20 @@ function page({ params }: { params: { id: string } }) {
               <ProfileMentor mentor={state.dataClass?.mentor || null} />
             </VStack>
           </HStack>
-          <Button
-            leftIcon={<MdArrowBackIosNew />}
-            colorScheme="blue"
-            variant="outline"
-            aria-label="btn-email"
-            size={"sm"}
-            mb={6}
-            onClick={() => router.push("/kelas")}
-          >
-            Kembali
-          </Button>
+          <HStack>
+            <DownloadExcel Url={`/export-course/${getParamsId}`} />
+            <Button
+              leftIcon={<MdArrowBackIosNew />}
+              colorScheme="blue"
+              variant="outline"
+              aria-label="btn-email"
+              size={"sm"}
+              mb={6}
+              onClick={() => router.push("/kelas")}
+            >
+              Kembali
+            </Button>
+          </HStack>
         </Flex>
 
         <Box>
