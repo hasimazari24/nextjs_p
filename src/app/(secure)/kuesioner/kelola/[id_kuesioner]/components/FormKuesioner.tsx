@@ -17,6 +17,7 @@ import {
   Textarea,
   Checkbox,
   CheckboxGroup,
+  Box,
 } from "@chakra-ui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { InfoIcon } from "@chakra-ui/icons";
@@ -164,214 +165,236 @@ function FormKuesioner({
 
             {Array.isArray(que.pertanyaan) && que.pertanyaan.length > 0 ? (
               que.pertanyaan.map((d, pertanyaanIndex) => (
-                <Stack spacing={4} key={d.id}>
-                  {d.type === "radio" && (
-                    <FormControl
-                      mb={2}
-                      isInvalid={Boolean(
-                        errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                          ?.opsi_submit?.[0],
-                      )}
+                <HStack w="full" align="start" spacing={2} key={d.id}>
+                  <Box
+                    // p={1}
+                    rounded={"md"}
+                    bgColor={"purple.500"}
+                    // boxSize={"30px"}
+                    color={"white"}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Text
+                      w="25px"
+                      as={"b"}
+                      textAlign={"center"}
+                      whiteSpace={"nowrap"}
+                      mt="0.5"
                     >
-                      <Text
-                        fontWeight={"bold"}
-                        fontSize={["15px", "16px"]}
-                        mb={1}
-                      >
-                        {d.pertanyaan}{" "}
-                        {d.is_required && (
-                          <span style={{ color: "red" }}>*</span>
-                        )}
-                      </Text>
-                      <Hide>
-                        <Input
-                          type="text"
-                          {...register(
-                            `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
-                          )}
-                          defaultValue={d.id}
-                        />
-                      </Hide>
-                      <RadioGroup>
-                        <Stack spacing={2}>
-                          {Array.isArray(d.opsi) &&
-                            d.opsi.length > 0 &&
-                            d.opsi.map((val) => (
-                              <Radio
-                                key={val.id}
-                                value={val.id}
-                                {...register(
-                                  `data.${index}.pertanyaan.${pertanyaanIndex}.opsi_submit.0`,
-                                  {
-                                    required: d.is_required
-                                      ? "Pertanyaan ini wajib dipilih."
-                                      : false,
-                                  },
-                                )}
-                              >
-                                {val.value}
-                              </Radio>
-                            ))}
-                        </Stack>
-                      </RadioGroup>
-                      <FormErrorMessage>
-                        {
+                      {pertanyaanIndex + 1}
+                    </Text>
+                  </Box>
+                  <Stack spacing={4}>
+                    {d.type === "radio" && (
+                      <FormControl
+                        mb={2}
+                        isInvalid={Boolean(
                           errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                            ?.opsi_submit?.[0]?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
-                  {d.type === "short_text" && (
-                    <FormControl
-                      mb={2}
-                      isInvalid={Boolean(
-                        errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                          ?.text_submit,
-                      )}
-                    >
-                      <Text
-                        mb={1}
-                        fontWeight={"bold"}
-                        fontSize={["15px", "16px"]}
-                      >
-                        {d.pertanyaan}{" "}
-                        {d.is_required && (
-                          <span style={{ color: "red" }}>*</span>
+                            ?.opsi_submit?.[0],
                         )}
-                      </Text>
-                      <Hide>
-                        <Input
-                          type="text"
-                          {...register(
-                            `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
+                      >
+                        <Text
+                          fontWeight={"bold"}
+                          fontSize={["15px", "16px"]}
+                          mb={1}
+                        >
+                          {d.pertanyaan}{" "}
+                          {d.is_required && (
+                            <span style={{ color: "red" }}>*</span>
                           )}
-                          defaultValue={d.id}
-                        />
-                      </Hide>
-                      <Input
-                        type="text"
-                        {...register(
-                          `data.${index}.pertanyaan.${pertanyaanIndex}.text_submit`,
+                        </Text>
+                        <Hide>
+                          <Input
+                            type="text"
+                            {...register(
+                              `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
+                            )}
+                            defaultValue={d.id}
+                          />
+                        </Hide>
+                        <RadioGroup>
+                          <Stack spacing={2}>
+                            {Array.isArray(d.opsi) &&
+                              d.opsi.length > 0 &&
+                              d.opsi.map((val) => (
+                                <Radio
+                                  key={val.id}
+                                  value={val.id}
+                                  {...register(
+                                    `data.${index}.pertanyaan.${pertanyaanIndex}.opsi_submit.0`,
+                                    {
+                                      required: d.is_required
+                                        ? "Pertanyaan ini wajib dipilih."
+                                        : false,
+                                    },
+                                  )}
+                                >
+                                  {val.value}
+                                </Radio>
+                              ))}
+                          </Stack>
+                        </RadioGroup>
+                        <FormErrorMessage>
                           {
-                            required: d.is_required
-                              ? "Pertanyaan ini wajib diisi."
-                              : false,
-                          },
-                        )}
-                      />
-                      <FormErrorMessage>
-                        {
+                            errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
+                              ?.opsi_submit?.[0]?.message
+                          }
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                    {d.type === "short_text" && (
+                      <FormControl
+                        mb={2}
+                        isInvalid={Boolean(
                           errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                            ?.text_submit?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
-                  {d.type === "long_text" && (
-                    <FormControl
-                      mb={2}
-                      isInvalid={Boolean(
-                        errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                          ?.text_submit,
-                      )}
-                    >
-                      <Text
-                        mb={1}
-                        fontWeight={"bold"}
-                        fontSize={["15px", "16px"]}
-                      >
-                        {d.pertanyaan}{" "}
-                        {d.is_required && (
-                          <span style={{ color: "red" }}>*</span>
+                            ?.text_submit,
                         )}
-                      </Text>
-                      <Hide>
+                      >
+                        <Text
+                          mb={1}
+                          fontWeight={"bold"}
+                          fontSize={["15px", "16px"]}
+                        >
+                          {d.pertanyaan}{" "}
+                          {d.is_required && (
+                            <span style={{ color: "red" }}>*</span>
+                          )}
+                        </Text>
+                        <Hide>
+                          <Input
+                            type="text"
+                            {...register(
+                              `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
+                            )}
+                            defaultValue={d.id}
+                          />
+                        </Hide>
                         <Input
                           type="text"
                           {...register(
-                            `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
+                            `data.${index}.pertanyaan.${pertanyaanIndex}.text_submit`,
+                            {
+                              required: d.is_required
+                                ? "Pertanyaan ini wajib diisi."
+                                : false,
+                            },
                           )}
-                          defaultValue={d.id}
                         />
-                      </Hide>
-                      <Textarea
-                        {...register(
-                          `data.${index}.pertanyaan.${pertanyaanIndex}.text_submit`,
+                        <FormErrorMessage>
                           {
-                            required: d.is_required
-                              ? "Pertanyaan ini wajib diisi."
-                              : false,
-                          },
-                        )}
-                      />
-                      <FormErrorMessage>
-                        {
+                            errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
+                              ?.text_submit?.message
+                          }
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                    {d.type === "long_text" && (
+                      <FormControl
+                        mb={2}
+                        isInvalid={Boolean(
                           errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                            ?.text_submit?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
-                  {d.type === "checkbox" && (
-                    <FormControl
-                      mb={2}
-                      isInvalid={Boolean(
-                        errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                          ?.opsi_submit,
-                      )}
-                    >
-                      <Text
-                        mb={1}
-                        fontWeight={"bold"}
-                        fontSize={["15px", "16px"]}
-                      >
-                        {d.pertanyaan}{" "}
-                        {d.is_required && (
-                          <span style={{ color: "red" }}>*</span>
+                            ?.text_submit,
                         )}
-                      </Text>
-                      <Hide>
-                        <Input
-                          type="text"
-                          {...register(
-                            `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
+                      >
+                        <Text
+                          mb={1}
+                          fontWeight={"bold"}
+                          fontSize={["15px", "16px"]}
+                        >
+                          {d.pertanyaan}{" "}
+                          {d.is_required && (
+                            <span style={{ color: "red" }}>*</span>
                           )}
-                          defaultValue={d.id}
+                        </Text>
+                        <Hide>
+                          <Input
+                            type="text"
+                            {...register(
+                              `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
+                            )}
+                            defaultValue={d.id}
+                          />
+                        </Hide>
+                        <Textarea
+                          {...register(
+                            `data.${index}.pertanyaan.${pertanyaanIndex}.text_submit`,
+                            {
+                              required: d.is_required
+                                ? "Pertanyaan ini wajib diisi."
+                                : false,
+                            },
+                          )}
                         />
-                      </Hide>
-                      <CheckboxGroup>
-                        <Stack spacing={2}>
-                          {Array.isArray(d.opsi) &&
-                            d.opsi.length > 0 &&
-                            d.opsi.map((val) => (
-                              <Checkbox
-                                key={val.id}
-                                value={val.id}
-                                {...register(
-                                  `data.${index}.pertanyaan.${pertanyaanIndex}.opsi_submit`,
-                                  {
-                                    required: d.is_required
-                                      ? "Pertanyaan ini wajib dipilih."
-                                      : false,
-                                  },
-                                )}
-                              >
-                                {val.value}
-                              </Checkbox>
-                            ))}
-                        </Stack>
-                      </CheckboxGroup>
+                        <FormErrorMessage>
+                          {
+                            errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
+                              ?.text_submit?.message
+                          }
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                    {d.type === "checkbox" && (
+                      <FormControl
+                        mb={2}
+                        isInvalid={Boolean(
+                          errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
+                            ?.opsi_submit,
+                        )}
+                      >
+                        <Text
+                          mb={1}
+                          fontWeight={"bold"}
+                          fontSize={["15px", "16px"]}
+                        >
+                          {d.pertanyaan}{" "}
+                          {d.is_required && (
+                            <span style={{ color: "red" }}>*</span>
+                          )}
+                        </Text>
+                        <Hide>
+                          <Input
+                            type="text"
+                            {...register(
+                              `data.${index}.pertanyaan.${pertanyaanIndex}.id_pertanyaan`,
+                            )}
+                            defaultValue={d.id}
+                          />
+                        </Hide>
+                        <CheckboxGroup>
+                          <Stack spacing={2}>
+                            {Array.isArray(d.opsi) &&
+                              d.opsi.length > 0 &&
+                              d.opsi.map((val) => (
+                                <Checkbox
+                                  key={val.id}
+                                  value={val.id}
+                                  {...register(
+                                    `data.${index}.pertanyaan.${pertanyaanIndex}.opsi_submit`,
+                                    {
+                                      required: d.is_required
+                                        ? "Pertanyaan ini wajib dipilih."
+                                        : false,
+                                    },
+                                  )}
+                                >
+                                  {val.value}
+                                </Checkbox>
+                              ))}
+                          </Stack>
+                        </CheckboxGroup>
 
-                      <FormErrorMessage>
-                        {
-                          errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
-                            ?.opsi_submit?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Stack>
+                        <FormErrorMessage>
+                          {
+                            errors.data?.[index]?.pertanyaan?.[pertanyaanIndex]
+                              ?.opsi_submit?.message
+                          }
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Stack>
+                </HStack>
               ))
             ) : (
               <></>
