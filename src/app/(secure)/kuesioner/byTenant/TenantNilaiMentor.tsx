@@ -161,6 +161,7 @@ const TenantNilaiMentor = ({
                     onSubmit();
                     onClose();
                   }}
+                  idKuesioner={idKuesioner}
                 />
               </Stack>
               //   )
