@@ -462,6 +462,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                           `/penilaian/tugas/${props.idTenant}/kelas/${row.values.id}`,
                         )
                       }
+                      title={"Masuk ke penilaian tugas berdasarkan kelas ini"}
                     >
                       <BiDoorOpen size="20px" />
                       &nbsp;Masuk

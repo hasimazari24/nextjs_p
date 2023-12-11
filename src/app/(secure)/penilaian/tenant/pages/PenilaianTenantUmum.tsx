@@ -121,11 +121,10 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
     <Stack spacing={{ base: 4, md: 6 }}>
       <Flex
         justifyContent={"space-between"}
-        pb="2"
         direction={["column-reverse", "row"]}
       >
         <Heading fontSize={"2xl"}>NILAI TENANT</Heading>
-        <HStack spacing={2} mb={2}>
+        <HStack spacing={2} mb={{ base: 2, md: 0 }}>
           <Button
             leftIcon={<MdArrowBackIosNew />}
             colorScheme="blue"
@@ -338,7 +337,6 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                   rounded={"2xl"}
                   bgColor={"white"}
                   key={i}
-                  cursor={"pointer"}
                 >
                   <Box
 
@@ -418,10 +416,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       onClick={() =>
                         router.push(`/penilaian/tenant/${row.values.id}`)
                       }
-                      //   onClick={() => {
-                      //     props.idTenant(row.values.id);
-                      //     props.tabIndex();
-                      //   }}
+                      title="Masuk ke penilaian tenant"
                     >
                       <BiDoorOpen size="20px" />
                       &nbsp;Masuk

@@ -62,6 +62,7 @@ const PreviewGroup = ({ idGroup }: { idGroup: string }) => {
         key="preview"
         size="sm"
         onClick={onOpen}
+        title={"Preview Grup Pertanyaan"}
       >
         <ViewIcon />
         &nbsp; Preview

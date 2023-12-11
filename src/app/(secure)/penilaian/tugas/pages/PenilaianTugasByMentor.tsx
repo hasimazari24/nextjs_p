@@ -93,7 +93,7 @@ const PenilaianTugasByMentor = ({ roleAccess }: { roleAccess: string }) => {
   return listTenant.isLoading ? (
     <Loading />
   ) : (
-    <Stack spacing={{ base: 6, md: 8 }}>
+    <Stack spacing={{ base: 4, md: 6 }}>
       <Flex
         justifyContent={"space-between"}
         direction={["column-reverse", "row"]}
@@ -108,6 +108,7 @@ const PenilaianTugasByMentor = ({ roleAccess }: { roleAccess: string }) => {
             aria-label="btn-email"
             size={"sm"}
             onClick={() => router.push("/penilaian")}
+            title={"Kembali ke halaman penilaian"}
           >
             Kembali
           </Button>
@@ -272,8 +273,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                   borderColor="blue.500"
                   borderWidth="4px"
                   shadow="2xl"
-                  // w="full"
-                  // h="full"
+                  title={"Lihat Nilai Tugas Tenant ini"}
                   p={3}
                   boxShadow={"lg"}
                   rounded={"2xl"}

@@ -144,7 +144,7 @@ const UpdateGraded: React.FC<editProps> = ({
         _hover={{
           bg: "blue.200",
         }}
-        title="Edit Data"
+        title={roleAccess === "Mentor" ? "Edit Nilai" : "Lihat Penilaian"}
         color="gray.700"
         onClick={() => {
           setModalOpen(true);

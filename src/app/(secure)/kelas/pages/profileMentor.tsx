@@ -175,6 +175,7 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
         cursor={"pointer"}
         // direction={{ base: "row", sm: "column", lg: "row" }}
         onClick={onOpen}
+        title="Lihat Profil Mentor"
       >
         <Avatar
           size={"sm"}
@@ -190,18 +191,8 @@ const ProfileMentor = ({ mentor }: ModalProps) => {
           <Text
             fontSize="sm"
             textOverflow="ellipsis"
-            // maxW={{
-            //   base: "auto",
-            //   sm: "340px",
-            //   md: "408px",
-            //   lg: "544px",
-            // }}
-            // w="auto"
-            // whiteSpace="nowrap"
             flex="1"
-            // cursor={"default"}
             overflow="hidden"
-            title={"Mr. dsfjskndf"}
             noOfLines={1}
           >
             {mentor?.fullname}

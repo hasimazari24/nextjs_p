@@ -68,8 +68,6 @@ const DeleteHasilPenilaian = ({ dataDelete, onSubmit }: deleteProps) => {
         onClick={() => setIsDeleteModalOpen(true)}
         key="hapusData"
         size="sm"
-        w="165px"
-        justifyContent={"start"}
       >
         <DeleteIcon />
       </Button>

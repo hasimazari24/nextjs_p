@@ -200,7 +200,7 @@ function page() {
           </Button>
         )}
 
-        <Popover closeOnBlur={false} isLazy>
+        <Popover>
           {({ isOpen }) => (
             <>
               <PopoverTrigger>
@@ -281,7 +281,7 @@ function page() {
     <Loading />
   ) : (
     <Suspense fallback={<Loading />}>
-      <Stack spacing={{ base: 2, md: 4 }}>
+      <Stack spacing={{ base: 4, md: 6 }}>
         <Flex
           flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
           justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan

@@ -195,13 +195,13 @@ function page() {
     <Loading />
   ) : (
     <Suspense fallback={<Loading />}>
-      <Stack spacing={{ base: 2, md: 4 }}>
+      <Stack spacing={{ base: 4, md: 6 }}>
         <Flex
           flexDirection={{ base: "column", md: "row" }} // Arah tata letak berdasarkan layar
           justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
           // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
         >
-          <Heading fontSize={"2xl"} mb="2">
+          <Heading fontSize={"2xl"}>
             DAFTAR GRUP PERTANYAAN
           </Heading>
           <HStack align="start" mb={{ base: 2, md: 0 }}>

@@ -100,6 +100,7 @@ function AddTenantRated({ onSubmit }: addProps) {
         onClick={() => {
           setModalOpen(true);
         }}
+        title="Tambah Tenant"
       >
         <AddIcon />
         &nbsp;Tambah Tenant

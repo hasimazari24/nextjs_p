@@ -318,7 +318,7 @@ const AccordionDetail = ({
                       fontSize={{ base: "16px", md: "17px" }}
                       textAlign={"center"}
                     >
-                      Tidak ada kuesioner yang perlu diisi.
+                      Tidak ada tugas yang perlu dikerjakan.
                     </Text>
                   </Stack>
                 ))}

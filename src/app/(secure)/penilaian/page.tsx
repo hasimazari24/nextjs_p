@@ -87,6 +87,7 @@ function PagePenilaian() {
               bgColor={"gray.50"}
               cursor={"pointer"}
               onClick={() => router.push("penilaian/tenant")}
+              title={"Lihat Nilai Tenant"}
             >
               <Box>
                 <Image
@@ -138,6 +139,7 @@ function PagePenilaian() {
             bgColor={"gray.50"}
             cursor={"pointer"}
             onClick={() => router.push("penilaian/tugas")}
+            title={"Lihat Nilai Tugas Tenant"}
           >
             <Box>
               <Image
@@ -187,7 +189,11 @@ function PagePenilaian() {
               boxShadow={"lg"}
               rounded={"2xl"}
               bgColor={"gray.50"}
+              cursor={"pointer"}
               onClick={() => router.push("penilaian/mentor")}
+              title={
+                "Kelola daftar pertanyaan dan hasil penilaian Tenant terhadap Mentor"
+              }
             >
               <Box>
                 <Image

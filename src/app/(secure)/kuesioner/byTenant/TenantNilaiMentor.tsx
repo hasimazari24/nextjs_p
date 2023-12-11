@@ -109,7 +109,7 @@ const TenantNilaiMentor = ({
                     >
                       IDENTITAS MENTOR :
                     </Text>
-                    <SimpleGrid columns={{ base: 1, md: 3 }} spacing={2}>
+                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
                       <Box
                         alignItems={"center"}
                         textAlign={"center"}
@@ -137,7 +137,7 @@ const TenantNilaiMentor = ({
                           />
                         </Center>
                       </Box>
-                      <Box
+                      {/* <Box
                         textAlign={"center"}
                         borderLeft={{ md: "3px solid" }}
                         borderColor={"purple.500"}
@@ -146,7 +146,7 @@ const TenantNilaiMentor = ({
                         <Text fontSize={["lg", "xl"]} as="b">
                           25 Oktober 2023
                         </Text>
-                      </Box>
+                      </Box> */}
                     </SimpleGrid>
                   </Stack>
                 </Box>

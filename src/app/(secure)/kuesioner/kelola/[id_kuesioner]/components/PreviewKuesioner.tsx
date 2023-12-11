@@ -85,6 +85,7 @@ const PreviewKuesioner = ({ idKuesioner }: { idKuesioner: string }) => {
         _hover={{ bgColor: "teal.200" }}
         key="preview"
         size="sm"
+        title="Preview Kuesioner"
         onClick={onOpen}
       >
         <ViewIcon />
