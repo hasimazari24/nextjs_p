@@ -32,6 +32,8 @@ interface PertanyaanProps {
   is_required: boolean;
   note: string;
   opsi: OpsiProps;
+  text_submit?: string;
+  opsi_submit?: string | string[] | null;
 }
 
 interface OpsiProps {
@@ -54,11 +56,13 @@ function FormNilaiMentor({
   isSubmitted,
   onSubmit,
   idKuesioner,
+  isShowResult,
 }: {
   dataPertanyaan: PertanyaanProps[] | [];
   isSubmitted?: boolean;
   onSubmit?: () => void;
   idKuesioner?: string;
+  isShowResult?: boolean;
 }) {
   const {
     // control,
@@ -150,7 +154,7 @@ function FormNilaiMentor({
                   {index + 1}
                 </Text>
               </Box>
-              <Stack spacing={4} key={que.id} mt="0.5">
+              <Stack spacing={4} key={que.id} mt="0.5" w="full">
                 {que.type === "radio" && (
                   <FormControl
                     mb={2}
@@ -173,7 +177,11 @@ function FormNilaiMentor({
                         defaultValue={que.id}
                       />
                     </Hide>
-                    <RadioGroup>
+                    <RadioGroup
+                      defaultValue={
+                        que.opsi_submit ? que.opsi_submit.toString() : ""
+                      }
+                    >
                       <Stack spacing={2}>
                         {Array.isArray(que.opsi) &&
                           que.opsi.length > 0 &&
@@ -186,6 +194,7 @@ function FormNilaiMentor({
                                   ? "Pertanyaan ini wajib dipilih."
                                   : false,
                               })}
+                              isReadOnly={isShowResult}
                             >
                               {val.value}
                             </Radio>
@@ -225,7 +234,13 @@ function FormNilaiMentor({
                         required: que.is_required
                           ? "Pertanyaan ini wajib diisi."
                           : false,
+                        maxLength: {
+                          value: 255,
+                          message: "Maksimal 255 karakter.",
+                        },
                       })}
+                      isReadOnly={isShowResult}
+                      defaultValue={que?.text_submit}
                     />
                     <FormErrorMessage>
                       {errors.data?.[index]?.text_submit?.message}
@@ -260,6 +275,8 @@ function FormNilaiMentor({
                           ? "Pertanyaan ini wajib diisi."
                           : false,
                       })}
+                      defaultValue={que?.text_submit}
+                      isReadOnly={isShowResult}
                     />
                     <FormErrorMessage>
                       {errors.data?.[index]?.text_submit?.message}
@@ -288,7 +305,11 @@ function FormNilaiMentor({
                         defaultValue={que.id}
                       />
                     </Hide>
-                    <CheckboxGroup>
+                    <CheckboxGroup
+                      defaultValue={
+                        Array.isArray(que.opsi_submit) ? que.opsi_submit : []
+                      }
+                    >
                       <Stack spacing={2}>
                         {Array.isArray(que.opsi) &&
                           que.opsi.length > 0 &&
@@ -301,6 +322,7 @@ function FormNilaiMentor({
                                   ? "Pertanyaan ini wajib dipilih."
                                   : false,
                               })}
+                              isReadOnly={isShowResult}
                             >
                               {val.value}
                             </Checkbox>

@@ -38,6 +38,8 @@ interface PertanyaanProps {
   is_required: boolean;
   note: string;
   opsi: OpsiProps;
+  text_submit?: string;
+  opsi_submit?: string | string[] | null;
 }
 
 interface OpsiProps {
@@ -61,6 +63,7 @@ interface FormData {
 function FormKuesioner({
   dataKuesioner,
   isSubmitted,
+  isShowResult,
   onSubmit,
   idKuesioner,
 }: {
@@ -68,13 +71,12 @@ function FormKuesioner({
   isSubmitted?: boolean;
   onSubmit?: () => void;
   idKuesioner?: string;
+  isShowResult?: boolean;
 }) {
   const {
-    // control,
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<FormData>();
 
   const [isDone, setIsDone] = useState(false);
@@ -186,7 +188,7 @@ function FormKuesioner({
                       {pertanyaanIndex + 1}
                     </Text>
                   </Box>
-                  <Stack spacing={4}>
+                  <Stack spacing={4} w="full">
                     {d.type === "radio" && (
                       <FormControl
                         mb={2}
@@ -214,7 +216,11 @@ function FormKuesioner({
                             defaultValue={d.id}
                           />
                         </Hide>
-                        <RadioGroup>
+                        <RadioGroup
+                          defaultValue={
+                            d.opsi_submit ? d.opsi_submit.toString() : ""
+                          }
+                        >
                           <Stack spacing={2}>
                             {Array.isArray(d.opsi) &&
                               d.opsi.length > 0 &&
@@ -230,6 +236,7 @@ function FormKuesioner({
                                         : false,
                                     },
                                   )}
+                                  isReadOnly={isShowResult}
                                 >
                                   {val.value}
                                 </Radio>
@@ -279,8 +286,14 @@ function FormKuesioner({
                               required: d.is_required
                                 ? "Pertanyaan ini wajib diisi."
                                 : false,
+                              maxLength: {
+                                value: 255,
+                                message: "Maksimal 255 karakter.",
+                              },
                             },
                           )}
+                          defaultValue={d?.text_submit}
+                          isReadOnly={isShowResult}
                         />
                         <FormErrorMessage>
                           {
@@ -326,6 +339,8 @@ function FormKuesioner({
                                 : false,
                             },
                           )}
+                          defaultValue={d?.text_submit}
+                          isReadOnly={isShowResult}
                         />
                         <FormErrorMessage>
                           {
@@ -362,7 +377,11 @@ function FormKuesioner({
                             defaultValue={d.id}
                           />
                         </Hide>
-                        <CheckboxGroup>
+                        <CheckboxGroup
+                          defaultValue={
+                            Array.isArray(d.opsi_submit) ? d.opsi_submit : []
+                          }
+                        >
                           <Stack spacing={2}>
                             {Array.isArray(d.opsi) &&
                               d.opsi.length > 0 &&
@@ -378,6 +397,7 @@ function FormKuesioner({
                                         : false,
                                     },
                                   )}
+                                  isReadOnly={isShowResult}
                                 >
                                   {val.value}
                                 </Checkbox>

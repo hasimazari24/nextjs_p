@@ -9,50 +9,56 @@ import {
   Flex,
   Text,
   useDisclosure,
-  VStack,
   Avatar,
   Heading,
 } from "@chakra-ui/react";
-import { MdAlarm, MdArrowBackIosNew, MdTask } from "react-icons/md/";
+import { MdArrowBackIosNew } from "react-icons/md/";
 import { Column } from "react-table";
 import DataTable from "@/app/components/datatable/data-table";
-import Link from "next/link";
 import { axiosCustom } from "@/app/api/axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(secure)/kelas/loading";
-import ReviewMentor from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/reviewMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
-// import ReviewTenant from "@/app/(secure)/kelas/[id]/progress/[id_progress]/Tugas/review/reviewTenant";
-import ReviewTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/reviewTenant";
-import NotFound from "@/app/components/template/NotFound";
-import DownloadExcel from "@/app/components/utils/DownloadExcel";
 import IngatkanTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/IngatkanTenant";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import DeleteHasilPenilaian from "./DeleteHasilPenilaian";
+import ViewHasilPenilaian from "./ViewHasilPenilaian";
+import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import NotFound from "@/app/components/template/NotFound";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 
 interface DataItem {
   id: string;
+  id_tenant: string;
   image: string;
   fullname: string;
   course: string;
   tenant: string;
+  status: string;
+  send_email_url: string;
   last_nilai: string;
 }
 
 function page() {
-  const { breadcrumbs, setBreadcrumbs } = useBreadcrumbContext();
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenTenant,
-    onOpen: onOpenTenant,
-    onClose: onCloseTenant,
-  } = useDisclosure();
   const { user } = useAuth();
   let getUser: any = null; // Inisialisasikan getUser di sini
 
   if (user !== null && user !== 401) {
     getUser = user; // Setel nilai getUser jika user ada
+    if (getUser.role !== "Super Admin" && getUser.role !== "Manajemen") return (
+      <NotFound
+        statusCode={403}
+        msg={"Access Denied"}
+        statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+      />
+    );
   }
 
   const router = useRouter();
@@ -63,7 +69,7 @@ function page() {
       accessor: "fullname",
       Cell: ({ value, row }) => (
         <HStack
-          // onClick={() => handleReviewShow(row.values)}
+          onClick={() => handleShowHasil(row.values)}
           cursor="pointer"
           alignItems={"center"}
         >
@@ -85,26 +91,57 @@ function page() {
       accessor: "image",
     },
     {
+      Header: "Kelas",
+      accessor: "course",
+      width: "350px",
+      minWidth: 280,
+      maxWidth: 350,
+    },
+    {
       Header: "ID",
       accessor: "id",
+    },
+    {
+      Header: "ID T",
+      accessor: "id_tenant",
     },
     {
       Header: "Dinilai Oleh :",
       accessor: "tenant",
     },
     {
+      Header: "send_email_url",
+      accessor: "send_email_url",
+    },
+    {
       Header: "Terakhir Dinilai",
       accessor: "last_nilai",
-      // Cell: ({ value, row }) =>
-      //   value && (
-      //     <Text>
-      //       {value}, {row.values["graded_answer_review_time"]}
-      //     </Text>
-      //   ),
+    },
+    {
+      Header: "Status Penilaian",
+      accessor: "status",
+      Cell: ({ value, row }) =>
+        value === "Sudah Dinilai" ? (
+          <Stack>
+            <Text>Sudah Dinilai :</Text>
+            <Text>{row.values.last_nilai}</Text>
+          </Stack>
+        ) : (
+          <Stack>
+            <Text>Belum Dinilai :</Text>
+            <IngatkanTenant Url={row.values.send_email_url} />
+          </Stack>
+        ),
     },
   ];
 
-  const hidenCols = ["id", "image"];
+  const hidenCols = [
+    "id",
+    "image",
+    "send_email_url",
+    "last_nilai",
+    "id_tenant",
+  ];
 
   const filterOptions = [
     {
@@ -115,10 +152,24 @@ function page() {
       key: "tenant",
       label: "Tenant",
     },
+    {
+      key: "status",
+      label: "Status",
+      values: ["Sudah Dinilai", "Belum Dinilai"],
+    },
   ];
 
   const [dataHasilNilai, setDataHasilNilai] = useState<DataItem[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [openHasil, setOpenHasil] = useState<{
+    idKuesioner: string;
+    idTenant: string;
+    tenantName: string;
+  }>({
+    idKuesioner: "",
+    idTenant: "",
+    tenantName: "",
+  });
   // const router = useRouter;
   const getDataHasilNilai = async () => {
     try {
@@ -139,6 +190,15 @@ function page() {
     // if (need_updated === true)
     getDataHasilNilai();
   }, []);
+
+  const handleShowHasil = (data: any) => {
+    setOpenHasil({
+      idTenant: data.id_tenant,
+      idKuesioner: data.id,
+      tenantName: data.name,
+    });
+    onOpen();
+  };
 
   const renderActions = (rowData: any) => {
     return (
@@ -162,9 +222,7 @@ function page() {
             HASIL PENILAIAN TENANT NILAI MENTOR
           </Heading>
           <HStack mb={{ base: 2, md: 0 }}>
-            {/* <DownloadExcel
-              Url={`/export-nilai-tugas/${idTenant}/course/${idKelas}`}
-            /> */}
+            <DownloadExcel Url={`/export-tenant-nilai-mentor`} />
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -186,6 +244,13 @@ function page() {
           {(rowData: any) => renderActions(rowData)}
         </DataTable>
       </Stack>
+      <ViewHasilPenilaian
+        idTenant={openHasil.idTenant}
+        idKuesioner={openHasil.idKuesioner}
+        tenantName={openHasil.tenantName}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </Suspense>
   );
 }
