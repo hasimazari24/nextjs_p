@@ -25,14 +25,14 @@ import { axiosCustom } from "@/app/api/axios";
 import { Column } from "react-table";
 import EditPertanyaan from "./EditPertanyaan";
 import DeletePertanyaan from "./DeletePertanyaan";
-import DataTable from "@/app/components/datatable/data-table";
+import { useAuth } from "@/app/components/utils/AuthContext";
 import { useRouter } from "next/navigation";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { GrMoreVertical } from "react-icons/gr";
 import { BsUiRadios } from "react-icons/bs";
 import { DropResult } from "react-beautiful-dnd";
 import DndTable from "@/app/components/datatable/DndTable";
-// import OnOffPertanyaan from "./OnOffPertanyaan";
+import NotFound from "@/app/components/template/NotFound";
 
 interface DataItem {
   id: string;
@@ -45,6 +45,20 @@ interface DataItem {
 }
 
 function page() {
+  const { user } = useAuth();
+  let getUser: any = null; // Inisialisasikan getUser di sini
+
+  if (user !== null && user !== 401) {
+    getUser = user; // Setel nilai getUser jika user ada
+    if (getUser.role !== "Super Admin" && getUser.role !== "Manajemen")
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
+  }
   const { setBreadcrumbs } = useBreadcrumbContext();
   const getForCrumbs: any = FindDefaultRoute();
   const [daftarPertanyaan, setDataPertanyaan] = useState<DataItem[] | []>();

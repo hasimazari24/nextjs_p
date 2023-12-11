@@ -5,6 +5,7 @@ import Loading from "../loading";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import { notFound } from "next/navigation";
 // import PenilaianTenantUmum from "./pages/PenilaianTenantUmum";
 
 const TenantRated = dynamic(() => import("./pages/PenilaianTenantUmum"), {
@@ -14,26 +15,20 @@ const TenantRated = dynamic(() => import("./pages/PenilaianTenantUmum"), {
 
 function PenilaianUmum() {
   const { user } = useAuth();
-   const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
-   React.useEffect(() => {
-     // Membuat nilai baru
-     const newValue = { name: "Nilai Tenant", href: "penilaian/tenant" };
-     // Cek apakah nilai baru sudah ada dalam breadcrumbs
-     const alreadyExists = breadcrumbs.some(
-       (breadcrumb) => JSON.stringify(breadcrumb) === JSON.stringify(newValue),
-     );
-     // Jika belum ada, tambahkan ke breadcrumbs
-     if (!alreadyExists) {
-       setBreadcrumbs([...breadcrumbs, newValue]);
-     }
-   }, []);
+  const { setBreadcrumbs } = useBreadcrumbContext();
+  const getForCrumbs: any = FindDefaultRoute();
+  React.useEffect(() => {
+    if (getForCrumbs) setBreadcrumbs(getForCrumbs);
+  }, []);
   if (user !== null && user !== 401) {
     // switch(user.role) {
     //   case "Super Admin" : return <PenilaianUmumByMJM />;
     //   case "Mentor" : return <PenilaianUmumByMentor />
     // }
     const getUser: any = user;
-    return <TenantRated roleAccess={getUser.role} />;
+    if (getUser.role !== "Tenant") {
+      return <TenantRated roleAccess={getUser.role} />;
+    } else notFound();
   }
 }
 

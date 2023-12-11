@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
+import NotFound from "@/app/components/template/NotFound";
 
 function PageNilaiMentor() {
   const router = useRouter();
@@ -25,6 +26,14 @@ function PageNilaiMentor() {
 
   if (user !== null && user !== 401) {
     getUser = user; // Setel nilai getUser jika user ada
+    if (getUser.role !== "Super Admin" && getUser.role !== "Manajemen")
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
   }
 
   const { setBreadcrumbs } = useBreadcrumbContext();

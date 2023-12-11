@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   HStack,
   Stack,
@@ -11,20 +9,18 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { MdAlarm, MdArrowBackIosNew, MdTask } from "react-icons/md/";
+import { MdArrowBackIosNew } from "react-icons/md/";
 import { Column } from "react-table";
 import DataTable from "@/app/components/datatable/data-table";
-import Link from "next/link";
 import { axiosCustom } from "@/app/api/axios";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/(secure)/kelas/loading";
-import ReviewMentor from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/reviewMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
-import ReviewTenant from "@/app/(secure)/kelas/[id]/sesi-kelas/[id_sesi]/review/[id_tugas]/reviewTenant";
 import NotFound from "@/app/components/template/NotFound";
 import AddGraded from "./addGraded";
 import UpdateGraded from "./updateGraded";
 import DeleteGraded from "./deleteGraded";
+import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 
 interface DataItem {
   id: string;
@@ -143,6 +139,7 @@ function page({ params }: { params: { id_graded: string } }) {
 
   const [dataReview, setDataReview] = useState<Data | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
   // const router = useRouter;
   const getDataReview = async () => {
     let Url: string = "";
@@ -155,13 +152,28 @@ function page({ params }: { params: { id_graded: string } }) {
         case "Mentor":
           Url = `/general-grades-tenant/${idGraded}`;
           break;
-        // case "Tenant":
-        //   Url = `/grades-assigment/tenant-course/${idKelas}`;
-        //   break;
       }
       setIsLoading(true);
-      // Panggil API menggunakan Axios dengan async/await
       const response = await axiosCustom.get(Url);
+      // Membuat nilai baru
+      const newValue = {
+        name: response.data.data?.tenant_name,
+        href: `/penilaian/tenant/${idGraded}`,
+      };
+      // Cek apakah nilai baru sudah ada dalam breadcrumbs
+      const alreadyExists = breadcrumbs.some(
+        (breadcrumb) => JSON.stringify(breadcrumb) === JSON.stringify(newValue),
+      );
+      // Jika belum ada, tambahkan ke breadcrumbs
+      if (!alreadyExists) {
+        setBreadcrumbs([...breadcrumbs, newValue]);
+      } else {
+        // Jika sudah ada, buat array baru tanpa nilai breadcrumb terakhir
+        // ini diperlukan jika berpindah dari sub-route yg ada didalam route ini
+        // const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
+        // setBreadcrumbs(newBreadcrumbs);
+      }
+      
       const timer = setTimeout(() => {
         // setIdTenant(id);
         setDataReview(response.data.data); // Set isLoading to false to stop the spinner
@@ -217,7 +229,7 @@ function page({ params }: { params: { id_graded: string } }) {
               </Text>
             </VStack>
           )}
-          <HStack spacing={2} mb={2}>
+          <HStack spacing={2} mb={{ base: 2, md: 0 }}>
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -225,6 +237,7 @@ function page({ params }: { params: { id_graded: string } }) {
               aria-label="btn-email"
               size={"sm"}
               onClick={() => router.push("/penilaian/tenant")}
+              title={"Kembali ke halaman Penilaian Tenant"}
             >
               Kembali
             </Button>

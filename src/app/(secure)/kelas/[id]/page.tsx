@@ -77,8 +77,10 @@ function page({ params }: { params: { id: string } }) {
         if (!alreadyExists) {
           setBreadcrumbs([...breadcrumbs, newValue]);
         } else {
-           const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
-           setBreadcrumbs(newBreadcrumbs);
+          // Jika sudah ada, buat array baru tanpa nilai breadcrumb terakhir
+          // ini diperlukan jika berpindah dari sub-route yg ada didalam route ini
+          const newBreadcrumbs = breadcrumbs.slice(0, breadcrumbs.length - 1);
+          setBreadcrumbs(newBreadcrumbs);
         }
       } catch (error) {
         console.error(error);

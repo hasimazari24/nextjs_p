@@ -18,7 +18,6 @@ import {
 import Loading from "../../loading";
 import { MdArrowBackIosNew } from "react-icons/md/";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
-import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 import { notFound, useRouter } from "next/navigation";
 import { Column } from "react-table";
 import { DropResult } from "react-beautiful-dnd";
@@ -54,11 +53,16 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
     return notFound();
   }
 
-  const { setBreadcrumbs } = useBreadcrumbContext();
-  const getForCrumbs: any = FindDefaultRoute();
-  //   useEffect(() => {
-  //     if (getForCrumbs) setBreadcrumbs(getForCrumbs);
-  //   }, []);
+  const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
+  useEffect(() => {
+    setBreadcrumbs([
+      ...breadcrumbs,
+      {
+        name: "Value Jawaban",
+        href: `/penilaian/mentor/daftarpertanyaan/${getParamsId}`,
+      },
+    ]);
+  }, []);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [loadingDragging, setLoadingDragging] = useState(false);
@@ -185,15 +189,13 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
     <Loading />
   ) : data ? (
     <Suspense fallback={<Loading />}>
-      <Stack spacing={{ base: 2, md: 4 }}>
+      <Stack spacing={{ base: 4, md: 6 }}>
         <Flex
           flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
           justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
           // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
         >
-          <Heading fontSize={"2xl"} mb={2}>
-            VALUE JAWABAN
-          </Heading>
+          <Heading fontSize={"2xl"}>VALUE JAWABAN</Heading>
 
           <HStack align="start" mb={{ base: 2, md: 0 }}>
             <Button

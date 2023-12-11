@@ -18,6 +18,7 @@ import { useAuth } from "@/app/components/utils/AuthContext";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 import PageByTenant from "./byTenant/PageByTenant";
+import NotFound from "@/app/components/template/NotFound";
 
 function PageKuesioner() {
   const router = useRouter();
@@ -35,7 +36,7 @@ function PageKuesioner() {
   }, []);
 
   return (
-    <Stack spacing={{ base: 2, md: 4 }} w="full">
+    <Stack spacing={{ base: 4, md: 6 }} w="full">
       <Flex
         justifyContent={"space-between"}
         // pb="2"
@@ -46,7 +47,7 @@ function PageKuesioner() {
 
       {getUser.role === "Tenant" ? (
         <PageByTenant />
-      ) : (
+      ) : getUser.role === "Super Admin" || getUser.role === "Manajemen" ? (
         <Center>
           <SimpleGrid
             columns={{ base: 1, sm: 2, md: 3, xl: 4 }}
@@ -79,6 +80,7 @@ function PageKuesioner() {
               bgColor={"gray.50"}
               cursor={"pointer"}
               onClick={() => router.push("kuesioner/daftar")}
+              title={"Buat dan Kelola daftar pertanyaan"}
             >
               <Box>
                 <Image
@@ -129,6 +131,7 @@ function PageKuesioner() {
               rounded={"2xl"}
               bgColor={"gray.50"}
               onClick={() => router.push("kuesioner/grup")}
+              title={"Buat dan Kelola grup pertanyaan"}
             >
               <Box>
                 <Image
@@ -179,6 +182,7 @@ function PageKuesioner() {
               bgColor={"gray.50"}
               cursor={"pointer"}
               onClick={() => router.push("kuesioner/kelola")}
+              title={"Buat dan Kelola kuesioner tahunan"}
             >
               <Box>
                 <Image
@@ -228,6 +232,7 @@ function PageKuesioner() {
               bgColor={"gray.50"}
               cursor={"pointer"}
               onClick={() => router.push("kuesioner/review")}
+              title={"Review hasil kuesioner"}
             >
               <Box>
                 <Image
@@ -261,6 +266,12 @@ function PageKuesioner() {
             </Stack>
           </SimpleGrid>
         </Center>
+      ) : (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
       )}
     </Stack>
   );
