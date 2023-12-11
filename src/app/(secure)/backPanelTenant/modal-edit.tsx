@@ -377,8 +377,8 @@ const ModalEdit: React.FC<ModalProps> = ({
       if (formData?.image_banner_id !== null) {
         if (idImageBannerOld !== formData.image_banner_id) {
           if (linkTemporary !== undefined) {
-            setIdImageAvatarOld(null);
-            setPreviewAvatar(linkTemporary);
+            setIdImageBannerOld(null);
+            setPreviewBanner(linkTemporary);
           }
           setIdImageBannerOld(formData.image_banner_id);
           setPreviewBanner(formData.image_banner_url);

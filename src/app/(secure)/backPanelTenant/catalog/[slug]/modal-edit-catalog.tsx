@@ -149,10 +149,7 @@ const ModalEditCatalog: React.FC<ModalProps> = ({
       } else {
         // Mode tambah, kirim data melalui POST request
         await axiosCustom
-          .post(`/tenant/${idTenant}/add-catalog`, {
-            title: data.title,
-            description: data.description,
-          })
+          .post(`/tenant/${idTenant}/add-catalog`, dataBaru)
           .then((response) => {
             // console.log(response);
             if (response.status === 201) {
