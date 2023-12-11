@@ -101,39 +101,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
                   "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis delectus nam facere veritatis. Praesentium eveniet tempora voluptas, facilis saepe perspiciatis, laborum et amet iusto aliquid possimus velit quos modi neque corrupti perferendis in cumque? Illum optio odio amet, inventore quas aperiam, natus assumenda consequuntur accusamus beatae, alias quo dolor provident!",
               }}
             />
-            <FormKuesioner
-              data={[
-                {
-                  id: "ID1",
-                  heading: "Pilih Jenis Produk Anda",
-                  type: "radio",
-                  value: [
-                    { id: "val1", title: "Teknologi" },
-                    { id: "val2", title: "Makanan" },
-                    { id: "val3", title: "Jasa Layanan" },
-                    { id: "val4", title: "Telekomunikasi" },
-                    { id: "val5", title: "Seni dan Kriya" },
-                  ],
-                },
-                {
-                  id: "ID2",
-                  heading: "Apa Saja Produknya ?",
-                  type: "checkbox",
-                  value: [
-                    { id: "val1", title: "Teknologi" },
-                    { id: "val2", title: "Makanan" },
-                    { id: "val3", title: "Jasa Layanan" },
-                    { id: "val4", title: "Telekomunikasi" },
-                    { id: "val5", title: "Seni dan Kriya" },
-                  ],
-                },
-                {
-                  id: "ID3",
-                  heading: "Jelaskan Bisnis anda ?",
-                  type: "short_text",
-                },
-              ]}
-            />
+            
           </Stack>
         </Stack>
         <ChooseResponden

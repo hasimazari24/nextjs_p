@@ -141,7 +141,7 @@ function page({ params }: { params: { id: string } }) {
               <ProfileMentor mentor={state.dataClass?.mentor || null} />
             </VStack>
           </HStack>
-          <HStack>
+          <HStack mb={{ base:4, md:0 }}>
             <DownloadExcel Url={`/export-course/${getParamsId}`} />
             <Button
               leftIcon={<MdArrowBackIosNew />}
@@ -149,7 +149,6 @@ function page({ params }: { params: { id: string } }) {
               variant="outline"
               aria-label="btn-email"
               size={"sm"}
-              mb={6}
               onClick={() => router.push("/kelas")}
             >
               Kembali

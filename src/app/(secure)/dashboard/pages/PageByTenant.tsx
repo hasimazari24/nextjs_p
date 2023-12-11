@@ -302,7 +302,7 @@ const AccordionDetail = ({
                 ) : (
                   <Stack
                     justifyContent={"center"}
-                    spacing={3}
+                    spacing={0}
                     alignItems={"center"}
                   >
                     <Image
@@ -315,10 +315,10 @@ const AccordionDetail = ({
                     <Text
                       as="b"
                       fontWeight={"bold"}
-                      fontSize={{ base: "14px", md: "15px" }}
+                      fontSize={{ base: "16px", md: "17px" }}
                       textAlign={"center"}
                     >
-                      Tidak ada tugas yang perlu dikerjakan.
+                      Tidak ada kuesioner yang perlu diisi.
                     </Text>
                   </Stack>
                 ))}
