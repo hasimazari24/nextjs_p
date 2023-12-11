@@ -27,6 +27,10 @@ const Routes: IRoutes[] = [
   { name: "Data Asset", icon: ImFileText2, href: "/assets" },
   { name: "My Profile", href: "/myprofile" },
   { name: "Nilai Tugas", href: "/penilaian/tugas" },
+  { name: "Nilai Tenant", href: "/penilaian/tenant" },
+  { name: "Nilai Mentor", href: "/penilaian/mentor" },
+  { name: "Daftar Pertanyaan Nilai Mentor", href: "/penilaian/mentor/daftarpertanyaan" },
+  { name: "Hasil Nilai Mentor", href: "/penilaian/mentor/hasilpenilaian" },
   {
     name: "Program",
     href: "/backPanelTenant/program",

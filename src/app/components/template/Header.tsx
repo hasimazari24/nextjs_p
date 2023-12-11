@@ -152,10 +152,11 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                           overflow="hidden"
                           textOverflow="ellipsis"
                           whiteSpace="nowrap"
-                          maxW={{ md: "100px", lg: "200px", xl: "full" }}
+                          maxW={{ md: "100px", lg: "200px", xl: "300px" }}
                           _hover={{ textDecoration: "underline" }}
                           onClick={() => router.push(value.href)}
                           cursor={"pointer"}
+                          title={value.name}
                         >
                           {value.name}
                         </Text>
