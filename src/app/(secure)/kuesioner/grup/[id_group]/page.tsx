@@ -19,10 +19,8 @@ import {
 import Loading from "../../loading";
 import { MdArrowBackIosNew } from "react-icons/md/";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
-import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 import { useRouter } from "next/navigation";
 import { HiFolderOpen } from "react-icons/hi";
-import { ViewIcon } from "@chakra-ui/icons";
 import DeleteDaftar from "./DeleteDaftar";
 import { axiosCustom } from "@/app/api/axios";
 import AddPertanyaanToGroup from "./AddPertanyaanToGroup";
@@ -46,11 +44,8 @@ interface GroupProps {
 }
 
 function page({ params }: { params: { id_group: string } }) {
-  const { setBreadcrumbs } = useBreadcrumbContext();
-  const getForCrumbs: any = FindDefaultRoute();
-  //   useEffect(() => {
-  //     if (getForCrumbs) setBreadcrumbs(getForCrumbs);
-  //   }, []);
+  const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
+
   const paramsId = params.id_group;
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -123,10 +118,35 @@ function page({ params }: { params: { id_group: string } }) {
     {
       Header: "Judul Pertanyaan",
       accessor: "pertanyaan",
+      Cell: ({ value }) => (
+        <Text
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          flex="1"
+          noOfLines={2}
+          whiteSpace="normal"
+        >
+          {value}
+        </Text>
+      ),
+      width: "450px",
+      minWidth: 260,
+      maxWidth: 550,
     },
     {
       Header: "Model",
       accessor: "type",
+      filter: (rows, id, filterValues) => {
+        if (filterValues === "Opsi Pilihan")
+          return rows.filter((row) => row.values["type"] === "radio");
+        else if (filterValues === "Checkbox")
+          return rows.filter((row) => row.values["type"] === "checkbox");
+        else if (filterValues === "Teks Pendek")
+          return rows.filter((row) => row.values["type"] === "short_text");
+        else if (filterValues === "Teks Panjang")
+          return rows.filter((row) => row.values["type"] === "long_text");
+        else return rows;
+      },
       Cell: ({ value }) =>
         value === "checkbox" ? (
           <Text>Checkbox</Text>
@@ -141,6 +161,13 @@ function page({ params }: { params: { id_group: string } }) {
     {
       Header: "Status",
       accessor: "is_active",
+      filter: (rows, id, filterValues) => {
+        if (filterValues === "Aktif")
+          return rows.filter((row) => row.values["is_active"] === true);
+        else if (filterValues === "Nonaktif")
+          return rows.filter((row) => row.values["is_active"] === false);
+        else return rows;
+      },
       Cell: ({ value }) =>
         value === true ? <Text>Aktif</Text> : <Text>Non Aktif</Text>,
     },
@@ -184,6 +211,19 @@ function page({ params }: { params: { id_group: string } }) {
       const response = await axiosCustom.get(
         `/kuesioner-tahunan/grup-pertanyaan/${paramsId}`,
       );
+      // Membuat nilai baru
+      const newValue = {
+        name: response.data.data?.title,
+        href: `/kuesioner/grup/${paramsId}`,
+      };
+      // Cek apakah nilai baru sudah ada dalam breadcrumbs
+      const alreadyExists = breadcrumbs.some(
+        (breadcrumb) => JSON.stringify(breadcrumb) === JSON.stringify(newValue),
+      );
+      // Jika belum ada, tambahkan ke breadcrumbs
+      if (!alreadyExists) {
+        setBreadcrumbs([...breadcrumbs, newValue]);
+      }
       const timer = setTimeout(() => {
         setData(response.data.data);
         setDataPertanyaan(response.data.data.pertanyaan);
@@ -214,7 +254,7 @@ function page({ params }: { params: { id_group: string } }) {
     <Loading />
   ) : data ? (
     <Suspense fallback={<Loading />}>
-      <Stack spacing={{ base: 2, md: 4 }}>
+      <Stack spacing={{ base: 4, md: 6 }}>
         <Flex
           flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
           justify="space-between"
@@ -283,7 +323,29 @@ function page({ params }: { params: { id_group: string } }) {
                   droppableId={"KelolaGroupDnd"}
                   onDragEnd={(result) => handleDragEnd(result)}
                   hiddenColumns={["id"]}
-                  filterOptions={[{ key: "title", label: "Judul" }]}
+                  filterOptions={[
+                    { key: "pertanyaan", label: "Judul Pertanyaan" },
+                    {
+                      key: "is_active",
+                      label: "Status",
+                      values: ["Aktif", "Nonaktif"],
+                    },
+                    {
+                      key: "type",
+                      label: "Model",
+                      values: [
+                        "Opsi Pilihan",
+                        "Checkbox",
+                        "Teks Pendek",
+                        "Teks Panjang",
+                      ],
+                    },
+                    {
+                      key: "is_required",
+                      label: "Wajib Isi",
+                      type: "val_check",
+                    },
+                  ]}
                   isLoading={loadingDragging}
                 >
                   {(rowData: any) => renderActions(rowData)}

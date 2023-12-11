@@ -28,6 +28,7 @@ import { ViewIcon } from "@chakra-ui/icons";
 import Responden from "./components/Responden";
 import Kuesioner from "./components/Kuesioner";
 import PreviewKuesioner from "./components/PreviewKuesioner";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 
 function page({ params }: { params: { id_kuesioner: string } }) {
   const getParamsId = params.id_kuesioner;
@@ -123,17 +124,20 @@ function page({ params }: { params: { id_kuesioner: string } }) {
               <PreviewKuesioner idKuesioner={getParamsId} />
             </VStack>
           </HStack>
-          <Button
-            leftIcon={<MdArrowBackIosNew />}
-            colorScheme="blue"
-            variant="outline"
-            aria-label="btn-email"
-            size={"sm"}
-            mb={6}
-            onClick={() => router.push("/kuesioner/kelola")}
-          >
-            Kembali
-          </Button>
+          <HStack mb={{ base: 2, md: 0 }}>
+            <DownloadExcel Url={`/export-kuesioner/${getParamsId}`} />
+            <Button
+              leftIcon={<MdArrowBackIosNew />}
+              colorScheme="blue"
+              variant="outline"
+              aria-label="btn-email"
+              size={"sm"}
+              title={`Kembali ke Halaman Sebelumnya`}
+              onClick={() => router.push("/kuesioner/kelola")}
+            >
+              Kembali
+            </Button>
+          </HStack>
         </Flex>
 
         <Box>
