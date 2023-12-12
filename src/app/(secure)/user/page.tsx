@@ -2,7 +2,7 @@
 
 import DataTable from "../../components/datatable/data-table";
 import { Column } from "react-table";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import ModalEdit from "./modal-edit";
 import ModalReset from "./modal-reset-pass";
 import {
@@ -18,12 +18,12 @@ import {
   MenuList,
   MenuItem,
   Avatar,
+  useDisclosure,
 } from "@chakra-ui/react";
 import ConfirmationModal from "../../components/modal/modal-confirm";
 import ModalNotif from "../../components/modal/modal-notif";
 import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { GrMoreVertical, GrShareOption } from "react-icons/gr";
-import { useRouter } from "next/navigation";
+import { GrMoreVertical } from "react-icons/gr";
 import { axiosCustom } from "@/app/api/axios";
 import { MdLockReset } from "react-icons/md";
 import dynamic from "next/dynamic";
@@ -33,6 +33,8 @@ import NotFound from "@/app/components/template/NotFound";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 import DownloadExcel from "@/app/components/utils/DownloadExcel";
+import AddUserToTenant from "./AddUserToTenant";
+import { FaUserPlus } from "react-icons/fa";
 
 interface DataItem {
   image_id: string;
@@ -44,6 +46,7 @@ interface DataItem {
   role: string;
   fullname: string;
   tenant?: string;
+  last_login?: string | null;
 }
 
 interface UserLog {
@@ -155,6 +158,10 @@ function PageUser() {
           value
         ),
     },
+    {
+      Header: "Terakhir Login",
+      accessor: "last_login",
+    },
   ];
 
   const [isLoading, setIsLoading] = useState(true);
@@ -162,6 +169,7 @@ function PageUser() {
   const [dataTampil, setDataTampil] = useState<any | null>([]);
   const getTampil = async () => {
     try {
+      setIsLoading(true);
       // Panggil API menggunakan Axios dengan async/await
       const response = await axiosCustom.get("/user");
 
@@ -204,7 +212,16 @@ function PageUser() {
   const [dataDeleteId, setDataDeleteId] = useState<number | null>(null);
   const [textConfirm, setTextConfirm] = useState(" ");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
-  const router = useRouter();
+
+  const [userTenant, setUserTenant] = useState<any | null>(null);
+
+  //modal to add user tenant to Tenant Team
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handeAddtoTenant = (data: any) => {
+    setUserTenant(data);
+    onOpen();
+  };
 
   const renderActions = (rowData: any) => {
     // console.log(rowData.image_id);
@@ -226,7 +243,14 @@ function PageUser() {
           >
             <GrMoreVertical />
           </MenuButton>
-          <MenuList>
+          <MenuList w="fit-content">
+            {rowData?.role === "Tenant" &&
+              (!rowData?.tenant || rowData?.tenant === "") && (
+                <MenuItem onClick={() => handeAddtoTenant(rowData)}>
+                  <FaUserPlus fontSize="18px" />
+                  &nbsp; Tambahkan ke Team Tenant
+                </MenuItem>
+              )}
             <MenuItem onClick={() => handleReset(rowData)}>
               <MdLockReset size="1.3rem" />
               &nbsp; Reset Password
@@ -364,9 +388,6 @@ function PageUser() {
           </Flex>
           {/* {editingData && ( */}
           <ModalEdit
-            // isOpen={isModalOpen}
-            // onClose={() => setIsModalOpen(false)}
-            // data={editingData}
             isOpen={isModalEditOpen}
             onClose={() => {
               setIsModalEditOpen(false);
@@ -425,6 +446,16 @@ function PageUser() {
             onClose={() => setModalNotif(false)}
             message={message}
             isError={isError}
+          />
+
+          <AddUserToTenant
+            isOpen={isOpen}
+            onClose={() => {
+              onClose();
+              setUserTenant(null);
+            }}
+            dataUser={userTenant}
+            onSubmit={() => getTampil()}
           />
         </>
       )}

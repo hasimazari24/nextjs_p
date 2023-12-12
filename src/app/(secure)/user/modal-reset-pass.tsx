@@ -88,7 +88,7 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
         }
       });
 
-      onSubmit();
+      // onSubmit();
       onClose(); // Tutup modal
       reset(); // Reset formulir
       setIsLoading(false);
@@ -216,6 +216,7 @@ const ModalReset: React.FC<ModalWithTableProps> = ({
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={()=>onSubmit()}
       />
     </>
   );

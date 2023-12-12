@@ -289,7 +289,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         });
       }
 
-      onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
+      // onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
       reset(); // Reset formulir
       setPreviewAvatar(undefined); // reset preview
@@ -577,6 +577,7 @@ const ModalEdit: React.FC<ModalProps> = ({
         onClose={() => setModalNotif(false)}
         message={message}
         isError={isError}
+        onSubmit={() => onSubmit()}
       />
     </>
   );
