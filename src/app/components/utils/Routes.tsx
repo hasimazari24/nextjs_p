@@ -11,6 +11,7 @@ import { ImFileText2 } from "react-icons/im";
 import { SiGoogleclassroom } from "react-icons/si";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import { IRoutes } from "@/app/type/routes-navigation.d";
+import { BsClipboardCheck } from "react-icons/bs";
 
 const Routes: IRoutes[] = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/dashboard" },
@@ -23,13 +24,20 @@ const Routes: IRoutes[] = [
     icon: BsFillJournalBookmarkFill,
     href: "/penilaian",
   },
-  { name: "Data Kuesioner", icon: MdOutlineQuiz, href: "/kuesioner" },
+  {
+    name: "Data Kuesioner",
+    icon: BsClipboardCheck,
+    href: "/kuesioner",
+  },
   { name: "Data Asset", icon: ImFileText2, href: "/assets" },
   { name: "My Profile", href: "/myprofile" },
   { name: "Nilai Tugas", href: "/penilaian/tugas" },
   { name: "Nilai Tenant", href: "/penilaian/tenant" },
   { name: "Nilai Mentor", href: "/penilaian/mentor" },
-  { name: "Daftar Pertanyaan Nilai Mentor", href: "/penilaian/mentor/daftarpertanyaan" },
+  {
+    name: "Daftar Pertanyaan Nilai Mentor",
+    href: "/penilaian/mentor/daftarpertanyaan",
+  },
   { name: "Hasil Nilai Mentor", href: "/penilaian/mentor/hasilpenilaian" },
   {
     name: "Program",
