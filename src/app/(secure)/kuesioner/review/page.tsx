@@ -310,12 +310,11 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                         xl: "13rem",
                       }}
                       objectFit={"cover"}
-                      // src={
-                      //   row.values.course_ends === true
-                      //     ? "/img/class-ends-min.png"
-                      //     : "/img/class-avatar.png"
-                      // }
-                      src="/img/kelola-kuesioner-detail.png"
+                      src={
+                        row.values.is_active === true
+                          ? "/img/kelola-kuesioner-detail.png"
+                          : "/img/quesionare-nds.png"
+                      }
                       alt="#"
                       // boxShadow={"xl"}
                     />

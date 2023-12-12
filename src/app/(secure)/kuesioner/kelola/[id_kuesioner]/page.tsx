@@ -106,7 +106,11 @@ function page({ params }: { params: { id_kuesioner: string } }) {
                 xl: "10rem",
               }}
               objectFit={"cover"}
-              src={"/img/kelola-kuesioner-detail.png"}
+              src={
+                state.dataKuesioner.is_active === true
+                  ? "/img/kelola-kuesioner-detail.png"
+                  : "/img/quesionare-nds.png"
+              }
               alt="#"
               // boxShadow={"xl"}
             />

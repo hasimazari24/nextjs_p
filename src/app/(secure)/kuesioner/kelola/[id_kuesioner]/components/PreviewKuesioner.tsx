@@ -62,7 +62,7 @@ const PreviewKuesioner = ({ idKuesioner }: { idKuesioner: string }) => {
       setIsLoading(true);
       try {
         const response = await axiosCustom.get(
-          `/kuesioner-review/${idKuesioner}/tahunan/`,
+          `/kuesioner-review/${idKuesioner}/tahunan`,
         );
         setState({
           dataReview: response.data.data,
