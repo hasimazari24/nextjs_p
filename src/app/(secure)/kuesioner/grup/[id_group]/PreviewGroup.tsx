@@ -52,7 +52,7 @@ const PreviewGroup = ({ idGroup }: { idGroup: string }) => {
     if (isOpen === true) getAll();
   }, [isOpen]);
 
-  console.log(state.dataReview);
+  // console.log(state.dataReview);
 
   return (
     <>

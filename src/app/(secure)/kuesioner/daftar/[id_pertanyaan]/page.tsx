@@ -91,8 +91,8 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
     const updatedData = newData.map((item, index) => {
       return { ...item, no_urut: index + 1 };
     });
-    console.log("data : ", data);
-    console.log("updatedData : ", updatedData);
+    // console.log("data : ", data);
+    // console.log("updatedData : ", updatedData);
     const timeoutId = setTimeout(() => {
       setLoadingDragging(false);
     }, 1000);

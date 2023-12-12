@@ -202,7 +202,7 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
         setIsModalSearchOpen(false);
       }
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       if (error?.response) {
         handleShowMessage(`Terjadi Kesalahan: ${error.response.data}`, true);
       } else handleShowMessage(`Terjadi Kesalahan: ${error.message}`, true);
