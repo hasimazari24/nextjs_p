@@ -4,17 +4,13 @@ import {
   Box,
   Alert,
   AlertIcon,
-  AlertTitle,
   CloseButton,
-  HStack,
   AlertDescription,
-  Progress,
   useDisclosure,
   Fade,
   Text,
 } from "@chakra-ui/react";
-import React, { useState, useEffect, useRef } from "react";
-import { MdOutlineOutdoorGrill } from "react-icons/md";
+import React from "react";
 
 interface AlertBarProps {
   message: string;
@@ -30,12 +26,13 @@ const AlertBar = ({ message, status }: AlertBarProps) => {
         <Box
           borderRadius="md"
           boxShadow="md"
+          w="full"
         >
           <Alert status={status} variant="subtle">
             <AlertIcon />
             <Box>
               <AlertDescription>
-                <Text whiteSpace={status === "success" ? "nowrap" : "normal"}>
+                <Text w="full">
                   {message}
                 </Text>
               </AlertDescription>
