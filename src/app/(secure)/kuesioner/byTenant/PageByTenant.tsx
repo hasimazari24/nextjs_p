@@ -34,11 +34,11 @@ function PageByTenant() {
   let hidenCols: string[] = ["id", "action"];
   const filterOptions = [
     { key: "kuesioner", label: "Judul Kuesioner" },
-    {
-      key: "type",
-      label: "Tipe",
-      values: ["Tahunan", "Penilaian Mentor"],
-    },
+    // {
+    //   key: "type",
+    //   label: "Tipe",
+    //   values: ["Tahunan", "Penilaian Mentor"],
+    // },
   ];
 
   const columns: ReadonlyArray<Column<DataItem>> = [
@@ -70,19 +70,19 @@ function PageByTenant() {
       // minWidth: 260,
       // maxWidth: 550,
     },
-    {
-      Header: "Tipe Kuesioner",
-      accessor: "type",
-      filter: (rows, id, filterValues) => {
-        if (filterValues === "Tahunan")
-          return rows.filter((row) => row.values["type"] === "tahunan");
-        else if (filterValues === "Penilaian Mentor")
-          return rows.filter((row) => row.values["type"] === "nilai_mentor");
-        else return rows;
-      },
-      Cell: ({ value }) =>
-        value === "tahunan" ? "Tahunan" : "Penilaian Mentor",
-    },
+    // {
+    //   Header: "Tipe Kuesioner",
+    //   accessor: "type",
+    //   filter: (rows, id, filterValues) => {
+    //     if (filterValues === "Tahunan")
+    //       return rows.filter((row) => row.values["type"] === "tahunan");
+    //     else if (filterValues === "Penilaian Mentor")
+    //       return rows.filter((row) => row.values["type"] === "nilai_mentor");
+    //     else return rows;
+    //   },
+    //   Cell: ({ value }) =>
+    //     value === "tahunan" ? "Tahunan" : "Penilaian Mentor",
+    // },
   ];
 
   const [datKuesionerTenant, setDatKuesionerTenant] = useState<Array<DataItem>>(

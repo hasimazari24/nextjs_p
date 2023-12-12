@@ -170,6 +170,9 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
+                    <small style={{ fontStyle: "italic" }}>{`(${
+                      que.note || null
+                    })`}</small>
                     <Hide>
                       <Input
                         type="text"
@@ -221,6 +224,9 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
+                    <small style={{ fontStyle: "italic" }}>{`(${
+                      que.note || null
+                    })`}</small>
                     <Hide>
                       <Input
                         type="text"
@@ -262,6 +268,9 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
+                    <small style={{ fontStyle: "italic" }}>{`(${
+                      que.note || null
+                    })`}</small>
                     <Hide>
                       <Input
                         type="text"
@@ -298,6 +307,9 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
+                    <small style={{ fontStyle: "italic" }}>{`(${
+                      que.note || null
+                    })`}</small>
                     <Hide>
                       <Input
                         type="text"

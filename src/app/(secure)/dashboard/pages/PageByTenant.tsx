@@ -371,7 +371,7 @@ const AccordionDetail = ({
                               <Text>{d.kuesioner}</Text>
                             </Box>
                           </Stack>
-                          <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                          {/* <Stack direction={["column", "row"]} spacing={[0, 3]}>
                             <HStack align={"start"}>
                               <Box w="120px">
                                 <Text as="b">Tipe Kuesioner</Text>
@@ -386,7 +386,7 @@ const AccordionDetail = ({
                                   : "Penilaian Mentor"}
                               </Text>
                             </Box>
-                          </Stack>
+                          </Stack> */}
                         </Stack>
                       </HStack>
                       <Box
