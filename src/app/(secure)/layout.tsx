@@ -47,15 +47,12 @@ export default function Layout({ children }: { children: ReactNode }) {
     redirect("/login");
   }
 
-  const susKey = crypto.randomUUID();
-
   return (
     <main>
       {loadingValidation ? (
         LoadingPage("Sedang melakukan validasi, mohon tunggu sebentar ...")
       ) : (
         <Suspense
-          key={susKey}
           fallback={LoadingPage(
             "Sedang memuat halaman, mohon tunggu sebentar ...",
           )}
