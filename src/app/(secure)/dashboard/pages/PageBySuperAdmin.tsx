@@ -21,6 +21,7 @@ import { FaNetworkWired } from "react-icons/fa";
 import { HiUserGroup } from "react-icons/hi";
 import DetailCard from "./DetailCard";
 import { useRouter } from "next/navigation";
+import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 
 function PageBySuperAdmin({ data }: { data: any }) {
   const router = useRouter();
@@ -205,6 +206,43 @@ function PageBySuperAdmin({ data }: { data: any }) {
                   ]}
                   cols={{ base: 1, sm: 2 }}
                   btnColor={{ bcolor: "orange.500", bhover: "orange.600" }}
+                />
+              }
+            />
+            <StatsCard
+              title={"TOTAL KUESIONER"}
+              stat={data.kuesioner.total_kuesioner}
+              icon={<HiOutlineClipboardDocumentList size={"3.5em"} />}
+              bgcolor="purple.300"
+              detail={
+                <DetailCard
+                  title="Total Kuesioner"
+                  content={[
+                    {
+                      icon: (
+                        <Box
+                          boxSize={"15px"}
+                          borderRadius={"full"}
+                          bgColor={"green.500"}
+                        />
+                      ),
+                      title_heading: "Kuesioner Aktif",
+                      title_content: `${data.kuesioner.active} Kuesioner`,
+                    },
+                    {
+                      icon: (
+                        <Box
+                          boxSize={"15px"}
+                          borderRadius={"full"}
+                          bgColor={"red.500"}
+                        />
+                      ),
+                      title_heading: "Kuesioner Nonaktif",
+                      title_content: `${data.kuesioner.inactive} Kuesioner`,
+                    },
+                  ]}
+                  cols={{ base: 1 }}
+                  btnColor={{ bcolor: "purple.400", bhover: "purple.500" }}
                 />
               }
             />
