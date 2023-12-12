@@ -82,7 +82,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
       accessor: "last_nilai",
     },
     {
-      Header: "Status Penilaian",
+      Header: "Status",
       accessor: "status",
       Cell: ({ value, row }) =>
         value === "Sudah Mengisi" ? (

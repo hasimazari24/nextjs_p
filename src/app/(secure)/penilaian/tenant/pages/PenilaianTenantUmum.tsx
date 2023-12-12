@@ -29,6 +29,7 @@ import DeleteTenantRated from "./deleteTenantRated";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { Mentor } from "@/app/type/class-type";
 import ProfileMentor from "@/app/(secure)/kelas/pages/profileMentor";
+import DownloadExcel from "@/app/components/utils/DownloadExcel";
 
 interface listPenilaian {
   id: string;
@@ -125,6 +126,7 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
       >
         <Heading fontSize={"2xl"}>NILAI TENANT</Heading>
         <HStack spacing={2} mb={{ base: 2, md: 0 }}>
+          <DownloadExcel Url="/export-mentor-nilai-tenant" />
           <Button
             leftIcon={<MdArrowBackIosNew />}
             colorScheme="blue"

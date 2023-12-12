@@ -95,7 +95,7 @@ function PageNilaiMentor() {
                   xl: "15rem",
                 }}
                 objectFit={"cover"}
-                src={"/img/nilai-tenant.png"}
+                src={"/img/pertanyaan-nilai-mentor.png"}
                 alt="#"
               />
             </Box>
@@ -144,7 +144,7 @@ function PageNilaiMentor() {
                   xl: "15rem",
                 }}
                 objectFit={"cover"}
-                src={"/img/nilai-tenant.png"}
+                src={"/img/hasil-nilai-mentor.png"}
                 alt="#"
               />
             </Box>
