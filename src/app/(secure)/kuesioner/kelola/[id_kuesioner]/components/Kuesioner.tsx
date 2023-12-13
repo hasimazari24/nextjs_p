@@ -148,6 +148,8 @@ function Kuesioner({ idKuesioner }: { idKuesioner: string }) {
     // },
   ];
 
+  const filterOptions = [{ key: "title", label: "Judul Grup" }];
+
   const [loadingDragging, setLoadingDragging] = useState(false);
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source } = result;
@@ -238,6 +240,7 @@ function Kuesioner({ idKuesioner }: { idKuesioner: string }) {
               // "pertanyaan_aktif_count",
             ]}
             isLoading={loadingDragging}
+            filterOptions={filterOptions}
           >
             {(rowData: any) => (
               <DeleteGroupKuesioner

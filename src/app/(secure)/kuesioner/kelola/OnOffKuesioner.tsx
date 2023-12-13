@@ -61,7 +61,7 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
             setIsLoadingDelete(false);
             handleShowMessage(
               onoff === true
-                ? "Kuesioner telah Nonaktifkan."
+                ? "Kuesioner telah Nonaktif."
                 : "Kuesioner Berhasil Diaktifkan kembali",
               false,
             );
@@ -127,8 +127,9 @@ const OnOffKuesioner = ({ dataKuesioner, onSubmit, onoff }: deleteProps) => {
                 <ModalCloseButton />
                 <ModalBody>
                   <Text>
-                    Yakin Ingin menonaktifkan Kuesioner : {dataKuesioner.title}{" "}
-                    ?
+                    Jika dinonaktifkan, kuesioer tidak akan bisa diaktifkan
+                    lagi. Namun, masih bisa diakses sebagai arsip. Yakin ingin
+                    menonaktifkan Kuesioner : {dataKuesioner.title} ?
                   </Text>
                 </ModalBody>
                 <ModalFooter>

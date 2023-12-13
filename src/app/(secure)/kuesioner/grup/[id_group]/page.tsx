@@ -260,7 +260,7 @@ function page({ params }: { params: { id_group: string } }) {
           justify="space-between"
         >
           <Heading fontSize={"2xl"}>DAFTAR GRUP PERTANYAAN</Heading>
-          <HStack align="start">
+          <HStack align="start" mb={{ base: 2, md: 0 }}>
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -280,7 +280,11 @@ function page({ params }: { params: { id_group: string } }) {
             justify="space-between"
             mb={{ base: 2, md: 0 }}
           >
-            <HStack color={"blue.500"} mb={{ base: 2, md: 0 }}>
+            <HStack
+              color={"blue.500"}
+              mb={{ base: 2, md: 0 }}
+              mr={{ base: 0, md: 2 }}
+            >
               {/* <FaRegFileAlt fontSize="18px" fontWeight={"bold"} /> */}
               <Icon
                 as={HiFolderOpen}

@@ -224,7 +224,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
         <Flex
           justifyContent={["center", "flex-end"]}
           alignItems={"center"}
-          mt="-2"
+          mt={{ base:0, md:"-2" }}
         >
           {/* <Stack direction={["column","row"]}> */}
           <Text>Showing</Text>

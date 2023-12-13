@@ -370,7 +370,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                             color="white"
                             // onClick={() => handleDetail(rowData)}
                             key="more"
-                            size={{ base: "xs", sm: "sm" }}
+                            size={"sm"}
                           >
                             <GrMoreVertical />
                           </Button>

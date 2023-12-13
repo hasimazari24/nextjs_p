@@ -14,6 +14,7 @@ import {
   PopoverContent,
   PopoverBody,
   PopoverArrow,
+  Box,
 } from "@chakra-ui/react";
 import Loading from "../../loading";
 import { MdArrowBackIosNew } from "react-icons/md/";
@@ -158,7 +159,7 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
                 color="white"
                 // onClick={() => handleDetail(rowData)}
                 key="more"
-                size={{ base: "xs", sm: "sm" }}
+                size={"sm"}
               >
                 <GrMoreVertical />
               </Button>
@@ -215,31 +216,106 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
             />
           </HStack>
         </Flex>
-        <VStack spacing={1} align="flex-start" mr={{ base: 0, md: 2 }}>
-          <Text fontSize={["md", "lg"]}>
-            <span style={{ fontWeight: "bold" }}>PERTANYAAN :</span>{" "}
-            {data.pertanyaan}
-          </Text>
-          <Text fontSize={["md", "lg"]}>
-            <span style={{ fontWeight: "bold" }}>MODEL PERTANYAAN :</span>{" "}
-            {ModelType(data.type)}
-          </Text>
-          <Text fontSize={["md", "lg"]}>
-            <span style={{ fontWeight: "bold" }}>WAJIB ISI :</span>{" "}
-            {data.is_required === true ? "Ya" : "Tidak"}
-          </Text>
-          <Text fontSize={["md", "lg"]}>
-            <span style={{ fontWeight: "bold" }}>STATUS PERTANYAAN :</span>{" "}
-            {data.is_active === true ? "Aktif" : "Nonaktif"}
-          </Text>
-          <Text fontSize={["md", "lg"]}>
-            <span style={{ fontWeight: "bold" }}>CATATAN ADMIN :</span>{" "}
-            {data.note}
-          </Text>
-          <Text fontSize={["md", "lg"]}>
-            <span style={{ fontWeight: "bold" }}>DAFTAR VALUE JAWABAN :</span>
-          </Text>
-        </VStack>
+        <Flex
+          justifyContent={"space-between"}
+          rounded={"lg"}
+          alignItems={"center"}
+          h="full"
+          p={{ base: 2, md: 4 }}
+        >
+          <HStack align={"start"} spacing={3}>
+            <Stack spacing={[2, 1]} direction="column" w="full">
+              <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                <HStack align={"start"}>
+                  <Box w="180px">
+                    <Text as="b" fontSize={["md", "lg"]}>
+                      PERTANYAAN
+                    </Text>
+                  </Box>
+                  <Text as="b">:</Text>
+                </HStack>
+
+                <Box w="full">
+                  <Text fontSize={["md", "lg"]}>{data.pertanyaan}</Text>
+                </Box>
+              </Stack>
+              <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                <HStack align={"start"}>
+                  <Box w="180px">
+                    <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
+                      MODEL PERTANYAAN
+                    </Text>
+                  </Box>
+                  <Text as="b">:</Text>
+                </HStack>
+
+                <Box w="full">
+                  <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
+                    {ModelType(data.type)}
+                  </Text>
+                </Box>
+              </Stack>
+              <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                <HStack align={"start"}>
+                  <Box w="180px">
+                    <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
+                      WAJIB ISI
+                    </Text>
+                  </Box>
+                  <Text as="b">:</Text>
+                </HStack>
+
+                <Box w="full">
+                  <Text fontSize={["md", "lg"]}>
+                    {data.is_required === true ? "Ya" : "Tidak"}
+                  </Text>
+                </Box>
+              </Stack>
+              <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                <HStack align={"start"}>
+                  <Box w="180px">
+                    <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
+                      STATUS PERTANYAAN
+                    </Text>
+                  </Box>
+                  <Text as="b">:</Text>
+                </HStack>
+
+                <Box w="full">
+                  <Text fontSize={["md", "lg"]}>
+                    {data.is_active === true ? "Aktif" : "Nonaktif"}
+                  </Text>
+                </Box>
+              </Stack>
+
+              <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                <HStack align={"start"}>
+                  <Box w="180px">
+                    <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
+                      CATATAN PERTANYAAN
+                    </Text>
+                  </Box>
+                  <Text as="b">:</Text>
+                </HStack>
+
+                <Box w="full">
+                  <Text fontSize={["md", "lg"]}>{data.note}</Text>
+                </Box>
+              </Stack>
+              <Stack direction={["column", "row"]} spacing={[0, 3]}>
+                <HStack align={"start"}>
+                  <Box w="180px">
+                    <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
+                      DAFTAR VALUE JAWABAN
+                    </Text>
+                  </Box>
+                  <Text as="b">:</Text>
+                </HStack>
+              </Stack>
+            </Stack>
+          </HStack>
+        </Flex>
+
         {dataOpsi.length > 0 ? (
           <DndTable
             columns={columns}

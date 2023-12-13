@@ -268,7 +268,7 @@ function page() {
               title="More ..."
               color="white"
               key="more"
-              size={{ base: "xs", sm: "sm" }}
+              size={"sm"}
             >
               <GrMoreVertical />
             </Button>

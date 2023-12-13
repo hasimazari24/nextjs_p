@@ -48,7 +48,7 @@ function page() {
     "pertanyaan_nonaktif_count",
     "pertanyaan_aktif_count",
   ];
-  const filterOptions = [{ key: "title", label: "Judul Kuesioner" }];
+  const filterOptions = [{ key: "title", label: "Judul Grup" }];
 
   const router = useRouter();
 
@@ -140,7 +140,7 @@ function page() {
                 color="white"
                 // onClick={() => handleDetail(rowData)}
                 key="more"
-                size={{ base: "xs", sm: "sm" }}
+                size={"sm"}
               >
                 <GrMoreVertical />
               </Button>
@@ -197,13 +197,11 @@ function page() {
     <Suspense fallback={<Loading />}>
       <Stack spacing={{ base: 4, md: 6 }}>
         <Flex
-          flexDirection={{ base: "column", md: "row" }} // Arah tata letak berdasarkan layar
+          flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
           justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
           // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
         >
-          <Heading fontSize={"2xl"}>
-            DAFTAR GRUP PERTANYAAN
-          </Heading>
+          <Heading fontSize={"2xl"}>DAFTAR GRUP PERTANYAAN</Heading>
           <HStack align="start" mb={{ base: 2, md: 0 }}>
             <Button
               leftIcon={<MdArrowBackIosNew />}

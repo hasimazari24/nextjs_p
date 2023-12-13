@@ -158,7 +158,7 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
                 color="white"
                 // onClick={() => handleDetail(rowData)}
                 key="more"
-                size={{ base: "xs", sm: "sm" }}
+                size={"sm"}
               >
                 <GrMoreVertical />
               </Button>

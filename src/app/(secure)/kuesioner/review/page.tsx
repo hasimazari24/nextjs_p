@@ -110,7 +110,7 @@ const page = () => {
     <Suspense fallback={<Loading />}>
       <Stack spacing={{ base: 2, md: 4 }}>
         <Flex
-          flexDirection={{ base: "column", md: "row" }} // Arah tata letak berdasarkan layar
+          flexDirection={{ base: "column-reverse", md: "row" }} // Arah tata letak berdasarkan layar
           justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
           // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
         >
@@ -118,7 +118,6 @@ const page = () => {
             REVIEW KUESIONER
           </Heading>
           <HStack align="start" mb={{ base: 2, md: 0 }}>
-            <DownloadExcel Url="/export-kuesioner" />
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -130,6 +129,7 @@ const page = () => {
             >
               Kembali
             </Button>
+            <DownloadExcel Url="/export-kuesioner" />
           </HStack>
         </Flex>
         {dataKuesioner && dataKuesioner.length > 0 ? (
@@ -241,7 +241,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
         <Flex
           justifyContent={["center", "flex-end"]}
           alignItems={"center"}
-          mt="-2"
+          mt={{ base: 0, md: "-2" }}
         >
           {/* <Stack direction={["column","row"]}> */}
           <Text>Showing</Text>

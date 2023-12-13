@@ -188,7 +188,6 @@ function page({ params }: { params: { id_kuesioner: string } }) {
             REVIEW KUESIONER : {dataKuesioner.kuesioner}
           </Heading>
           <HStack align="start" mb={{ base: 2, md: 0 }}>
-            <DownloadExcel Url={`/export-kuesioner/${getParamsId}`} />
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -200,6 +199,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
             >
               Kembali
             </Button>
+            <DownloadExcel Url={`/export-kuesioner/${getParamsId}`} />
           </HStack>
         </Flex>
         <DataTable
