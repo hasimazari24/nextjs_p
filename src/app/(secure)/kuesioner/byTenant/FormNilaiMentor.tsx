@@ -170,9 +170,11 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
-                    <small style={{ fontStyle: "italic" }}>{`(${
-                      que.note || null
-                    })`}</small>
+                    {que.note !== null && que.note !== "" && (
+                      <small
+                        style={{ fontStyle: "italic" }}
+                      >{`(${que.note})`}</small>
+                    )}
                     <Hide>
                       <Input
                         type="text"
@@ -224,9 +226,11 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
-                    <small style={{ fontStyle: "italic" }}>{`(${
-                      que.note || null
-                    })`}</small>
+                    {que.note !== null && que.note !== "" && (
+                      <small
+                        style={{ fontStyle: "italic" }}
+                      >{`(${que.note})`}</small>
+                    )}
                     <Hide>
                       <Input
                         type="text"
@@ -268,9 +272,11 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
-                    <small style={{ fontStyle: "italic" }}>{`(${
-                      que.note || null
-                    })`}</small>
+                    {que.note !== null && que.note !== "" && (
+                      <small
+                        style={{ fontStyle: "italic" }}
+                      >{`(${que.note})`}</small>
+                    )}
                     <Hide>
                       <Input
                         type="text"
@@ -307,9 +313,11 @@ function FormNilaiMentor({
                         <span style={{ color: "red" }}>*</span>
                       )}
                     </Text>
-                    <small style={{ fontStyle: "italic" }}>{`(${
-                      que.note || null
-                    })`}</small>
+                    {que.note !== null && que.note !== "" && (
+                      <small
+                        style={{ fontStyle: "italic" }}
+                      >{`(${que.note})`}</small>
+                    )}
                     <Hide>
                       <Input
                         type="text"

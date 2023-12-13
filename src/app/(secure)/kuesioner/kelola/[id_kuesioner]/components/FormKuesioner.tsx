@@ -207,9 +207,12 @@ function FormKuesioner({
                             <span style={{ color: "red" }}>*</span>
                           )}
                         </Text>
-                        <small style={{ fontStyle: "italic" }}>{`(${
-                          d.note || null
-                        })`}</small>
+                        {d.note !== null && d.note !== "" && (
+                          <small
+                            style={{ fontStyle: "italic" }}
+                          >{`(${d.note})`}</small>
+                        )}
+
                         <Hide>
                           <Input
                             type="text"
@@ -272,9 +275,11 @@ function FormKuesioner({
                             <span style={{ color: "red" }}>*</span>
                           )}
                         </Text>
-                        <small style={{ fontStyle: "italic" }}>{`(${
-                          d.note || null
-                        })`}</small>
+                        {d.note !== null && d.note !== "" && (
+                          <small
+                            style={{ fontStyle: "italic" }}
+                          >{`(${d.note})`}</small>
+                        )}
                         <Hide>
                           <Input
                             type="text"
@@ -327,9 +332,11 @@ function FormKuesioner({
                             <span style={{ color: "red" }}>*</span>
                           )}
                         </Text>
-                        <small style={{ fontStyle: "italic" }}>{`(${
-                          d.note || null
-                        })`}</small>
+                        {d.note !== null && d.note !== "" && (
+                          <small
+                            style={{ fontStyle: "italic" }}
+                          >{`(${d.note})`}</small>
+                        )}
                         <Hide>
                           <Input
                             type="text"
@@ -377,9 +384,11 @@ function FormKuesioner({
                             <span style={{ color: "red" }}>*</span>
                           )}
                         </Text>
-                        <small style={{ fontStyle: "italic" }}>{`(${
-                          d.note || null
-                        })`}</small>
+                        {d.note !== null && d.note !== "" && (
+                          <small
+                            style={{ fontStyle: "italic" }}
+                          >{`(${d.note})`}</small>
+                        )}
                         <Hide>
                           <Input
                             type="text"
