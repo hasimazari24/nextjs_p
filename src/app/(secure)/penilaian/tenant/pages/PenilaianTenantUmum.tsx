@@ -125,8 +125,7 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
         direction={["column-reverse", "row"]}
       >
         <Heading fontSize={"2xl"}>NILAI TENANT</Heading>
-        <HStack spacing={2} mb={{ base: 2, md: 0 }}>
-          <DownloadExcel Url="/export-mentor-nilai-tenant" />
+        <HStack spacing={2} mb={{ base: 2, md: 0 }} flexWrap={"wrap"}>
           <Button
             leftIcon={<MdArrowBackIosNew />}
             colorScheme="blue"
@@ -137,6 +136,7 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
           >
             Kembali
           </Button>
+          <DownloadExcel Url="/export-mentor-nilai-tenant" />
           {roleAccess === "Mentor" && (
             <AddTenantRated onSubmit={() => getTenantRated()} />
           )}

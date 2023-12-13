@@ -222,7 +222,6 @@ function page() {
             HASIL PENILAIAN TENANT NILAI MENTOR
           </Heading>
           <HStack mb={{ base: 2, md: 0 }}>
-            <DownloadExcel Url={`/export-tenant-nilai-mentor`} />
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -233,6 +232,7 @@ function page() {
             >
               Kembali
             </Button>
+            <DownloadExcel Url={`/export-tenant-nilai-mentor`} />
           </HStack>
         </Flex>
         <DataTable

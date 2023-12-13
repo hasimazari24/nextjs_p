@@ -161,7 +161,7 @@ function PageNilaiMentor() {
               // fontWeight={"bold"}
               textAlign={"center"}
             >
-              Lihat hasil penilaian mentor oleh tenant.
+              Lihat hasil penilaian Mentor oleh Tenant.
             </Text>
           </Stack>
         </SimpleGrid>

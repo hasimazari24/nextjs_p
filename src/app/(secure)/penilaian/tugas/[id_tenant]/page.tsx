@@ -178,8 +178,7 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
             direction={["column-reverse", "row"]}
           >
             <Heading fontSize={"2xl"}>NILAI TUGAS TENANT</Heading>
-            <HStack pb={{ base: 2, md: 0 }}>
-              <DownloadExcel Url={`/export-nilai-tugas/${idTenant}`} />
+            <HStack mb={{ base: 2, md: 0 }}>
               <Button
                 leftIcon={<MdArrowBackIosNew />}
                 colorScheme="blue"
@@ -196,6 +195,7 @@ const ListKelas = ({ params }: { params: { id_tenant: string } }) => {
               >
                 Kembali
               </Button>
+              <DownloadExcel Url={`/export-nilai-tugas/${idTenant}`} />
             </HStack>
           </Flex>
         )}
@@ -311,7 +311,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
   const router = useRouter();
 
   return (
-    <Stack mt="4" spacing={6}>
+    <Stack spacing={6}>
       <Stack
         justifyContent="space-between"
         direction={["column", "row"]}
@@ -358,7 +358,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
         <Flex
           justifyContent={["center", "flex-end"]}
           alignItems={"center"}
-          mt="-2"
+          mt={{ base: "0", md: "-2" }}
         >
           {/* <Stack direction={["column","row"]}> */}
           <Text>Showing</Text>
@@ -455,7 +455,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       }}
                       color="white"
                       w="full"
-                      size={{ base: "xs", sm: "sm" }}
+                      size={"sm"}
                       alignContent={"center"}
                       onClick={() =>
                         router.push(

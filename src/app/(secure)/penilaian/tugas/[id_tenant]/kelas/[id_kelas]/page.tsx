@@ -296,9 +296,6 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
             </Text>
           </VStack>
           <HStack mb={{ base: 2, md: 0 }}>
-            <DownloadExcel
-              Url={`/export-nilai-tugas/${idTenant}/course/${idKelas}`}
-            />
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -315,6 +312,9 @@ function page({ params }: { params: { id_tenant: string; id_kelas: string } }) {
             >
               Kembali
             </Button>
+            <DownloadExcel
+              Url={`/export-nilai-tugas/${idTenant}/course/${idKelas}`}
+            />
           </HStack>
         </Flex>
         <DataTable

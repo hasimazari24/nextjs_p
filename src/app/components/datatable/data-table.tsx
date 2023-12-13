@@ -224,7 +224,7 @@ function DataTable<T extends object>(props: DataTableProps<T>) {
         <Flex
           justifyContent={["center", "flex-start"]}
           alignItems={"center"}
-          mt="-2"
+          mt={{ base: "0", md: "-2" }}
         >
           {/* <Stack direction={["column","row"]}> */}
           <Text>Showing</Text>

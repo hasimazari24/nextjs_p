@@ -100,7 +100,6 @@ const PenilaianTugasByMentor = ({ roleAccess }: { roleAccess: string }) => {
       >
         <Heading fontSize={"2xl"}>NILAI TUGAS TENANT</Heading>
         <HStack pb={{ base:2, md:0 }}>
-          <DownloadExcel Url={"/export-nilai-tugas"} />
           <Button
             leftIcon={<MdArrowBackIosNew />}
             colorScheme="blue"
@@ -112,6 +111,7 @@ const PenilaianTugasByMentor = ({ roleAccess }: { roleAccess: string }) => {
           >
             Kembali
           </Button>
+          <DownloadExcel Url={"/export-nilai-tugas"} />
         </HStack>
       </Flex>
       {/* konten disinii (daftar participant) */}
@@ -213,7 +213,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
         <Flex
           justifyContent={["center", "flex-end"]}
           alignItems={"center"}
-          mt="-2"
+          mt={{ base: "0", md: "-2" }}
         >
           {/* <Stack direction={["column","row"]}> */}
           <Text>Showing</Text>
