@@ -144,7 +144,6 @@ function page({ params }: { params: { id: string } }) {
             </VStack>
           </HStack>
           <HStack mb={{ base:4, md:0 }}>
-            <DownloadExcel Url={`/export-course/${getParamsId}`} />
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -155,6 +154,7 @@ function page({ params }: { params: { id: string } }) {
             >
               Kembali
             </Button>
+            <DownloadExcel Url={`/export-course/${getParamsId}`} />
           </HStack>
         </Flex>
 

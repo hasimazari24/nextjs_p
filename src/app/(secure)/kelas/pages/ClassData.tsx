@@ -350,7 +350,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
                       }}
                       color="white"
                       w="full"
-                      size={{ base: "xs", sm: "sm" }}
+                      size={"sm"}
                       alignContent={"center"}
                       onClick={() => router.push(`/kelas/${row.values.id}`)}
                     >

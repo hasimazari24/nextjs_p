@@ -147,9 +147,9 @@ function Progress({
   return isLoading ? (
     <Loading />
   ) : (
-    <Stack spacing={{ base: 6, md: 8 }}>
+    <Stack spacing={{ base: 2, md: 4 }}>
       <Flex
-        flexDirection={{ base: "column", sm: "row" }} // Arah tata letak berdasarkan layar
+        flexDirection={{ base: "column-reverse", sm: "row" }} // Arah tata letak berdasarkan layar
         justify="space-between" // Menyusun komponen pertama di kiri dan kedua di kanan
       >
         <VStack spacing={0} align="flex-start" mr={2}>
@@ -161,7 +161,7 @@ function Progress({
             <span style={{ color: "green" }}>{dataProgress?.tenant_name}</span>
           </Text>
         </VStack>
-        <HStack spacing={2} align="start">
+        <HStack mb={{ base:2, md:0 }} align="start">
           <Button
             leftIcon={<MdArrowBackIosNew />}
             colorScheme="blue"

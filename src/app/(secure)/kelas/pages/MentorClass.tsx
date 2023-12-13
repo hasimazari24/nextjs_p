@@ -53,12 +53,10 @@ function MentorClass({ roleAccess }: { roleAccess: string }) {
         <Loading />
       ) : (
         <>
-          <Flex
-            justifyContent={"space-between"}
-            pb="2"
-            direction={["column", "row"]}
-          >
-            <Heading fontSize={"2xl"}>DATA KELAS</Heading>
+          <Flex justifyContent={"space-between"} direction={["column", "row"]}>
+            <Heading fontSize={"2xl"} mb={{ base: 2, md: 0 }}>
+              DATA KELAS
+            </Heading>
             <HStack>
               <DownloadExcel Url={"/export-course"} />
               <AddClass onSubmit={() => getClass()} roleAccess={roleAccess} />
