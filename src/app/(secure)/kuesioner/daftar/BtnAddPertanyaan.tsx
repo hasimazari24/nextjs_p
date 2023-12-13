@@ -245,7 +245,7 @@ function BtnAddPertanyaan({ onSubmit }: { onSubmit: () => void }) {
                     </FormErrorMessage>
                   </Flex>
                 </FormControl>
-                <FormControl mb="3">
+                <FormControl mb="3" isInvalid={!!errors.note}>
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Catatan</FormLabel>
@@ -253,11 +253,15 @@ function BtnAddPertanyaan({ onSubmit }: { onSubmit: () => void }) {
                     <Box flex={["1", "80%"]}>
                       <Input
                         type="text"
-                        {...register("note")}
-                        // className={`form-control ${errors.name ? "is-invalid"}`}
+                        {...register("note", {
+                          maxLength: {
+                            value: 255,
+                            message: "Maksimal 255 karakter.",
+                          },
+                        })}
                       />
                       <FormErrorMessage>
-                        {/* {errors.name && errors.name.message} */}
+                        {errors.note && errors.note.message}
                       </FormErrorMessage>
                     </Box>
                   </Flex>

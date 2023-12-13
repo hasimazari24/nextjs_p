@@ -191,7 +191,7 @@ function EditPertanyaan({
                     </FormErrorMessage>
                   </Flex>
                 </FormControl>
-                <FormControl mb="3">
+                <FormControl mb="3" isInvalid={!!errors.note}>
                   <Flex flexDirection={["column", "row"]}>
                     <Box flex={["1", "20%"]} marginRight={["0", "2"]}>
                       <FormLabel>Catatan</FormLabel>
@@ -204,7 +204,7 @@ function EditPertanyaan({
                         // className={`form-control ${errors.name ? "is-invalid"}`}
                       />
                       <FormErrorMessage>
-                        {/* {errors.name && errors.name.message} */}
+                        {errors.note && errors.note.message}
                       </FormErrorMessage>
                     </Box>
                   </Flex>
