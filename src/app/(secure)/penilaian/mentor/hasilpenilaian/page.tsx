@@ -52,13 +52,14 @@ function page() {
 
   if (user !== null && user !== 401) {
     getUser = user; // Setel nilai getUser jika user ada
-    if (getUser.role !== "Super Admin" && getUser.role !== "Manajemen") return (
-      <NotFound
-        statusCode={403}
-        msg={"Access Denied"}
-        statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
-      />
-    );
+    if (getUser.role !== "Super Admin" && getUser.role !== "Manajemen")
+      return (
+        <NotFound
+          statusCode={403}
+          msg={"Access Denied"}
+          statusDesc="Akses Ditolak. Anda tidak diizinkan mengakses halaman ini."
+        />
+      );
   }
 
   const router = useRouter();
@@ -145,7 +146,7 @@ function page() {
 
   const filterOptions = [
     {
-      key: "mentor",
+      key: "fullname",
       label: "Mentor",
     },
     {
@@ -165,10 +166,12 @@ function page() {
     idKuesioner: string;
     idTenant: string;
     tenantName: string;
+    tglKirim: string;
   }>({
     idKuesioner: "",
     idTenant: "",
     tenantName: "",
+    tglKirim: "",
   });
   // const router = useRouter;
   const getDataHasilNilai = async () => {
@@ -195,7 +198,8 @@ function page() {
     setOpenHasil({
       idTenant: data.id_tenant,
       idKuesioner: data.id,
-      tenantName: data.name,
+      tenantName: data.tenant,
+      tglKirim: data.last_nilai,
     });
     onOpen();
   };
@@ -248,6 +252,7 @@ function page() {
         idTenant={openHasil.idTenant}
         idKuesioner={openHasil.idKuesioner}
         tenantName={openHasil.tenantName}
+        // tglKirim={openHasil.tglKirim}
         isOpen={isOpen}
         onClose={onClose}
       />

@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from "react";
 import {
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
   Text,
-  Heading,
   Stack,
   Box,
   Image,
   SimpleGrid,
   Center,
+  HStack,
 } from "@chakra-ui/react";
 import { axiosCustom } from "@/app/api/axios";
-import { ViewIcon } from "@chakra-ui/icons";
 import Loading from "../loading";
 import FormNilaiMentor from "@/app/(secure)/kuesioner/byTenant/FormNilaiMentor";
 import ProfileMentor from "@/app/(secure)/kelas/pages/profileMentor";
+import { MdOutlineScheduleSend } from "react-icons/md";
+import { FaBuildingUser } from "react-icons/fa6";
 
 const ViewHasilPenilaian = ({
   idKuesioner,
@@ -72,9 +70,8 @@ const ViewHasilPenilaian = ({
       <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader mt={{ base: 5, md: 0 }}>
-            PENILAIAN MENTOR OLEH TENANT{" "}
-            <span style={{ color: "green" }}>{tenantName}</span>
+          <ModalHeader mt={{ base: 5, md: 0 }} textAlign={"center"}>
+            HASIL NILAI MENTOR OLEH TENANT
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -108,7 +105,7 @@ const ViewHasilPenilaian = ({
                       color={"white"}
                       py={2}
                     >
-                      IDENTITAS MENTOR :
+                      DATA PENILAIAN :
                     </Text>
                     <SimpleGrid columns={{ base: 1, md: 3 }} spacing={2}>
                       <Box
@@ -143,10 +140,31 @@ const ViewHasilPenilaian = ({
                         borderLeft={{ md: "3px solid" }}
                         borderColor={"purple.500"}
                       >
-                        <Text fontSize={["md", "lg"]}>Tanggal Dinilai</Text>
-                        <Text fontSize={["lg", "xl"]} as="b">
-                          {state.viewHasilPenilaian.submitted_date}
-                        </Text>
+                        <Center flexDirection={"column"}>
+                          <Text fontSize={["md", "lg"]}>Dinilai Oleh :</Text>
+                          <Stack
+                            spacing={1}
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                          >
+                            <HStack alignItems={"center"}>
+                              <Box>
+                                <FaBuildingUser fontSize={"20px"} />
+                              </Box>
+                              <Text fontSize={["lg", "xl"]} as="b">
+                                {tenantName}
+                              </Text>
+                            </HStack>
+                            <HStack alignItems={"center"}>
+                              <Box>
+                                <MdOutlineScheduleSend fontSize={"22px"} />
+                              </Box>
+                              <Text fontSize={"md"}>
+                                {state.viewHasilPenilaian.submitted_date}
+                              </Text>
+                            </HStack>
+                          </Stack>
+                        </Center>
                       </Box>
                     </SimpleGrid>
                   </Stack>

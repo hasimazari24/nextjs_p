@@ -107,7 +107,7 @@ const TenantNilaiMentor = ({
                       color={"white"}
                       py={2}
                     >
-                      IDENTITAS MENTOR :
+                      DATA PENILAIAN :
                     </Text>
                     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
                       <Box

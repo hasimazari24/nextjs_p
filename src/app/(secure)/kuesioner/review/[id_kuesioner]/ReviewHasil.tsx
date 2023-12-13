@@ -14,11 +14,15 @@ import {
   Stack,
   Box,
   Image,
+  HStack,
+  Center,
 } from "@chakra-ui/react";
 import FormKuesioner from "../../kelola/[id_kuesioner]/components/FormKuesioner";
 import { axiosCustom } from "@/app/api/axios";
 import { ViewIcon } from "@chakra-ui/icons";
 import Loading from "../../loading";
+import { FaBuildingUser } from "react-icons/fa6";
+import { MdOutlineScheduleSend } from "react-icons/md";
 
 const ReviewHasil = ({
   isOpen,
@@ -26,12 +30,14 @@ const ReviewHasil = ({
   idKuesioner,
   idTenant,
   tenantName,
+  tglKirim,
 }: {
   isOpen: boolean;
   onClose: () => void;
   idKuesioner: string;
   idTenant: string;
   tenantName: string;
+  tglKirim: string;
 }) => {
   //   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(true);
@@ -71,8 +77,40 @@ const ReviewHasil = ({
       <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textTransform={"uppercase"} textAlign={"center"}>
-            HASIL KUESIONER DIISI OLEH : {tenantName}
+          <ModalHeader
+          // justifyContent={"center"}
+          // alignItems={"center"}
+          >
+            <Center flexDirection={"column"}>
+              <Text textAlign={"center"} textTransform={"uppercase"} mb={2}>
+                HASIL KUESIONER DIISI OLEH :
+              </Text>
+              <Stack
+                spacing={[1, 6]}
+                justifyContent={"center"}
+                alignItems={"center"}
+                direction={["column", "row"]}
+              >
+                <HStack alignItems={"center"}>
+                  <Box>
+                    <FaBuildingUser fontSize={"20px"} />
+                  </Box>
+                  <Text fontSize={["15px", "lg", "xl"]}>{tenantName}</Text>
+                </HStack>
+                <HStack alignItems={"center"}>
+                  <Box>
+                    <MdOutlineScheduleSend fontSize={"22px"} />
+                  </Box>
+                  <Text
+                    fontWeight={"thin"}
+                    fontSize={["md", "lg"]}
+                    whiteSpace={"nowrap"}
+                  >
+                    {tglKirim || "Belum Mengisi"}
+                  </Text>
+                </HStack>
+              </Stack>
+            </Center>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>

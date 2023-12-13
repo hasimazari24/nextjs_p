@@ -124,10 +124,12 @@ function page({ params }: { params: { id_kuesioner: string } }) {
     idKuesioner: string;
     idTenant: string;
     tenantName: string;
+    tglKirim: string;
   }>({
     idKuesioner: "",
     idTenant: "",
     tenantName: "",
+    tglKirim: "",
   });
   const [isLoading, setIsLoading] = useState(true);
   const { setBreadcrumbs, breadcrumbs } = useBreadcrumbContext();
@@ -165,6 +167,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
       idTenant: data.id_tenant,
       idKuesioner: getParamsId,
       tenantName: data.name,
+      tglKirim: data.last_nilai,
     });
     onOpen();
   };
@@ -219,6 +222,7 @@ function page({ params }: { params: { id_kuesioner: string } }) {
         idKuesioner={openHasil.idKuesioner}
         idTenant={openHasil.idTenant}
         tenantName={openHasil.tenantName}
+        tglKirim={openHasil.tglKirim}
       />
     </Suspense>
   ) : (
