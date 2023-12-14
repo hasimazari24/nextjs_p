@@ -208,9 +208,11 @@ function FormKuesioner({
                           )}
                         </Text>
                         {d.note !== null && d.note !== "" && (
-                          <small
-                            style={{ fontStyle: "italic" }}
-                          >{`(${d.note})`}</small>
+                          <Stack mb={2} mt="-1">
+                            <Text as="i" fontSize="small">
+                              {d.note}
+                            </Text>
+                          </Stack>
                         )}
 
                         <Hide>
@@ -276,9 +278,11 @@ function FormKuesioner({
                           )}
                         </Text>
                         {d.note !== null && d.note !== "" && (
-                          <small
-                            style={{ fontStyle: "italic" }}
-                          >{`(${d.note})`}</small>
+                          <Stack mb={2} mt="-1">
+                            <Text as="i" fontSize="small">
+                              {d.note}
+                            </Text>
+                          </Stack>
                         )}
                         <Hide>
                           <Input
@@ -333,9 +337,11 @@ function FormKuesioner({
                           )}
                         </Text>
                         {d.note !== null && d.note !== "" && (
-                          <small
-                            style={{ fontStyle: "italic" }}
-                          >{`(${d.note})`}</small>
+                          <Stack mb={2} mt="-1">
+                            <Text as="i" fontSize="small">
+                              {d.note}
+                            </Text>
+                          </Stack>
                         )}
                         <Hide>
                           <Input
@@ -385,9 +391,11 @@ function FormKuesioner({
                           )}
                         </Text>
                         {d.note !== null && d.note !== "" && (
-                          <small
-                            style={{ fontStyle: "italic" }}
-                          >{`(${d.note})`}</small>
+                          <Stack mb={2} mt="-1">
+                            <Text as="i" fontSize="small">
+                              {d.note}
+                            </Text>
+                          </Stack>
                         )}
                         <Hide>
                           <Input

@@ -171,9 +171,11 @@ function FormNilaiMentor({
                       )}
                     </Text>
                     {que.note !== null && que.note !== "" && (
-                      <small
-                        style={{ fontStyle: "italic" }}
-                      >{`(${que.note})`}</small>
+                      <Stack mb={2} mt="-1">
+                        <Text as="i" fontSize="small">
+                          {que.note}
+                        </Text>
+                      </Stack>
                     )}
                     <Hide>
                       <Input
@@ -227,9 +229,11 @@ function FormNilaiMentor({
                       )}
                     </Text>
                     {que.note !== null && que.note !== "" && (
-                      <small
-                        style={{ fontStyle: "italic" }}
-                      >{`(${que.note})`}</small>
+                      <Stack mb={2} mt="-1">
+                        <Text as="i" fontSize="small">
+                          {que.note}
+                        </Text>
+                      </Stack>
                     )}
                     <Hide>
                       <Input
@@ -273,9 +277,11 @@ function FormNilaiMentor({
                       )}
                     </Text>
                     {que.note !== null && que.note !== "" && (
-                      <small
-                        style={{ fontStyle: "italic" }}
-                      >{`(${que.note})`}</small>
+                      <Stack mb={2} mt="-1">
+                        <Text as="i" fontSize="small">
+                          {que.note}
+                        </Text>
+                      </Stack>
                     )}
                     <Hide>
                       <Input
@@ -314,9 +320,11 @@ function FormNilaiMentor({
                       )}
                     </Text>
                     {que.note !== null && que.note !== "" && (
-                      <small
-                        style={{ fontStyle: "italic" }}
-                      >{`(${que.note})`}</small>
+                      <Stack mb={2} mt="-1">
+                        <Text as="i" fontSize="small">
+                          {que.note}
+                        </Text>
+                      </Stack>
                     )}
                     <Hide>
                       <Input
