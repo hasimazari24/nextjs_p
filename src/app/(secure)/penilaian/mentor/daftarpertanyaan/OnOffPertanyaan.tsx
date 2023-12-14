@@ -61,7 +61,7 @@ const OnOffPertanyaan = ({ dataPertanyaan, onSubmit, onoff }: deleteProps) => {
             setIsLoadingDelete(false);
             handleShowMessage(
               onoff === true
-                ? "Pertanyaan telah Nonaktifkan."
+                ? "Pertanyaan telah Nonaktif."
                 : "Pertanyaan Berhasil Diaktifkan kembali",
               false,
             );

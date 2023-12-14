@@ -5,24 +5,18 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   useDisclosure,
   Text,
-  Heading,
   Stack,
-  Box,
   Image,
-  Center,
-  HStack,
-  Icon,
 } from "@chakra-ui/react";
 // import FormKuesioner from "./FormKuesioner";
 import { axiosCustom } from "@/app/api/axios";
 import { ViewIcon } from "@chakra-ui/icons";
 import Loading from "../../loading";
-import { HiFolderOpen } from "react-icons/hi";
+import FormNilaiMentor from "@/app/(secure)/kuesioner/byTenant/FormNilaiMentor";
 
 interface PertanyaanProps {
   id: string;
@@ -88,60 +82,49 @@ const PreviewPertanyaan = () => {
           <ModalBody>
             {isLoading ? (
               <Loading />
+            ) : state.dataReview ? (
+              <Stack
+                spacing={3}
+                w="full"
+                px={{ base: 0, md: "100px", lg: "150px", xl: "200px" }}
+              >
+                <FormNilaiMentor
+                  dataPertanyaan={
+                    Array.isArray(state.dataReview)
+                      ? state.dataReview
+                      : []
+                  }
+                  isSubmitted={false}
+                />
+              </Stack>
             ) : (
-              state.dataReview && (
-                <Stack
-                  spacing={3}
-                  w="full"
-                  px={{ base: 0, md: "100px", lg: "150px", xl: "200px" }}
+              <Stack
+                justifyContent={"center"}
+                spacing={0}
+                alignItems={"center"}
+              >
+                <Image
+                  src="/img/kuesioner-notfound.png"
+                  h={{ base: "200px", sm: "250px", md: "350px" }}
+                  w="auto"
+                  // w="auto"
+                  // objectFit={"cover"}
+                />
+                <Text
+                  as="b"
+                  fontWeight={"bold"}
+                  fontSize={{ base: "16px", md: "17px" }}
+                  textAlign={"center"}
                 >
-                  {Array.isArray(state.dataReview) &&
-                  state.dataReview.length > 0 ? (
-                    state.dataReview.map((que) => (
-                      <Stack
-                        w="full"
-                        spacing={3}
-                        p={{ base: 2, md: 4 }}
-                        rounded={["md", "lg"]}
-                        borderWidth={"4px"}
-                        borderColor={"purple.500"}
-                        key={que.id}
-                        mb={4}
-                      >
-                        
-                      </Stack>
-                    ))
-                  ) : (
-                    <Stack
-                      justifyContent={"center"}
-                      spacing={0}
-                      alignItems={"center"}
-                    >
-                      <Image
-                        src="/img/kuesioner-notfound.png"
-                        h={{ base: "200px", sm: "250px", md: "350px" }}
-                        w="auto"
-                        // w="auto"
-                        // objectFit={"cover"}
-                      />
-                      <Text
-                        as="b"
-                        fontWeight={"bold"}
-                        fontSize={{ base: "16px", md: "17px" }}
-                        textAlign={"center"}
-                      >
-                        Daftar Grup Kuesioner Kosong
-                      </Text>
-                      <Text
-                        fontSize={{ base: "15.5px", md: "16.5px" }}
-                        textAlign={"center"}
-                      >
-                        Silahkan buat terlebih dahulu.
-                      </Text>
-                    </Stack>
-                  )}
-                </Stack>
-              )
+                  Daftar Pertanyaan Kosong
+                </Text>
+                <Text
+                  fontSize={{ base: "15.5px", md: "16.5px" }}
+                  textAlign={"center"}
+                >
+                  Silahkan buat terlebih dahulu.
+                </Text>
+              </Stack>
             )}
           </ModalBody>
         </ModalContent>

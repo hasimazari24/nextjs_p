@@ -33,6 +33,8 @@ import { BsUiRadios } from "react-icons/bs";
 import { DropResult } from "react-beautiful-dnd";
 import DndTable from "@/app/components/datatable/DndTable";
 import NotFound from "@/app/components/template/NotFound";
+import PreviewPertanyaan from "./PreviewPertanyaan";
+import OnOffPertanyaan from "./OnOffPertanyaan";
 
 interface DataItem {
   id: string;
@@ -257,7 +259,7 @@ function page() {
           </Button>
         )}
 
-        <Popover isLazy>
+        <Popover placement="bottom-end">
           <PopoverTrigger>
             <Button
               bgColor="teal.400"
@@ -273,11 +275,12 @@ function page() {
               <GrMoreVertical />
             </Button>
           </PopoverTrigger>
+          {/* <Portal> */}
           <PopoverContent
             w="fit-content"
             _focus={{ boxShadow: "none" }}
-            overflowX={"auto"}
-            rootProps={{ style: { left: 0 } }}
+            // overflowX={"auto"}
+            // rootProps={{ style: { left: 0 } }}
           >
             <PopoverArrow />
             <PopoverBody>
@@ -287,11 +290,11 @@ function page() {
                   formdata={rowData}
                   onSubmit={() => getDaftar()}
                 />
-                {/* <OnOffPertanyaan
-                      onoff={rowData.is_active}
-                      onSubmit={() => getDaftar()}
-                      dataPertanyaan={rowData}
-                    /> */}
+                <OnOffPertanyaan
+                  onoff={rowData.is_active}
+                  onSubmit={() => getDaftar()}
+                  dataPertanyaan={rowData}
+                />
                 <DeletePertanyaan
                   dataDelete={rowData}
                   onSubmit={() => getDaftar()}
@@ -299,6 +302,7 @@ function page() {
               </Stack>
             </PopoverBody>
           </PopoverContent>
+          {/* </Portal> */}
         </Popover>
       </HStack>
     );
@@ -339,7 +343,7 @@ function page() {
           // align={"flex-start"} // Untuk pusatkan vertikal pada mode mobile
         >
           <Heading fontSize={"2xl"}>DAFTAR PERTANYAAN NILAI MENTOR</Heading>
-          <HStack align="start" mb={{ base: 2, md: 0 }}>
+          <HStack align="start" mb={{ base: 2, md: 0 }} flexWrap={"wrap"}>
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -351,6 +355,7 @@ function page() {
             >
               Kembali
             </Button>
+            <PreviewPertanyaan />
             <BtnAddPertanyaan onSubmit={() => getDaftar()} />
           </HStack>
         </Flex>

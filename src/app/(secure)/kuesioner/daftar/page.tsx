@@ -200,7 +200,7 @@ function page() {
           </Button>
         )}
 
-        <Popover>
+        <Popover placement="bottom-end">
           {({ isOpen }) => (
             <>
               <PopoverTrigger>
@@ -223,8 +223,8 @@ function page() {
                 w="fit-content"
                 _focus={{ boxShadow: "none" }}
                 display={isOpen ? "block" : "none"}
-                overflowX={"auto"}
-                rootProps={{ style: { left: 0 } }}
+                // overflowX={"auto"}
+                // rootProps={{ style: { left: 0 } }}
               >
                 <PopoverArrow />
                 <PopoverBody>

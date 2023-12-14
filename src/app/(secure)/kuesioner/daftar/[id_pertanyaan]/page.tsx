@@ -227,7 +227,7 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
             <Stack spacing={[2, 1]} direction="column" w="full">
               <Stack direction={["column", "row"]} spacing={[0, 3]}>
                 <HStack align={"start"}>
-                  <Box w="180px">
+                  <Box w="150px">
                     <Text as="b" fontSize={["md", "lg"]}>
                       PERTANYAAN
                     </Text>
@@ -241,9 +241,9 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
               </Stack>
               <Stack direction={["column", "row"]} spacing={[0, 3]}>
                 <HStack align={"start"}>
-                  <Box w="180px">
+                  <Box w="150px">
                     <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
-                      MODEL PERTANYAAN
+                      MODEL
                     </Text>
                   </Box>
                   <Text as="b">:</Text>
@@ -257,7 +257,7 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
               </Stack>
               <Stack direction={["column", "row"]} spacing={[0, 3]}>
                 <HStack align={"start"}>
-                  <Box w="180px">
+                  <Box w="150px">
                     <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
                       WAJIB ISI
                     </Text>
@@ -273,9 +273,9 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
               </Stack>
               <Stack direction={["column", "row"]} spacing={[0, 3]}>
                 <HStack align={"start"}>
-                  <Box w="180px">
+                  <Box w="150px">
                     <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
-                      STATUS PERTANYAAN
+                      STATUS
                     </Text>
                   </Box>
                   <Text as="b">:</Text>
@@ -290,9 +290,9 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
 
               <Stack direction={["column", "row"]} spacing={[0, 3]}>
                 <HStack align={"start"}>
-                  <Box w="180px">
+                  <Box w="150px">
                     <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
-                      CATATAN PERTANYAAN
+                      CATATAN
                     </Text>
                   </Box>
                   <Text as="b">:</Text>
@@ -302,20 +302,17 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
                   <Text fontSize={["md", "lg"]}>{data.note}</Text>
                 </Box>
               </Stack>
-              <Stack direction={["column", "row"]} spacing={[0, 3]}>
-                <HStack align={"start"}>
-                  <Box w="180px">
-                    <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
-                      DAFTAR VALUE JAWABAN
-                    </Text>
-                  </Box>
-                  <Text as="b">:</Text>
-                </HStack>
-              </Stack>
             </Stack>
           </HStack>
         </Flex>
-
+        <HStack align={"start"} mb="-2">
+          <Box w="150px">
+            <Text fontSize={["md", "lg"]} fontWeight={"bold"}>
+              DAFTAR VALUE JAWABAN
+            </Text>
+          </Box>
+          <Text as="b">:</Text>
+        </HStack>
         {dataOpsi.length > 0 ? (
           <DndTable
             columns={columns}
