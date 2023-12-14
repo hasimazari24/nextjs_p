@@ -137,7 +137,7 @@ export default function PageProgram({ params }: { params: { slug: string } }) {
   const idTenant = searchParams.get("id");
   // const idTenant = params.id;
   const [namaTenant, setNamaTenant] = useState<string | null>();
-  const [loadingProgram, setLoadingProgram] = useState<boolean>(false);
+  const [loadingProgram, setLoadingProgram] = useState<boolean>(true);
   const router = useRouter();
   // if (!params.program) {
   //   router.push("/tenant");

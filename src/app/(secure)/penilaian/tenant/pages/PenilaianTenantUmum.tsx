@@ -136,7 +136,7 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
           >
             Kembali
           </Button>
-          <DownloadExcel Url="/export-mentor-nilai-tenant" />
+          <DownloadExcel Url="/export/mentor-nilai-tenant" />
           {roleAccess === "Mentor" && (
             <AddTenantRated onSubmit={() => getTenantRated()} />
           )}
@@ -165,7 +165,7 @@ const PenilaianTenantUmum = ({ roleAccess }: { roleAccess: string }) => {
             fontSize={{ base: "16px", md: "17px" }}
             textAlign={"center"}
           >
-            Data Nilai Tugas Tenant Kosong
+            Data Nilai Tenant Kosong
           </Text>
           <Text
             fontSize={{ base: "15.5px", md: "16.5px" }}

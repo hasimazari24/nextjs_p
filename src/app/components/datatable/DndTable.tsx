@@ -100,7 +100,7 @@ function DndTable<T extends object>({
   };
 
   return (
-    <Stack w="full" mb="2">
+    <Stack mb="2">
       <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>
         <Stack
           direction={{ base: "column", md: "row", lg: "row" }}

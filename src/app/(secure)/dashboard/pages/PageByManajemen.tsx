@@ -20,6 +20,7 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { FaNetworkWired } from "react-icons/fa";
 import { HiUserGroup } from "react-icons/hi";
 import DetailCard from "./DetailCard";
+import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 
 function PageByManajemen({ data }: { data: any }) {
   return (
@@ -34,10 +35,9 @@ function PageByManajemen({ data }: { data: any }) {
         </Flex>
         {data && (
           <SimpleGrid
-            columns={{ base: 1, md: 2 }}
+            columns={{ base: 1, md: 2, lg: 3 }}
             spacing={{ base: 6, lg: 8 }}
             height={"full"}
-            px={{ base: 0, md: 10, lg: 20 }}
           >
             <StatsCard
               title={"TOTAL TENANT"}
@@ -169,6 +169,44 @@ function PageByManajemen({ data }: { data: any }) {
                   ]}
                   cols={{ base: 1, sm: 2 }}
                   btnColor={{ bcolor: "orange.500", bhover: "orange.600" }}
+                />
+              }
+            />
+
+            <StatsCard
+              title={"TOTAL KUESIONER"}
+              stat={data.kuesioner.total_kuesioner}
+              icon={<HiOutlineClipboardDocumentList size={"3.5em"} />}
+              bgcolor="purple.300"
+              detail={
+                <DetailCard
+                  title="Total Kuesioner"
+                  content={[
+                    {
+                      icon: (
+                        <Box
+                          boxSize={"15px"}
+                          borderRadius={"full"}
+                          bgColor={"green.500"}
+                        />
+                      ),
+                      title_heading: "Kuesioner Aktif",
+                      title_content: `${data.kuesioner.active} Kuesioner`,
+                    },
+                    {
+                      icon: (
+                        <Box
+                          boxSize={"15px"}
+                          borderRadius={"full"}
+                          bgColor={"red.500"}
+                        />
+                      ),
+                      title_heading: "Kuesioner Nonaktif",
+                      title_content: `${data.kuesioner.inactive} Kuesioner`,
+                    },
+                  ]}
+                  cols={{ base: 1 }}
+                  btnColor={{ bcolor: "purple.400", bhover: "purple.500" }}
                 />
               }
             />
