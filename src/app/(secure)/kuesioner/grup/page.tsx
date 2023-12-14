@@ -128,35 +128,46 @@ function page() {
           >
             <BsUiRadios fontSize={"17px"} />
           </Button>
-          <Popover placement="bottom">
-            <PopoverTrigger>
-              <Button
-                bgColor="teal.400"
-                _hover={{
-                  bg: "teal.300",
-                }}
-                // colorScheme="aqua"
-                title="More ..."
-                color="white"
-                // onClick={() => handleDetail(rowData)}
-                key="more"
-                size={"sm"}
-              >
-                <GrMoreVertical />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent w="fit-content" _focus={{ boxShadow: "none" }}>
-              <PopoverArrow />
-              <PopoverBody>
-                <Stack>
-                  <EditGroup formData={rowData} onSubmit={() => getGroup()} />
-                  <DeleteGroup
-                    dataDelete={rowData}
-                    onSubmit={() => getGroup()}
-                  />
-                </Stack>
-              </PopoverBody>
-            </PopoverContent>
+          <Popover placement="bottom-end">
+            {({ isOpen }) => (
+              <>
+                <PopoverTrigger>
+                  <Button
+                    bgColor="teal.400"
+                    _hover={{
+                      bg: "teal.300",
+                    }}
+                    // colorScheme="aqua"
+                    title="More ..."
+                    color="white"
+                    // onClick={() => handleDetail(rowData)}
+                    key="more"
+                    size={"sm"}
+                  >
+                    <GrMoreVertical />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  w="fit-content"
+                  _focus={{ boxShadow: "none" }}
+                  display={isOpen ? "block" : "none"}
+                >
+                  <PopoverArrow />
+                  <PopoverBody>
+                    <Stack>
+                      <EditGroup
+                        formData={rowData}
+                        onSubmit={() => getGroup()}
+                      />
+                      <DeleteGroup
+                        dataDelete={rowData}
+                        onSubmit={() => getGroup()}
+                      />
+                    </Stack>
+                  </PopoverBody>
+                </PopoverContent>
+              </>
+            )}
           </Popover>
         </HStack>
       </div>

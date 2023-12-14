@@ -177,83 +177,89 @@ export default function MyTenant() {
             <Heading fontSize={"2xl"}>DATA TENANT</Heading>
             <HStack>
               <Menu>
-                <MenuButton
-                  as={Button}
-                  bgColor="green.100"
-                  _hover={{
-                    bg: "green.200",
-                  }}
-                  // color="white"
-                  title="More ..."
-                  // onClick={() => handleDetail(rowData)}
-                  key="dataDetail"
-                  size="sm"
-                >
-                  <GrMoreVertical />
-                </MenuButton>
-                <MenuList>
+                {({ isOpen }) => (
                   <>
-                    {dataMyTenant?.is_public === true && (
-                      <Link
-                        href={`/tenant-detail/${dataMyTenant?.slug}`}
-                        target="_blank"
-                      >
-                        <MenuItem>
-                          <BiLinkExternal />
-                          &nbsp; Lihat Situs
+                    <MenuButton
+                      as={Button}
+                      bgColor="green.100"
+                      _hover={{
+                        bg: "green.200",
+                      }}
+                      // color="white"
+                      title="More ..."
+                      // onClick={() => handleDetail(rowData)}
+                      key="dataDetail"
+                      size="sm"
+                    >
+                      <GrMoreVertical />
+                    </MenuButton>
+                    <MenuList display={isOpen ? "block" : "none"}>
+                      <>
+                        {dataMyTenant?.is_public === true && (
+                          <Link
+                            href={`/tenant-detail/${dataMyTenant?.slug}`}
+                            target="_blank"
+                          >
+                            <MenuItem>
+                              <BiLinkExternal />
+                              &nbsp; Lihat Situs
+                            </MenuItem>
+                          </Link>
+                        )}
+                        <MenuItem
+                          onClick={() =>
+                            router.push(
+                              `/backPanelTenant/catalog/${dataMyTenant?.id}`,
+                            )
+                          }
+                        >
+                          <HamburgerIcon />
+                          &nbsp; Catalog Tenant
                         </MenuItem>
-                      </Link>
-                    )}
-                    <MenuItem
-                      onClick={() =>
-                        router.push(
-                          `/backPanelTenant/catalog/${dataMyTenant?.id}`,
-                        )
-                      }
-                    >
-                      <HamburgerIcon />
-                      &nbsp; Catalog Tenant
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() =>
-                        router.push(`/backPanelTenant/team/${dataMyTenant?.id}`)
-                      }
-                    >
-                      <SiMicrosoftteams />
-                      &nbsp; Team Tenant
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() =>
-                        router.push(
-                          `/backPanelTenant/program/${dataMyTenant.id}`,
-                        )
-                      }
-                    >
-                      <LiaClipboardListSolid />
-                      &nbsp; Program Tenant
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() =>
-                        router.push(
-                          `/backPanelTenant/awards/${dataMyTenant.id}`,
-                        )
-                      }
-                    >
-                      <GrTrophy />
-                      &nbsp; Awards Tenant
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() =>
-                        router.push(
-                          `/backPanelTenant/gallery/${dataMyTenant.id}`,
-                        )
-                      }
-                    >
-                      <BsCalendar2Event />
-                      &nbsp; Gallery Events Tenant
-                    </MenuItem>
+                        <MenuItem
+                          onClick={() =>
+                            router.push(
+                              `/backPanelTenant/team/${dataMyTenant?.id}`,
+                            )
+                          }
+                        >
+                          <SiMicrosoftteams />
+                          &nbsp; Team Tenant
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() =>
+                            router.push(
+                              `/backPanelTenant/program/${dataMyTenant.id}`,
+                            )
+                          }
+                        >
+                          <LiaClipboardListSolid />
+                          &nbsp; Program Tenant
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() =>
+                            router.push(
+                              `/backPanelTenant/awards/${dataMyTenant.id}`,
+                            )
+                          }
+                        >
+                          <GrTrophy />
+                          &nbsp; Awards Tenant
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() =>
+                            router.push(
+                              `/backPanelTenant/gallery/${dataMyTenant.id}`,
+                            )
+                          }
+                        >
+                          <BsCalendar2Event />
+                          &nbsp; Gallery Events Tenant
+                        </MenuItem>
+                      </>
+                    </MenuList>
                   </>
-                </MenuList>
+                )}
               </Menu>
               &nbsp;
               {is_admin ? (

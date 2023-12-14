@@ -229,37 +229,41 @@ function PageUser() {
     return (
       <>
         <Menu>
-          <MenuButton
-            as={Button}
-            bgColor="green.100"
-            _hover={{
-              bg: "green.200",
-            }}
-            // color="white"
-            title="More ..."
-            // onClick={() => handleDetail(rowData)}
-            key="more"
-            size="sm"
-          >
-            <GrMoreVertical />
-          </MenuButton>
-          <MenuList w="fit-content">
-            {rowData?.role === "Tenant" &&
-              (!rowData?.tenant || rowData?.tenant === "") && (
-                <MenuItem onClick={() => handeAddtoTenant(rowData)}>
-                  <FaUserPlus fontSize="18px" />
-                  &nbsp; Tambahkan ke Team Tenant
+          {({ isOpen }) => (
+            <>
+              <MenuButton
+                as={Button}
+                bgColor="green.100"
+                _hover={{
+                  bg: "green.200",
+                }}
+                // color="white"
+                title="More ..."
+                // onClick={() => handleDetail(rowData)}
+                key="more"
+                size="sm"
+              >
+                <GrMoreVertical />
+              </MenuButton>
+              <MenuList w="fit-content" display={isOpen ? "block" : "none"}>
+                {rowData?.role === "Tenant" &&
+                  (!rowData?.tenant || rowData?.tenant === "") && (
+                    <MenuItem onClick={() => handeAddtoTenant(rowData)}>
+                      <FaUserPlus fontSize="18px" />
+                      &nbsp; Tambahkan ke Team Tenant
+                    </MenuItem>
+                  )}
+                <MenuItem onClick={() => handleReset(rowData)}>
+                  <MdLockReset size="1.3rem" />
+                  &nbsp; Reset Password
                 </MenuItem>
-              )}
-            <MenuItem onClick={() => handleReset(rowData)}>
-              <MdLockReset size="1.3rem" />
-              &nbsp; Reset Password
-            </MenuItem>
-            <MenuItem onClick={() => handleDelete(rowData)}>
-              <DeleteIcon />
-              &nbsp; Hapus user
-            </MenuItem>
-          </MenuList>
+                <MenuItem onClick={() => handleDelete(rowData)}>
+                  <DeleteIcon />
+                  &nbsp; Hapus user
+                </MenuItem>
+              </MenuList>
+            </>
+          )}
         </Menu>
         &nbsp;
         <Button

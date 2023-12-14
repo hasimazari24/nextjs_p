@@ -250,45 +250,54 @@ export default function PageTeam({ params }: { params: { slug: string } }) {
                   {(teamFeatures?.access.includes("tmbhTeam") &&
                     is_admin === true) ||
                   allMenu?.access.includes("all_access") ? (
-                    <Popover placement="bottom" isLazy>
-                      <PopoverTrigger>
-                        <Button colorScheme="green" key="tambahData" size="sm">
-                          <AddIcon />
-                          &nbsp;Tambah Anggota
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        w="fit-content"
-                        _focus={{ boxShadow: "none" }}
-                      >
-                        <PopoverArrow />
-                        <PopoverBody>
-                          <Stack>
+                    <Popover placement="bottom-end">
+                      {({ isOpen }) => (
+                        <>
+                          <PopoverTrigger>
                             <Button
-                              variant="ghost"
-                              key="tambahTeamLogin"
+                              colorScheme="green"
+                              key="tambahData"
                               size="sm"
-                              onClick={() => setIsModalSearchOpen(true)}
-                              fontWeight="normal"
-                              justifyContent={"start"}
                             >
                               <AddIcon />
-                              &nbsp;Login Team
+                              &nbsp;Tambah Anggota
                             </Button>
-                            <Button
-                              variant="ghost"
-                              key="tambahTeamNonLogin"
-                              size="sm"
-                              onClick={() => setIsModalNonLogin(true)}
-                              justifyContent="start"
-                              fontWeight="normal"
-                            >
-                              <AddIcon />
-                              &nbsp;Non-Login Team
-                            </Button>
-                          </Stack>
-                        </PopoverBody>
-                      </PopoverContent>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            w="fit-content"
+                            _focus={{ boxShadow: "none" }}
+                            display={isOpen ? "block" : "none"}
+                          >
+                            <PopoverArrow />
+                            <PopoverBody>
+                              <Stack>
+                                <Button
+                                  variant="ghost"
+                                  key="tambahTeamLogin"
+                                  size="sm"
+                                  onClick={() => setIsModalSearchOpen(true)}
+                                  fontWeight="normal"
+                                  justifyContent={"start"}
+                                >
+                                  <AddIcon />
+                                  &nbsp;Login Team
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  key="tambahTeamNonLogin"
+                                  size="sm"
+                                  onClick={() => setIsModalNonLogin(true)}
+                                  justifyContent="start"
+                                  fontWeight="normal"
+                                >
+                                  <AddIcon />
+                                  &nbsp;Non-Login Team
+                                </Button>
+                              </Stack>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </>
+                      )}
                     </Popover>
                   ) : null}
                 </HStack>

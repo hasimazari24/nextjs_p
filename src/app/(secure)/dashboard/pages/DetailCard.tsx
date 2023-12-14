@@ -29,7 +29,7 @@ const DetailCard = ({
   cols: Record<string, number>;
 }) => {
   return (
-    <Popover isLazy>
+    <Popover >
       <PopoverTrigger>
         <Button
           fontWeight={"normal"}

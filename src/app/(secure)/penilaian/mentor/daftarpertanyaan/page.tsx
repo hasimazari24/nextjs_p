@@ -260,49 +260,50 @@ function page() {
         )}
 
         <Popover placement="bottom-end">
-          <PopoverTrigger>
-            <Button
-              bgColor="teal.400"
-              _hover={{
-                bg: "teal.300",
-              }}
-              // colorScheme="aqua"
-              title="More ..."
-              color="white"
-              key="more"
-              size={"sm"}
-            >
-              <GrMoreVertical />
-            </Button>
-          </PopoverTrigger>
-          {/* <Portal> */}
-          <PopoverContent
-            w="fit-content"
-            _focus={{ boxShadow: "none" }}
-            // overflowX={"auto"}
-            // rootProps={{ style: { left: 0 } }}
-          >
-            <PopoverArrow />
-            <PopoverBody>
-              <Stack>
-                <EditPertanyaan
-                  type={rowData.type}
-                  formdata={rowData}
-                  onSubmit={() => getDaftar()}
-                />
-                <OnOffPertanyaan
-                  onoff={rowData.is_active}
-                  onSubmit={() => getDaftar()}
-                  dataPertanyaan={rowData}
-                />
-                <DeletePertanyaan
-                  dataDelete={rowData}
-                  onSubmit={() => getDaftar()}
-                />
-              </Stack>
-            </PopoverBody>
-          </PopoverContent>
-          {/* </Portal> */}
+          {({ isOpen }) => (
+            <>
+              <PopoverTrigger>
+                <Button
+                  bgColor="teal.400"
+                  _hover={{
+                    bg: "teal.300",
+                  }}
+                  // colorScheme="aqua"
+                  title="More ..."
+                  color="white"
+                  key="more"
+                  size={"sm"}
+                >
+                  <GrMoreVertical />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                w="fit-content"
+                _focus={{ boxShadow: "none" }}
+                display={isOpen ? "block" : "none"}
+              >
+                <PopoverArrow />
+                <PopoverBody>
+                  <Stack>
+                    <EditPertanyaan
+                      type={rowData.type}
+                      formdata={rowData}
+                      onSubmit={() => getDaftar()}
+                    />
+                    <OnOffPertanyaan
+                      onoff={rowData.is_active}
+                      onSubmit={() => getDaftar()}
+                      dataPertanyaan={rowData}
+                    />
+                    <DeletePertanyaan
+                      dataDelete={rowData}
+                      onSubmit={() => getDaftar()}
+                    />
+                  </Stack>
+                </PopoverBody>
+              </PopoverContent>
+            </>
+          )}
         </Popover>
       </HStack>
     );

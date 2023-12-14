@@ -351,80 +351,89 @@ function PageTenant() {
     return (
       <>
         <Menu>
-          <MenuButton
-            as={Button}
-            bgColor="green.100"
-            _hover={{
-              bg: "green.200",
-            }}
-            // color="white"
-            title="More ..."
-            // onClick={() => handleDetail(rowData)}
-            key="dataDetail"
-            size="sm"
-          >
-            <GrMoreVertical />
-          </MenuButton>
-          <MenuList>
-            {rowData?.is_public === true && (
-              <Link href={`/tenant-detail/${rowData?.slug}`} target="_blank">
-                <MenuItem>
-                  <BiLinkExternal />
-                  &nbsp; Lihat Situs
-                </MenuItem>
-              </Link>
-            )}
+          {({ isOpen }) => (
+            <>
+              <MenuButton
+                as={Button}
+                bgColor="green.100"
+                _hover={{
+                  bg: "green.200",
+                }}
+                // color="white"
+                title="More ..."
+                // onClick={() => handleDetail(rowData)}
+                key="dataDetail"
+                size="sm"
+              >
+                <GrMoreVertical />
+              </MenuButton>
+              <MenuList display={isOpen ? "block" : "none"}>
+                {rowData?.is_public === true && (
+                  <Link
+                    href={`/tenant-detail/${rowData?.slug}`}
+                    target="_blank"
+                  >
+                    <MenuItem>
+                      <BiLinkExternal />
+                      &nbsp; Lihat Situs
+                    </MenuItem>
+                  </Link>
+                )}
 
-            <MenuItem
-              onClick={() =>
-                router.push(`/backPanelTenant/catalog/${rowData.id}`)
-              }
-            >
-              <BiBookBookmark />
-              &nbsp; Catalog Tenant
-            </MenuItem>
-            <MenuItem
-              onClick={() => router.push(`/backPanelTenant/team/${rowData.id}`)}
-            >
-              <SiMicrosoftteams />
-              &nbsp; Team Tenant
-            </MenuItem>
-            <MenuItem
-              onClick={() =>
-                router.push(`/backPanelTenant/program/${rowData.id}`)
-              }
-            >
-              <LiaClipboardListSolid />
-              &nbsp; Program Tenant
-            </MenuItem>
-            <MenuItem
-              onClick={() =>
-                router.push(`/backPanelTenant/awards/${rowData.id}`)
-              }
-            >
-              <GrTrophy />
-              &nbsp; Awards Tenant
-            </MenuItem>
-            <MenuItem
-              onClick={() =>
-                router.push(`/backPanelTenant/gallery/${rowData.id}`)
-              }
-            >
-              <BsCalendar2Event />
-              &nbsp; Gallery Events Tenant
-            </MenuItem>
-            <MenuItem onClick={() => handleSocial(rowData)}>
-              <GrShareOption />
-              &nbsp; Social Links Tenant
-            </MenuItem>
-            {backPanelTenantFeatures?.access.includes("deleteTenant") ||
-            allMenu?.access.includes("all_access") ? (
-              <MenuItem onClick={() => handleDelete(rowData)}>
-                <DeleteIcon />
-                &nbsp; Hapus Tenant
-              </MenuItem>
-            ) : null}
-          </MenuList>
+                <MenuItem
+                  onClick={() =>
+                    router.push(`/backPanelTenant/catalog/${rowData.id}`)
+                  }
+                >
+                  <BiBookBookmark />
+                  &nbsp; Catalog Tenant
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    router.push(`/backPanelTenant/team/${rowData.id}`)
+                  }
+                >
+                  <SiMicrosoftteams />
+                  &nbsp; Team Tenant
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    router.push(`/backPanelTenant/program/${rowData.id}`)
+                  }
+                >
+                  <LiaClipboardListSolid />
+                  &nbsp; Program Tenant
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    router.push(`/backPanelTenant/awards/${rowData.id}`)
+                  }
+                >
+                  <GrTrophy />
+                  &nbsp; Awards Tenant
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    router.push(`/backPanelTenant/gallery/${rowData.id}`)
+                  }
+                >
+                  <BsCalendar2Event />
+                  &nbsp; Gallery Events Tenant
+                </MenuItem>
+                <MenuItem onClick={() => handleSocial(rowData)}>
+                  <GrShareOption />
+                  &nbsp; Social Links Tenant
+                </MenuItem>
+                {backPanelTenantFeatures?.access.includes("deleteTenant") ||
+                allMenu?.access.includes("all_access") ? (
+                  <MenuItem onClick={() => handleDelete(rowData)}>
+                    <DeleteIcon />
+                    &nbsp; Hapus Tenant
+                  </MenuItem>
+                ) : null}
+              </MenuList>
+            </>
+          )}
         </Menu>
         &nbsp;
         {backPanelTenantFeatures?.access.includes("editTenant") ||

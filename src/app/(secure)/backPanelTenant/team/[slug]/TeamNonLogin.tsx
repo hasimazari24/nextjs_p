@@ -152,28 +152,32 @@ function TeamNonLogin({
       allMenu?.access.includes("all_access") ? (
       <>
         <Menu>
-          <MenuButton
-            as={Button}
-            bgColor="green.100"
-            _hover={{
-              bg: "green.200",
-            }}
-            title="More ..."
-            key="more"
-            size="sm"
-          >
-            <GrMoreVertical />
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={() => handleSocial(rowData)}>
-              <GrShareOption size="1.3rem" />
-              &nbsp; Social Links
-            </MenuItem>
-            <MenuItem onClick={() => handleDelete(rowData)}>
-              <DeleteIcon />
-              &nbsp; Hapus Team
-            </MenuItem>
-          </MenuList>
+          {({ isOpen }) => (
+            <>
+              <MenuButton
+                as={Button}
+                bgColor="green.100"
+                _hover={{
+                  bg: "green.200",
+                }}
+                title="More ..."
+                key="more"
+                size="sm"
+              >
+                <GrMoreVertical />
+              </MenuButton>
+              <MenuList display={isOpen ? "block" : "none"}>
+                <MenuItem onClick={() => handleSocial(rowData)}>
+                  <GrShareOption size="1.3rem" />
+                  &nbsp; Social Links
+                </MenuItem>
+                <MenuItem onClick={() => handleDelete(rowData)}>
+                  <DeleteIcon />
+                  &nbsp; Hapus Team
+                </MenuItem>
+              </MenuList>
+            </>
+          )}
         </Menu>
         &nbsp;
         <Button

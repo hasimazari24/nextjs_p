@@ -147,38 +147,46 @@ function page({ params }: { params: { id_pertanyaan: string } }) {
         <HStack>
           <EditValueJawaban formData={rowData} onSubmit={() => getValueJ()} />
           <Popover placement="bottom">
-            <PopoverTrigger>
-              <Button
-                bgColor="teal.300"
-                _hover={{
-                  bg: "teal.200",
-                }}
-                // colorScheme="aqua"
-                title="More ..."
-                color="white"
-                // onClick={() => handleDetail(rowData)}
-                key="more"
-                size={"sm"}
-              >
-                <GrMoreVertical />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent w="fit-content" _focus={{ boxShadow: "none" }}>
-              <PopoverArrow />
-              <PopoverBody>
-                <Stack>
-                  <OnOffValueJawaban
-                    onoff={rowData.is_active}
-                    dataValue={rowData}
-                    onSubmit={() => getValueJ()}
-                  />
-                  <DeleteValueJawaban
-                    dataDelete={rowData}
-                    onSubmit={() => getValueJ()}
-                  />
-                </Stack>
-              </PopoverBody>
-            </PopoverContent>
+            {({ isOpen }) => (
+              <>
+                <PopoverTrigger>
+                  <Button
+                    bgColor="teal.300"
+                    _hover={{
+                      bg: "teal.200",
+                    }}
+                    // colorScheme="aqua"
+                    title="More ..."
+                    color="white"
+                    // onClick={() => handleDetail(rowData)}
+                    key="more"
+                    size={"sm"}
+                  >
+                    <GrMoreVertical />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  w="fit-content"
+                  _focus={{ boxShadow: "none" }}
+                  display={isOpen ? "block" : "none"}
+                >
+                  <PopoverArrow />
+                  <PopoverBody>
+                    <Stack>
+                      <OnOffValueJawaban
+                        onoff={rowData.is_active}
+                        dataValue={rowData}
+                        onSubmit={() => getValueJ()}
+                      />
+                      <DeleteValueJawaban
+                        dataDelete={rowData}
+                        onSubmit={() => getValueJ()}
+                      />
+                    </Stack>
+                  </PopoverBody>
+                </PopoverContent>
+              </>
+            )}
           </Popover>
         </HStack>
       </div>
