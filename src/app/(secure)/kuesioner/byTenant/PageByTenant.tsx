@@ -31,7 +31,7 @@ interface DataItem {
 }
 
 function PageByTenant() {
-  let hidenCols: string[] = ["id", "action"];
+  let hidenCols: string[] = ["id", "action", "type"];
   const filterOptions = [
     { key: "kuesioner", label: "Judul Kuesioner" },
     // {
@@ -45,6 +45,10 @@ function PageByTenant() {
     {
       Header: "id",
       accessor: "id",
+    },
+    {
+      Header: "type",
+      accessor: "type",
     },
     {
       Header: "Judul Kuesioner",

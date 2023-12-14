@@ -40,7 +40,7 @@ import { useRouter } from "next/navigation";
 import TenantModalKuesioner from "../../kuesioner/byTenant/TenantModalKuesioner";
 import TenantNilaiMentor from "../../kuesioner/byTenant/TenantNilaiMentor";
 
-function PageByTenant({ data }: { data: any }) {
+function PageByTenant({ data, onSubmit }: { data: any; onSubmit: () => void }) {
   return (
     <div>
       <Stack spacing={{ base: 4, md: 6 }}>
@@ -87,10 +87,12 @@ function PageByTenant({ data }: { data: any }) {
               <AccordionDetail
                 tugas={data.tugas}
                 heading="DAFTAR TUGAS BELUM DIKERJAKAN"
+                onSubmit={() => onSubmit()}
               />
               <AccordionDetail
                 heading="DAFTAR KUESIONER PERLU DIISI"
                 kuesioner={data.kuesioner}
+                onSubmit={() => onSubmit()}
               />
             </SimpleGrid>
           </>
@@ -104,15 +106,17 @@ const AccordionDetail = ({
   tugas,
   kuesioner,
   heading,
+  onSubmit,
 }: {
   tugas?: any[] | [];
   kuesioner?: any[] | [];
   heading: string;
+  onSubmit: () => void;
 }) => {
   const [isModalKuesioner, setIsModalKuesioner] = useState(false);
   const [isModalPenilaian, setIsModalPenilaian] = useState(false);
   const [idKuesioner, setIdKuesioner] = useState("");
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleKuesioner = (data: any) => {
     if (data.type === "tahunan") {
@@ -443,7 +447,7 @@ const AccordionDetail = ({
           setIdKuesioner("");
         }}
         idKuesioner={idKuesioner}
-        onSubmit={() => router.refresh()}
+        onSubmit={() => onSubmit()}
       />
       <TenantNilaiMentor
         isOpen={isModalPenilaian}
@@ -452,7 +456,7 @@ const AccordionDetail = ({
           setIdKuesioner("");
         }}
         idKuesioner={idKuesioner}
-        onSubmit={() => router.refresh()}
+        onSubmit={() => onSubmit()}
       />
     </>
   );

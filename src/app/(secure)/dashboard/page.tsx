@@ -52,30 +52,29 @@ export default function Dashboard() {
     isLoading: true,
     data: null,
   });
-
-  useEffect(() => {
-    async function callApi() {
-      try {
-        // Panggil API menggunakan Axios dengan async/await
-        const response = await axiosCustom.get(`/dashboard`);
-        const timer = setTimeout(() => {
-          // setIdTenant(id);
-          setState({
-            isLoading: false,
-            data: response.data.data,
-          }); // Set isLoading to false to stop the spinner
-        }, 1000);
-        return () => clearTimeout(timer);
-      } catch (error: any) {
-        console.error("Gagal memuat data:", error);
+  async function callApi() {
+    try {
+      // Panggil API menggunakan Axios dengan async/await
+      const response = await axiosCustom.get(`/dashboard`);
+      const timer = setTimeout(() => {
+        // setIdTenant(id);
         setState({
           isLoading: false,
-          data: null,
-        });
-      }
+          data: response.data.data,
+        }); // Set isLoading to false to stop the spinner
+      }, 1000);
+      return () => clearTimeout(timer);
+    } catch (error: any) {
+      console.error("Gagal memuat data:", error);
+      setState({
+        isLoading: false,
+        data: null,
+      });
     }
+  }
+  useEffect(() => {
     callApi();
-  },[]);
+  }, []);
 
   if (state.isLoading) return <Loading />;
 
@@ -87,7 +86,7 @@ export default function Dashboard() {
     case "Mentor":
       return <Mentor data={state.data} />;
     case "Tenant":
-      return <Tenant data={state.data} />;
+      return <Tenant data={state.data} onSubmit={() => callApi()} />;
     default:
       break;
   }
