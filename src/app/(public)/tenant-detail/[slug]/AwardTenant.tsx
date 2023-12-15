@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Text,
@@ -14,12 +14,17 @@ import {
   Grid,
   Center,
   Image,
-  Heading,
-  IconButton,
+  Drawer,
+  DrawerOverlay,
+  DrawerBody,
+  DrawerHeader,
+  DrawerContent,
+  DrawerCloseButton,
 } from "@chakra-ui/react";
 // import ContactInfo from "./ContactTenant";
 import { motion } from "framer-motion";
 import * as TenantTypes from "@/app/type/tenant-type.d";
+import CardAward from "./AwardsCard";
 
 const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
   // const MotionSimpleGrid = motion(SimpleGrid);
@@ -57,55 +62,7 @@ const AwardTenant = ({ tenant }: { tenant: TenantTypes.Tenant }) => {
             gap={8}
           >
             {award.map((data, index) => (
-              <Stack
-                key={index}
-                maxW={"xl"}
-                p={4}
-                boxShadow={"lg"}
-                // rounded={"2xl"}
-                bgColor={"gray.50"}
-                spacing="2"
-                rounded="2xl"
-                align="center"
-                // flexDirection={"column"}
-                // justifyContent={'flex-start'}
-              >
-                <Image
-                  // boxSize={[20,40]}
-                  h={{ base: "80px", sm: "140px", xl: "200px" }}
-                  maxW={{ base: "80px", sm: "140px", xl: "200px" }}
-                  // w={"xl"}
-                  objectFit={"cover"}
-                  src={data.image_url || "/img/tenant-logo-default.png"}
-                  rounded={{ base: "xl", lg: "3xl" }}
-                  boxShadow="xl"
-                  mb={[2, 4]}
-                />
-                <Text
-                  as="b"
-                  fontSize={["sm", "lg", "xl"]}
-                  textOverflow="ellipsis"
-                  align="center"
-                  cursor={"default"}
-                  overflow="hidden"
-                  title={data.rank}
-                  noOfLines={{ base: 2, sm: 1 }}
-                >
-                  {data.rank}
-                </Text>
-                <Text
-                  textAlign="center"
-                  fontSize={["sm", "md"]}
-                  textOverflow="ellipsis"
-                  align="center"
-                  cursor={"default"}
-                  overflow="hidden"
-                  noOfLines={2}
-                  title={data.name}
-                >
-                  {data.name}
-                </Text>
-              </Stack>
+              <CardAward data={data} index={index} />
             ))}
           </Grid>
         ) : (
