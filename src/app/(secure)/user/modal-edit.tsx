@@ -291,7 +291,6 @@ const ModalEdit: React.FC<ModalProps> = ({
 
       // onSubmit(); // Panggil fungsi penyimpanan data (misalnya, untuk memperbarui tampilan tabel)
       onClose(); // Tutup modal
-      reset(); // Reset formulir
       setPreviewAvatar(undefined); // reset preview
       setIdImageAvatarOld(null); // kosongkan idimage
       setIdImageAvatar(null); // kosongkan idimage

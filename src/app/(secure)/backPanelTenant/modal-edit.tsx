@@ -17,7 +17,6 @@ import {
   Flex,
   Text,
   Box,
-  useDisclosure,
   Textarea,
   Select,
   HStack,
@@ -27,8 +26,6 @@ import {
   RadioGroup,
   Radio,
   SimpleGrid,
-  Grid,
-  GridItem,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useRef } from "react";
 import { useForm, SubmitHandler, useController } from "react-hook-form";
@@ -233,8 +230,8 @@ const ModalEdit: React.FC<ModalProps> = ({
         });
       }
 
+      // reset(); // Reset formulir
       onClose(); // Tutup modal
-      reset(); // Reset formulir
       setPreviewAvatar(undefined); // reset preview
       setIdImageAvatarOld(null); // kosongkan idimage
       setIdImageAvatar(null); // kosongkan idimage
