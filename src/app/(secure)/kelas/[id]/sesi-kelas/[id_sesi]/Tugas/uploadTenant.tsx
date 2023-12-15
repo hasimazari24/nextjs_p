@@ -135,7 +135,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
     try {
       setIsLoading(true);
       //   assigment_answer_id !== null artinya sudah mengumpulkan tugas jadi diedit
-      if (rowData?.assigment_answer_id) {
+      if (rowData?.answer_id) {
         await axiosCustom
           .put(`/course-item/${idSesi}/update-submit-assigment`, dataBaru)
           .then((response) => {
@@ -344,16 +344,19 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
                   </FormControl>
 
                   <HStack justifyContent={"flex-end"} mb="4">
-                    <Button
-                      leftIcon={<CheckIcon />}
-                      colorScheme="blue"
-                      mr={3}
-                      type="submit"
-                      isLoading={isLoading}
-                      size="sm"
-                    >
-                      {"Simpan Perubahan"}
-                    </Button>
+                    {!rowData?.answer_id || changeFile === true && (
+                      <Button
+                        leftIcon={<CheckIcon />}
+                        colorScheme="blue"
+                        mr={3}
+                        type="submit"
+                        isLoading={isLoading}
+                        size="sm"
+                      >
+                        {"Simpan Perubahan"}
+                      </Button>
+                    )}
+
                     <Button
                       leftIcon={<CloseIcon />}
                       color={"red.400"}

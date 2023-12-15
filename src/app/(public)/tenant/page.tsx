@@ -150,7 +150,10 @@ function Tenant() {
           </Stack>
 
           {loadingBeranda ? (
-            <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing={"15px"}>
+            <SimpleGrid
+              columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
+              spacing={"15px"}
+            >
               {[1, 2, 3, 4, 5].map((index) => (
                 <Skeleton
                   key={index}
@@ -308,7 +311,7 @@ function CardTable<T extends object>(props: CardTableProps<T>) {
       </Stack>
       {rows && rows.length > 0 ? (
         <SimpleGrid
-          columns={{ base: 2, md: 3, lg: 5 }}
+          columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
           spacing={"15px"}
           {...getTableProps()}
         >

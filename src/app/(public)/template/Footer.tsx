@@ -233,7 +233,7 @@ const Footer = () => {
               </HStack>
               <HStack spacing={3} alignItems="center">
                 <Icon as={FaPhoneAlt} w={4} h={4} color="teal.200" />
-                <Box as="a" href={"wa.me/+62271666628"}>
+                <Box>
                   +62 271 666 628
                 </Box>
               </HStack>
