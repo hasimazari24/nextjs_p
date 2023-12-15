@@ -153,7 +153,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
             // console.log(response);
             if (response.status === 201) {
               handleShowMessage(
-                "Upload jawaban berhasil. Silahkan lihat Review Tugas.",
+                "Upload jawaban berhasil. Silahkan lihat melalui Review Tugas, jika sudah dinilai mentor.",
                 false,
               );
               setIsLoading(false);
@@ -195,7 +195,7 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
         fontWeight={"thin"}
       >
         <FaFileUpload />
-        &nbsp; Upload Tugas
+        &nbsp; Upload Jawaban
       </Button>
 
       <Modal
@@ -344,18 +344,18 @@ function UploadTenant({ rowData, idSesi, onSubmit }: uploadProps) {
                   </FormControl>
 
                   <HStack justifyContent={"flex-end"} mb="4">
-                    {!rowData?.answer_id || changeFile === true && (
-                      <Button
-                        leftIcon={<CheckIcon />}
-                        colorScheme="blue"
-                        mr={3}
-                        type="submit"
-                        isLoading={isLoading}
-                        size="sm"
-                      >
-                        {"Simpan Perubahan"}
-                      </Button>
-                    )}
+                    {/* {(!rowData?.answer_id || changeFile === true) && ( */}
+                    <Button
+                      leftIcon={<CheckIcon />}
+                      colorScheme="blue"
+                      mr={3}
+                      type="submit"
+                      isLoading={isLoading}
+                      size="sm"
+                    >
+                      {"Simpan Perubahan"}
+                    </Button>
+                    {/* )} */}
 
                     <Button
                       leftIcon={<CloseIcon />}
