@@ -665,6 +665,7 @@ export default function MyTenant() {
         isEdit={true}
         formData={dataMyTenant}
         dataValuasi={dataValuasi}
+        myTenant={true}
       />
     </>
   );

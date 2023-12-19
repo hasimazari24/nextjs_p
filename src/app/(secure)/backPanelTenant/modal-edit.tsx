@@ -47,6 +47,7 @@ interface ModalProps {
   isEdit?: boolean; // Tambahkan prop isEdit untuk menentukan apakah ini mode edit
   formData?: any; // Jika mode edit, kirim data yang akan diedit
   dataValuasi: any[];
+  myTenant?: boolean;
 }
 
 interface FormValues {
@@ -58,7 +59,7 @@ interface FormValues {
   contact: string;
   email: string;
   founder: string;
-  level_tenant: string;
+  level_tenant?: string;
   image?: string;
   image_banner?: string;
   is_public?: boolean;
@@ -73,6 +74,7 @@ const ModalEdit: React.FC<ModalProps> = ({
   isEdit = false,
   formData,
   dataValuasi,
+  myTenant,
 }) => {
   const {
     register,
@@ -189,11 +191,16 @@ const ModalEdit: React.FC<ModalProps> = ({
       contact: `${data.contact}`,
       email: `${data.email}`,
       founder: `${data.founder}`,
-      level_tenant: `${data.level_tenant}`,
-      is_public: data.is_public === "true" ? true : false,
-      valuasi : data.valuasi === "default" ? null : data.valuasi,
-      jangkauan : data.jangkauan === "default" ? null : data.jangkauan,
+      // level_tenant: `${data.level_tenant}`,
+      // is_public: data.is_public === "true" ? true : false,
+      valuasi: data.valuasi === "default" ? null : data.valuasi,
+      jangkauan: data.jangkauan === "default" ? null : data.jangkauan,
     };
+
+    if (!myTenant) {
+      dataBaru.is_public = data.is_public === "true" ? true : false;
+      dataBaru.level_tenant = data.level_tenant;
+    }
 
     // if (data.valuasi !== "default") dataBaru.valuasi = data.valuasi;
     // if (data.jangkauan !== "default") dataBaru.jangkauan = data.jangkauan;
@@ -204,6 +211,7 @@ const ModalEdit: React.FC<ModalProps> = ({
     // append id jika isEdit
     if (isEdit) dataBaru.id = data.id;
     // logic submit form
+    console.log(dataBaru);
     try {
       // Simpan data menggunakan Axios POST atau PUT request, tergantung pada mode tambah/edit
       if (isEdit) {
@@ -437,7 +445,7 @@ const ModalEdit: React.FC<ModalProps> = ({
     const UPLOAD_FILE_TYPE = file?.type;
     // ambil size dari file
     const UPLOAD_FILE_SIZE = file?.size;
-    //jika pencet batal 
+    //jika pencet batal
     if (!file) return;
     // jika file type tidak disupport
     if (!SUPPORT_FILE_TYPE.includes(UPLOAD_FILE_TYPE)) {
@@ -678,42 +686,49 @@ const ModalEdit: React.FC<ModalProps> = ({
                       </FormErrorMessage>
                     </FormControl>
                   </Hide>
-                  <FormControl as="fieldset" mb="3">
-                    <Flex
-                      flexDir={{ base: "column", md: "row" }}
-                      // align={{ base: "start", md: "center" }}
-                    >
-                      <Box
-                        minWidth={["100%", "110px"]}
-                        marginRight={["0", "2"]}
+                  {!myTenant && (
+                    <FormControl as="fieldset" mb="3">
+                      <Flex
+                        flexDir={{ base: "column", md: "row" }}
+                        // align={{ base: "start", md: "center" }}
                       >
-                        <FormLabel>
-                          Tampilkan ke halaman public ?&nbsp;
-                          <Text as={"span"} color={"red"}>
-                            *
-                          </Text>
-                        </FormLabel>
-                      </Box>
-                      <Box flex={["1", "50%"]}>
-                        <RadioGroup
-                          defaultValue={
-                            formData
-                              ? formData.is_public === true
-                                ? "true"
-                                : "false"
-                              : "true"
-                          }
+                        <Box
+                          minWidth={["100%", "110px"]}
+                          marginRight={["0", "2"]}
                         >
-                          <Radio value="true" pr="4" {...register("is_public")}>
-                            Ya
-                          </Radio>
-                          <Radio value="false" {...register("is_public")}>
-                            Tidak
-                          </Radio>
-                        </RadioGroup>
-                      </Box>
-                    </Flex>
-                  </FormControl>
+                          <FormLabel>
+                            Tampilkan ke halaman public ?&nbsp;
+                            <Text as={"span"} color={"red"}>
+                              *
+                            </Text>
+                          </FormLabel>
+                        </Box>
+                        <Box flex={["1", "50%"]}>
+                          <RadioGroup
+                            defaultValue={
+                              formData
+                                ? formData.is_public === true
+                                  ? "true"
+                                  : "false"
+                                : "true"
+                            }
+                          >
+                            <Radio
+                              value="true"
+                              pr="4"
+                              {...register("is_public")}
+                            >
+                              Ya
+                            </Radio>
+                            <Radio value="false" {...register("is_public")}>
+                              Tidak
+                            </Radio>
+                          </RadioGroup>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+                  )}
+
                   <SimpleGrid
                     columns={{ base: 1, md: 2 }}
                     spacing={{ base: "0", md: "4" }}
@@ -972,17 +987,25 @@ const ModalEdit: React.FC<ModalProps> = ({
                           </FormLabel>
                         </Box>
                         <Box w="full">
-                          <Select
-                            defaultValue={formData?.level_tenant}
-                            {...fields.level_tenant}
-                          >
-                            <option value="Pra Inkubasi">Pra Inkubasi</option>
-                            <option value="Inkubasi">Inkubasi</option>
-                            <option value="Inkubasi Lanjutan">
-                              Inkubasi Lanjutan
-                            </option>
-                            <option value="Scale Up">Scale Up</option>
-                          </Select>
+                          {myTenant && myTenant === true ? (
+                            <Input
+                              defaultValue={formData?.level_tenant}
+                              isDisabled
+                            />
+                          ) : (
+                            <Select
+                              defaultValue={formData?.level_tenant}
+                              {...fields.level_tenant}
+                            >
+                              <option value="Pra Inkubasi">Pra Inkubasi</option>
+                              <option value="Inkubasi">Inkubasi</option>
+                              <option value="Inkubasi Lanjutan">
+                                Inkubasi Lanjutan
+                              </option>
+                              <option value="Scale Up">Scale Up</option>
+                            </Select>
+                          )}
+
                           <FormErrorMessage>
                             {errors.level_tenant && errors.level_tenant.message}
                           </FormErrorMessage>
