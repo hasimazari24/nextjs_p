@@ -118,13 +118,13 @@ const SearchModal = ({
     onClose();
   };
 
-  const [selectedOption, setSelectedOption] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<boolean>(true);
   const handleIsAdmin = (value: string) => {
     setSelectedOption(value === "ya_admin");
   };
 
   //pastikan nilai di dalam() sesuai default valuenya radioSelected
-  const [selectedIsPublic, setSelecteIsPublic] = useState<boolean>(true);
+  const [selectedIsPublic, setSelecteIsPublic] = useState<boolean>(false);
   const handleIsPublic = (value: string) => {
     setSelecteIsPublic(value === "ya_public");
   };

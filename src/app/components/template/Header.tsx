@@ -338,14 +338,4 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   );
 };
 
-// const Header = () => {
-//   const { isOpen, onOpen, onClose } = useDisclosure();
-
-//   return (
-//     <div>
-//       <HeaderContent onOpen={onOpen} />
-//     </div>
-//   );
-// };
-
 export default Header;

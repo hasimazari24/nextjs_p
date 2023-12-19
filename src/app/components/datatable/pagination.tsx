@@ -11,6 +11,8 @@ type PaginationProps = {
 };
 
 const Pagination = (props: PaginationProps) => {
+  // Menggunakan useMemo untuk menghitung halaman dan hasil paginasi 
+  // hanya saat props.currentPage atau props.totalPages berubah.
   const pages = useMemo(() => {
     const result = [];
 

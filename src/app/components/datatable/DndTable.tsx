@@ -93,12 +93,6 @@ function DndTable<T extends object>({
 
   const [isDisableDraggable, setIsDisableDraggable] = useState(false);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setFilter("title", value); // Replace "yourColumnName" with the actual column name you want to filter
-    setIsDisableDraggable(value !== "" ? true : false); // Disable drag and drop if the filter is active
-  };
-
   return (
     <Stack mb="2">
       <Flex justifyContent={["center", "flex-start"]} flexWrap={"wrap"}>

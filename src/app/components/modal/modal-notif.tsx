@@ -37,7 +37,6 @@ const ModalNotif: React.FC<ModalProps> = ({
   const timerRef = useRef<number | null>(null);
   const autoCloseDuration = 5000;
   const [progressValue, setProgressValue] = useState(100);
-  const router = useRouter();
 
   // Efek samping untuk mengatur timer ketika modal terbuka
   useEffect(() => {

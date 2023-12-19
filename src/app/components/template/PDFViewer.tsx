@@ -1,23 +1,16 @@
 import * as React from "react";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
-import {
-  toolbarPlugin,
-  ToolbarSlot,
-  MoreActionsPopover,
-} from "@react-pdf-viewer/toolbar";
+import { toolbarPlugin, ToolbarSlot } from "@react-pdf-viewer/toolbar";
 
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/toolbar/lib/styles/index.css";
 import {
   Box,
-  Button,
   IconButton,
   Popover,
   PopoverArrow,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
-  PopoverFooter,
   HStack,
   PopoverTrigger,
   Stack,
@@ -89,7 +82,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl }) => {
                     <CurrentPageInput />
                   </Box>
                   <Box>
-                   &nbsp;/ <NumberOfPages />
+                    &nbsp;/ <NumberOfPages />
                   </Box>
                   <Box display={{ base: "none", lg: "flex" }}>
                     <GoToNextPage />

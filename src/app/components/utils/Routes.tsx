@@ -6,7 +6,6 @@ import {
   BsPeople,
   BsFillJournalBookmarkFill,
 } from "react-icons/bs";
-import { MdOutlineQuiz } from "react-icons/md";
 import { ImFileText2 } from "react-icons/im";
 import { SiGoogleclassroom } from "react-icons/si";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
@@ -75,7 +74,6 @@ const Routes: IRoutes[] = [
     name: "Review Kuesioner",
     href: "/kuesioner/review",
   },
-  //   { name: "Program", href: "/backPanelTenant", layout:"Data Tenant" },
 ];
 
 export default Routes;

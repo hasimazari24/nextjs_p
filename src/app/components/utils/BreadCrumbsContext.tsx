@@ -1,6 +1,4 @@
-// BreadcrumbContext.tsx
 "use client";
-import { usePathname } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -9,9 +7,8 @@ import {
   useEffect,
 } from "react";
 import { IRoutes } from "@/app/type/routes-navigation.d";
-import Routes from "@/app/components/utils/Routes";
 import { FindDefaultRoute } from "./FindDefaultRoute";
-// import { findCurrentRoute } from "@/app/components/utils/Navigation";
+
 type BreadcrumbContextType = {
   breadcrumbs: IRoutes[];
   setBreadcrumbs: (breadcrumbs: IRoutes[]) => void;

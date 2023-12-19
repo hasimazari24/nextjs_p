@@ -6,25 +6,13 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Center,
   BoxProps,
   FlexProps,
   Img,
-  Spinner,
 } from "@chakra-ui/react";
-import { AiOutlineDashboard } from "react-icons/ai";
-import { BsBuilding, BsPeople } from "react-icons/bs";
 import { IconType } from "react-icons";
 import { useAuth } from "../utils/AuthContext";
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
-import { UserRoles, permissions } from "@/app/type/role-access-control.d";
-
-interface LinkItemProps {
-  name: string;
-  icon: IconType;
-  href: string;
-}
+import { permissions } from "@/app/type/role-access-control.d";
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
