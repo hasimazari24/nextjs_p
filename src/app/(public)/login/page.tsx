@@ -18,11 +18,12 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { useAuth } from "../../components/utils/AuthContext";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
+import Loading from "../loading";
 
 interface Formlogin {
   usernameoremail: string;
@@ -75,127 +76,144 @@ const Login = () => {
           </Text>
         </Center>
       ) : (
-        <Flex
-          minH={"100vh"}
-          align={"center"}
-          justify={"center"}
-          // bgColor={"red.400"}
-          bgGradient="linear(to-br, red.600, red.500, red.600)"
-        >
-          <Stack
-            spacing={4}
-            // w={"full"}
-            maxW={"4xl"}
-            bg={"white"}
-            rounded={"xl"}
-            boxShadow={"lg"}
-            p={6}
-            my={12}
-            direction={["column", "row"]}
-            // flexWrap={"wrap"}
-            // justifyContent={"space-between"}
+        <Suspense fallback={<Loading />}>
+          <Flex
+            minH={"100vh"}
+            align={"center"}
+            justify={"center"}
+            // bgColor={"red.400"}
+            bgGradient="linear(to-br, red.600, red.500, red.600)"
           >
-            <Flex
-              bgColor="rgba(231, 231, 231, 0.3)"
-              p={{ base: 4, sm: 6, md: 8 }}
-              // spacing={{ base: 8 }}
+            <Stack
+              spacing={4}
+              // w={"full"}
+              maxW={"4xl"}
+              bg={"white"}
               rounded={"xl"}
-              alignItems={"center"}
-              maxW="lg"
-              flexDirection={"column"}
+              boxShadow={"lg"}
+              p={6}
+              my={12}
+              direction={{ base: "column", md: "row" }}
+              // direction={["column","row"]}
+              // flexWrap={"wrap"}
+              // justifyContent={"space-between"}
             >
-              <Stack align={"center"} mb="3">
-                {/* <FaRegCircleUser fontSize="3.5rem" /> */}
-                <Img src="/img/siteman-primary.png" h="60px" />
-                <Heading
-                  fontSize={"4xl"}
-                  whiteSpace={"nowrap"}
-                  color={"red.500"}
-                >
-                  SELAMAT DATANG
-                </Heading>
-                <Text fontSize={"lg"} color={"gray.600"}>
-                  Silahkan login terlebih dahulu
-                </Text>
-              </Stack>
-              <Box
-                rounded={"lg"}
-                w={{ base: "auto", md: "300px", lg: "350px" }}
-                bg={"white"}
-                boxShadow={"lg"}
-                p={8}
+              <Flex
+                bgColor="rgba(231, 231, 231, 0.3)"
+                p={{ base: 4, sm: 6, md: 8 }}
+                // spacing={{ base: 8 }}
+                rounded={"xl"}
+                alignItems={"center"}
+                maxW="lg"
+                flexDirection={"column"}
               >
-                <form onSubmit={handleSubmit(handleLogin)}>
-                  <FormControl
-                    id="email"
-                    isInvalid={!!errors.usernameoremail}
-                    mb="3"
+                <Stack align={"center"} mb="3">
+                  {/* <FaRegCircleUser fontSize="3.5rem" /> */}
+                  <Img src="/img/siteman-primary.png" h="60px" />
+                  <Heading
+                    fontSize={"4xl"}
+                    whiteSpace={"nowrap"}
+                    color={"red.500"}
                   >
-                    <FormLabel>Username</FormLabel>
-                    <Input type="text" {...fields.usernameoremail} autoFocus />
-                    <FormErrorMessage>
-                      {errors.usernameoremail && errors.usernameoremail.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    id="password"
-                    isInvalid={!!errors.password}
-                    mb="3"
-                  >
-                    <FormLabel>Password</FormLabel>
-                    <InputGroup>
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        {...fields.password}
-                      />
-                      <InputRightElement h={"full"}>
-                        <Button
-                          variant={"ghost"}
-                          onClick={() =>
-                            setShowPassword((showPassword) => !showPassword)
-                          }
-                        >
-                          {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
-                    <FormErrorMessage>
-                      {errors.password && errors.password.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <Stack spacing={10}>
-                    <Button
-                      bg={"blue.400"}
-                      color={"white"}
-                      _hover={{
-                        bg: "blue.500",
-                      }}
-                      type="submit"
-                      isLoading={loading}
-                      mt="2"
+                    SELAMAT DATANG
+                  </Heading>
+                  <Text fontSize={"lg"} color={"gray.600"}>
+                    Silahkan login terlebih dahulu
+                  </Text>
+                </Stack>
+                <Box
+                  rounded={"lg"}
+                  w={{ base: "auto", md: "350px" }}
+                  bg={"white"}
+                  boxShadow={"lg"}
+                  p={8}
+                >
+                  <form onSubmit={handleSubmit(handleLogin)}>
+                    <FormControl
+                      id="email"
+                      isInvalid={!!errors.usernameoremail}
+                      mb="3"
                     >
-                      <RiLoginBoxLine />
-                      &nbsp; Login
-                    </Button>
-                  </Stack>
-                </form>
-              </Box>
-            </Flex>
-            <Flex
-              align={"center"}
-              justify={"center"}
-              p={{ base: 1, sm: 2, md: 3 }}
-            >
-              <Img
-                alt={"Login Image"}
-                objectFit={"cover"}
-                src="img/asset-login.png"
-                w="full"
-                h={{ base: "auto", sm: "220px", md: "280px", lg: "auto" }}
-              />
-            </Flex>
-          </Stack>
-        </Flex>
+                      <FormLabel>Username</FormLabel>
+                      <Input
+                        type="text"
+                        {...fields.usernameoremail}
+                        autoFocus
+                      />
+                      <FormErrorMessage>
+                        {errors.usernameoremail &&
+                          errors.usernameoremail.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl
+                      id="password"
+                      isInvalid={!!errors.password}
+                      mb="3"
+                    >
+                      <FormLabel>Password</FormLabel>
+                      <InputGroup>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          {...fields.password}
+                        />
+                        <InputRightElement h={"full"}>
+                          <Button
+                            variant={"ghost"}
+                            onClick={() =>
+                              setShowPassword((showPassword) => !showPassword)
+                            }
+                          >
+                            {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                          </Button>
+                        </InputRightElement>
+                      </InputGroup>
+                      <FormErrorMessage>
+                        {errors.password && errors.password.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <Stack spacing={10}>
+                      <Button
+                        bg={"blue.400"}
+                        color={"white"}
+                        _hover={{
+                          bg: "blue.500",
+                        }}
+                        type="submit"
+                        isLoading={loading}
+                        mt="2"
+                      >
+                        <RiLoginBoxLine />
+                        &nbsp; Login
+                      </Button>
+                    </Stack>
+                  </form>
+                </Box>
+              </Flex>
+              <Flex
+                align={"center"}
+                justify={"center"}
+                p={{ base: 1, sm: 2, md: 3 }}
+                flexDirection={"column"}
+                maxW="md"
+              >
+                <Img
+                  alt={"Login Image"}
+                  // objectFit={"fill"}
+                  src="img/asset-login.png"
+                  w="full"
+                  // h={{ base: "auto", sm: "220px", md: "280px", lg: "auto" }}
+                  mb={2}
+                />
+                <Img
+                  // objectFit={"cover"}
+                  src="img/logo_stp_dan_inkubator.png"
+                  w="full"
+                  h={"auto"}
+                />
+              </Flex>
+            </Stack>
+          </Flex>
+        </Suspense>
       )}
     </>
   );
