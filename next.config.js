@@ -6,7 +6,7 @@ const packageJSON = require("./package.json");
 const nextConfig = {
   //ini diperlukan utk reordering row dalam mode develop
   // comment jika mode production krn nextjs otomatis set ini scr true
-  reactStrictMode : false,
+  // reactStrictMode: false,
   env: {
     APP_NAME: "SITEMAN-STP",
     APP_DESCRIPTION: "Sistem Tenant Mentoring dan Manajemen Solo Technopark",
@@ -15,9 +15,7 @@ const nextConfig = {
     API_TINYMCE: "o4l95gui4izt7wza5inl45ilj7fle6abfwt08h5hwn6ffx5x",
     pdfjsVersion: packageJSON.dependencies["pdfjs-dist"],
   },
-  // images: {
-  //   domains: ["img.freepik.com", "veterinaire-tour-hassan.com"],
-  // },
+
   webpack: (config) => {
     config.module.rules.push({
       test: /\.node/,
