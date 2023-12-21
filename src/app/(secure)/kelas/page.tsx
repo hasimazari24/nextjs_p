@@ -1,15 +1,13 @@
 "use client";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import Loading from "./loading";
-import { UserRoles, permissions } from "@/app/type/role-access-control.d";
+import { UserRoles } from "@/app/type/role-access-control.d";
 import dynamic from "next/dynamic";
-import ManajemenClass from "./pages/ManajemenClass";
 import { FindDefaultRoute } from "@/app/components/utils/FindDefaultRoute";
 import { useBreadcrumbContext } from "@/app/components/utils/BreadCrumbsContext";
 import React from "react";
 
 interface UserLog {
-  // id: string;
   fullname: string;
   role: UserRoles;
   image_url: string;
@@ -31,6 +29,7 @@ const Tenant = dynamic(() => import("./pages/TenantClass"), {
 const page = () => {
   const { user } = useAuth();
   const { setBreadcrumbs } = useBreadcrumbContext();
+  //temukan rute default kelas lalu set breadcrumbs dengan rute yang ditemukan
   const getForCrumbs: any = FindDefaultRoute();
   React.useEffect(() => {
     if (getForCrumbs) setBreadcrumbs(getForCrumbs);
@@ -49,7 +48,6 @@ const page = () => {
   } else if (getUser?.role === "Tenant") {
     return <Tenant />;
   }
-  // return <ManajemenClass />;
 };
 
 export default page;

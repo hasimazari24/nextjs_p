@@ -12,17 +12,14 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import Link from "next/link";
 import React, { useState } from "react";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 
 function DownloadExcel({
   Url,
-  onSubmit,
   popOver,
 }: {
   Url: string;
-  onSubmit?: () => void;
   popOver?: string[];
 }) {
   const [stateNotif, setStateNotif] = useState({
@@ -164,7 +161,6 @@ function DownloadExcel({
         }
         message={stateNotif.msg}
         isError={stateNotif.isError}
-        // onSubmit={() => onSubmit()}
       />
     </div>
   );

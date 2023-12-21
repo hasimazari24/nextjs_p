@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Text,
@@ -19,25 +19,8 @@ import {
   PopoverBody,
   PopoverArrow,
   Select,
-  useDisclosure,
-  Img,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import {
-  AiFillTwitterCircle,
-  AiOutlineFacebook,
-  AiOutlineCrown,
-  AiOutlineGlobal,
-} from "react-icons/ai";
-import {
-  IoLogoFacebook,
-  IoLogoInstagram,
-  IoLogoLinkedin,
-  IoLogoYoutube,
-} from "react-icons/io5";
-import * as TenantTypes from "@/app/type/tenant-type.d";
-import Link from "next/link";
-import { Kelas, Mentor } from "@/app/type/class-type";
+import { Kelas } from "@/app/type/class-type";
 import { MdOutlinePeople } from "react-icons/md";
 import {
   HiChevronLeft,
@@ -45,14 +28,8 @@ import {
   HiOutlineNewspaper,
 } from "react-icons/hi";
 import { BiDoorOpen } from "react-icons/bi";
-import {
-  DeleteIcon,
-  EditIcon,
-  ExternalLinkIcon,
-  SearchIcon,
-} from "@chakra-ui/icons";
+import { SearchIcon } from "@chakra-ui/icons";
 import { GrMoreVertical } from "react-icons/gr";
-import { useMemo, useState } from "react";
 import Pagination from "@/app/components/datatable/pagination";
 import EditClass from "./editClass";
 import ProfileMentor from "./profileMentor";
