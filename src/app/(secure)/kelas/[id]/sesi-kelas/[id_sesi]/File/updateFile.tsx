@@ -15,18 +15,8 @@ import {
   Flex,
   Box,
   Text,
-  SimpleGrid,
-  PinInputDescendantsProvider,
-  InputGroup,
-  InputLeftElement,
   HStack,
   Link,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  Stack,
   Hide,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
@@ -34,11 +24,8 @@ import {
   useForm,
   SubmitHandler,
   useController,
-  Controller,
 } from "react-hook-form";
 import {
-  AddIcon,
-  CalendarIcon,
   CheckIcon,
   CloseIcon,
   EditIcon,
@@ -47,7 +34,6 @@ import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
 import initRichTextProps from "@/app/type/inital-rich-text";
 import { Editor } from "@tinymce/tinymce-react";
-import * as ClassInfo from "@/app/type/class-type.d";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { BsFiletypePdf } from "react-icons/bs";

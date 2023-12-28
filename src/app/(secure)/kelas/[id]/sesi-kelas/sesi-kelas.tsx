@@ -9,7 +9,6 @@ import {
   VStack,
   Image,
 } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
 import AddSesi from "./addSesi";
 import { BiDoorOpen } from "react-icons/bi";
 import EditSesi from "./editSesi";

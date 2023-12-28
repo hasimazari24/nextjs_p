@@ -128,7 +128,11 @@ function page({ params }: { params: { id_tugas: string } }) {
           size={"md"}
           onClick={() => handleReviewShow(row.values)}
         >
-          {row.values.graded_answer_grade ? "Lihat Nilai" : "Isi Nilai"}
+          {getUser.role === "Mentor"
+            ? row.values.graded_answer_grade
+              ? "Lihat Nilai"
+              : "Isi Nilai"
+            : "Lihat Nilai"}
         </Button>
       ),
     },

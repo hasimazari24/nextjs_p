@@ -17,11 +17,10 @@ import {
   Box,
   Text,
   useDisclosure,
-  Hide,
   SlideFade,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Mentor } from "@/app/type/class-type.d";
 
 function AddMentor({
@@ -31,10 +30,6 @@ function AddMentor({
   onResult: (idMentor: string) => void;
   editedSelect?: Mentor;
 }) {
-  // const initialState: { isLoading?: boolean; resultMentor?: MentorResult[] } = {
-  //   isLoading: true,
-  //   resultMentor: [],
-  // };
 
   const [stateResult, setStateResult] = useState<Mentor[] | []>([]);
   // let result:MentorResult[] = [];

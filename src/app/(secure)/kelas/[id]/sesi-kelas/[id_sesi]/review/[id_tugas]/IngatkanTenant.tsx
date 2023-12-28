@@ -7,10 +7,8 @@ import { MdAlarm } from "react-icons/md";
 
 function IngatkanTenant({
   Url,
-  onSubmit,
 }: {
   Url: string;
-  onSubmit?: () => void;
 }) {
   const [stateNotif, setStateNotif] = useState({
     msg: "",

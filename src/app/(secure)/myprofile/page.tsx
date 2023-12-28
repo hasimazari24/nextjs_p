@@ -366,6 +366,7 @@ const MyProfile: React.FC = () => {
                         w={{ base: "100px", sm: "200px", lg: "200px" }}
                         borderRadius="full"
                         alt="Avatar"
+                        fit={"cover"}
                       />
                     )}
                     <Stack

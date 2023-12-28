@@ -7,10 +7,7 @@ import {
   Stack,
   Text,
   VStack,
-  Image,
 } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { BiDoorOpen } from "react-icons/bi";
 import { axiosCustom } from "@/app/api/axios";
 import Loading from "../../loading";
 import { MdArrowBackIosNew } from "react-icons/md";

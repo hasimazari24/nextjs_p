@@ -1,13 +1,11 @@
 "use client";
-import React, { useState, useEffect, ReactNode, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import {
-  Avatar,
   Box,
   Button,
   Flex,
   Grid,
   HStack,
-  Icon,
   Input,
   InputGroup,
   InputLeftElement,
@@ -18,12 +16,9 @@ import {
   Image,
   Select,
 } from "@chakra-ui/react";
-import { DeleteIcon, Search2Icon, SearchIcon } from "@chakra-ui/icons";
+import { SearchIcon } from "@chakra-ui/icons";
 
-import { IoSearchSharp } from "react-icons/io5";
-import { BiDoorOpen, BiPlus } from "react-icons/bi";
-import { GrMoreVertical } from "react-icons/gr";
-// import data from "../../../dashboard/data";
+import { BiDoorOpen} from "react-icons/bi";
 import AddPartisipan from "./addPartisipan";
 import * as ClassInfo from "@/app/type/class-type.d";
 import { Column, useFilters, usePagination, useTable } from "react-table";
@@ -31,7 +26,6 @@ import Loading from "../../loading";
 import { axiosCustom } from "@/app/api/axios";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Pagination from "@/app/components/datatable/pagination";
-import dynamic from "next/dynamic";
 import DeletePartisipan from "./deletePartisipan";
 
 const TenantKelas = ({

@@ -16,16 +16,14 @@ import {
   Box,
   Text,
   Textarea,
-  HStack,
   Radio,
   RadioGroup,
   Stack,
   Hide,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
-import { useForm, SubmitHandler, useController } from "react-hook-form";
+import React, { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
-  AddIcon,
   CheckIcon,
   CloseIcon,
   EditIcon,
@@ -33,8 +31,6 @@ import {
 } from "@chakra-ui/icons";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
-import initRichTextProps from "@/app/type/inital-rich-text";
-import { Editor } from "@tinymce/tinymce-react";
 
 type GradedItem = {
   id: string;
@@ -58,8 +54,6 @@ const UpdateGraded: React.FC<editProps> = ({
     register,
     handleSubmit,
     reset,
-    control,
-    clearErrors,
     formState: { errors },
   } = useForm<GradedItem>();
 
@@ -165,7 +159,9 @@ const UpdateGraded: React.FC<editProps> = ({
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <ModalHeader>Tambah Nilai</ModalHeader>
+            <ModalHeader>
+              {roleAccess === "Mentor" ? "Edit Nilai" : "Lihat Penilaian"}
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <div className="data-form">

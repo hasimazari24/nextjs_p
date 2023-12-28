@@ -8,14 +8,6 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Flex,
-  Box,
-  Text,
-  Textarea,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";

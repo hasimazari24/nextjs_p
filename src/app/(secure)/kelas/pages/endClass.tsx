@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import ModalNotif from "@/app/components/modal/modal-notif";
 import { axiosCustom } from "@/app/api/axios";
-import ConfirmationModal from "@/app/components/modal/modal-confirm";
 import {
   Button,
   Modal,
@@ -15,7 +14,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { AiOutlineCloseSquare, AiOutlineCheckSquare } from "react-icons/ai";
+import { AiOutlineCloseSquare } from "react-icons/ai";
 
 interface deleteProps {
   onSubmit: () => void;

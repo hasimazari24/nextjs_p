@@ -24,7 +24,6 @@ import * as ClassInfo from "@/app/type/class-type.d";
 import Loading from "../loading";
 import { axiosCustom } from "@/app/api/axios";
 import NotFound from "@/app/components/template/NotFound";
-import useSession from "./api/api-masuk-kelas";
 import ProfileMentor from "../pages/profileMentor";
 import { useAuth } from "@/app/components/utils/AuthContext";
 import Progress from "./partisipan/progress";
@@ -143,7 +142,7 @@ function page({ params }: { params: { id: string } }) {
               <ProfileMentor mentor={state.dataClass?.mentor || null} />
             </VStack>
           </HStack>
-          <HStack mb={{ base:4, md:0 }}>
+          <HStack mb={{ base: 4, md: 0 }}>
             <Button
               leftIcon={<MdArrowBackIosNew />}
               colorScheme="blue"
@@ -157,15 +156,16 @@ function page({ params }: { params: { id: string } }) {
             <DownloadExcel Url={`/export-course/${getParamsId}`} />
           </HStack>
         </Flex>
-
-        <Box>
-          <Text
-            textAlign="justify"
-            dangerouslySetInnerHTML={{
-              __html: state.dataClass ? state.dataClass.description : "",
-            }}
-          />
-        </Box>
+        {state.dataClass.description && (
+          <Box>
+            <Text
+              textAlign="justify"
+              dangerouslySetInnerHTML={{
+                __html: state.dataClass ? state.dataClass.description : "",
+              }}
+            />
+          </Box>
+        )}
 
         <Tabs variant="unstyled">
           <TabList justifyContent="center">

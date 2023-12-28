@@ -353,7 +353,7 @@ export function TugasMentor({
                       _hover={{
                         bg: "blue.400",
                       }}
-                      title="Edit Data"
+                      title="Review Tugas"
                       color="white"
                       onClick={() =>
                         router.push(`${pathName}/review/${data.id}`)
