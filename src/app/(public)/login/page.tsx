@@ -109,7 +109,7 @@ const Login = () => {
               >
                 <Stack align={"center"} mb="3">
                   {/* <FaRegCircleUser fontSize="3.5rem" /> */}
-                  <Img src="/img/siteman-primary.png" h="60px" />
+                  <Img src="/img/logo-primary.png" h="60px" />
                   <Heading
                     fontSize={"4xl"}
                     whiteSpace={"nowrap"}

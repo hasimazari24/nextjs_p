@@ -79,7 +79,7 @@ export default function Navbar() {
                 color={useColorModeValue("gray.800", "white")}
               >
                 <Img
-                  src="/img/siteman-primary.png"
+                  src="/img/logo-primary.png"
                   h="30px"
                   alt="Logo Solo Technopark"
                 />

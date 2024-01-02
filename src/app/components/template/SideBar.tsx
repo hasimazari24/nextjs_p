@@ -98,7 +98,7 @@ const Sidebar = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="center">
-        <Img src="/img/siteman-primary.png" h="35px" />
+        <Img src="/img/logo-primary.png" h="35px" />
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
 

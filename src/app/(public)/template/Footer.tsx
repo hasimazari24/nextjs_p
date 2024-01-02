@@ -39,7 +39,7 @@ const Logo = (props: any) => {
       // height={32}
       width={"75%"}
       viewBox="0 0 120 28"
-      src="/img/siteman-primary.png"
+      src="/img/logo-primary.png"
       alt="Logo Siteman"
       style={{
         boxShadow: "4px 4px 8px rgba(0, 0, 0, 0.2)",
@@ -233,9 +233,7 @@ const Footer = () => {
               </HStack>
               <HStack spacing={3} alignItems="center">
                 <Icon as={FaPhoneAlt} w={4} h={4} color="teal.200" />
-                <Box>
-                  +62 271 666 628
-                </Box>
+                <Box>+62 271 666 628</Box>
               </HStack>
               <HStack spacing={3} alignItems="center">
                 <Icon as={FaEnvelopeOpen} w={4} h={4} color="teal.200" />
